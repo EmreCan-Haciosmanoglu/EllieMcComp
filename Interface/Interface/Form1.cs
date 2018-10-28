@@ -14,8 +14,7 @@ namespace EllieMcComp
         // paths
         internal string tasksPath;
         internal string projectsPath;
-
-
+        
         public Interface()
         {
             InitializeComponent();
@@ -32,6 +31,7 @@ namespace EllieMcComp
                 rk.DeleteValue("EllieMcComp", false);
 
         }
+
         private string FindUserPath()
         {
             /*
@@ -50,25 +50,26 @@ namespace EllieMcComp
         private void Form1_Load(object sender, EventArgs e)
         {
             CreatePaths();
+            SetPanelsBounds();
+            CloseAllPanels();
+            FillLists();
+        }
 
-            pnlAddProject.Visible = false;
-            pnlNewTask.Visible = false;
-            pnlCurrentTasks.Visible = false;
-            pnlShowProjects.Visible = false;
-            
+        private void SetPanelsBounds()
+        {
             pnlAddProject.SetBounds(360, 180, 308, 306);
             pnlNewTask.SetBounds(360, 180, 308, 306);
             pnlCurrentTasks.SetBounds(360, 180, 308, 325);
             pnlShowProjects.SetBounds(360, 180, 308, 325);
-
-            FillLists();
         }
+
         private void CreatePaths()
         {
             string repo = "/source/repos/EmreCan-Haciosmanoglu";
             tasksPath = FindUserPath() + repo + "/EllieMcComp/EllieMcComp-Memory";
             projectsPath = FindUserPath() + repo + "/EllieMcComp/EllieMcComp-Memory";
         }
+
         private void FillLists()
         {
             char[] seperator = { '_' };
