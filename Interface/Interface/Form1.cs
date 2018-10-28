@@ -113,7 +113,13 @@ namespace EllieMcComp
 
         private void BtnNewTask_Click(object sender, EventArgs e)
         {
+            CloseAllPanels();
             pnlNewTask.Visible = true;
+        }
+
+        private void CloseAllPanels()
+        {
+            pnlNewTask.Visible = false;
             pnlAddProject.Visible = false;
             pnlCurrentTasks.Visible = false;
             pnlShowProjects.Visible = false;
@@ -121,18 +127,14 @@ namespace EllieMcComp
 
         private void BtnNewProject_Click(object sender, EventArgs e)
         {
-            pnlNewTask.Visible = false;
+            CloseAllPanels();
             pnlAddProject.Visible = true;
-            pnlCurrentTasks.Visible = false;
-            pnlShowProjects.Visible = false;
         }
 
         private void BtnShowTasks_Click(object sender, EventArgs e)
         {
-            pnlNewTask.Visible = false;
-            pnlAddProject.Visible = false;
+            CloseAllPanels();
             pnlCurrentTasks.Visible = true;
-            pnlShowProjects.Visible = false;
             ////////////////////////////////
             cbShowTasksTasks.Items.Clear();
             foreach (string t in Task.tasks.Keys)
@@ -150,9 +152,7 @@ namespace EllieMcComp
 
         private void BtnShowProjects_Click(object sender, EventArgs e)
         {
-            pnlNewTask.Visible = false;
-            pnlAddProject.Visible = false;
-            pnlCurrentTasks.Visible = false;
+            CloseAllPanels();
             pnlShowProjects.Visible = true;
             ////////////////////////////////
             cbShowProjectsProjects.Items.Clear();
