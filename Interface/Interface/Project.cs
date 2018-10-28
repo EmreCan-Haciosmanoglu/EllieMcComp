@@ -8,6 +8,7 @@ namespace EllieMcComp
 {
     class Project
     {
+        public static Dictionary<string, Project> projects = new Dictionary<string, Project>();
         public string Name { get => _name; set => _name = value; }
         string _name;
 

@@ -11,14 +11,8 @@ namespace EllieMcComp
 {
     public partial class Interface : Form
     {
-        // Tasks
-        internal Dictionary<string, Task> Tasks { get => tasks; set => tasks = value; }
-        private Dictionary<string, Task> tasks = new Dictionary<string, Task>();
+        // paths
         internal string tasksPath;
-
-        // Projects
-        internal Dictionary<string, Project> Projects { get => projects; set => projects = value; }
-        private Dictionary<string, Project> projects = new Dictionary<string, Project>();
         internal string projectsPath;
 
 
@@ -92,7 +86,7 @@ namespace EllieMcComp
             {
                 string[] arrD = d.Split(seperator);
                 if (arrD.Length > 1)
-                    Tasks.Add(arrD[0], new Task(arrD[0], arrD[1]));
+                    Task.tasks.Add(arrD[0], new Task(arrD[0], arrD[1]));
             }
             ///////////////////////////////
             if (Directory.Exists(projectsPath) == false)
@@ -108,7 +102,7 @@ namespace EllieMcComp
             {
                 string[] arrD = d.Split(seperator);
                 if (arrD.Length > 1)
-                    Projects.Add(arrD[0], new Project(arrD[0], arrD[1], arrD[2]));
+                    Project.projects.Add(arrD[0], new Project(arrD[0], arrD[1], arrD[2]));
             }
         }
 
@@ -141,7 +135,7 @@ namespace EllieMcComp
             pnlShowProjects.Visible = false;
             ////////////////////////////////
             cbShowTasksTasks.Items.Clear();
-            foreach (string t in Tasks.Keys)
+            foreach (string t in Task.tasks.Keys)
             {
                 cbShowTasksTasks.Items.Add(t);
             }
@@ -162,7 +156,7 @@ namespace EllieMcComp
             pnlShowProjects.Visible = true;
             ////////////////////////////////
             cbShowProjectsProjects.Items.Clear();
-            foreach (string t in Projects.Keys)
+            foreach (string t in Project.projects.Keys)
             {
                 cbShowProjectsProjects.Items.Add(t);
             }
@@ -179,10 +173,10 @@ namespace EllieMcComp
         {
             if (tbNewTaskDescription.Text == "" || tbNewTaskTaskName.Text == "")
                 return; // make backgroundColor of empty textbox red
-            List<string> data = File.ReadAllLines(tasksPath).ToList<string>();
+            List<string> data = File.ReadAllLines(tasksPath + "/Tasks.txt").ToList<string>();
             data.Add(tbNewTaskTaskName.Text + "_" + tbNewTaskDescription.Text);
-            Tasks.Add(tbNewTaskTaskName.Text, new Task(tbNewTaskTaskName.Text, tbNewTaskDescription.Text));
-            StreamWriter sw = new StreamWriter(tasksPath);
+            Task.tasks.Add(tbNewTaskTaskName.Text, new Task(tbNewTaskTaskName.Text, tbNewTaskDescription.Text));
+            StreamWriter sw = new StreamWriter(tasksPath + "/Tasks.txt");
             foreach (string d in data)
             {
                 sw.WriteLine(d);
@@ -196,7 +190,7 @@ namespace EllieMcComp
         private void CbShowTasksTasks_SelectedIndexChanged(object sender, EventArgs e)
         {
             tbShowTasksTaskName.Text = cbShowTasksTasks.SelectedItem.ToString();
-            tbShowTasksTaskDescription.Text = Tasks[cbShowTasksTasks.SelectedItem.ToString()].Description;
+            tbShowTasksTaskDescription.Text = Task.tasks[cbShowTasksTasks.SelectedItem.ToString()].Description;
         }
 
         private void BtnShowTasksEdit_Click(object sender, EventArgs e)
@@ -221,22 +215,22 @@ namespace EllieMcComp
             btnShowTasksSave.Enabled = false;
             btnShowTasksDelete.Enabled = true;
             tbShowTasksTaskName.Text = cbShowTasksTasks.SelectedItem.ToString();
-            tbShowTasksTaskDescription.Text = Tasks[cbShowTasksTasks.SelectedItem.ToString()].Description;
+            tbShowTasksTaskDescription.Text = Task.tasks[cbShowTasksTasks.SelectedItem.ToString()].Description;
         }
 
         private void BtnShowTasksSave_Click(object sender, EventArgs e)
         {
-            Tasks.Remove(cbShowTasksTasks.SelectedItem.ToString());
-            Tasks.Add(tbShowTasksTaskName.Text, new Task(tbShowTasksTaskName.Text, tbShowTasksTaskDescription.Text));
-            StreamWriter sw = new StreamWriter(tasksPath);
-            foreach (Task t in Tasks.Values)
+            Task.tasks.Remove(cbShowTasksTasks.SelectedItem.ToString());
+            Task.tasks.Add(tbShowTasksTaskName.Text, new Task(tbShowTasksTaskName.Text, tbShowTasksTaskDescription.Text));
+            StreamWriter sw = new StreamWriter(tasksPath + "/Tasks.txt");
+            foreach (Task t in Task.tasks.Values)
             {
                 sw.WriteLine(t.ToString());
             }
             sw.Close();
             cbShowTasksTasks.Items.Clear();
             cbShowTasksTasks.SelectedText = "";
-            foreach (string t in Tasks.Keys)
+            foreach (string t in Task.tasks.Keys)
             {
                 cbShowTasksTasks.Items.Add(t);
             }
@@ -255,16 +249,16 @@ namespace EllieMcComp
             DialogResult result = MessageBox.Show("Are You Sure!!!", "", MessageBoxButtons.YesNoCancel);
             if (result == DialogResult.Yes)
             {
-                Tasks.Remove(cbShowTasksTasks.SelectedItem.ToString());
-                StreamWriter sw = new StreamWriter(tasksPath);
-                foreach (Task t in Tasks.Values)
+                Task.tasks.Remove(cbShowTasksTasks.SelectedItem.ToString());
+                StreamWriter sw = new StreamWriter(tasksPath + "/Tasks.txt");
+                foreach (Task t in Task.tasks.Values)
                 {
                     sw.WriteLine(t.Name + "_" + t.Description);
                 }
                 sw.Close();
                 cbShowTasksTasks.Items.Clear();
                 cbShowTasksTasks.SelectedText = "";
-                foreach (string t in Tasks.Keys)
+                foreach (string t in Task.tasks.Keys)
                 {
                     cbShowTasksTasks.Items.Add(t);
                 }
@@ -291,11 +285,11 @@ namespace EllieMcComp
             if (tbAddProjectDescription.Text == "" || tbAddProjectProjectName.Text == "" || tbAddProjectProjectLocation.Text == "")
                 return; // make backgroundColor of empty textbox red
 
-            List<string> data = File.ReadAllLines(projectsPath).ToList<string>();
+            List<string> data = File.ReadAllLines(projectsPath + "/Projects.txt").ToList<string>();
             Project p = new Project(tbAddProjectProjectName.Text, tbAddProjectDescription.Text, tbAddProjectProjectLocation.Text);
             data.Add(p.ToString());
-            Projects.Add(p.Name, p);
-            StreamWriter sw = new StreamWriter(projectsPath);
+            Project.projects.Add(p.Name, p);
+            StreamWriter sw = new StreamWriter(projectsPath + "/Projects.txt");
             foreach (string d in data)
             {
                 sw.WriteLine(d);
@@ -310,8 +304,8 @@ namespace EllieMcComp
         private void CbShowProjectsProjects_SelectedIndexChanged(object sender, EventArgs e)
         {
             tbShowProjectsProjectName.Text = cbShowProjectsProjects.SelectedItem.ToString();
-            tbShowProjectsDescription.Text = Projects[cbShowProjectsProjects.SelectedItem.ToString()].Description;
-            tbShowProjectsProjectLocation.Text = Projects[cbShowProjectsProjects.SelectedItem.ToString()].Path;
+            tbShowProjectsDescription.Text = Project.projects[cbShowProjectsProjects.SelectedItem.ToString()].Description;
+            tbShowProjectsProjectLocation.Text = Project.projects[cbShowProjectsProjects.SelectedItem.ToString()].Path;
             btnShowProjectsRun.Enabled = true;
         }
 
@@ -341,17 +335,17 @@ namespace EllieMcComp
 
         private void BtnShowProjectsSave_Click(object sender, EventArgs e)
         {
-            Projects.Remove(cbShowProjectsProjects.SelectedItem.ToString());
-            Projects.Add(tbShowTasksTaskName.Text, new Project(tbShowProjectsProjectName.Text, tbShowProjectsDescription.Text, tbShowProjectsProjectLocation.Text));
-            StreamWriter sw = new StreamWriter(projectsPath);
-            foreach (Project p in Projects.Values)
+            Project.projects.Remove(cbShowProjectsProjects.SelectedItem.ToString());
+            Project.projects.Add(tbShowTasksTaskName.Text, new Project(tbShowProjectsProjectName.Text, tbShowProjectsDescription.Text, tbShowProjectsProjectLocation.Text));
+            StreamWriter sw = new StreamWriter(projectsPath + "/Projects.txt");
+            foreach (Project p in Project.projects.Values)
             {
                 sw.WriteLine(p.ToString());
             }
             sw.Close();
             cbShowProjectsProjects.Items.Clear();
             cbShowProjectsProjects.SelectedText = "";
-            foreach (string p in Projects.Keys)
+            foreach (string p in Project.projects.Keys)
             {
                 cbShowProjectsProjects.Items.Add(p);
             }
@@ -370,8 +364,8 @@ namespace EllieMcComp
             tbShowProjectsProjectLocation.Enabled = false;
 
             tbShowProjectsProjectName.Text = cbShowProjectsProjects.SelectedItem.ToString();
-            tbShowProjectsDescription.Text = Projects[cbShowProjectsProjects.SelectedItem.ToString()].Description;
-            tbShowProjectsProjectLocation.Text = Projects[cbShowProjectsProjects.SelectedItem.ToString()].Path;
+            tbShowProjectsDescription.Text = Project.projects[cbShowProjectsProjects.SelectedItem.ToString()].Description;
+            tbShowProjectsProjectLocation.Text = Project.projects[cbShowProjectsProjects.SelectedItem.ToString()].Path;
         }
 
         private void BtnShowProjectsDelete_Click(object sender, EventArgs e)
@@ -381,16 +375,16 @@ namespace EllieMcComp
             DialogResult result = MessageBox.Show("Are You Sure!!!", "", MessageBoxButtons.YesNoCancel);
             if (result == DialogResult.Yes)
             {
-                Projects.Remove(cbShowProjectsProjects.SelectedItem.ToString());
+                Project.projects.Remove(cbShowProjectsProjects.SelectedItem.ToString());
                 StreamWriter sw = new StreamWriter(projectsPath);
-                foreach (Project p in Projects.Values)
+                foreach (Project p in Project.projects.Values)
                 {
                     sw.WriteLine(p.ToString());
                 }
                 sw.Close();
                 cbShowProjectsProjects.Items.Clear();
                 cbShowProjectsProjects.SelectedText = "";
-                foreach (string t in Projects.Keys)
+                foreach (string t in Project.projects.Keys)
                 {
                     cbShowProjectsProjects.Items.Add(t);
                 }
