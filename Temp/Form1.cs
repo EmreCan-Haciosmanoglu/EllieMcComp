@@ -57,63 +57,21 @@ namespace Temp
 
         public string _parent = "";
         public string _child = "";
-        public Button[] btns = new Button[1];
 
         public char[] ayrac = { ' ' };
 
         public Dictionary<string, Func<string, string, string>> nameFunc = new Dictionary<string, Func<string, string, string>>();
 
         public List<string> unknownWordList;
-
-        NotifyIcon trayIcon;
-
-
-
-
+        
         public Form1()
         {
             InitializeComponent();
-
             unknownWordList = new List<string>();
-
             FillFuncDictionary();
-            CreateButton();
-            ////////////////////////////////////////////////
-            //--------------------------------------------//
-            //               Deneme Alanı Başlangıcı      //
-            //--------------------------------------------//
-            ////////////////////////////////////////////////
             SetStartup();
-
-            trayIcon = new NotifyIcon();
-            trayMenu = new ContextMenu();
-            Component comp = new Component();
-            //trayMenu.Container.Add(comp);
-            trayIcon.Text = "My application";
-            //trayIcon.Icon = new Icon("C://Users//ECHOO GameDesigner//Desktop//iconn.ico");
-
-            // Add menu to tray icon and show it.
-            trayIcon.ContextMenu = trayMenu;
-            trayIcon.Visible = true;
-
-            Visible = false; // Hide form window.
-            ShowInTaskbar = false; // Remove from taskbar.
-
-            ////////////////////////////////////////////////
-            //--------------------------------------------//
-            //               Deneme Alanı Bitişi          //
-            //--------------------------------------------//
-            ////////////////////////////////////////////////
-
-        }
-
-        public void CreateButton()
-        {
-            Button btn = new Button();
-            btn.Width = 50;
-            btn.Height = 20;
-            btn.Text = "Okay!";
-            btns[0] = btn;
+            Visible = false;
+            ShowInTaskbar = false;
         }
 
         /// <summary>
@@ -126,7 +84,6 @@ namespace Temp
             nameFunc.Add("add", AddInfo);
             nameFunc.Add("open", OpenWebsite);
             nameFunc.Add("show", ShowProgress);
-            nameFunc.Add("process", Processing);
         }
 
         public string ComponentOfSentence(int indexOfWords, int indexOfStep)
@@ -136,9 +93,7 @@ namespace Temp
             // what is definition of STH*
             // open WEBSITE* on BROWSER*
             // show progress of map
-            // process part of map
             // open program* - TODO -
-            // start process of map
             if (WhatTypeIs(_kelime[indexOfWords], "Verb"))
             {
                 _predicate += _kelime[indexOfWords];
@@ -148,7 +103,7 @@ namespace Temp
                 }
                 else
                 {
-                    ComponentOfSentence(indexOfWords + 1, indexOfStep + 1);             // *
+                    ComponentOfSentence(indexOfWords + 1, indexOfStep + 1);             
                 }
             }
             else if (WhatTypeIs(_kelime[indexOfWords], "ProperNoun"))
@@ -298,40 +253,6 @@ namespace Temp
 
         public string ShowProgress(string map, string progress)
         {
-            return "";
-        }
-
-        public Bitmap png90;
-        public Bitmap png180;
-        private float meterPerPixel = 108.73f;
-        public string Processing(string map, string part)
-        {
-            Processing prc = new Processing();
-            prc.ShowDialog();
-            int pngHeight = png90.Height;
-            int pngWidth = png90.Width;
-            float[,] heightmap = new float[pngWidth, pngHeight];
-            float grey;
-            Color c;
-            for (int y = 0; y < pngHeight; y++)
-            {
-                for (int x = 0; x < pngWidth; x++)
-                {
-                    if (x == 0)
-                    {
-                        heightmap[x, 0] = 0f;
-                    }
-                    else
-                    {
-                        c = png90.GetPixel(pngWidth, pngHeight);
-                        grey = (c.R + c.G + c.B) / 3;
-                        float slope = 90f - (grey / 255) * 180f;
-
-                    }
-                }
-            }
-
-
             return "";
         }
 
