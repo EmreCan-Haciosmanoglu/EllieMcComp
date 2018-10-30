@@ -26,9 +26,17 @@ Matrix::Matrix(Matrix& copy)
 Matrix::~Matrix()
 {
 }
-Matrix* Matrix::sum()const
+void Matrix::sum(Matrix* m)
 {
-	return  new Matrix();
+	if (this->getColumns() != m->getColumns() || this->getRows != m->getRows())
+		return;
+	for (int i = 0; i < this->getRows(); i++)
+	{
+		for (int j = 0; j < this->getColumns(); j++)
+		{
+			this->getData()[i][j] += m->getData()[i][j];
+		}
+	}
 }
 void Matrix::elementarySum(double num)
 {

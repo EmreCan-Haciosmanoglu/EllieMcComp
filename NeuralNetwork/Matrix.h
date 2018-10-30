@@ -7,7 +7,7 @@ public:
 	Matrix(Matrix& copy);
 	~Matrix();
 
-	Matrix* sum() const;
+	void sum(Matrix* m);
 	void elementarySum(double num);
 	void elementaryMult(double num);
 	Matrix* matrixMult() const;
