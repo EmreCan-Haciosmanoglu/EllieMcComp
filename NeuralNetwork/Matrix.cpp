@@ -30,9 +30,27 @@ Matrix* Matrix::sum()const
 {
 	return  new Matrix();
 }
-Matrix* Matrix::elementaryMult()const
+void Matrix::elementarySum(double num)
 {
-	return  new Matrix();
+	for (int i = 0; i < this->getRows(); i++)
+	{
+		for (int j = 0; j < this->getColumns(); j++)
+		{
+			this->getData()[i][j] += num;
+		}
+	}
+	return;
+}
+void Matrix::elementaryMult(double num)
+{
+	for (int i = 0; i < this->getRows(); i++)
+	{
+		for (int j = 0; j < this->getColumns(); j++)
+		{
+			this->getData()[i][j] *= num;
+		}
+	}
+	return;
 }
 Matrix* Matrix::matrixMult()const
 {

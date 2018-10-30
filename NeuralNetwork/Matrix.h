@@ -8,9 +8,10 @@ public:
 	~Matrix();
 
 	Matrix* sum() const;
-	Matrix* elementaryMult()const;
-	Matrix* matrixMult()const;
-	Matrix* transpose()const;
+	void elementarySum(double num);
+	void elementaryMult(double num);
+	Matrix* matrixMult() const;
+	Matrix* transpose() const;
 	int getRows() { return rows; }
 	int getColumns() { return columns; }
 	double** getData() { return data; }
