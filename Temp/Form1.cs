@@ -36,7 +36,6 @@ namespace Temp
         #endregion
 
         public string[] _types = { "Noun", "Pronoun", "Verb", "Adjective", "Adverb", "Preposition", "WH" };
-        public string filePath = "C:\\Users\\ECHOO GameDesigner\\Desktop\\AI\\Interface\\bin\\Debug\\";
 
         public string[] _kelime;
         public string _cumle = "";
@@ -63,15 +62,35 @@ namespace Temp
         public Dictionary<string, Func<string, string, string>> nameFunc = new Dictionary<string, Func<string, string, string>>();
 
         public List<string> unknownWordList;
-        
+
+        public string MemoryPath;
+        private string repo = "/source/repos/EmreCan-Haciosmanoglu";
+
+
         public Form1()
         {
             InitializeComponent();
             unknownWordList = new List<string>();
+            MemoryPath = FindUserPath() + repo + "/EllieMcComp/EllieMcComp-Memory/";
             FillFuncDictionary();
             SetStartup();
             Visible = false;
             ShowInTaskbar = false;
+        }
+
+        private string FindUserPath()
+        {
+            /*
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            
+            */
+            string path = Directory.GetParent(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)).FullName;
+            if (Environment.OSVersion.Version.Major >= 6)
+            {
+                path = Directory.GetParent(path).ToString();
+            }
+
+            return path;
         }
 
         /// <summary>
@@ -216,7 +235,7 @@ namespace Temp
         public void AddInto(string _cumle)
         {
             char[] ayrac = { ' ' };
-            string[] lines = File.ReadAllLines(filePath + "Deneme.txt");
+            string[] lines = File.ReadAllLines(MemoryPath + "Deneme.txt");
             string[] _kelime = _cumle.Split(ayrac);
             int i = 1;
             foreach (string item in _kelime)
@@ -243,7 +262,7 @@ namespace Temp
                     lines[x] = item;
                 }
             }
-            StreamWriter sw = new StreamWriter(filePath + "Deneme.txt");
+            StreamWriter sw = new StreamWriter(MemoryPath + "Deneme.txt");
             foreach (string line in lines)
             {
                 sw.WriteLine(line);
@@ -258,7 +277,7 @@ namespace Temp
 
         public string Show(string FileName)
         {
-            string[] lines = File.ReadAllLines("" + filePath + FileName + ".txt");
+            string[] lines = File.ReadAllLines("" + MemoryPath + FileName + ".txt");
             foreach (string word in lines)
             {
                 Console.WriteLine(word);
@@ -307,14 +326,14 @@ namespace Temp
                 return "Something gone wrong!!!";
             }
 
-            if (!(Directory.Exists(@"" + filePath + definition + "\\" + word + ".txt")))
+            if (!(Directory.Exists(@"" + MemoryPath + definition + "\\" + word + ".txt")))
             {
-                FileStream fs = File.Create(@"" + filePath + definition + "\\" + word + ".txt");
+                FileStream fs = File.Create(@"" + MemoryPath + definition + "\\" + word + ".txt");
                 fs.Close();
             }
             try
             {
-                StreamWriter sw = new StreamWriter("" + filePath + definition + "\\" + word + ".txt");
+                StreamWriter sw = new StreamWriter("" + MemoryPath + definition + "\\" + word + ".txt");
                 sw.WriteLine(def);
                 sw.Close();
                 return "" + definition + " was successfully added for specified word( " + word + " )";
@@ -329,7 +348,7 @@ namespace Temp
         {
             try
             {
-                StreamReader sr = new StreamReader("" + filePath + definition + "\\" + word + ".txt");
+                StreamReader sr = new StreamReader("" + MemoryPath + definition + "\\" + word + ".txt");
                 string _return = sr.ReadLine();
                 sr.Close();
                 return _return;
@@ -404,14 +423,14 @@ namespace Temp
 
         public bool WhatTypeIs(string word, string type)
         {
-            if (!(File.Exists(@"" + filePath + type + "s.txt")))
+            if (!(File.Exists(@"" + MemoryPath + type + "s.txt")))
             {
-                FileStream fs = File.Create(@"" + filePath + type + "s.txt");
+                FileStream fs = File.Create(@"" + MemoryPath + type + "s.txt");
                 fs.Close();
                 return false;
             }
             List<string> wordList = new List<string>();
-            string[] lines = File.ReadAllLines("" + filePath + type + "s.txt");
+            string[] lines = File.ReadAllLines("" + MemoryPath + type + "s.txt");
             foreach (string each in lines)
             {
                 wordList.Add(each);
@@ -425,14 +444,14 @@ namespace Temp
 
         public bool IsItKnown(string word, string type) // need to be checked
         {
-            if (!(File.Exists(@"" + filePath + type + "s.txt")))
+            if (!(File.Exists(@"" + MemoryPath + type + "s.txt")))
             {
-                FileStream fs = File.Create(@"" + filePath + type + "s.txt");
+                FileStream fs = File.Create(@"" + MemoryPath + type + "s.txt");
                 fs.Close();
                 return false;
             }
             List<string> wordList = new List<string>();
-            string[] lines = File.ReadAllLines("" + filePath + type + "s.txt");
+            string[] lines = File.ReadAllLines("" + MemoryPath + type + "s.txt");
             foreach (string each in lines)
             {
                 wordList.Add(each);
@@ -446,14 +465,14 @@ namespace Temp
 
         public string Add(string word, string type)
         {
-            string[] lines = File.ReadAllLines("" + filePath + type + "s.txt");
+            string[] lines = File.ReadAllLines("" + MemoryPath + type + "s.txt");
             List<string> wordList = new List<string>();
             foreach (string each in lines)
             {
                 wordList.Add(each);
             }
             wordList.Add(word);
-            StreamWriter sw = new StreamWriter("" + filePath + type + "s.txt");
+            StreamWriter sw = new StreamWriter("" + MemoryPath + type + "s.txt");
             try
             {
                 foreach (string each in wordList)
