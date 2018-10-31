@@ -78,6 +78,21 @@ namespace Temp
             ShowInTaskbar = false;
         }
 
+        private bool MakeSureExistanceOf(string path,bool isFile)
+        {
+            if (isFile && !(Directory.Exists(@"" + path)))
+            {
+                FileStream fs = File.Create(@"" + path);
+                fs.Close();
+                return true;
+            }
+            else
+            {
+
+            }
+            return false;
+        }
+
         private string FindUserPath()
         {
             /*
@@ -325,15 +340,11 @@ namespace Temp
             {
                 return "Something gone wrong!!!";
             }
-
-            if (!(Directory.Exists(@"" + MemoryPath + definition + "\\" + word + ".txt")))
+            string path = MemoryPath + definition + "\\" + word + ".txt";
+            MakeSureExistanceOf(path,true);
+            try//TODO: do we need try-catch?
             {
-                FileStream fs = File.Create(@"" + MemoryPath + definition + "\\" + word + ".txt");
-                fs.Close();
-            }
-            try
-            {
-                StreamWriter sw = new StreamWriter("" + MemoryPath + definition + "\\" + word + ".txt");
+                StreamWriter sw = new StreamWriter("" + path);
                 sw.WriteLine(def);
                 sw.Close();
                 return "" + definition + " was successfully added for specified word( " + word + " )";
@@ -346,9 +357,10 @@ namespace Temp
 
         public string GetDefinition(string word, string definition)
         {
+            string path = MemoryPath + definition + "\\" + word + ".txt";
             try
             {
-                StreamReader sr = new StreamReader("" + MemoryPath + definition + "\\" + word + ".txt");
+                StreamReader sr = new StreamReader("" + path);
                 string _return = sr.ReadLine();
                 sr.Close();
                 return _return;
@@ -423,12 +435,9 @@ namespace Temp
 
         public bool WhatTypeIs(string word, string type)
         {
-            if (!(File.Exists(@"" + MemoryPath + type + "s.txt")))
-            {
-                FileStream fs = File.Create(@"" + MemoryPath + type + "s.txt");
-                fs.Close();
+            string path = MemoryPath + type + "s.txt";
+            if (MakeSureExistanceOf(path, true))
                 return false;
-            }
             List<string> wordList = new List<string>();
             string[] lines = File.ReadAllLines("" + MemoryPath + type + "s.txt");
             foreach (string each in lines)
@@ -444,12 +453,9 @@ namespace Temp
 
         public bool IsItKnown(string word, string type) // need to be checked
         {
-            if (!(File.Exists(@"" + MemoryPath + type + "s.txt")))
-            {
-                FileStream fs = File.Create(@"" + MemoryPath + type + "s.txt");
-                fs.Close();
+            string path = MemoryPath + type + "s.txt";
+            if (MakeSureExistanceOf(path, true))
                 return false;
-            }
             List<string> wordList = new List<string>();
             string[] lines = File.ReadAllLines("" + MemoryPath + type + "s.txt");
             foreach (string each in lines)
@@ -465,14 +471,16 @@ namespace Temp
 
         public string Add(string word, string type)
         {
-            string[] lines = File.ReadAllLines("" + MemoryPath + type + "s.txt");
+            string path = MemoryPath + type + "s.txt";
+            MakeSureExistanceOf(path, true);
+            string[] lines = File.ReadAllLines("" + path);
             List<string> wordList = new List<string>();
             foreach (string each in lines)
             {
                 wordList.Add(each);
             }
             wordList.Add(word);
-            StreamWriter sw = new StreamWriter("" + MemoryPath + type + "s.txt");
+            StreamWriter sw = new StreamWriter("" + path);
             try
             {
                 foreach (string each in wordList)
@@ -574,13 +582,12 @@ namespace Temp
             mouse_event(MOUSEEVENTF_RIGHTDOWN, 10, 10, 0, 0);
             mouse_event(MOUSEEVENTF_RIGHTUP, 10, 10, 0, 0);
         }
+
         private void QuitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
-
-        int i = 5;
-
+        
         private void Form1_Load(object sender, EventArgs e)
         {
         }
