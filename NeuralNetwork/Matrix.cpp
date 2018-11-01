@@ -60,11 +60,21 @@ void Matrix::elementaryMult(double num)
 	}
 	return;
 }
-Matrix* Matrix::matrixMult()const
+void Matrix::matrixMult(Matrix* m)
 {
-	return  new Matrix();
 }
-Matrix* Matrix::transpose()const
+void Matrix::transpose(Matrix* m)
 {
-	return  new Matrix();
+	Matrix* tmp = new Matrix(m->getColumns(),m->getRows());
+
+	for (int i = 0; i < this->getRows(); i++)
+	{
+		for (int j = 0; j < this->getColumns(); j++)
+		{
+			tmp->getData()[i][j] *= m->getData()[j][i];
+		}
+	}
+	this->setColumns(tmp->getColumns());
+	this->setRows(tmp->getRows());
+	this->setData(tmp->getData());
 }
