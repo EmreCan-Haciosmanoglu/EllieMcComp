@@ -28,7 +28,7 @@ Matrix::~Matrix()
 }
 void Matrix::sum(Matrix* m)
 {
-	if (this->getColumns() != m->getColumns() || this->getRows != m->getRows())
+	if ((this->getColumns() != m->getColumns()) || (this->getRows() != m->getRows()))
 		return;
 	for (int i = 0; i < this->getRows(); i++)
 	{

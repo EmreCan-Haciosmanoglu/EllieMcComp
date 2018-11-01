@@ -13,5 +13,13 @@ int main(int argc, char *argv[])
 	m1->sum(m2);
 	cout << m1->getData()[2][0];
 	cout << m1->getData()[3][0];
+	for (int i = 0; i < m1->getRows(); i++)
+	{
+		for (int j = 0; j < m1->getColumns(); j++)
+		{
+			cout << m1->getData()[i][j] << " ";
+		}
+		cout << endl;
+	}
 	return 0;
 }
