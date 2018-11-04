@@ -10,71 +10,98 @@ Matrix::Matrix(int r, int c)
 	:rows(r)
 	, columns(c)
 {
-	this->data = new double*[rows];
+	data = new double*[rows];
 	for (int i = 0; i < rows; ++i)
-		this->data[i] = new double[columns];
+		data[i] = new double[columns];
 	for (int i = 0; i < rows; ++i)
 		for (int j = 0; j < columns; ++j)
-			this->data[i][j] = 0.0;
+			data[i][j] = 0.0;
 }
-Matrix::Matrix(Matrix& copy)
-	: rows(copy.getRows())
-	, columns(copy.getColumns())
+Matrix::Matrix(const Matrix& copy)
 {
-
+	columns = copy.columns;
+	rows = copy.rows;
+	data = new double*[rows];
+	for (int i = 0; i < rows; ++i)
+		data[i] = new double[columns];
+	for (int i = 0; i < rows; ++i)
+		for (int j = 0; j < columns; ++j)
+			data[i][j] = copy.data[i][j];
 }
 Matrix::~Matrix()
 {
 }
-void Matrix::sum(Matrix* m)
+
+void Matrix::sum(Matrix m)
 {
-	if ((this->getColumns() != m->getColumns()) || (this->getRows() != m->getRows()))
+	if ((getColumns() != m.getColumns()) || (getRows() != m.getRows()))
 		return;
-	for (int i = 0; i < this->getRows(); i++)
+	for (int i = 0; i < getRows(); i++)
 	{
-		for (int j = 0; j < this->getColumns(); j++)
+		for (int j = 0; j < getColumns(); j++)
 		{
-			this->getData()[i][j] += m->getData()[i][j];
+			getData()[i][j] += m.getData()[i][j];
 		}
 	}
 }
+
 void Matrix::elementarySum(double num)
 {
-	for (int i = 0; i < this->getRows(); i++)
+	for (int i = 0; i < getRows(); i++)
 	{
-		for (int j = 0; j < this->getColumns(); j++)
+		for (int j = 0; j < getColumns(); j++)
 		{
-			this->getData()[i][j] += num;
+			getData()[i][j] += num;
 		}
 	}
 	return;
 }
 void Matrix::elementaryMult(double num)
 {
-	for (int i = 0; i < this->getRows(); i++)
+	for (int i = 0; i < getRows(); i++)
 	{
-		for (int j = 0; j < this->getColumns(); j++)
+		for (int j = 0; j < getColumns(); j++)
 		{
-			this->getData()[i][j] *= num;
+			getData()[i][j] *= num;
 		}
 	}
 	return;
 }
-void Matrix::matrixMult(Matrix* m)
+void Matrix::matrixMult(Matrix m)
 {
-}
-void Matrix::transpose(Matrix* m)
-{
-	Matrix* tmp = new Matrix(m->getColumns(),m->getRows());
+	if (getColumns() != m.getRows())
+		return;
+	Matrix tmp(getRows(), m.getColumns());
 
-	for (int i = 0; i < this->getRows(); i++)
+	for (int i = 0; i < tmp.getRows(); i++)
 	{
-		for (int j = 0; j < this->getColumns(); j++)
+		for (int j = 0; j < tmp.getColumns(); j++)
 		{
-			tmp->getData()[i][j] *= m->getData()[j][i];
+			tmp.getData()[i][j] = 0;
+			for (int k = 0; k < m.getRows(); k++)
+			{
+				tmp.getData()[i][j] += getData()[i][k] * m.getData()[k][j];
+			}
+			
 		}
 	}
-	this->setColumns(tmp->getColumns());
-	this->setRows(tmp->getRows());
-	this->setData(tmp->getData());
+	setColumns(tmp.getColumns());
+	setRows(tmp.getRows());
+	setData(tmp.getData());
 }
+void Matrix::transpose()
+{
+	Matrix tmp(getColumns(),getRows());
+
+	for (int i = 0; i < getRows(); i++)
+	{
+		for (int j = 0; j < getColumns(); j++)
+		{
+			tmp.getData()[j][i] = getData()[i][j];
+		}
+	}
+	setColumns(tmp.getColumns());
+	setRows(tmp.getRows());
+	setData(tmp.getData());
+}
+

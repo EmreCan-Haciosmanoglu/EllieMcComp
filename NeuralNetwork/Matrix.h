@@ -4,14 +4,14 @@ class Matrix
 public:
 	Matrix();
 	Matrix(int r, int c);
-	Matrix(Matrix& copy);
+	Matrix(const Matrix &copy);
 	~Matrix();
 
-	void sum(Matrix* m);
+	void sum(Matrix m);
 	void elementarySum(double num);
 	void elementaryMult(double num);
-	void matrixMult(Matrix* m);
-	void transpose(Matrix* m);
+	void matrixMult(Matrix m);
+	void transpose();
 
 	int getRows() { return rows; }
 	int getColumns() { return columns; }
@@ -20,6 +20,7 @@ public:
 	void setRows(int r) { rows = r; }
 	void setColumns(int c) { columns = c; }
 	void setData(double** d) { data = d; }
+
 private:
 	int rows;
 	int columns;
