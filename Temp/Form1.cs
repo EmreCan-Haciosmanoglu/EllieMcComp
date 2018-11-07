@@ -80,7 +80,7 @@ namespace Temp
 
         private bool MakeSureExistanceOf(string path,bool isFile)
         {
-            if (isFile && !(Directory.Exists(@"" + path)))
+            if (isFile && !(File.Exists(@"" + path)))
             {
                 FileStream fs = File.Create(@"" + path);
                 fs.Close();
@@ -418,7 +418,7 @@ namespace Temp
             try
             {
                 Process islem = Process.Start("" + browser + ".exe");
-                islem.WaitForInputIdle();
+                //islem.WaitForInputIdle();
                 IntPtr h = islem.MainWindowHandle;
                 SetForegroundWindow(h);
                 Thread.Sleep(3000);
@@ -426,6 +426,10 @@ namespace Temp
                 Thread.Sleep(200);
                 SendKeys.Send("{ENTER}");
                 return "Opening website is successful";
+            }
+            catch(Exception e)
+            {
+                return e.Message;
             }
             catch
             {
