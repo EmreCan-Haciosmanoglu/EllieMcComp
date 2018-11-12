@@ -3,7 +3,7 @@ class NeuralNetwork
 {
 public:
 	NeuralNetwork();
-	NeuralNetwork(int* neurons);
+	NeuralNetwork(int * neurons, int size);
 	NeuralNetwork(const NeuralNetwork& copy);
 	~NeuralNetwork();
 
