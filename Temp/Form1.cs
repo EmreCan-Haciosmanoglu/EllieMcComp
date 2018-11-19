@@ -324,7 +324,6 @@ namespace Temp
         }
 
         public string def = "";
-        private ContextMenu trayMenu;
 
         public string AddInfo(string word, string definition) // Check it
         {
@@ -430,10 +429,6 @@ namespace Temp
             catch(Exception e)
             {
                 return e.Message;
-            }
-            catch
-            {
-                return "System Error --- Encountered an error";
             }
         }
 
