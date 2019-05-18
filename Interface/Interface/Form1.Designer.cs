@@ -54,6 +54,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.pnlAddProject = new System.Windows.Forms.Panel();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.btnAddProjectShow = new System.Windows.Forms.Button();
             this.tbAddProjectProjectLocation = new System.Windows.Forms.TextBox();
             this.lblAddProjectProjectLocation = new System.Windows.Forms.Label();
@@ -348,6 +349,14 @@
             this.pnlAddProject.Size = new System.Drawing.Size(308, 306);
             this.pnlAddProject.TabIndex = 10;
             // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(639, 380);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(121, 21);
+            this.comboBox1.TabIndex = 9;
+            // 
             // btnAddProjectShow
             // 
             this.btnAddProjectShow.Location = new System.Drawing.Point(219, 67);
@@ -595,6 +604,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1264, 681);
+            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.pnlShowProjects);
@@ -677,5 +687,6 @@
         private System.Windows.Forms.Button btnShowProjectsRun;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }

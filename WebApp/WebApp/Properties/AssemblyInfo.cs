@@ -20,14 +20,14 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Bu proje COM'a açılmışsa aşağıdaki GUID typelib'in ID'si içindir
-[assembly: Guid("f348861b-5503-4afb-8584-6983b39fecef")]
+[assembly: Guid("12267e87-8765-41f4-9053-40ac5923ba32")]
 
 // Bir derlemenin sürüm bilgisi aşağıdaki dört değerden oluşur:
 //
-//      Ana Sürüm
-//      Alt Sürüm 
-//      Yapı Numarası
-//      Düzeltme
+//      Major Version
+//      Minor Version 
+//      Build Number
+//      Revision
 //
 // Tüm değerleri belirtebilirsiniz veya Düzeltme ve Yapı Numaralarına aşağıda 
 // gösterildiği gibi '*' ile varsayılan değer atayabilirsiniz:
