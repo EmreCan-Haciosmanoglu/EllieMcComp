@@ -10,15 +10,24 @@
 namespace WebApp {
     
     
-    public partial class SiteMaster {
+    public partial class AracSec {
         
         /// <summary>
-        /// MainContent denetimi.
+        /// Make denetimi.
         /// </summary>
         /// <remarks>
         /// Otomatik üretilmiş alan.
         /// Değiştirmek için, alan bildirimini tasarımcı dosyasından arka plan kod dosyasına taşıyın.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder MainContent;
+        protected global::System.Web.UI.WebControls.DropDownList Make;
+        
+        /// <summary>
+        /// Model denetimi.
+        /// </summary>
+        /// <remarks>
+        /// Otomatik üretilmiş alan.
+        /// Değiştirmek için, alan bildirimini tasarımcı dosyasından arka plan kod dosyasına taşıyın.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList Model;
     }
 }
