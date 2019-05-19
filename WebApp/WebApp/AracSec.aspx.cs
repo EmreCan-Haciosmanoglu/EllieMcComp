@@ -34,5 +34,15 @@ namespace WebApp
         {
 
         }
+
+        protected void Year_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void Trim_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
