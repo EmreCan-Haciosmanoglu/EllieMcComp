@@ -11,5 +11,14 @@ namespace WebApp {
     
     
     public partial class Envanter {
+        
+        /// <summary>
+        /// Output denetimi.
+        /// </summary>
+        /// <remarks>
+        /// Otomatik üretilmiş alan.
+        /// Değiştirmek için, alan bildirimini tasarımcı dosyasından arka plan kod dosyasına taşıyın.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Output;
     }
 }

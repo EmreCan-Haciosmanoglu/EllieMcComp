@@ -20,13 +20,13 @@ namespace WebApp
             if (id == "0")
             {
                 Model.Enabled = false;
-                Model.Items.Clear();
-                Model.Items.Add(new ListItem("Model Seçin", "0"));
+                //Model.Items.Clear();
+                //Model.Items.Add(new ListItem("Model Seçin", "0"));
             }
             else
             {
                 Model.Enabled = true;
-                Model.Items.Add(new ListItem("Tesla/Ford", "1"));
+                //Model.Items.Add(new ListItem("Tesla/Ford", "1"));
             }
         }
 
@@ -43,6 +43,15 @@ namespace WebApp
         protected void Trim_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        protected void Envanter_Click(object sender, EventArgs e)
+        {
+            Session["Model"] = Model.SelectedItem.Text;
+            Session["Make"] = Make.SelectedItem.Text;
+            Session["Year"] = Year.SelectedItem.Text;
+            Session["Trim"] = Trim.SelectedItem.Text;
+            Response.Redirect("Envanter.aspx");
         }
     }
 }
