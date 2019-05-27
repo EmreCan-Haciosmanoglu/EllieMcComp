@@ -36,5 +36,7 @@
         <asp:FileUpload ID="imageUpload" runat="server" AllowMultiple="true" />
         <br />
         <asp:Button ID="Btn_Upload" runat="server" Text="Upload" OnClick="Btn_Upload_Click"/>
+        <br />
+        <asp:Label ID="lb_error" runat="server" Text=""></asp:Label>
     </div>
 </asp:Content>

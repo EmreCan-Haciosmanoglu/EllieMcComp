@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Web.UI.HtmlControls;
 
 namespace WebApp
 {
@@ -11,24 +13,39 @@ namespace WebApp
         {
             if (Session["Model"] == null)
                 return;
+            List<HtmlGenericControl> items = new List<HtmlGenericControl>();
             SqlConnection cnn = new SqlConnection(ConfigurationManager.ConnectionStrings[0].ConnectionString);
-
-            string sorgu = "SELECT * from Envanter WHERE Model = '" + Session["Model"] + "' AND Make = '" + Session["Make"] + "' AND Year = '" + Session["Year"] + "' AND Trim = '" + Session["Trim"] + "'";
-            SqlCommand cmd = new SqlCommand(sorgu, cnn);
             cnn.Open();
 
+            string query = "SELECT ID FROM Types WHERE Model = '" + Session["Model"] + "' AND Make = '" + Session["Make"] + "' AND Year = '" + Session["Year"] + "' AND Trim = '" + Session["Trim"] + "'";
+            SqlCommand cmd = new SqlCommand(query, cnn);
+            int id = int.Parse(cmd.ExecuteScalar().ToString());
+
+            cmd.CommandText = "SELECT * FROM Items WHERE TypeID = " + id;
             SqlDataReader reader = cmd.ExecuteReader();
-            int IDCount = 0;
-            foreach(DbDataRecord d in reader)
+
+            while (reader.Read())
             {
-                Item i = new Item(d.GetString(0), d.GetInt32(1), d.GetString(2));
-                System.Web.UI.HtmlControls.HtmlGenericControl item = new System.Web.UI.HtmlControls.HtmlGenericControl();
-                item.ID = "item_" + IDCount;
-                item.Style.Value = "background-color:gray; height:100px; margin:40px; padding:10px;";
+                HtmlGenericControl item = new HtmlGenericControl("div");
+                item.ID = reader[0].ToString();
+                item.Style.Value = "margin:40px; padding:10px; border:2px; bordor-color:gray;";
                 item.Visible = true;
-                item.Attributes.Add("class", "itemclass_" + IDCount);
+                item.Attributes.Add("class", "itemclass_" + item.ID);
+                items.Add(item);
+            }
+            reader.Close();
+            foreach(HtmlGenericControl item in items)
+            {
+                cmd.CommandText = "SELECT * FROM Images WHERE ItemID = " + item.ID;
+                reader = cmd.ExecuteReader();
+                reader.Read();
+                byte[] byteData = (byte[])reader[1];
+
+                HtmlGenericControl image = new HtmlGenericControl("img");
+                image.Attributes.Add("src", "data:image;base64," + Convert.ToBase64String(byteData));
+
+                item.Controls.Add(image);
                 Spwn.Controls.Add(item);
-                IDCount++;
             }
             Spwn.Visible = true;
             cnn.Close();

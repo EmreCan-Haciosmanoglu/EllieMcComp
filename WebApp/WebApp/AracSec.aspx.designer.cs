@@ -22,15 +22,6 @@ namespace WebApp {
         protected global::System.Web.UI.WebControls.DropDownList Make;
         
         /// <summary>
-        /// Year denetimi.
-        /// </summary>
-        /// <remarks>
-        /// Otomatik üretilmiş alan.
-        /// Değiştirmek için, alan bildirimini tasarımcı dosyasından arka plan kod dosyasına taşıyın.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList Year;
-        
-        /// <summary>
         /// Model denetimi.
         /// </summary>
         /// <remarks>
@@ -38,6 +29,15 @@ namespace WebApp {
         /// Değiştirmek için, alan bildirimini tasarımcı dosyasından arka plan kod dosyasına taşıyın.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList Model;
+        
+        /// <summary>
+        /// Year denetimi.
+        /// </summary>
+        /// <remarks>
+        /// Otomatik üretilmiş alan.
+        /// Değiştirmek için, alan bildirimini tasarımcı dosyasından arka plan kod dosyasına taşıyın.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList Year;
         
         /// <summary>
         /// Trim denetimi.

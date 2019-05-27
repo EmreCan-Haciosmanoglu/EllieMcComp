@@ -21,15 +21,26 @@ namespace WebApp
         {
             SqlConnection cnn = new SqlConnection(ConfigurationManager.ConnectionStrings[0].ConnectionString);
             cnn.Open();
-
-            string qTypes = "INSERT INTO Types (Make, Model, Year, Trim) values ('" + tb_Make.Text + "', '" + tb_Model.Text + "', " + tb_Year.Text + ", '" + tb_Trim.Text + "')";
-            SqlCommand cmd = new SqlCommand(qTypes, cnn);
-            cmd.ExecuteNonQuery();
+            int qTypesID = 0;
 
             string qGetIDBack = "SELECT SCOPE_IDENTITY()";
-            cmd.CommandText = qGetIDBack;
+            string qCheck = "SELECT ID FROM Types WHERE Make='" + tb_Make.Text + "' AND Model='" + tb_Model.Text + "' AND Year=" + tb_Year.Text + "  AND Trim='" + tb_Trim.Text + "'";
+            SqlCommand cmd = new SqlCommand(qCheck, cnn);
+            object result = cmd.ExecuteScalar();
 
-            int qTypesID = int.Parse(cmd.ExecuteScalar().ToString());
+            if(result == null)
+            {
+                string qTypes = "INSERT INTO Types (Make, Model, Year, Trim) values ('" + tb_Make.Text + "', '" + tb_Model.Text + "', " + tb_Year.Text + ", '" + tb_Trim.Text + "')";
+                cmd.CommandText = qTypes;
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = qGetIDBack;
+                qTypesID = int.Parse(cmd.ExecuteScalar().ToString());
+            }
+            else
+            {
+                qTypesID = int.Parse(result.ToString());
+            }
 
             string qItems = "INSERT INTO Items ( TypeID, Title, Price, Description) values ( " + qTypesID + ", '" + tb_Title.Text + "', " + tb_Price.Text + ", '" + tb_Description.Text + "')";
             cmd.CommandText = qItems;
