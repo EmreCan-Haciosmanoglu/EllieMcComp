@@ -19,6 +19,8 @@ namespace WebApp
 
         protected void Btn_Upload_Click(object sender, EventArgs e)
         {
+            if (password.Text != "Code")
+                return;
             SqlConnection cnn = new SqlConnection(ConfigurationManager.ConnectionStrings[0].ConnectionString);
             cnn.Open();
             int qTypesID = 0;

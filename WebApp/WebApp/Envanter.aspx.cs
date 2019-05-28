@@ -11,6 +11,10 @@ namespace WebApp
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if(!IsPostBack)
+            {
+                Spwn.Controls.Clear();
+            }
             if (Session["Model"] == null)
                 return;
             List<HtmlGenericControl> items = new List<HtmlGenericControl>();
