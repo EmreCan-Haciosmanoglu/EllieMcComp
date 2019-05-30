@@ -29,6 +29,68 @@
 }
 
     .Envater .Button_Envanter {
-        height:inherit;
-        width:inherit;
+        height: inherit;
+        width: inherit;
     }
+
+.Item_Envanter {
+    border-width: 2px;
+    border-style: double;
+    border-color: #bbbbbb;
+    background-color: #cccccc;
+    width: 500px;
+    height: 500px;
+}
+
+    .Item_Envanter .ImageContainer_Div {
+        margin-left: 25px;
+        margin-top: 25px;
+        width: 450px;
+        height: 400px;
+    }
+
+        .Item_Envanter .ImageContainer_Div .Item_Image {
+            width: inherit;
+            height: inherit;
+        }
+
+    .Item_Envanter .Buttom_Div {
+    }
+
+        .Item_Envanter .Buttom_Div .LinkContainer_Div {
+            margin-left: 25px;
+            margin-top: 25px;
+            width: 350px;
+            height: 25px;
+            overflow: hidden;
+            float: left;
+        }
+
+            .Item_Envanter .Buttom_Div .LinkContainer_Div:hover .ToolTipLink {
+                visibility: visible;
+            }
+
+            .Item_Envanter .Buttom_Div .LinkContainer_Div .ToolTipLink {
+                visibility: hidden;
+                width: auto;
+                background-color: #c28989;
+                color: #fff;
+                text-align: center;
+                border-radius: 6px;
+                padding: 5px 0;
+                /* Position the tooltip */
+                position: absolute;
+                z-index: 1;
+            }
+
+        .Item_Envanter .Buttom_Div .ButtonContainer_Div {
+            margin: 25px;
+            height: 25px;
+            float: right;
+        }
+
+            .Item_Envanter .Buttom_Div .ButtonContainer_Div .Button_Ekle {
+                width: auto;
+                height: auto;
+                border-radius: 10px 10px;
+            }

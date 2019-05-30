@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Web.UI;
 using System.Web.UI.HtmlControls;
 
 namespace WebApp
@@ -11,12 +12,15 @@ namespace WebApp
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if(!IsPostBack)
+            if (!IsPostBack)
             {
                 Spwn.Controls.Clear();
             }
             if (Session["Model"] == null)
+            {
+                Response.Redirect("AracSec.aspx");
                 return;
+            }
             List<HtmlGenericControl> items = new List<HtmlGenericControl>();
             SqlConnection cnn = new SqlConnection(ConfigurationManager.ConnectionStrings[0].ConnectionString);
             cnn.Open();
@@ -31,14 +35,48 @@ namespace WebApp
             while (reader.Read())
             {
                 HtmlGenericControl item = new HtmlGenericControl("div");
-                item.ID = reader[0].ToString();
-                item.Style.Value = "margin:40px; padding:10px; border:2px; bordor-color:gray;";
-                item.Visible = true;
-                item.Attributes.Add("class", "itemclass_" + item.ID);
-                items.Add(item);
+                item.Attributes.Add("class", "Item_Envanter");
+
+                HtmlGenericControl imageContainer = new HtmlGenericControl("div");
+                imageContainer.Attributes.Add("class", "ImageContainer_Div");
+                imageContainer.ID = reader[0].ToString();
+                imageContainer.Visible = true;
+                item.Controls.Add(imageContainer);
+                items.Add(imageContainer);
+                Spwn.Controls.Add(item);
+
+                HtmlGenericControl buttom = new HtmlGenericControl("div");
+                buttom.Attributes.Add("class", "Buttom_Div");
+
+                HtmlGenericControl link = new HtmlGenericControl("a");
+                link.Attributes.Add("href", "Detail.aspx");
+                link.Attributes.Add("class", "Link_A");
+                link.InnerText = reader[2].ToString();
+
+                HtmlGenericControl linkHover = new HtmlGenericControl("span");
+                linkHover.Attributes.Add("class", "ToolTipLink");
+                linkHover.InnerText = reader[2].ToString();
+
+                HtmlGenericControl linkContainer = new HtmlGenericControl("div");
+                linkContainer.Attributes.Add("class", "LinkContainer_Div");
+                linkContainer.Controls.Add(link);
+                linkContainer.Controls.Add(linkHover);
+                buttom.Controls.Add(linkContainer);
+
+                HtmlButton btn = new HtmlButton();
+                btn.Attributes.Add("class", "Button_Ekle");
+                btn.InnerText = "Ekle";
+                btn.ServerClick += Btn_ServerClick;
+
+                HtmlGenericControl buttonContainer = new HtmlGenericControl("div");
+                buttonContainer.Attributes.Add("class", "ButtonContainer_Div");
+                buttonContainer.Controls.Add(btn);
+                buttom.Controls.Add(buttonContainer);
+
+                item.Controls.Add(buttom);
             }
             reader.Close();
-            foreach(HtmlGenericControl item in items)
+            foreach (HtmlGenericControl item in items)
             {
                 cmd.CommandText = "SELECT * FROM Images WHERE ItemID = " + item.ID;
                 reader = cmd.ExecuteReader();
@@ -47,12 +85,16 @@ namespace WebApp
 
                 HtmlGenericControl image = new HtmlGenericControl("img");
                 image.Attributes.Add("src", "data:image;base64," + Convert.ToBase64String(byteData));
-
+                image.Attributes.Add("class", "Item_Image");
                 item.Controls.Add(image);
-                Spwn.Controls.Add(item);
             }
             Spwn.Visible = true;
             cnn.Close();
+        }
+
+        private void Btn_ServerClick(object sender, EventArgs e)
+        {
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Hi')", true);
         }
     }
 }
