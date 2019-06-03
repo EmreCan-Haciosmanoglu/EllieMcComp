@@ -49,7 +49,7 @@ namespace WebApp
                 buttom.Attributes.Add("class", "Buttom_Div");
 
                 HtmlGenericControl link = new HtmlGenericControl("a");
-                link.Attributes.Add("href", "Detail.aspx");
+                link.Attributes.Add("href", "Detail.aspx?id=" + imageContainer.ID);
                 link.Attributes.Add("class", "Link_A");
                 link.InnerText = reader[2].ToString();
 

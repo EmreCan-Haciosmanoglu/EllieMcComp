@@ -10,7 +10,7 @@
                     <asp:ImageButton class="Left_Image" runat="server" />
                 </div>
                 <div class="Image_Div">
-                    <asp:Image class="Image" runat="server" />
+                    <asp:Image class="Image" ID="Image_ID" runat="server" />
                 </div>
                 <div class="Right">
                     <asp:ImageButton class="Right_Image" runat="server" />
@@ -21,14 +21,14 @@
             </div>
         </div>
         <div class="Details">
-            <div class="Title">
+            <div class="Title" runat="server" id="Title_ID">
 
             </div>
-            <div class="Description">
+            <div class="Description" runat="server" id="Desc_ID">
 
             </div>
             <div class="Buy">
-                <div class="Price">
+                <div class="Price" runat="server" id="Price_ID">
 
                 </div>
                 <div class="Button">
