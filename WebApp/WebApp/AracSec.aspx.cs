@@ -158,23 +158,6 @@ namespace WebApp
 
         protected void Trim_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Model.Enabled = true;
-            SqlConnection cnn = new SqlConnection(ConfigurationManager.ConnectionStrings[0].ConnectionString);
-            cnn.Open();
-            SqlCommand cmd = new SqlCommand("SELECT Make FROM Types", cnn);
-            SqlDataReader reader = cmd.ExecuteReader();
-            List<string> models = new List<string>();
-            int index = 1;
-            while (reader.Read())
-            {
-                if (!models.Contains(reader[0].ToString()))
-                {
-                    Make.Items.Add(new ListItem(reader[0].ToString(), "" + index));
-                    index++;
-                    models.Add(reader[0].ToString());
-                }
-            }
-            cnn.Close();
         }
 
         protected void Envanter_Click(object sender, EventArgs e)

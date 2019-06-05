@@ -34,10 +34,11 @@
     }
 
 .Item_Envanter {
+    margin: 15px;
     border-width: 2px;
     border-style: double;
-    border-color: #bbbbbb;
-    background-color: #cccccc;
+    border-color: #c4c4c4;
+    background-color: #ddedde;
     width: 500px;
     height: 500px;
 }
