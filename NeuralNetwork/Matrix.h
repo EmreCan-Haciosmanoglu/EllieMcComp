@@ -10,11 +10,12 @@ public:
 	void sum(Matrix m);
 	void elementarySum(double num);
 	void elementaryMult(double num);
+
 	void matrixMult(Matrix m);
 	void transpose();
 
-	int getRows() { return rows; }
-	int getColumns() { return columns; }
+	inline int getRows() const { return rows; }
+	inline int getColumns() const { return columns; }
 	double** getData() { return data; }
 
 	void setRows(int r) { rows = r; }

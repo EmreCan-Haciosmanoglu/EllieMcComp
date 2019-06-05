@@ -105,6 +105,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="aa.xml" />
     <Content Include="About.aspx" />
     <Content Include="AdminPanel.aspx" />
     <Content Include="AracSec.aspx" />

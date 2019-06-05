@@ -4,24 +4,24 @@ Matrix::Matrix()
 	:rows(-1)
 	, columns(-1)
 {
-
+	data = new double* [0];
 }
 Matrix::Matrix(int r, int c)
-	:rows(r)
+	: rows(r)
 	, columns(c)
 {
-	data = new double*[rows];
+	data = new double* [rows];
 	for (int i = 0; i < rows; ++i)
 		data[i] = new double[columns];
 	for (int i = 0; i < rows; ++i)
 		for (int j = 0; j < columns; ++j)
 			data[i][j] = 0.0;
 }
-Matrix::Matrix(const Matrix& copy)
+Matrix::Matrix(const Matrix & copy)
 {
 	columns = copy.columns;
 	rows = copy.rows;
-	data = new double*[rows];
+	data = new double* [rows];
 	for (int i = 0; i < rows; ++i)
 		data[i] = new double[columns];
 	for (int i = 0; i < rows; ++i)
@@ -82,7 +82,7 @@ void Matrix::matrixMult(Matrix m)
 			{
 				tmp.getData()[i][j] += getData()[i][k] * m.getData()[k][j];
 			}
-			
+
 		}
 	}
 	setColumns(tmp.getColumns());
@@ -91,7 +91,7 @@ void Matrix::matrixMult(Matrix m)
 }
 void Matrix::transpose()
 {
-	Matrix tmp(getColumns(),getRows());
+	Matrix tmp(getColumns(), getRows());
 
 	for (int i = 0; i < getRows(); i++)
 	{
@@ -104,4 +104,3 @@ void Matrix::transpose()
 	setRows(tmp.getRows());
 	setData(tmp.getData());
 }
-
