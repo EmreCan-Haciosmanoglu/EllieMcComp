@@ -2,25 +2,32 @@
 }
 
 .Detail_Div {
-    width: 90%;
-    height: 600px;
+    width: 1200px;
+    height: 700px;
     margin: auto;
     margin-top: 50px;
-    background-color: #e6e5e5;
+    background-color: #f0f0f0;
+    border-radius: 20px 20px;
 }
 
     .Detail_Div .Images {
+        margin-top: 25px;
+        margin-left: 50px;
         float: left;
-        width: 75%;
-        height: 100%;
+        width: 700px;
+        height: 650px;
     }
 
         .Detail_Div .Images .MainImage {
-            height: 85%;
+            width: 700px;
+            height: 500px;
+            padding: 5px;
+            background-color: #e0e0e0;
+            border-radius: 20px 20px;
         }
 
             .Detail_Div .Images .MainImage .Left {
-                width: 5%;
+                width: 40px;
                 height: 100%;
                 float: left;
             }
@@ -33,7 +40,7 @@
                 }
 
             .Detail_Div .Images .MainImage .Image_Div {
-                width: 80%;
+                width: 550px;
                 height: 100%;
                 margin-left: 5%;
                 float: left;
@@ -43,7 +50,7 @@
                 }
 
             .Detail_Div .Images .MainImage .Right {
-                width: 5%;
+                width: 40px;
                 height: 100%;
                 float: right;
             }
@@ -56,28 +63,47 @@
                 }
 
         .Detail_Div .Images .ImagePrevs {
-            margin-top: 5%;
-            height: 10%;
+            margin-top: 25px;
+            width: 700px;
+            height: 110px;
+            background-color: #e0e0e0;
+            border-radius: 10px 10px;
         }
 
+            .Detail_Div .Images .ImagePrevs .SmallImage {
+                margin: 5px;
+                float: left;
+            }
+
     .Detail_Div .Details {
+        margin-top: 25px;
+        margin-right: 25px;
         float: right;
-        width: 20%;
-        height: 100%;
+        width: 375px;
+        height: 550px;
     }
 
         .Detail_Div .Details .Title {
             width: 100%;
-            height: 15%;
+            height: 80px;
         }
 
         .Detail_Div .Details .Description {
             width: 100%;
             margin-top: 5%;
-            height: 25%;
+            height: 200px;
         }
 
         .Detail_Div .Details .Buy {
             width: 100%;
-            margin-top: 30%;
+            margin-top: 50%;
         }
+
+            .Detail_Div .Details .Buy .Price {
+                margin-left: 35px;
+            }
+
+            .Detail_Div .Details .Buy .Button {
+                float: right;
+                margin-right: 35px;
+            }

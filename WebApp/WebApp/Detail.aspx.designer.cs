@@ -22,6 +22,15 @@ namespace WebApp {
         protected global::System.Web.UI.WebControls.Image Image_ID;
         
         /// <summary>
+        /// ImagePrevs_ID denetimi.
+        /// </summary>
+        /// <remarks>
+        /// Otomatik üretilmiş alan.
+        /// Değiştirmek için, alan bildirimini tasarımcı dosyasından arka plan kod dosyasına taşıyın.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl ImagePrevs_ID;
+        
+        /// <summary>
         /// Title_ID denetimi.
         /// </summary>
         /// <remarks>

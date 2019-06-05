@@ -9,11 +9,13 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using Image = System.Web.UI.WebControls.Image;
 
 namespace WebApp
 {
     public partial class Detail : System.Web.UI.Page
     {
+        List<Bitmap> bms = new List<Bitmap>();
         List<byte[]> images = new List<byte[]>();
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -35,12 +37,24 @@ namespace WebApp
             TypeConverter tc = TypeDescriptor.GetConverter(typeof(Bitmap));
             while (reader.Read())
             {
+                bms.Add((Bitmap)tc.ConvertFrom((byte[])reader[1]));
                 images.Add((byte[])reader[1]);
+
+                Image smallImage = new Image();
+                smallImage.Width = 100;
+                smallImage.Height = 100;
+                smallImage.ImageAlign = ImageAlign.AbsMiddle;
+                smallImage.Attributes.Add("class", "SmallImage");
+                smallImage.Attributes.Add("src", "data:image;base64," + Convert.ToBase64String((byte[])reader[1]));
+                ImagePrevs_ID.Controls.Add(smallImage);
             }
             reader.Close();
 
-            HtmlGenericControl image = new HtmlGenericControl("img");
             Image_ID.Attributes.Add("src", "data:image;base64," + Convert.ToBase64String(images[0]));
+            if (bms[0].Width > bms[0].Height)
+                Image_ID.Attributes.Add("style", "width:inherit");
+            else
+                Image_ID.Attributes.Add("style", "height:inherit");
 
             cmd.CommandText = "SELECT * FROM Items WHERE ID = " + id;
             reader = cmd.ExecuteReader();

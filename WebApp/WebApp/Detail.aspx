@@ -16,7 +16,7 @@
                     <asp:ImageButton class="Right_Image" runat="server" />
                 </div>
             </div>
-            <div class="ImagePrevs">
+            <div runat="server" class="ImagePrevs" id="ImagePrevs_ID">
 
             </div>
         </div>
@@ -32,7 +32,7 @@
 
                 </div>
                 <div class="Button">
-
+                    <asp:Button runat="server" style="width:150px;height:40px;" Text="Buy"/>
                 </div>
             </div>
         </div>
