@@ -1,38 +1,21 @@
 #include "NeuralNetwork.h"
 
-
-
 NeuralNetwork::NeuralNetwork()
+	: inputLayer(nullptr)
+	, hiddenLayer(new float*[0])
+	, outputLayer(nullptr)
 {
 }
 
-NeuralNetwork::NeuralNetwork(int * neurons, int size)
+NeuralNetwork::NeuralNetwork(int input, int* hidden, int width, int output)
+	: inputLayer(new float[input])
+	, hiddenLayer(new float* [width])
+	, outputLayer(new float[output])
 {
-	weights = new double**[size - 1];
-
-	for (int i = 0; i < size; i++)
-		weights[i] = new double*[neurons[i + 1]];
-
-	for (int i = 0; i < size; i++)
-		for (int j = 0; j < neurons[i + 1]; j++)
-			weights[i][j] = new double[neurons[i]];
-
-	for (int i = 0; i < size; i++)
-		for (int j = 0; j < neurons[i + 1]; j++)
-			for (int k = 0; k < neurons[i]; k++)
-				weights[i][j][k] = 0.0;
+	for (int i = 0; i < width; i++)
+		hiddenLayer[i] = new float[hidden[i]];
 }
-
-NeuralNetwork::NeuralNetwork(const NeuralNetwork & copy)
-{
-}
-
 
 NeuralNetwork::~NeuralNetwork()
 {
-}
-
-int * NeuralNetwork::guess(int * input)
-{
-	return nullptr;
 }

@@ -3,12 +3,13 @@ class NeuralNetwork
 {
 public:
 	NeuralNetwork();
-	NeuralNetwork(int * neurons, int size);
-	NeuralNetwork(const NeuralNetwork& copy);
+	NeuralNetwork(int, int*, int, int);
+
 	~NeuralNetwork();
 
-	int* guess( int* input);
 private:
-	double***  weights;
+	float* inputLayer;
+	float** hiddenLayer;
+	float* outputLayer;
 };
 
