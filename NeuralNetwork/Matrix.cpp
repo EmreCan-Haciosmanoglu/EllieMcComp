@@ -18,27 +18,23 @@ Matrix::Matrix(int r, int c)
 Matrix::~Matrix()
 {
 }
-void Matrix::matrixMult(Matrix m)
+Matrix* Matrix::MatrixMultiplication(Matrix& other)
 {
-	if (getColumns() != m.getRows())
+	int otr = other.getRows();
+	if (getColumns() != otr)
 		return;
-	Matrix tmp(getRows(), m.getColumns());
-
-	for (int i = 0; i < tmp.getRows(); i++)
-	{
-		for (int j = 0; j < tmp.getColumns(); j++)
+	Matrix *tmp = new Matrix(getRows(), other.getColumns());
+	float* d = tmp->getData();
+	int tc = tmp->getColumns();
+	int tr = tmp->getRows();
+	for (int j = 0; j < tr; j++)
+		for (int i = 0; i < tc; i++)
 		{
-			tmp.getData()[i][j] = 0;
-			for (int k = 0; k < m.getRows(); k++)
-			{
-				tmp.getData()[i][j] += getData()[i][k] * m.getData()[k][j];
-			}
-
+			d[j * tc + i] = 0;
+			for (int k = 0; k < otr; k++)
+				d[j * tc + i] += this->getData()[j * otr + k] * other.getData()[k * tc + i];
 		}
-	}
-	setColumns(tmp.getColumns());
-	setRows(tmp.getRows());
-	setData(tmp.getData());
+	return tmp;
 }
 
 void Matrix::transpose()
@@ -65,12 +61,11 @@ Matrix& Matrix::operator+(float x)
 
 	return *this;
 }
-
-Matrix& Matrix::operator+(const Matrix& other)
+Matrix& Matrix::operator+(Matrix& other)
 {
 	for (int j = 0; j < rows; j++)
 		for (int i = 0; i < columns; i++)
-			data[j * columns + i] += other[j * columns + i];
+			data[j * columns + i] += other.getData()[j * columns + i];
 
 	return *this;
 }
@@ -83,12 +78,28 @@ Matrix & Matrix::operator-(float x)
 
 	return *this;
 }
+Matrix& Matrix::operator-(Matrix& other)
+{
+	for (int j = 0; j < rows; j++)
+		for (int i = 0; i < columns; i++)
+			data[j * columns + i] -= other.getData()[j * columns + i];
+
+	return *this;
+}
 
 Matrix & Matrix::operator*(float x)
 {
 	for (int j = 0; j < rows; j++)
 		for (int i = 0; i < columns; i++)
 			data[j * columns + i] *= x;
+
+	return *this;
+}
+Matrix& Matrix::operator*(Matrix& other)
+{
+	for (int j = 0; j < rows; j++)
+		for (int i = 0; i < columns; i++)
+			data[j * columns + i] *= other.getData()[j * columns + i];
 
 	return *this;
 }
@@ -101,39 +112,11 @@ Matrix & Matrix::operator/(float x)
 
 	return *this;
 }
-
-Matrix& Matrix::operator+=(float x)
+Matrix& Matrix::operator/(Matrix& other)
 {
 	for (int j = 0; j < rows; j++)
 		for (int i = 0; i < columns; i++)
-			data[j * columns + i] += x;
-
-	return *this;
-}
-
-Matrix & Matrix::operator-=(float x)
-{
-	for (int j = 0; j < rows; j++)
-		for (int i = 0; i < columns; i++)
-			data[j * columns + i] -= x;
-
-	return *this;
-}
-
-Matrix & Matrix::operator*=(float x)
-{
-	for (int j = 0; j < rows; j++)
-		for (int i = 0; i < columns; i++)
-			data[j * columns + i] *= x;
-
-	return *this;
-}
-
-Matrix & Matrix::operator/=(float x)
-{
-	for (int j = 0; j < rows; j++)
-		for (int i = 0; i < columns; i++)
-			data[j * columns + i] /= x;
+			data[j * columns + i] /= other.getData()[j * columns + i];
 
 	return *this;
 }
