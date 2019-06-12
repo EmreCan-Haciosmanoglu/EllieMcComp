@@ -1,5 +1,7 @@
 #include "Matrix.h"
 
+#include <ostream>
+
 Matrix::Matrix()
 	:rows(-1)
 	, columns(-1)
@@ -10,20 +12,23 @@ Matrix::Matrix(int r, int c)
 	: rows(r)
 	, columns(c)
 {
-	data = new float[rows * columns];
-	for (int i = 0; i < rows; ++i)
+	int w = r * c;
+	data = new float[w];
+	for (int i = 0; i < rows * columns; i++)
 		data[i] = 0.0f;
 }
 
 Matrix::~Matrix()
 {
+	delete[] data;
 }
-Matrix* Matrix::MatrixMultiplication(Matrix& other)
+
+Matrix* Matrix::MatrixMultiplication(Matrix & other)
 {
 	int otr = other.getRows();
 	if (getColumns() != otr)
-		return;
-	Matrix *tmp = new Matrix(getRows(), other.getColumns());
+		return nullptr;
+	Matrix * tmp = new Matrix(getRows(), other.getColumns());
 	float* d = tmp->getData();
 	int tc = tmp->getColumns();
 	int tr = tmp->getRows();
@@ -36,24 +41,23 @@ Matrix* Matrix::MatrixMultiplication(Matrix& other)
 		}
 	return tmp;
 }
-
-void Matrix::transpose()
+Matrix& Matrix::Transpose()
 {
-	Matrix tmp(getColumns(), getRows());
+	float* temp = new float[rows * columns];
 
-	for (int i = 0; i < getRows(); i++)
-	{
-		for (int j = 0; j < getColumns(); j++)
-		{
-			tmp.getData()[j][i] = getData()[i][j];
-		}
-	}
-	setColumns(tmp.getColumns());
-	setRows(tmp.getRows());
-	setData(tmp.getData());
+	for (int j = 0; j < rows; j++)
+		for (int i = 0; i < columns; i++)
+			temp[i * rows + j] = data[j * columns + i];
+
+	int c = columns;
+	setColumns(rows);
+	setRows(c);
+	setData(temp);
+
+	return *this;
 }
 
-Matrix& Matrix::operator+(float x)
+Matrix & Matrix::operator+(float x)
 {
 	for (int j = 0; j < rows; j++)
 		for (int i = 0; i < columns; i++)
@@ -61,7 +65,7 @@ Matrix& Matrix::operator+(float x)
 
 	return *this;
 }
-Matrix& Matrix::operator+(Matrix& other)
+Matrix & Matrix::operator+(Matrix & other)
 {
 	for (int j = 0; j < rows; j++)
 		for (int i = 0; i < columns; i++)
@@ -78,7 +82,7 @@ Matrix & Matrix::operator-(float x)
 
 	return *this;
 }
-Matrix& Matrix::operator-(Matrix& other)
+Matrix & Matrix::operator-(Matrix & other)
 {
 	for (int j = 0; j < rows; j++)
 		for (int i = 0; i < columns; i++)
@@ -95,7 +99,7 @@ Matrix & Matrix::operator*(float x)
 
 	return *this;
 }
-Matrix& Matrix::operator*(Matrix& other)
+Matrix & Matrix::operator*(Matrix & other)
 {
 	for (int j = 0; j < rows; j++)
 		for (int i = 0; i < columns; i++)
@@ -112,11 +116,36 @@ Matrix & Matrix::operator/(float x)
 
 	return *this;
 }
-Matrix& Matrix::operator/(Matrix& other)
+Matrix & Matrix::operator/(Matrix & other)
 {
 	for (int j = 0; j < rows; j++)
 		for (int i = 0; i < columns; i++)
 			data[j * columns + i] /= other.getData()[j * columns + i];
 
 	return *this;
+}
+
+
+
+std::ostream & operator<<(std::ostream & stream, Matrix & matrix)
+{
+	int rows = matrix.getRows();
+	int cols = matrix.getColumns();
+	float* data = matrix.getData();
+
+	stream << "Matrix: " << rows << " - " << cols << "\n[ ";
+
+	for (int j = 0; j < rows - 1; j++)
+	{
+		stream << data[j * cols];
+		for (int i = 1; i < cols; i++)
+		{
+			stream << ", " << data[j * cols + i];
+		}
+		stream << std::endl;
+	}
+	stream << ", " << data[rows * cols - 1] << "]\n";
+
+
+	return stream;
 }
