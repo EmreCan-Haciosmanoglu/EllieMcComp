@@ -9,9 +9,19 @@ public:
 
 	~NeuralNetwork();
 
+	Matrix* FeedForward(Matrix& input) const;
+	//float Sigmoid(float x);
 private:
-	float* inputLayer;
-	float** hiddenLayer;
-	float* outputLayer;
+	int inputCount;
+	int* hiddenCount;
+	int hiddenLength;
+	int outputCount;
+
+	Matrix* weights_ih;
+	Matrix** weights_hh;
+	Matrix* weights_ho;
+
+	Matrix** bias_h;
+	Matrix* bias_o;
 };
 
