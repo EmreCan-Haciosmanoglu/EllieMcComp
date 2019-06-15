@@ -2,7 +2,7 @@
 
 #include <ostream>
 #include <iostream>
-#include <time.h>
+
 Matrix::Matrix()
 	:rows(-1)
 	, columns(-1)
@@ -13,7 +13,6 @@ Matrix::Matrix(int r, int c)
 	: rows(r)
 	, columns(c)
 {
-	srand(time(NULL));
 	int w = r * c;
 	data = new float[w];
 	for (int i = 0; i < w; i++)

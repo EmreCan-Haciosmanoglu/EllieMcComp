@@ -1,10 +1,12 @@
 #include <iostream>
 
+#include <time.h>
 #include "NeuralNetwork.h"
 
 
 int main()
 {
+	srand(time(NULL));
 	int hidden[1] = { 2 };
 	NeuralNetwork *nn = new NeuralNetwork(2, hidden, 1, 1);
 

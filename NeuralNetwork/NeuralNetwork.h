@@ -10,7 +10,7 @@ public:
 	~NeuralNetwork();
 
 	Matrix* FeedForward(Matrix& input) const;
-	//float Sigmoid(float x);
+	void Train( Matrix* inputs,  Matrix* targets);
 private:
 	int inputCount;
 	int* hiddenCount;
@@ -23,5 +23,7 @@ private:
 
 	Matrix** bias_h;
 	Matrix* bias_o;
+
+	float learning_rate;
 };
 
