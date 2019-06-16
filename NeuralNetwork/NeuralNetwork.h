@@ -4,25 +4,20 @@
 class NeuralNetwork
 {
 public:
-	NeuralNetwork();
-	NeuralNetwork(int, int*, int, int);
+	NeuralNetwork(int* nodes, int length, float lr);
 
 	~NeuralNetwork();
 
 	Matrix* FeedForward(Matrix& input) const;
-	void Train( Matrix* inputs,  Matrix* targets);
+	void Train(Matrix* inputs, Matrix* targets);
+
 private:
-	int inputCount;
-	int* hiddenCount;
-	int hiddenLength;
-	int outputCount;
+	int* Nodes;
+	int Length;
 
-	Matrix* weights_ih;
-	Matrix** weights_hh;
-	Matrix* weights_ho;
-
-	Matrix** bias_h;
-	Matrix* bias_o;
+	Matrix** weights;
+	Matrix** biases;
+	Matrix** layerOutputs;
 
 	float learning_rate;
 };

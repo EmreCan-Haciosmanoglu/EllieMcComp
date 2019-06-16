@@ -13,8 +13,9 @@ public:
 
 	inline Matrix& Multiply(float x) { return (*this * x); }
 	inline Matrix& Add(float x) { return *this + x; }
-
-	Matrix* MatrixMultiplication(Matrix& other);
+	Matrix& Randomize(float min, float max);
+	static Matrix* MatrixMultiplication(const Matrix& left, const Matrix& right);
+	static Matrix* MatrixMultiplication(Matrix* left, Matrix* right);
 	Matrix& Transpose();
 
 	Matrix& operator+(float x);
@@ -44,7 +45,6 @@ public:
 public:
 	inline int GetRows() const { return rows; }
 	inline int GetColumns() const { return columns; }
-	inline float* GetData() { return data; }
 
 	inline void SetRows(int r) { rows = r; }
 	inline void SetColumns(int c) { columns = c; }
@@ -53,5 +53,6 @@ public:
 private:
 	int rows;
 	int columns;
+public:
 	float* data;
 };

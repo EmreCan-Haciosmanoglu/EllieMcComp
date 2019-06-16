@@ -16,7 +16,7 @@ Matrix::Matrix(int r, int c)
 	int w = r * c;
 	data = new float[w];
 	for (int i = 0; i < w; i++)
-		data[i] = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * 2 - 1;
+		data[i] = 0.0f;
 }
 Matrix::Matrix(int r, int c, float *d)
 	: rows(r)
@@ -30,21 +30,44 @@ Matrix::~Matrix()
 	delete[] data;
 }
 
-Matrix* Matrix::MatrixMultiplication(Matrix & other)
+Matrix& Matrix::Randomize(float min, float max)
 {
-	int otr = other.GetRows();
-	if (GetColumns() != otr)
-		return nullptr;
-	Matrix * tmp = new Matrix(GetRows(), other.GetColumns());
-	float* d = tmp->GetData();
+	for (int i = 0; i < columns * rows; i++)
+		data[i] = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * (max - min) + min;
+}
+
+Matrix* Matrix::MatrixMultiplication(const Matrix& left, const Matrix& right)
+{
+
+	Matrix* tmp = new Matrix(left.GetRows(), right.GetColumns());
+	float* d = tmp->data;
 	int tc = tmp->GetColumns();
 	int tr = tmp->GetRows();
+	int rr = right.GetRows();
 	for (int j = 0; j < tr; j++)
 		for (int i = 0; i < tc; i++)
 		{
 			d[j * tc + i] = 0;
-			for (int k = 0; k < otr; k++)
-				d[j * tc + i] += this->GetData()[j * otr + k] * other.GetData()[k * tc + i];
+			for (int k = 0; k < rr; k++)
+				d[j * tc + i] += left.data[j * rr + k] * right.data[k * tc + i];
+		}
+	return tmp;
+}
+
+Matrix* Matrix::MatrixMultiplication(Matrix* left, Matrix* right)
+{
+
+	Matrix* tmp = new Matrix(left->GetRows(), right->GetColumns());
+	float* d = tmp->data;
+	int tc = tmp->GetColumns();
+	int tr = tmp->GetRows();
+	int rr = right->GetRows();
+	for (int j = 0; j < tr; j++)
+		for (int i = 0; i < tc; i++)
+		{
+			d[j * tc + i] = 0;
+			for (int k = 0; k < rr; k++)
+				d[j * tc + i] += left->data[j * rr + k] * right->data[k * tc + i];
 		}
 	return tmp;
 }
@@ -67,68 +90,67 @@ Matrix& Matrix::Transpose()
 
 Matrix & Matrix::operator+(float x)
 {
-	for (int j = 0; j < rows; j++)
-		for (int i = 0; i < columns; i++)
-			data[j * columns + i] += x;
-
+	int w = rows * columns;
+	for (int i = 0; i < w; i++)
+		data[i] += x;
 	return *this;
 }
-Matrix & Matrix::operator+(Matrix & other)
+Matrix& Matrix::operator+(Matrix& other)
 {
-	for (int j = 0; j < rows; j++)
-		for (int i = 0; i < columns; i++)
-			data[j * columns + i] += other.GetData()[j * columns + i];
+	int w = rows * columns;
+	for (int i = 0; i < w; i++)
+		data[i] += other.data[i];
 
 	return *this;
 }
 
 Matrix & Matrix::operator-(float x)
 {
-	for (int j = 0; j < rows; j++)
-		for (int i = 0; i < columns; i++)
-			data[j * columns + i] -= x;
+	int w = rows * columns;
+	for (int i = 0; i < w; i++)
+		data[i] -= x;
 
 	return *this;
 }
 Matrix & Matrix::operator-(Matrix & other)
 {
-	for (int j = 0; j < rows; j++)
-		for (int i = 0; i < columns; i++)
-			data[j * columns + i] -= other.GetData()[j * columns + i];
+	int w = rows * columns;
+	for (int i = 0; i < w; i++)
+		data[i] -= other.data[i];
 
 	return *this;
 }
 
 Matrix & Matrix::operator*(float x)
 {
-	for (int j = 0; j < rows; j++)
-		for (int i = 0; i < columns; i++)
-			data[j * columns + i] *= x;
+	int w = rows * columns;
+	for (int i = 0; i < w; i++)
+		data[i] *= x;
 
 	return *this;
 }
 Matrix & Matrix::operator*(Matrix & other)
 {
-	for (int j = 0; j < rows; j++)
-		for (int i = 0; i < columns; i++)
-			data[j * columns + i] *= other.GetData()[j * columns + i];
+	int w = rows * columns;
+	for (int i = 0; i < w; i++)
+		data[i] *= other.data[i];
 
 	return *this;
 }
 
 Matrix & Matrix::operator/(float x)
 {
-	for (int j = 0; j < rows; j++)
-		for (int i = 0; i < columns; i++)
-			data[j * columns + i] /= x;
+	int w = rows * columns;
+	for (int i = 0; i < w; i++)
+		data[i] /= x;
 
 	return *this;
 }
 Matrix & Matrix::operator/(Matrix & other)
 {
-	for (int j = 0; j < rows; j++)
-		for (int i = 0; i < columns; i++)
-			data[j * columns + i] /= other.GetData()[j * columns + i];
+	int w = rows * columns;
+	for (int i = 0; i < w; i++)
+		data[i] /= other.data[i];
 
 	return *this;
 }
@@ -168,7 +190,7 @@ std::ostream& operator<<(std::ostream& stream, Matrix& matrix)
 {
 	int rows = matrix.GetRows();
 	int cols = matrix.GetColumns();
-	float* data = matrix.GetData();
+	float* data = matrix.data;
 
 	stream << "Matrix: " << rows << " - " << cols << "\n[ ";
 
