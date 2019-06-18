@@ -5,39 +5,44 @@ typedef float (*func)(float x);
 class Matrix
 {
 public:
-	Matrix();
 	Matrix(int r, int c);
 	Matrix(int r, int c, float *d);
 
 	~Matrix();
 
-	inline Matrix& Multiply(float x) { return (*this * x); }
-	inline Matrix& Add(float x) { return *this + x; }
+	inline Matrix& Multiply(float x) { return *(*this * x); }
+	inline Matrix& Add(float x) { return *(*this + x); }
 	Matrix& Randomize(float min, float max);
 	static Matrix* MatrixMultiplication(const Matrix& left, const Matrix& right);
 	static Matrix* MatrixMultiplication(Matrix* left, Matrix* right);
 	Matrix& Transpose();
-
-	Matrix& operator+(float x);
-	Matrix& operator+(Matrix& other);
-	inline Matrix& operator+=(float x) { return *this + x; }
-	inline Matrix& operator+=(Matrix& other) { return *this + other; }
-
-	Matrix& operator-(float x);
-	Matrix& operator-(Matrix& other);
-	inline Matrix& operator-=(float x) { return *this - x; }
-	inline Matrix& operator-=(Matrix& other) { return *this - other; }
-
-	Matrix& operator*(float x);
-	Matrix& operator*(Matrix& other);
-	inline Matrix& operator*=(float x) { return *this * x; }
-	inline Matrix& operator*=(Matrix& other) { return *this * other; }
-
-	Matrix& operator/(float x);
-	Matrix& operator/(Matrix& other);
+	static Matrix* Transpose(const Matrix& matrix);
 	Matrix* Activation(func f);
-	inline Matrix& operator/=(float x) { return *this / x; }
-	inline Matrix& operator/=(Matrix& other) { return *this / other; }
+	static Matrix* Map(const Matrix& matrix, func f);
+
+	friend Matrix* operator+(float left, const Matrix& right);
+	friend Matrix* operator+(const Matrix& left, float right);
+	friend Matrix* operator+(const Matrix& left, const Matrix& right);
+	Matrix* operator+=(float x);
+	Matrix* operator+=(const Matrix& other);
+
+	friend Matrix* operator-(float left, const Matrix& right);
+	friend Matrix* operator-(const Matrix& left, float right);
+	friend Matrix* operator-(const Matrix& left, const Matrix& right);
+	Matrix* operator-=(float x);
+	Matrix* operator-=(const Matrix& other);
+
+	friend Matrix* operator*(float left, const Matrix& right);
+	friend Matrix* operator*(const Matrix& left, float right);
+	friend Matrix* operator*(const Matrix& left, const Matrix& right);
+	Matrix* operator*=(float x);
+	Matrix* operator*=(const Matrix& other);
+
+	friend Matrix* operator/(float left, const Matrix& right);
+	friend Matrix* operator/(const Matrix& left, float right);
+	friend Matrix* operator/(const Matrix& left, const Matrix& right);
+	Matrix* operator/=(float x);
+	Matrix* operator/=(const Matrix& other);
 
 
 	void Print() const;
@@ -51,6 +56,7 @@ public:
 	inline void SetData(float* d) { data = d; }
 
 private:
+	int size;
 	int rows;
 	int columns;
 public:

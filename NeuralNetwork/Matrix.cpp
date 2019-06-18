@@ -2,54 +2,51 @@
 
 #include <ostream>
 #include <iostream>
-
-Matrix::Matrix()
-	:rows(-1)
-	, columns(-1)
-{
-	data = new float[0];
-}
 Matrix::Matrix(int r, int c)
 	: rows(r)
 	, columns(c)
+	, size(r*c)
 {
-	int w = r * c;
-	data = new float[w];
-	for (int i = 0; i < w; i++)
+	data = new float[size];
+	for (int i = 0; i < size; i++)
 		data[i] = 0.0f;
 }
 Matrix::Matrix(int r, int c, float *d)
 	: rows(r)
 	, columns(c)
-	, data(d)
+	, size(r* c)
 {
+	data = new float[size];
+	for (int i = 0; i < size; i++)
+		data[i] = d[i];
 }
 
 Matrix::~Matrix()
 {
-	delete[] data;
+	//delete[] data;
 }
 
 Matrix& Matrix::Randomize(float min, float max)
 {
 	for (int i = 0; i < columns * rows; i++)
 		data[i] = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * (max - min) + min;
+
+	return *this;
 }
 
 Matrix* Matrix::MatrixMultiplication(const Matrix& left, const Matrix& right)
 {
 
 	Matrix* tmp = new Matrix(left.GetRows(), right.GetColumns());
-	float* d = tmp->data;
 	int tc = tmp->GetColumns();
 	int tr = tmp->GetRows();
 	int rr = right.GetRows();
 	for (int j = 0; j < tr; j++)
 		for (int i = 0; i < tc; i++)
 		{
-			d[j * tc + i] = 0;
+			tmp->data[j * tc + i] = 0;
 			for (int k = 0; k < rr; k++)
-				d[j * tc + i] += left.data[j * rr + k] * right.data[k * tc + i];
+				tmp->data[j * tc + i] += left.data[j * rr + k] * right.data[k * tc + i];
 		}
 	return tmp;
 }
@@ -58,16 +55,15 @@ Matrix* Matrix::MatrixMultiplication(Matrix* left, Matrix* right)
 {
 
 	Matrix* tmp = new Matrix(left->GetRows(), right->GetColumns());
-	float* d = tmp->data;
 	int tc = tmp->GetColumns();
 	int tr = tmp->GetRows();
 	int rr = right->GetRows();
 	for (int j = 0; j < tr; j++)
 		for (int i = 0; i < tc; i++)
 		{
-			d[j * tc + i] = 0;
+			tmp->data[j * tc + i] = 0;
 			for (int k = 0; k < rr; k++)
-				d[j * tc + i] += left->data[j * rr + k] * right->data[k * tc + i];
+				tmp->data[j * tc + i] += left->data[j * rr + k] * right->data[k * tc + i];
 		}
 	return tmp;
 }
@@ -87,82 +83,207 @@ Matrix& Matrix::Transpose()
 
 	return *this;
 }
-
-Matrix & Matrix::operator+(float x)
+Matrix* Matrix::Transpose(const Matrix& matrix)
 {
-	int w = rows * columns;
-	for (int i = 0; i < w; i++)
-		data[i] += x;
-	return *this;
-}
-Matrix& Matrix::operator+(Matrix& other)
-{
-	int w = rows * columns;
-	for (int i = 0; i < w; i++)
-		data[i] += other.data[i];
+	Matrix* result = new Matrix(matrix.GetColumns(), matrix.GetRows());
 
-	return *this;
+	for (int j = 0; j < matrix.rows; j++)
+		for (int i = 0; i < matrix.columns; i++)
+			result->data[i * matrix.rows + j] = matrix.data[j * matrix.columns + i];
+
+	return result;
 }
 
-Matrix & Matrix::operator-(float x)
+Matrix* operator+(float left, const Matrix& right)
 {
-	int w = rows * columns;
-	for (int i = 0; i < w; i++)
-		data[i] -= x;
+	Matrix* result = new Matrix(right.GetRows(), right.GetColumns());
 
-	return *this;
+	for (int i = 0; i < result->size; i++)
+		result->data[i] = left + right.data[i];
+
+	return result;
 }
-Matrix & Matrix::operator-(Matrix & other)
+Matrix* operator+(const Matrix& left, float right)
 {
-	int w = rows * columns;
-	for (int i = 0; i < w; i++)
-		data[i] -= other.data[i];
+	Matrix* result = new Matrix(left.GetRows(), left.GetColumns());
 
-	return *this;
+	for (int i = 0; i < result->size; i++)
+		result->data[i] = left.data[i] + right;
+
+	return result;
 }
-
-Matrix & Matrix::operator*(float x)
+Matrix* operator+(const Matrix& left, const Matrix& right)
 {
-	int w = rows * columns;
-	for (int i = 0; i < w; i++)
-		data[i] *= x;
+	Matrix* result = new Matrix(left.GetRows(), left.GetColumns());
 
-	return *this;
-}
-Matrix & Matrix::operator*(Matrix & other)
-{
-	int w = rows * columns;
-	for (int i = 0; i < w; i++)
-		data[i] *= other.data[i];
+	for (int i = 0; i < result->size; i++)
+		result->data[i] = left.data[i] + right.data[i];
 
-	return *this;
+	return result;
 }
 
-Matrix & Matrix::operator/(float x)
+Matrix* Matrix::operator+=(float x)
 {
-	int w = rows * columns;
-	for (int i = 0; i < w; i++)
-		data[i] /= x;
+	for (int i = 0; i < this->size; i++)
+		this->data[i] +=x;
 
-	return *this;
+	return this;
 }
-Matrix & Matrix::operator/(Matrix & other)
+Matrix* Matrix::operator+=(const Matrix& other)
 {
-	int w = rows * columns;
-	for (int i = 0; i < w; i++)
-		data[i] /= other.data[i];
+	for (int i = 0; i < this->size; i++)
+		this->data[i] += other.data[i];
 
-	return *this;
+	return this;
+}
+
+Matrix* operator-(float left, const Matrix& right)
+{
+	Matrix* result = new Matrix(right.GetRows(), right.GetColumns());
+
+	for (int i = 0; i < result->size; i++)
+		result->data[i] = left - right.data[i];
+
+	return result;
+}
+Matrix* operator-(const Matrix & left, float right)
+{
+	Matrix* result = new Matrix(left.GetRows(), left.GetColumns());
+
+	for (int i = 0; i < result->size; i++)
+		result->data[i] = left.data[i] - right;
+
+	return result;
+}
+Matrix* operator-(const Matrix & left, const Matrix & right)
+{
+	Matrix* result = new Matrix(left.GetRows(), left.GetColumns());
+
+	for (int i = 0; i < result->size; i++)
+		result->data[i] = left.data[i] - right.data[i];
+
+	return result;
+}
+
+Matrix* Matrix::operator-=(float x)
+{
+	for (int i = 0; i < this->size; i++)
+		this->data[i] -= x;
+
+	return this;
+}
+Matrix* Matrix::operator-=(const Matrix& other)
+{
+	for (int i = 0; i < this->size; i++)
+		this->data[i] -= other.data[i];
+
+	return this;
+}
+
+Matrix* operator*(float left, const Matrix& right)
+{
+	Matrix* result = new Matrix(right.GetRows(), right.GetColumns());
+
+	for (int i = 0; i < result->size; i++)
+		result->data[i] = left * right.data[i];
+
+	return result;
+}
+Matrix* operator*(const Matrix & left, float right)
+{
+	Matrix* result = new Matrix(left.GetRows(), left.GetColumns());
+
+	for (int i = 0; i < result->size; i++)
+		result->data[i] = left.data[i] * right;
+
+	return result;
+}
+Matrix* operator*(const Matrix & left, const Matrix & right)
+{
+	Matrix* result = new Matrix(left.GetRows(), left.GetColumns());
+
+	for (int i = 0; i < result->size; i++)
+		result->data[i] = left.data[i] * right.data[i];
+
+	return result;
+}
+
+Matrix* Matrix::operator*=(float x)
+{
+	for (int i = 0; i < this->size; i++)
+		this->data[i] *= x;
+
+	return this;
+}
+Matrix* Matrix::operator*=(const Matrix& other)
+{
+	for (int i = 0; i < this->size; i++)
+		this->data[i] *= other.data[i];
+
+	return this;
+}
+
+Matrix* operator/(float left, const Matrix& right)
+{
+	Matrix* result = new Matrix(right.GetRows(), right.GetColumns());
+
+	for (int i = 0; i < result->size; i++)
+		result->data[i] = left / right.data[i];
+
+	return result;
+}
+Matrix* operator/(const Matrix & left, float right)
+{
+	Matrix* result = new Matrix(left.GetRows(), left.GetColumns());
+
+	for (int i = 0; i < result->size; i++)
+		result->data[i] = left.data[i] / right;
+
+	return result;
+}
+Matrix* operator/(const Matrix & left, const Matrix & right)
+{
+	Matrix* result = new Matrix(left.GetRows(), left.GetColumns());
+
+	for (int i = 0; i < result->size; i++)
+		result->data[i] = left.data[i] / right.data[i];
+
+	return result;
+}
+
+Matrix* Matrix::operator/=(float x)
+{
+	for (int i = 0; i < this->size; i++)
+		this->data[i] /= x;
+
+	return this;
+}
+Matrix* Matrix::operator/=(const Matrix & other)
+{
+	for (int i = 0; i < this->size; i++)
+		this->data[i] /= other.data[i];
+
+	return this;
 }
 
 Matrix* Matrix::Activation(func f)
 {
-	int length = this->GetColumns() * this->GetRows();
 
-	for (int i = 0; i < length; i++)
+	for (int i = 0; i < size; i++)
 		data[i] = f(data[i]);
 
 	return this;
+}
+
+Matrix* Matrix::Map(const Matrix& matrix, func f)
+{
+	int length = matrix.GetColumns() * matrix.GetRows();
+	Matrix* result = new Matrix(matrix.GetRows(), matrix.GetColumns());
+
+
+	for (int i = 0; i < length; i++)
+		result->data[i] = f(matrix.data[i]);
+	return result;
 }
 
 void Matrix::Print() const

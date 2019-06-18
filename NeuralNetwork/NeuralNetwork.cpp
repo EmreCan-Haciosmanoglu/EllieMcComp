@@ -30,7 +30,7 @@ NeuralNetwork::~NeuralNetwork()
 	delete[] biases;
 }
 
-Matrix* NeuralNetwork::FeedForward(Matrix & input) const
+Matrix* NeuralNetwork::FeedForward(Matrix input) const
 {
 	layerOutputs[0] = &input;
 	for (int i = 1; i < Length; i++)
@@ -42,28 +42,28 @@ Matrix* NeuralNetwork::FeedForward(Matrix & input) const
 	return layerOutputs[Length-1];
 }
 
-void NeuralNetwork::Train(Matrix * inputs, Matrix * targets)
+void NeuralNetwork::Train(Matrix inputs, Matrix targets)
 {
-	Matrix** hiddens = new Matrix * [hiddenLength];
+	FeedForward(inputs);
+	Matrix** errors = new Matrix * [Length];
+	errors[Length - 1] = (targets - *layerOutputs[Length - 1]);
 
-	hiddens[0] = (*(weights_ih->MatrixMultiplication(*inputs)) + *bias_h[0]).Activation(SIGMOID);
-	for (int i = 1; i < hiddenLength; i++)
-		hiddens[i] = (*(weights_ih->MatrixMultiplication(*hiddens[i - 1])) + *bias_h[0]).Activation(SIGMOID);
-
-	Matrix * outputs = (*(weights_ih->MatrixMultiplication(*hiddens[hiddenLength - 1])) + *bias_h[0]).Activation(SIGMOID);
-	Matrix * gradients = outputs->Activation(D_SIGMOID);
-
-	Matrix & outputs_error = (*targets - *outputs);
-
-	*gradients *= outputs_error;
-	*gradients *= learning_rate;
-
-	Matrix & weights_ho_deltas = (*gradients * *hiddens[hiddenLength - 1]);
-
-	*weights_ho += weights_ho_deltas;
-
-	for (int i = hiddenLength - 1; i > 0; i--)
+	for (int i = Length - 2; i >=0; i--)
 	{
+		Matrix* T = Matrix::Transpose(*weights[i]);
+		errors[i] = Matrix::MatrixMultiplication(T, errors[i + 1]);
+	}
 
+	for (int i = Length - 2; i >= 0; i--)
+	{
+		Matrix* gradients = Matrix::Map(*layerOutputs[i+1],D_SIGMOID);
+
+		*gradients *= *errors[i];
+		*gradients *= learning_rate;
+		Matrix* T = Matrix::Transpose(*layerOutputs[i]);
+		Matrix* deltas = Matrix::MatrixMultiplication(gradients, T);
+
+		*weights[i] += *deltas;
+		*biases[i] += *gradients;
 	}
 }

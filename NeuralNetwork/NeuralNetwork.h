@@ -8,8 +8,8 @@ public:
 
 	~NeuralNetwork();
 
-	Matrix* FeedForward(Matrix& input) const;
-	void Train(Matrix* inputs, Matrix* targets);
+	Matrix* FeedForward(Matrix input) const;
+	void Train(Matrix inputs, Matrix targets);
 
 private:
 	int* Nodes;
