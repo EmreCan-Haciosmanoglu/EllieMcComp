@@ -23,7 +23,7 @@ Matrix::Matrix(int r, int c, float *d)
 
 Matrix::~Matrix()
 {
-	//delete[] data;
+	delete[] data;
 }
 
 Matrix& Matrix::Randomize(float min, float max)
@@ -83,13 +83,13 @@ Matrix& Matrix::Transpose()
 
 	return *this;
 }
-Matrix* Matrix::Transpose(const Matrix& matrix)
+Matrix* Matrix::Transpose(Matrix* matrix)
 {
-	Matrix* result = new Matrix(matrix.GetColumns(), matrix.GetRows());
+	Matrix* result = new Matrix(matrix->GetColumns(), matrix->GetRows());
 
-	for (int j = 0; j < matrix.rows; j++)
-		for (int i = 0; i < matrix.columns; i++)
-			result->data[i * matrix.rows + j] = matrix.data[j * matrix.columns + i];
+	for (int j = 0; j < matrix->rows; j++)
+		for (int i = 0; i < matrix->columns; i++)
+			result->data[i * matrix->rows + j] = matrix->data[j * matrix->columns + i];
 
 	return result;
 }
@@ -200,6 +200,11 @@ Matrix* operator*(const Matrix & left, float right)
 }
 Matrix* operator*(const Matrix & left, const Matrix & right)
 {
+	if (left.GetRows() != right.GetRows() || left.GetColumns() != right.GetColumns())
+	{
+		std::cout << "A*B matrix doesn't match" << std::endl;
+		return nullptr;
+	}
 	Matrix* result = new Matrix(left.GetRows(), left.GetColumns());
 
 	for (int i = 0; i < result->size; i++)
@@ -217,6 +222,11 @@ Matrix* Matrix::operator*=(float x)
 }
 Matrix* Matrix::operator*=(const Matrix& other)
 {
+	if (this->GetRows() != other.GetRows() || this->GetColumns() != other.GetColumns())
+	{
+		std::cout << "*= matrix doesn't match" << std::endl;
+		return nullptr;
+	}
 	for (int i = 0; i < this->size; i++)
 		this->data[i] *= other.data[i];
 
@@ -275,31 +285,26 @@ Matrix* Matrix::Activation(func f)
 	return this;
 }
 
-Matrix* Matrix::Map(const Matrix& matrix, func f)
+Matrix* Matrix::Map(Matrix* matrix, func f)
 {
-	int length = matrix.GetColumns() * matrix.GetRows();
-	Matrix* result = new Matrix(matrix.GetRows(), matrix.GetColumns());
+	Matrix* result = new Matrix(matrix->GetRows(), matrix->GetColumns());
 
 
-	for (int i = 0; i < length; i++)
-		result->data[i] = f(matrix.data[i]);
+	for (int i = 0; i < matrix->size; i++)
+		result->data[i] = f(matrix->data[i]);
 	return result;
 }
 
 void Matrix::Print() const
 {
+	std::cout << "Matrix: " << this->GetRows() << " - " << this->GetColumns() << "\n";
 
-	int rows = this->GetRows();
-	int cols = this->GetColumns();
-
-	std::cout << "Matrix: " << rows << " - " << cols << "\n";
-
-	for (int j = 0; j < rows; j++)
+	for (int j = 0; j < this->GetRows(); j++)
 	{
-		std::cout << data[j * cols];
-		for (int i = 1; i < cols; i++)
+		std::cout << data[j * this->GetColumns()];
+		for (int i = 1; i < this->GetColumns(); i++)
 		{
-			std::cout << ", " << data[j * cols + i];
+			std::cout << ", " << data[j * this->GetColumns() + i];
 		}
 		std::cout << std::endl;
 	}

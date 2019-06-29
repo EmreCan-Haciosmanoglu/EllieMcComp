@@ -10,15 +10,13 @@ public:
 
 	~Matrix();
 
-	inline Matrix& Multiply(float x) { return *(*this * x); }
-	inline Matrix& Add(float x) { return *(*this + x); }
 	Matrix& Randomize(float min, float max);
 	static Matrix* MatrixMultiplication(const Matrix& left, const Matrix& right);
 	static Matrix* MatrixMultiplication(Matrix* left, Matrix* right);
 	Matrix& Transpose();
-	static Matrix* Transpose(const Matrix& matrix);
+	static Matrix* Transpose(Matrix* matrix);
 	Matrix* Activation(func f);
-	static Matrix* Map(const Matrix& matrix, func f);
+	static Matrix* Map(Matrix* matrix, func f);
 
 	friend Matrix* operator+(float left, const Matrix& right);
 	friend Matrix* operator+(const Matrix& left, float right);
