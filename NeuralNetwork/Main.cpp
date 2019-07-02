@@ -10,7 +10,7 @@ int main()
 	float arr1[6] = { 1,5,2,4,8,3 };
 	float arr2[6] = { 4,-1,12,-6,4,1 };
 
-	Matrix* m1 = new Matrix(3, 2,arr1);
+	Matrix* m1 = new Matrix(3, 2, arr1);
 	Matrix* m2 = new Matrix(3, 2, arr2);
 	Matrix* m3 = *m1 + *m2;
 	Matrix* m4 = *m1 - *m2;
@@ -83,9 +83,23 @@ int main() {
 	srand(time(NULL));
 	int layers[3] = { 2, 5 ,2 };
 	NeuralNetwork* nn = new NeuralNetwork(layers, 3, 0.01f);
-
-	for (int i = 0; i < 500000; i++)
+	int times = 2000000;
+	for (int i = 0; i < times; i++)
 	{
+		if (0 == i % (times / 100))
+		{
+			int perc = (i / (times / 100));
+			//system("CLS");
+			for (int i = 0; i < perc; i++)
+			{
+				std::cout << "|";
+			}
+			for (int i = 0; i < 100 - perc; i++)
+			{
+				std::cout << " ";
+			}
+			std::cout << "| " << perc << "%" << std::endl;
+		}
 		int r = rand() % 4;
 		if (r == 0)
 		{
@@ -94,18 +108,14 @@ int main() {
 			Matrix* input = new Matrix(2, 1, in);
 			Matrix* target = new Matrix(2, 1, ta);
 			nn->Train(input, target);
-			delete input;
-			delete target;
 		}
 		if (r == 1)
 		{
-			float in[2] = { 0,1 };
-			float ta[2] = { 1 ,0};
+			float in[2] = { 0, 1 };
+			float ta[2] = { 1 ,0 };
 			Matrix* input = new Matrix(2, 1, in);
 			Matrix* target = new Matrix(2, 1, ta);
 			nn->Train(input, target);
-			delete input;
-			delete target;
 		}
 		if (r == 2)
 		{
@@ -114,8 +124,6 @@ int main() {
 			Matrix* input = new Matrix(2, 1, in);
 			Matrix* target = new Matrix(2, 1, ta);
 			nn->Train(input, target);
-			delete input;
-			delete target;
 		}
 		if (r == 3)
 		{
@@ -124,24 +132,29 @@ int main() {
 			Matrix* input = new Matrix(2, 1, in);
 			Matrix* target = new Matrix(2, 1, ta);
 			nn->Train(input, target);
-			delete input;
-			delete target;
 		}
-
-
-		//delete input;
-		//delete target;
 	}
 
 	float inputs[4][2] = { {1,0},{0,1},{1,1},{0,0} };
 	Matrix* input0 = new Matrix(2, 1, inputs[0]);
-	(nn->FeedForward(input0))->Print();
+	Matrix* result0 = nn->FeedForward(input0);
+	result0->Print();
+	delete result0;
+
 	Matrix* input1 = new Matrix(2, 1, inputs[1]);
-	(nn->FeedForward(input1))->Print();
+	Matrix* result1 = nn->FeedForward(input1);
+	result1->Print();
+	delete result1;
+
 	Matrix* input2 = new Matrix(2, 1, inputs[2]);
-	(nn->FeedForward(input2))->Print();
+	Matrix* result2 = nn->FeedForward(input2);
+	result2->Print();
+	delete result2;
+
 	Matrix* input3 = new Matrix(2, 1, inputs[3]);
-	(nn->FeedForward(input3))->Print();
+	Matrix* result3 = nn->FeedForward(input3);
+	result3->Print();
+	delete result3;
 
 	delete nn;
 	int wait = 0;

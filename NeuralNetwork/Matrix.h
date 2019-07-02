@@ -7,7 +7,7 @@ class Matrix
 public:
 	Matrix(int r, int c);
 	Matrix(int r, int c, float *d);
-
+	Matrix(const Matrix& copy);
 	~Matrix();
 
 	Matrix& Randomize(float min, float max);

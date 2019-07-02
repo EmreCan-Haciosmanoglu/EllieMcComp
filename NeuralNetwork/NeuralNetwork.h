@@ -9,6 +9,7 @@ public:
 	~NeuralNetwork();
 
 	Matrix* FeedForward(Matrix* input) const;
+	void FeedForward(Matrix** outputs) const;
 	void Train(Matrix *inputs, Matrix* targets);
 
 private:
@@ -17,7 +18,6 @@ private:
 
 	Matrix** weights;
 	Matrix** biases;
-	Matrix** layerOutputs;
 
 	float learning_rate;
 };

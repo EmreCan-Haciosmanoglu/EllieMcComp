@@ -21,33 +21,52 @@ NeuralNetwork::NeuralNetwork(int* nodes, int length, float lr)
 		biases[i] = new Matrix(nodes[i + 1], 1);
 		biases[i]->Randomize(-2.0f,2.0f);
 	}
-	layerOutputs = new Matrix * [length];
 }
 
 NeuralNetwork::~NeuralNetwork()
 {
 	delete[] weights;
 	delete[] biases;
-	delete[] layerOutputs;
 }
 
 Matrix* NeuralNetwork::FeedForward(Matrix* inputs) const
 {
+	Matrix** layerOutputs = new Matrix * [Length];
 	layerOutputs[0] = inputs;
 	for (int i = 1; i < Length; i++)
 	{
-		layerOutputs[i] = Matrix::MatrixMultiplication(weights[i-1], layerOutputs[i-1]);
-		*layerOutputs[i] += *biases[i-1];
+		layerOutputs[i] = Matrix::MatrixMultiplication(weights[i - 1], layerOutputs[i - 1]);
+		*layerOutputs[i] += *biases[i - 1];
 		layerOutputs[i]->Activation(SIGMOID);
 	}
-	return layerOutputs[Length-1];
+	Matrix* result = new Matrix(*layerOutputs[Length - 1]);
+	for (int i = 0; i < Length; i++)
+	{
+		delete layerOutputs[i];
+	}
+	delete[] layerOutputs;
+	return result;
+}
+
+void NeuralNetwork::FeedForward(Matrix** outputs) const
+{
+	for (int i = 1; i < Length; i++)
+	{
+		outputs[i] = Matrix::MatrixMultiplication(weights[i - 1], outputs[i - 1]);
+		*outputs[i] += *biases[i - 1];
+		outputs[i]->Activation(SIGMOID);
+	}
 }
 
 void NeuralNetwork::Train(Matrix* inputs, Matrix* targets)
 {
-	FeedForward(inputs);
+	Matrix** outputs = new Matrix * [Length];
+	outputs[0] = inputs;
+	FeedForward(outputs);
+
 	Matrix** errors = new Matrix * [Length];
-	errors[Length - 1] = *targets - *layerOutputs[Length - 1];
+	errors[Length - 1] = *targets - *outputs[Length - 1];
+	delete targets;
 
 	for (int i = Length - 2; i >=0; i--)
 	{
@@ -58,12 +77,11 @@ void NeuralNetwork::Train(Matrix* inputs, Matrix* targets)
 
 	for (int i = Length - 2; i >= 0; i--)
 	{
-		Matrix* gradients = Matrix::Map(layerOutputs[i+1],D_SIGMOID);
+		Matrix* gradients = Matrix::Map(outputs[i+1],D_SIGMOID);
 
-		//std::cout << "gradients " << gradients->GetColumns() <<" - " << gradients->GetRows() <<" === " << "error " << errors[i+1]->GetColumns() << " - " << errors[i+1]->GetRows() << std::endl;
 		*gradients *= *errors[i+1];
 		*gradients *= learning_rate;
-		Matrix* T = Matrix::Transpose(layerOutputs[i]);
+		Matrix* T = Matrix::Transpose(outputs[i]);
 		Matrix* deltas = Matrix::MatrixMultiplication(gradients, T);
 
 		*weights[i] += *deltas;
@@ -73,4 +91,11 @@ void NeuralNetwork::Train(Matrix* inputs, Matrix* targets)
 		delete T;
 		delete deltas;
 	}
+	for (int i = 0; i < Length; i++)
+	{
+		delete outputs[i];
+		delete errors[i];
+	}
+	delete[] outputs;
+	delete[] errors;
 }

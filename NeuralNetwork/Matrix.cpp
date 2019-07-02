@@ -7,7 +7,7 @@ Matrix::Matrix(int r, int c)
 	, columns(c)
 	, size(r*c)
 {
-	data = new float[size];
+	data = new float[r*c];
 	for (int i = 0; i < size; i++)
 		data[i] = 0.0f;
 }
@@ -19,6 +19,16 @@ Matrix::Matrix(int r, int c, float *d)
 	data = new float[size];
 	for (int i = 0; i < size; i++)
 		data[i] = d[i];
+}
+
+Matrix::Matrix(const Matrix& copy)
+	: rows(copy.rows)
+	, columns(copy.columns)
+	, size(copy.size)
+{
+	data = new float[size];
+	for (int i = 0; i < size; i++)
+		data[i] = copy.data[i];
 }
 
 Matrix::~Matrix()
