@@ -24,13 +24,7 @@
     <ClInclude Include="Perceptron.h">
       <Filter>Üst Bilgi Dosyaları</Filter>
     </ClInclude>
-    <ClInclude Include="ScreenCapture.h">
-      <Filter>Üst Bilgi Dosyaları</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Üst Bilgi Dosyaları</Filter>
-    </ClInclude>
-    <ClInclude Include="avifile.h">
+    <ClInclude Include="Keys.h">
       <Filter>Üst Bilgi Dosyaları</Filter>
     </ClInclude>
   </ItemGroup>
@@ -47,7 +41,7 @@
     <ClCompile Include="Perceptron.cpp">
       <Filter>Kaynak Dosyalar</Filter>
     </ClCompile>
-    <ClCompile Include="avifile.cpp">
+    <ClCompile Include="KeySimulation.cpp">
       <Filter>Kaynak Dosyalar</Filter>
     </ClCompile>
   </ItemGroup>
