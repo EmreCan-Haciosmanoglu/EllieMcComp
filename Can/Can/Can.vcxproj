@@ -56,8 +56,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Can\vendor\spdlog\include;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>CAN_PLATFORM_WINDOWS;CAN_BUILD_DLL;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -72,8 +71,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Can\vendor\spdlog\include;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>CAN_PLATFORM_WINDOWS;CAN_BUILD_DLL;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -87,9 +85,11 @@
     <ClInclude Include="src\Can\Application.h" />
     <ClInclude Include="src\Can\Core.h" />
     <ClInclude Include="src\Can\EntryPoint.h" />
+    <ClInclude Include="src\Can\Log.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp" />
+    <ClCompile Include="src\Can\Log.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
