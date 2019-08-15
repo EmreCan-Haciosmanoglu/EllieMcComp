@@ -1,5 +1,7 @@
 #include "Application.h"
-#include <stdio.h>
+
+#include "Can/Events/ApplicationEvent.h"
+#include "Can/Log.h"
 
 namespace Can
 {
@@ -15,6 +17,8 @@ namespace Can
 
 	void Application::Run()
 	{
+		Event::WindowResizeEvent e(1280, 720);
+		CAN_TRACE(e);
 		while (true)
 		{
 		}

@@ -19,6 +19,10 @@
     <ClInclude Include="src\Can\Log.h">
       <Filter>Can</Filter>
     </ClInclude>
+    <ClInclude Include="src\Can\Events\ApplicationEvent.h" />
+    <ClInclude Include="src\Can\Events\Event.h" />
+    <ClInclude Include="src\Can\Events\KeyEvent.h" />
+    <ClInclude Include="src\Can\Events\MouseEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">

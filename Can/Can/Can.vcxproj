@@ -147,6 +147,10 @@
     <ClInclude Include="src\Can\Application.h" />
     <ClInclude Include="src\Can\Core.h" />
     <ClInclude Include="src\Can\EntryPoint.h" />
+    <ClInclude Include="src\Can\Events\ApplicationEvent.h" />
+    <ClInclude Include="src\Can\Events\Event.h" />
+    <ClInclude Include="src\Can\Events\KeyEvent.h" />
+    <ClInclude Include="src\Can\Events\MouseEvent.h" />
     <ClInclude Include="src\Can\Log.h" />
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core.h"
+#include "Can/Events/Event.h"
 
 namespace Can
 {
