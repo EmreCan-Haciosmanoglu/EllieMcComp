@@ -4,6 +4,9 @@
     <Filter Include="Can">
       <UniqueIdentifier>{D7DC870B-43E6-877C-CC61-9E7C386A937C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Can\Events">
+      <UniqueIdentifier>{DBD057B7-C788-9904-3090-72601C6734F5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Can.h" />
@@ -16,13 +19,21 @@
     <ClInclude Include="src\Can\EntryPoint.h">
       <Filter>Can</Filter>
     </ClInclude>
+    <ClInclude Include="src\Can\Events\ApplicationEvent.h">
+      <Filter>Can\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Events\Event.h">
+      <Filter>Can\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Events\KeyEvent.h">
+      <Filter>Can\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Events\MouseEvent.h">
+      <Filter>Can\Events</Filter>
+    </ClInclude>
     <ClInclude Include="src\Can\Log.h">
       <Filter>Can</Filter>
     </ClInclude>
-    <ClInclude Include="src\Can\Events\ApplicationEvent.h" />
-    <ClInclude Include="src\Can\Events\Event.h" />
-    <ClInclude Include="src\Can\Events\KeyEvent.h" />
-    <ClInclude Include="src\Can\Events\MouseEvent.h" />
     <ClInclude Include="src\canpch.h" />
   </ItemGroup>
   <ItemGroup>
