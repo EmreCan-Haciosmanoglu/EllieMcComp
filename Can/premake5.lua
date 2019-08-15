@@ -18,6 +18,9 @@ project "Can"
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
+    pchheader "canpch.h"
+    pchsource "Can/src/canpch.cpp"
+
     files
     {
         "%{prj.name}/src/**.h",

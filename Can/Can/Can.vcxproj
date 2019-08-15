@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Can.h" />
+    <ClInclude Include="src\canpch.h" />
     <ClInclude Include="src\Can\Application.h" />
     <ClInclude Include="src\Can\Core.h" />
     <ClInclude Include="src\Can\EntryPoint.h" />
@@ -154,6 +155,7 @@
     <ClInclude Include="src\Can\Log.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\canpch.cpp" />
     <ClCompile Include="src\Can\Application.cpp" />
     <ClCompile Include="src\Can\Log.cpp" />
   </ItemGroup>

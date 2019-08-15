@@ -2,8 +2,6 @@
 
 #include "Event.h"
 
-#include <sstream>
-
 namespace Can::Event
 {
 	class CAN_API MouseMovedEvent : public Event

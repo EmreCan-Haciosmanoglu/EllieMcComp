@@ -2,9 +2,6 @@
 
 #include "Can/Core.h"
 
-#include <string>
-#include <functional>
-
 namespace Can::Event
 {
 	enum class EventType

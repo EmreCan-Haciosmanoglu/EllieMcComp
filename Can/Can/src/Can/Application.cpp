@@ -1,3 +1,5 @@
+#include "canpch.h"
+
 #include "Application.h"
 
 #include "Can/Events/ApplicationEvent.h"

@@ -23,6 +23,7 @@
     <ClInclude Include="src\Can\Events\Event.h" />
     <ClInclude Include="src\Can\Events\KeyEvent.h" />
     <ClInclude Include="src\Can\Events\MouseEvent.h" />
+    <ClInclude Include="src\canpch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -31,5 +32,6 @@
     <ClCompile Include="src\Can\Log.cpp">
       <Filter>Can</Filter>
     </ClCompile>
+    <ClCompile Include="src\canpch.cpp" />
   </ItemGroup>
 </Project>
