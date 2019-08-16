@@ -11,7 +11,6 @@ public:
 
 	void OnUpdate() override
 	{
-		CAN_INFO("ExampleLayer::Update");
 	}
 
 	void OnEvent(Can::Event::Event& event) override
@@ -26,6 +25,7 @@ public:
 	Sandbox()
 	{
 		PushLayer(new ExampleLayer());
+		PushOverlay(new Can::Layer::ImGuiLayer());
 	}
 
 	~Sandbox()

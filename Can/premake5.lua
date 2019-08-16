@@ -15,14 +15,19 @@ IncludeDir["GLFW"] = "Can/vendor/glfw/include"
 IncludeDir["GLAD"] = "Can/vendor/glad/include"
 IncludeDir["imgui"] = "Can/vendor/imgui"
 
-include "Can/vendor/glfw"
-include "Can/vendor/glad"
-include "Can/vendor/imgui"
+startproject "Sandbox"
+
+group "Dependencies"
+    include "Can/vendor/glfw"
+    include "Can/vendor/glad"
+    include "Can/vendor/imgui"
+group ""
 
 project "Can"
     location "Can"
     kind "SharedLib"
     language "C++"
+    staticruntime "Off"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -55,7 +60,6 @@ project "Can"
 
     filter "system:windows"
         cppdialect "C++17"
-        staticruntime "On"
         systemversion "latest"
 
         defines
@@ -67,28 +71,29 @@ project "Can"
 
         postbuildcommands
         {
-            ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
+            ("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
         }
 
     filter "configurations:Debug"
         defines "CAN_DEBUG"
-        buildoptions "/MDd"
+        runtime "Debug"
         symbols "On"
 
     filter "configurations:Release"
         defines "CAN_RELEASE"
-        buildoptions "/MD"
+        runtime "Release"
         optimize "On"
 
     filter "configurations:Dist"
         defines "CAN_DIST"
-        buildoptions "/MD"
+        runtime "Release"
         optimize "On"
 
 project "Sandbox"
     location "Sandbox"
     kind "ConsoleApp"
     language "C++"
+    staticruntime "Off"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -112,7 +117,6 @@ project "Sandbox"
 
     filter "system:windows"
         cppdialect "C++17"
-        staticruntime "On"
         systemversion "latest"
 
         defines
@@ -122,15 +126,15 @@ project "Sandbox"
 
     filter "configurations:Debug"
         defines "CAN_DEBUG"
-        buildoptions "/MDd"
+        runtime "Debug"
         symbols "On"
 
     filter "configurations:Release"
         defines "CAN_RELEASE"
-        buildoptions "/MD"
+        runtime "Release"
         optimize "On"
 
     filter "configurations:Dist"
         defines "CAN_DIST"
-        buildoptions "/MD"
+        runtime "Release"
         optimize "On"

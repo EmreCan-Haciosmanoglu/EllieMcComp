@@ -7,6 +7,15 @@
     <Filter Include="Can\Events">
       <UniqueIdentifier>{DBD057B7-C788-9904-3090-72601C6734F5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Can\Layers">
+      <UniqueIdentifier>{B6BB3AC6-A273-7C13-0B7B-556FF7511704}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\Windows">
+      <UniqueIdentifier>{64FBD71A-50F4-F66C-7926-DCF1657ED678}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Can.h" />
@@ -31,18 +40,54 @@
     <ClInclude Include="src\Can\Events\MouseEvent.h">
       <Filter>Can\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\Can\Layers\ImGuiLayer.h">
+      <Filter>Can\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Layers\Layer.h">
+      <Filter>Can\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Layers\LayerStack.h">
+      <Filter>Can\Layers</Filter>
+    </ClInclude>
     <ClInclude Include="src\Can\Log.h">
       <Filter>Can</Filter>
     </ClInclude>
+    <ClInclude Include="src\Can\Window.h">
+      <Filter>Can</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\WindowsInput.h">
+      <Filter>Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
+      <Filter>Platform\Windows</Filter>
+    </ClInclude>
     <ClInclude Include="src\canpch.h" />
+    <ClInclude Include="src\Platform\OpenGl\ImGuiOpenGlRenderer.h" />
+    <ClInclude Include="src\Can\Input.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
       <Filter>Can</Filter>
     </ClCompile>
+    <ClCompile Include="src\Can\Layers\ImGuiLayer.cpp">
+      <Filter>Can\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Layers\Layer.cpp">
+      <Filter>Can\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Layers\LayerStack.cpp">
+      <Filter>Can\Layers</Filter>
+    </ClCompile>
     <ClCompile Include="src\Can\Log.cpp">
       <Filter>Can</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
     <ClCompile Include="src\canpch.cpp" />
+    <ClCompile Include="src\Platform\OpenGl\ImGuiOpenGlRenderer.cpp" />
   </ItemGroup>
 </Project>

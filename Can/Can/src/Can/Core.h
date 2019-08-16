@@ -10,6 +10,10 @@
 #error CAN only supports Windows!
 #endif // CAN_PLATFORM_WINDOWS
 
+#ifdef CAN_DEBUG
+#define CAN_ENABLE_ASSERTS
+#endif  // CAN_DEBUG
+
 #ifdef CAN_ENABLE_ASSERTS
 #define CAN_ASSERT(x, ...) {if(!(x)) { CAN_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak();}}
 #define CAN_CORE_ASSERT(x, ...) {if(!(x)) { CAN_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak();}}
@@ -19,3 +23,5 @@
 #endif
 
 #define BIT(x) (1 << x)
+
+#define CAN_BIND_EVENT_FN(x) std::bind(&Can::Layer::x,this,std::placeholders::_1)

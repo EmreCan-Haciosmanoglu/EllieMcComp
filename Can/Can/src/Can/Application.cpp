@@ -4,11 +4,18 @@
 
 #include <glad/glad.h>
 
+#include "Input.h"
+
 namespace Can
 {
 #define BIND_EVENT_FN(x) std::bind(&Application::x,this,std::placeholders::_1)
+
+	Application* Application::s_Instance = nullptr;
+
 	Application::Application()
 	{
+		s_Instance = this;
+
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 	}
@@ -41,21 +48,26 @@ namespace Can
 			for (Layer::Layer* layer : m_LayerStack)
 				layer->OnUpdate();
 
+			auto [x, y] = Input::GetMousePos();
+			CAN_CORE_TRACE("{0}, {1}", x, y);
+
 			m_Window->OnUpdate();
 		}
 	}
 
-	void Application::PushLayer(Layer::Layer* layer)
+	void Application::PushLayer(Layer::Layer * layer)
 	{
 		m_LayerStack.PushLayer(layer);
+		layer->OnAttach();
 	}
 
-	void Application::PushOverlay(Layer::Layer* layer)
+	void Application::PushOverlay(Layer::Layer * layer)
 	{
 		m_LayerStack.PushOverlay(layer);
+		layer->OnAttach();
 	}
 
-	bool Application::OnWindowClose(Event::WindowCloseEvent& e)
+	bool Application::OnWindowClose(Event::WindowCloseEvent & e)
 	{
 		m_Running = false;
 		return true;
