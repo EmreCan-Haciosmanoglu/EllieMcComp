@@ -10,6 +10,11 @@ workspace "Can"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+IncludeDir = {}
+IncludeDir["GLFW"] = "Can/vendor/glfw/include"
+
+include "Can/vendor/glfw"
+
 project "Can"
     location "Can"
     kind "SharedLib"
@@ -29,8 +34,15 @@ project "Can"
 
     includedirs
     {
+        "%{prj.name}/src",
         "%{prj.name}/vendor/spdlog/include",
-        "%{prj.name}/src"
+        "%{IncludeDir.GLFW}"
+    }
+
+    links
+    {
+        "GLFW",
+        "opengl32.lib"
     }
 
     filter "system:windows"
