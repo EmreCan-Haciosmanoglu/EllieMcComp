@@ -12,8 +12,12 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
 IncludeDir["GLFW"] = "Can/vendor/glfw/include"
+IncludeDir["GLAD"] = "Can/vendor/glad/include"
+IncludeDir["imgui"] = "Can/vendor/imgui"
 
 include "Can/vendor/glfw"
+include "Can/vendor/glad"
+include "Can/vendor/imgui"
 
 project "Can"
     location "Can"
@@ -36,12 +40,16 @@ project "Can"
     {
         "%{prj.name}/src",
         "%{prj.name}/vendor/spdlog/include",
-        "%{IncludeDir.GLFW}"
+        "%{IncludeDir.GLFW}",
+        "%{IncludeDir.GLAD}",
+        "%{IncludeDir.imgui}"
     }
 
     links
     {
         "GLFW",
+        "GLAD",
+        "imgui",
         "opengl32.lib"
     }
 
@@ -53,7 +61,8 @@ project "Can"
         defines
         {
             "CAN_PLATFORM_WINDOWS",
-            "CAN_BUILD_DLL"
+            "CAN_BUILD_DLL",
+            "GLFW_INCLUDE_NONE"
         }
 
         postbuildcommands
@@ -63,14 +72,17 @@ project "Can"
 
     filter "configurations:Debug"
         defines "CAN_DEBUG"
+        buildoptions "/MDd"
         symbols "On"
 
     filter "configurations:Release"
         defines "CAN_RELEASE"
+        buildoptions "/MD"
         optimize "On"
 
     filter "configurations:Dist"
         defines "CAN_DIST"
+        buildoptions "/MD"
         optimize "On"
 
 project "Sandbox"
@@ -110,12 +122,15 @@ project "Sandbox"
 
     filter "configurations:Debug"
         defines "CAN_DEBUG"
+        buildoptions "/MDd"
         symbols "On"
 
     filter "configurations:Release"
         defines "CAN_RELEASE"
+        buildoptions "/MD"
         optimize "On"
 
     filter "configurations:Dist"
         defines "CAN_DIST"
+        buildoptions "/MD"
         optimize "On"

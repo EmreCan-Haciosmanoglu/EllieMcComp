@@ -5,7 +5,7 @@
 
 namespace Can::Platform::Windows
 {
-	class WindowsWindow : public Window
+	class CAN_API WindowsWindow : public Window
 	{
 	public:
 		WindowsWindow(const WindowProps& props);

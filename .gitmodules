@@ -4,3 +4,6 @@
 [submodule "Can/Can/vendor/glfw"]
 	path = Can/Can/vendor/glfw
 	url = https://github.com/EmreCan-Haciosmanoglu/glfw
+[submodule "Can/Can/vendor/imgui"]
+	path = Can/Can/vendor/imgui
+	url = https://github.com/EmreCan-Haciosmanoglu/imgui

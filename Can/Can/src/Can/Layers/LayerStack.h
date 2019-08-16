@@ -7,7 +7,7 @@
 
 namespace Can::Layer
 {
-	class LayerStack
+	class CAN_API LayerStack
 	{
 	public:
 		LayerStack();
