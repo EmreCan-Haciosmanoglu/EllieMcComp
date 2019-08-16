@@ -2,6 +2,7 @@
 
 #include "Application.h"
 
+#include <GLFW/glfw3.h>
 
 namespace Can
 {
@@ -22,20 +23,41 @@ namespace Can
 		Event::EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<Event::WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
 
-		CAN_CORE_TRACE("{0}", e);
-	}
-
-	bool Application::OnWindowClose(Event::WindowCloseEvent& e)
-	{
-		m_Running = false;
-		return true;
+		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();)
+		{
+			(*--it)->OnEvent(e);
+			if (e.m_Handled)
+				break;
+		}
 	}
 
 	void Application::Run()
 	{
 		while (m_Running)
 		{
+			glClearColor(1, 0, 1, 1);
+			glClear(GL_COLOR_BUFFER_BIT);
+
+			for (Layer::Layer* layer : m_LayerStack)
+				layer->OnUpdate();
+
 			m_Window->OnUpdate();
 		}
+	}
+
+	void Application::PushLayer(Layer::Layer* layer)
+	{
+		m_LayerStack.PushLayer(layer);
+	}
+
+	void Application::PushOverlay(Layer::Layer* layer)
+	{
+		m_LayerStack.PushOverlay(layer);
+	}
+
+	bool Application::OnWindowClose(Event::WindowCloseEvent& e)
+	{
+		m_Running = false;
+		return true;
 	}
 }
