@@ -1,13 +1,13 @@
 workspace "Can"
     architecture "x64"
-
+    
     configurations
     {
         "Debug",
         "Release",
         "Dist"
     }
-
+    
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
@@ -26,22 +26,23 @@ group ""
 
 project "Can"
     location "Can"
-    kind "SharedLib"
+    kind "StaticLib"
     language "C++"
-    staticruntime "Off"
-
+    cppdialect "C++17" 
+    staticruntime "on"
+    
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-
+    
     pchheader "canpch.h"
     pchsource "Can/src/canpch.cpp"
-
+    
     files
     {
         "%{prj.name}/src/**.h",
         "%{prj.name}/src/**.cpp"
     }
-
+    
     includedirs
     {
         "%{prj.name}/src",
@@ -51,7 +52,7 @@ project "Can"
         "%{IncludeDir.imgui}",
         "%{IncludeDir.glm}"
     }
-
+    
     links
     {
         "GLFW",
@@ -59,47 +60,42 @@ project "Can"
         "imgui",
         "opengl32.lib"
     }
-
+    
     filter "system:windows"
-        cppdialect "C++17"
         systemversion "latest"
-
+        
         defines
         {
             "CAN_PLATFORM_WINDOWS",
             "CAN_BUILD_DLL",
             "GLFW_INCLUDE_NONE"
         }
-
-        postbuildcommands
-        {
-            ("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
-        }
-
+        
     filter "configurations:Debug"
         defines "CAN_DEBUG"
         runtime "Debug"
-        symbols "On"
-
+        symbols "on"
+    
     filter "configurations:Release"
         defines "CAN_RELEASE"
         runtime "Release"
-        optimize "On"
-
+        optimize "on"
+    
     filter "configurations:Dist"
         defines "CAN_DIST"
         runtime "Release"
-        optimize "On"
+        optimize "on"
 
 project "Sandbox"
     location "Sandbox"
     kind "ConsoleApp"
     language "C++"
-    staticruntime "Off"
-
+    cppdialect "C++17"
+    staticruntime "On"
+    
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-
+    
     files
     {
         "%{prj.name}/src/**.h",
@@ -107,39 +103,38 @@ project "Sandbox"
         "%{prj.name}/vendor/glm/glm/**.hpp",
         "%{prj.name}/vendor/glm/glm/**.inl"
     }
-
+    
     includedirs
     {
         "Can/vendor/spdlog/include",
         "Can/src",
         "%{IncludeDir.glm}"
     }
-
+    
     links
     {
         "Can"
     }
-
+    
     filter "system:windows"
-        cppdialect "C++17"
         systemversion "latest"
-
+        
         defines
         {
             "CAN_PLATFORM_WINDOWS"
         }
-
+    
     filter "configurations:Debug"
         defines "CAN_DEBUG"
         runtime "Debug"
-        symbols "On"
-
+        symbols "on"
+    
     filter "configurations:Release"
         defines "CAN_RELEASE"
         runtime "Release"
-        optimize "On"
-
+        optimize "on"
+    
     filter "configurations:Dist"
         defines "CAN_DIST"
         runtime "Release"
-        optimize "On"
+        optimize "on"
