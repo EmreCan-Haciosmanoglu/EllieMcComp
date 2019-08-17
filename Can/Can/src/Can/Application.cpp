@@ -18,11 +18,13 @@ namespace Can
 
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+
+		m_ImGuiLayer = new Layer::ImGuiLayer();
 	}
 
 	Application::~Application()
 	{
-
+		delete m_ImGuiLayer;
 	}
 
 	void Application::OnEvent(Event::Event& e)
@@ -47,6 +49,11 @@ namespace Can
 
 			for (Layer::Layer* layer : m_LayerStack)
 				layer->OnUpdate();
+
+			m_ImGuiLayer->Begin();
+			for (Layer::Layer* layer : m_LayerStack)
+				layer->OnImGuiRender();
+			m_ImGuiLayer->End();
 
 			m_Window->OnUpdate();
 		}

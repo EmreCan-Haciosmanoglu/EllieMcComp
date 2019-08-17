@@ -62,7 +62,6 @@
       <Filter>Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\canpch.h" />
-    <ClInclude Include="src\Platform\OpenGl\ImGuiOpenGlRenderer.h" />
     <ClInclude Include="src\Can\Input.h" />
     <ClInclude Include="src\Can\KeyCode.h" />
     <ClInclude Include="src\Can\MouseButtonCode.h" />
@@ -90,6 +89,6 @@
       <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\canpch.cpp" />
-    <ClCompile Include="src\Platform\OpenGl\ImGuiOpenGlRenderer.cpp" />
+    <ClCompile Include="src\Can\Layers\ImGuiBuild.cpp" />
   </ItemGroup>
 </Project>

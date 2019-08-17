@@ -14,6 +14,7 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "Can/vendor/glfw/include"
 IncludeDir["GLAD"] = "Can/vendor/glad/include"
 IncludeDir["imgui"] = "Can/vendor/imgui"
+IncludeDir["glm"] = "Can/vendor/glm"
 
 startproject "Sandbox"
 
@@ -47,7 +48,8 @@ project "Can"
         "%{prj.name}/vendor/spdlog/include",
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.GLAD}",
-        "%{IncludeDir.imgui}"
+        "%{IncludeDir.imgui}",
+        "%{IncludeDir.glm}"
     }
 
     links
@@ -101,13 +103,16 @@ project "Sandbox"
     files
     {
         "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp"
+        "%{prj.name}/src/**.cpp",
+        "%{prj.name}/vendor/glm/glm/**.hpp",
+        "%{prj.name}/vendor/glm/glm/**.inl"
     }
 
     includedirs
     {
         "Can/vendor/spdlog/include",
-        "Can/src"
+        "Can/src",
+        "%{IncludeDir.glm}"
     }
 
     links

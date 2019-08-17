@@ -5,6 +5,7 @@
 #include "Window.h"
 #include "Can/Events/Event.h"
 #include "Can/Layers/LayerStack.h"
+#include "Can/Layers/ImGuiLayer.h"
 #include "Can/Events/ApplicationEvent.h"
 
 
@@ -29,6 +30,7 @@ namespace Can
 		bool OnWindowClose(Event::WindowCloseEvent& e);
 
 		std::unique_ptr<Window> m_Window;
+		Layer::ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		Layer::LayerStack m_LayerStack;
 
