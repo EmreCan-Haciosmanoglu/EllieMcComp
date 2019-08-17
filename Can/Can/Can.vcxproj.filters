@@ -64,6 +64,8 @@
     <ClInclude Include="src\canpch.h" />
     <ClInclude Include="src\Platform\OpenGl\ImGuiOpenGlRenderer.h" />
     <ClInclude Include="src\Can\Input.h" />
+    <ClInclude Include="src\Can\KeyCode.h" />
+    <ClInclude Include="src\Can\MouseButtonCode.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">

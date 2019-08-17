@@ -11,11 +11,13 @@ public:
 
 	void OnUpdate() override
 	{
+		if (Can::Input::IsKeyPressed(CAN_KEY_F))
+			CAN_CORE_WARN("F key is pressed!!!");
 	}
 
 	void OnEvent(Can::Event::Event& event) override
 	{
-		CAN_TRACE("{0}", event);
+		//CAN_TRACE("{0}", event);
 	}
 };
 

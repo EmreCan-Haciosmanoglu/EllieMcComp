@@ -13,6 +13,8 @@
 #include <unordered_set>
 
 #include "Can/Log.h"
+#include "Can/KeyCode.h"
+#include "Can/MouseButtonCode.h"
 
 #ifdef CAN_PLATFORM_WINDOWS
 	#include <Windows.h>

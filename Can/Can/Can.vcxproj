@@ -161,10 +161,12 @@
     <ClInclude Include="src\Can\Events\KeyEvent.h" />
     <ClInclude Include="src\Can\Events\MouseEvent.h" />
     <ClInclude Include="src\Can\Input.h" />
+    <ClInclude Include="src\Can\KeyCode.h" />
     <ClInclude Include="src\Can\Layers\ImGuiLayer.h" />
     <ClInclude Include="src\Can\Layers\Layer.h" />
     <ClInclude Include="src\Can\Layers\LayerStack.h" />
     <ClInclude Include="src\Can\Log.h" />
+    <ClInclude Include="src\Can\MouseButtonCode.h" />
     <ClInclude Include="src\Can\Window.h" />
     <ClInclude Include="src\Platform\OpenGl\ImGuiOpenGlRenderer.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
