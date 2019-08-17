@@ -7,3 +7,6 @@
 [submodule "Can/Can/vendor/imgui"]
 	path = Can/Can/vendor/imgui
 	url = https://github.com/EmreCan-Haciosmanoglu/imgui
+[submodule "Can/Can/vendor/glm"]
+	path = Can/Can/vendor/glm
+	url = https://github.com/g-truc/glm
