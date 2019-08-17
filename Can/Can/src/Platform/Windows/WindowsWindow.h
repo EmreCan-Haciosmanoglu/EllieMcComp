@@ -1,7 +1,9 @@
 #pragma once
 #include "Can/Window.h"
+#include "Can/Renderer/GraphicsContext.h"
 
 #include <GLFW/glfw3.h>
+
 
 namespace Can::Platform::Windows
 {
@@ -25,7 +27,7 @@ namespace Can::Platform::Windows
 		virtual void ShutDown();
 	private:
 		GLFWwindow* m_Window;
-
+		GraphicsContext* m_Context;
 		struct WindowData
 		{
 			std::string Title;

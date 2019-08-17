@@ -40,6 +40,12 @@
     <ClInclude Include="src\Can\Events\MouseEvent.h">
       <Filter>Can\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\Can\Input.h">
+      <Filter>Can</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\KeyCode.h">
+      <Filter>Can</Filter>
+    </ClInclude>
     <ClInclude Include="src\Can\Layers\ImGuiLayer.h">
       <Filter>Can\Layers</Filter>
     </ClInclude>
@@ -52,6 +58,9 @@
     <ClInclude Include="src\Can\Log.h">
       <Filter>Can</Filter>
     </ClInclude>
+    <ClInclude Include="src\Can\MouseButtonCode.h">
+      <Filter>Can</Filter>
+    </ClInclude>
     <ClInclude Include="src\Can\Window.h">
       <Filter>Can</Filter>
     </ClInclude>
@@ -62,13 +71,15 @@
       <Filter>Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\canpch.h" />
-    <ClInclude Include="src\Can\Input.h" />
-    <ClInclude Include="src\Can\KeyCode.h" />
-    <ClInclude Include="src\Can\MouseButtonCode.h" />
+    <ClInclude Include="src\Can\Renderer\GraphicsContext.h" />
+    <ClInclude Include="src\Platform\OpenGl\OpenGLContext.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
       <Filter>Can</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Layers\ImGuiBuild.cpp">
+      <Filter>Can\Layers</Filter>
     </ClCompile>
     <ClCompile Include="src\Can\Layers\ImGuiLayer.cpp">
       <Filter>Can\Layers</Filter>
@@ -89,6 +100,6 @@
       <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\canpch.cpp" />
-    <ClCompile Include="src\Can\Layers\ImGuiBuild.cpp" />
+    <ClCompile Include="src\Platform\OpenGl\OpenGLContext.cpp" />
   </ItemGroup>
 </Project>
