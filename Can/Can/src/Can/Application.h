@@ -8,6 +8,7 @@
 #include "Can/Layers/ImGuiLayer.h"
 #include "Can/Events/ApplicationEvent.h"
 
+#include "Can/Renderer/Shader.h"
 
 namespace Can
 {
@@ -35,6 +36,7 @@ namespace Can
 		Layer::LayerStack m_LayerStack;
 
 		unsigned int m_VertexArray, m_VertexBuffer, m_IndexBuffer;
+		std::unique_ptr<Shader> m_Shader;
 
 		static Application* s_Instance;
 	};

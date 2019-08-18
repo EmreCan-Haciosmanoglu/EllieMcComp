@@ -73,6 +73,7 @@
     <ClInclude Include="src\canpch.h" />
     <ClInclude Include="src\Can\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLContext.h" />
+    <ClInclude Include="src\Can\Renderer\Shader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -101,5 +102,6 @@
     </ClCompile>
     <ClCompile Include="src\canpch.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLContext.cpp" />
+    <ClCompile Include="src\Can\Renderer\Shader.cpp" />
   </ItemGroup>
 </Project>

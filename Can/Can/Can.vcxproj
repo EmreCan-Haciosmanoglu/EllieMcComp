@@ -156,6 +156,7 @@
     <ClInclude Include="src\Can\Log.h" />
     <ClInclude Include="src\Can\MouseButtonCode.h" />
     <ClInclude Include="src\Can\Renderer\GraphicsContext.h" />
+    <ClInclude Include="src\Can\Renderer\Shader.h" />
     <ClInclude Include="src\Can\Window.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLContext.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
@@ -169,6 +170,7 @@
     <ClCompile Include="src\Can\Layers\Layer.cpp" />
     <ClCompile Include="src\Can\Layers\LayerStack.cpp" />
     <ClCompile Include="src\Can\Log.cpp" />
+    <ClCompile Include="src\Can\Renderer\Shader.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />

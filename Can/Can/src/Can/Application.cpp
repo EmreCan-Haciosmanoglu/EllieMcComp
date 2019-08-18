@@ -43,6 +43,35 @@ namespace Can
 
 		unsigned int indices[3]{ 0,1,2 };
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+		std::string veS = R"(
+			#version 330 core
+			
+			layout(location = 0) in vec3 a_Position;
+			
+			out vec3 v_Position;
+
+			void main()
+			{
+				gl_Position = vec4(a_Position,1.0);
+				v_Position = (a_Position + 1.0) / 2.0;
+			}
+		)";
+
+		std::string frS = R"(
+			#version 330 core
+			
+			layout(location = 0) out vec4 color;
+			
+			in vec3 v_Position;
+			
+			void main()
+			{
+				color = vec4(v_Position,1.0);
+			}
+		)";
+
+		m_Shader.reset(new Shader(veS,frS));
 	}
 
 	Application::~Application()
@@ -68,6 +97,8 @@ namespace Can
 		{
 			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
+
+			m_Shader->Bind();
 
 			glBindVertexArray(m_VertexArray);
 			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
