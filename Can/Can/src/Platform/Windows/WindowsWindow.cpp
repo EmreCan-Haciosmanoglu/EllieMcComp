@@ -42,7 +42,6 @@ namespace Can::Platform::Windows
 		m_Data.Width = props.Width;
 		m_Data.Height = props.Height;
 
-		using Can::Log;
 		CAN_CORE_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width, props.Height);
 		
 
