@@ -8,6 +8,7 @@
 #include "Can/Layers/ImGuiLayer.h"
 #include "Can/Events/ApplicationEvent.h"
 #include "Platform/OpenGl/OpenGLBuffer.h"
+#include "Platform/OpenGl/OpenGLVertexArray.h"
 
 #include "Can/Renderer/Shader.h"
 
@@ -36,10 +37,8 @@ namespace Can
 		bool m_Running = true;
 		Layer::LayerStack m_LayerStack;
 
-		unsigned int m_VertexArray;
-		std::unique_ptr<Shader> m_Shader;
-		std::unique_ptr<VertexBuffer> m_VertexBuffer;
-		std::unique_ptr<IndexBuffer> m_IndexBuffer;
+		std::shared_ptr<Shader> m_Shader;
+		std::shared_ptr <VertexArray> m_VertexArray;
 
 		static Application* s_Instance;
 	};
