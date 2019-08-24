@@ -157,6 +157,7 @@
     <ClInclude Include="src\Can\MouseButtonCode.h" />
     <ClInclude Include="src\Can\Renderer\Buffer.h" />
     <ClInclude Include="src\Can\Renderer\GraphicsContext.h" />
+    <ClInclude Include="src\Can\Renderer\OrthographicCamera.h" />
     <ClInclude Include="src\Can\Renderer\RenderCommand.h" />
     <ClInclude Include="src\Can\Renderer\Renderer.h" />
     <ClInclude Include="src\Can\Renderer\RendererAPI.h" />
@@ -179,6 +180,7 @@
     <ClCompile Include="src\Can\Layers\LayerStack.cpp" />
     <ClCompile Include="src\Can\Log.cpp" />
     <ClCompile Include="src\Can\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Can\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\Can\Renderer\RenderCommand.cpp" />
     <ClCompile Include="src\Can\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Can\Renderer\RendererAPI.cpp" />

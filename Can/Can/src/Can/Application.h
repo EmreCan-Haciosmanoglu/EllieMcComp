@@ -4,13 +4,14 @@
 
 #include "Window.h"
 #include "Can/Events/Event.h"
+#include "Can/Events/ApplicationEvent.h"
 #include "Can/Layers/LayerStack.h"
 #include "Can/Layers/ImGuiLayer.h"
-#include "Can/Events/ApplicationEvent.h"
+#include "Can/Renderer/Shader.h"
+#include "Can/Renderer/OrthographicCamera.h"
+
 #include "Platform/OpenGl/OpenGLBuffer.h"
 #include "Platform/OpenGl/OpenGLVertexArray.h"
-
-#include "Can/Renderer/Shader.h"
 
 namespace Can
 {
@@ -39,6 +40,8 @@ namespace Can
 
 		std::shared_ptr<Shader> m_Shader;
 		std::shared_ptr <VertexArray> m_VertexArray;
+
+		OrthographicCamera m_Camera;
 
 		static Application* s_Instance;
 	};
