@@ -5,6 +5,7 @@
 #include <glad/glad.h>
 
 #include "Input.h"
+#include "Can/Renderer/Renderer.h"
 
 namespace Can
 {
@@ -97,13 +98,16 @@ namespace Can
 	{
 		while (m_Running)
 		{
-			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
+			RenderCommand::SetClearColor({ 0.15f, 0.15f, 0.15f, 1.0f });
+			RenderCommand::Clear();
+
+			Renderer::BeginScene();
 
 			m_Shader->Bind();
+			Renderer::Submit(m_VertexArray);
 
-			m_VertexArray->Bind();
-			glDrawElements(GL_TRIANGLES, m_VertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			Renderer::EndScene();
+
 
 			for (Layer::Layer* layer : m_LayerStack)
 				layer->OnUpdate();
