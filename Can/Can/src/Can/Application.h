@@ -7,11 +7,6 @@
 #include "Can/Events/ApplicationEvent.h"
 #include "Can/Layers/LayerStack.h"
 #include "Can/Layers/ImGuiLayer.h"
-#include "Can/Renderer/Shader.h"
-#include "Can/Renderer/OrthographicCamera.h"
-
-#include "Platform/OpenGl/OpenGLBuffer.h"
-#include "Platform/OpenGl/OpenGLVertexArray.h"
 
 namespace Can
 {
@@ -37,11 +32,6 @@ namespace Can
 		Layer::ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		Layer::LayerStack m_LayerStack;
-
-		std::shared_ptr<Shader> m_Shader;
-		std::shared_ptr <VertexArray> m_VertexArray;
-
-		OrthographicCamera m_Camera;
 
 		static Application* s_Instance;
 	};

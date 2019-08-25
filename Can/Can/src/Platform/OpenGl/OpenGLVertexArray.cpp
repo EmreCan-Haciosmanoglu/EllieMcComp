@@ -25,6 +25,7 @@ namespace Can
 		CAN_CORE_ASSERT(false, "Unknown ShaderDataType!");
 		return 0;
 	}
+	
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
 		glCreateVertexArrays(1, &m_RendererID);
@@ -33,6 +34,7 @@ namespace Can
 	{
 		glDeleteVertexArrays(1, &m_RendererID);
 	}
+	
 	void OpenGLVertexArray::Bind() const
 	{
 		glBindVertexArray(m_RendererID);
@@ -41,6 +43,7 @@ namespace Can
 	{
 		glBindVertexArray(0);
 	}
+	
 	void OpenGLVertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexbuffer) 
 	{
 		CAN_CORE_ASSERT(vertexbuffer->GetLayout().GetElements().size(), "Vertex buffer has no layout");

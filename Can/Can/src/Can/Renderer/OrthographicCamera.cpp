@@ -1,7 +1,7 @@
 #include "canpch.h"
 #include "OrthographicCamera.h"
 
-#include <glm/gtc/matrix_transform.hpp>s
+#include <glm/gtc/matrix_transform.hpp>
 namespace Can
 {
 	OrthographicCamera::OrthographicCamera(float left, float right, float bottom, float top)
