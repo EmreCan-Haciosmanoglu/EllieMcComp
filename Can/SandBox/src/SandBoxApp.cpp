@@ -6,7 +6,7 @@ class ExampleLayer : public Can::Layer::Layer
 public:
 	ExampleLayer()
 		: Can::Layer::Layer("Example")
-		, m_Camera(-16.0f, 16.0f, -9.0f, 9.0f)
+		, m_Camera(-16.0f, 16.0f, -9.0f, 9.0f, -10.0f, 10.0f)
 		, m_CameraPosition(0.0f)
 		, m_CameraRotation(0.0f)
 		, m_CameraMoveSpeed(0.1f)
@@ -34,7 +34,6 @@ public:
 		std::shared_ptr<Can::IndexBuffer> indexBuffer;
 		indexBuffer.reset(Can::IndexBuffer::Create(indices, 3));
 		m_VertexArray->SetIndexBuffer(indexBuffer);
-
 		std::string veS = R"(
 			#version 330 core
 			
@@ -66,6 +65,72 @@ public:
 		)";
 
 		m_Shader.reset(new Can::Shader(veS, frS));
+
+
+		VertexArray.reset(Can::VertexArray::Create());
+
+		float cubeVertexPositions[8 * (3 + 4) * 3] = {
+			+1.0f, +1.0f, +1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // Red		-- 0	-0
+			+1.0f, +1.0f, +1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // Blue	-- 1	-0
+			+1.0f, +1.0f, +1.0f, 1.0f, 0.0f, 1.0f, 1.0f, // Magenta	-- 2	-0
+														    		  		
+			+1.0f, +1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // Red		-- 3	-1
+			+1.0f, +1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // Blue	-- 4	-1
+			+1.0f, +1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, // Cyan	-- 5	-1
+														    		  		
+			+1.0f, -1.0f, +1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // Red		-- 6	-2
+			+1.0f, -1.0f, +1.0f, 1.0f, 1.0f, 0.0f, 1.0f, // Yellow	-- 7	-2
+			+1.0f, -1.0f, +1.0f, 1.0f, 0.0f, 1.0f, 1.0f, // Magenta	-- 8	-2
+														    		  		
+			+1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // Red		-- 9	-3
+			+1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 0.0f, 1.0f, // Yellow	-- 10	-3
+			+1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, // Cyan	-- 11	-3
+														    		  		
+			-1.0f, +1.0f, +1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // Blue	-- 12	-4
+			-1.0f, +1.0f, +1.0f, 0.0f, 1.0f, 0.0f, 1.0f, // Green	-- 13	-4
+			-1.0f, +1.0f, +1.0f, 1.0f, 0.0f, 1.0f, 1.0f, // Magenta	-- 14	-4
+														    		  		
+			-1.0f, +1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // Blue	-- 15	-5
+			-1.0f, +1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f, // Green	-- 16	-5
+			-1.0f, +1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, // Cyan	-- 17	-5
+														    		  		
+			-1.0f, -1.0f, +1.0f, 0.0f, 1.0f, 0.0f, 1.0f, // Green	-- 18	-6
+			-1.0f, -1.0f, +1.0f, 1.0f, 1.0f, 0.0f, 1.0f, // Yellow	-- 19	-6
+			-1.0f, -1.0f, +1.0f, 1.0f, 0.0f, 1.0f, 1.0f, // Magenta	-- 20	-6
+														    		  		
+			-1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f, // Green	-- 21	-7
+			-1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 0.0f, 1.0f, // Yellow	-- 22	-7
+			-1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f  // Cyan	-- 23	-7
+		};
+		std::shared_ptr<Can::VertexBuffer> vertexPositionBuffer;
+		vertexPositionBuffer.reset(Can::VertexBuffer::Create(cubeVertexPositions, sizeof(cubeVertexPositions)));
+
+		Can::BufferLayout Positionlayout = {
+			{Can::ShaderDataType::Float3, "a_Position"},
+			{Can::ShaderDataType::Float4, "a_Color"}
+		};
+
+		vertexPositionBuffer->SetLayout(Positionlayout);
+		VertexArray->AddVertexBuffer(vertexPositionBuffer);
+
+		uint32_t cubeIndices[12 * 3] = {
+			0,  6,  9,  // Red
+			0,  9,  3,  // Red
+			4,  15, 12, // Blue
+			4,  12, 1,  // Blue
+			16, 21, 18, // Green
+			16, 18, 13, // Green
+			7,  19, 22, // Yellow
+			7,  22, 10, // Yellow
+			5,  11, 17, // Cyan
+			17, 11, 23, // Cyan
+			14, 20, 8,  // Magenta
+			14, 8,  2   // Magenta
+		};
+
+		std::shared_ptr<Can::IndexBuffer> cIndexBuffer;
+		cIndexBuffer.reset(Can::IndexBuffer::Create(cubeIndices, 12 * 3));
+		VertexArray->SetIndexBuffer(cIndexBuffer);
 	}
 
 	void OnUpdate() override
@@ -90,13 +155,31 @@ public:
 
 		if (Can::Input::IsKeyPressed(CAN_KEY_A))
 		{
-			m_CameraRotation += m_CameraRotateSpeed;
+			m_CameraRotation.z += m_CameraRotateSpeed;
 		}
 		else if (Can::Input::IsKeyPressed(CAN_KEY_D))
 		{
-			m_CameraRotation -= m_CameraRotateSpeed;
+			m_CameraRotation.z -= m_CameraRotateSpeed;
 		}
-		
+
+		if (Can::Input::IsKeyPressed(CAN_KEY_W))
+		{
+			m_CameraRotation.y += m_CameraRotateSpeed;
+		}
+		else if (Can::Input::IsKeyPressed(CAN_KEY_S))
+		{
+			m_CameraRotation.y -= m_CameraRotateSpeed;
+		}
+
+		if (Can::Input::IsKeyPressed(CAN_KEY_Q))
+		{
+			m_CameraRotation.x += m_CameraRotateSpeed;
+		}
+		else if (Can::Input::IsKeyPressed(CAN_KEY_E))
+		{
+			m_CameraRotation.x -= m_CameraRotateSpeed;
+		}
+
 		Can::RenderCommand::SetClearColor({ 0.15f, 0.15f, 0.15f, 1.0f });
 		Can::RenderCommand::Clear();
 
@@ -104,9 +187,10 @@ public:
 		m_Camera.SetRotation(m_CameraRotation);
 
 		Can::Renderer::BeginScene(m_Camera);
-		
+
 		Can::Renderer::Submit(m_Shader, m_VertexArray);
-		
+		Can::Renderer::Submit(m_Shader, VertexArray);
+
 		Can::Renderer::EndScene();
 	}
 
@@ -118,12 +202,14 @@ private:
 	std::shared_ptr<Can::Shader> m_Shader;
 	std::shared_ptr <Can::VertexArray> m_VertexArray;
 
+	std::shared_ptr <Can::VertexArray> VertexArray;
+
 	Can::OrthographicCamera m_Camera;
 
 	glm::vec3 m_CameraPosition;
 	float m_CameraMoveSpeed;
 
-	float m_CameraRotation;
+	glm::vec3 m_CameraRotation;
 	float m_CameraRotateSpeed;
 
 };

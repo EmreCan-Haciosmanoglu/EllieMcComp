@@ -7,6 +7,8 @@
 #include "Can/Events/ApplicationEvent.h"
 #include "Can/Layers/LayerStack.h"
 #include "Can/Layers/ImGuiLayer.h"
+#include "Can/Renderer/Shader.h"
+#include "Can/Renderer/VertexArray.h"
 
 namespace Can
 {

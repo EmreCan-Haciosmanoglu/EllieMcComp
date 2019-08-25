@@ -41,6 +41,11 @@ namespace Can
 	{
 		while (m_Running)
 		{
+
+			glEnable(GL_CULL_FACE);
+			glCullFace(GL_BACK);
+			glFrontFace(GL_CCW);
+
 			for (Layer::Layer* layer : m_LayerStack)
 				layer->OnUpdate();
 
