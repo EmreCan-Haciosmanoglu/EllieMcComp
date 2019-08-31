@@ -10,6 +10,7 @@ public:
 		, m_CameraPosition(0.0f)
 		, m_CameraRotation(0.0f)
 		, m_CameraMoveSpeed(10.0f)
+		, m_CubePosition(0.0f)
 		, m_CameraRotateSpeed(90.0f)
 	{
 		m_VertexArray.reset(Can::VertexArray::Create());
@@ -41,13 +42,14 @@ public:
 			layout(location = 1) in vec4 a_Color;
 			
 			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
 
 			out vec4 v_Color;
 
 			void main()
 			{
 				v_Color = a_Color;
-				gl_Position = u_ViewProjection * vec4(a_Position,1.0);
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position,1.0);
 			}
 		)";
 
@@ -137,6 +139,8 @@ public:
 	{
 		float time = ts;
 		//CAN_CORE_INFO("Timestep: {0}s ({1}ms)", time ,ts.GetMiliseconds());
+		
+		//Camera Movement
 		if (Can::Input::IsKeyPressed(CAN_KEY_LEFT))
 		{
 			m_CameraPosition -= glm::vec3(m_CameraMoveSpeed * time, 0.0f, 0.0f);
@@ -155,6 +159,7 @@ public:
 			m_CameraPosition -= glm::vec3(0.0f, m_CameraMoveSpeed * time, 0.0f);
 		}
 
+		//Camera Rotation
 		if (Can::Input::IsKeyPressed(CAN_KEY_A))
 		{
 			m_CameraRotation.z += m_CameraRotateSpeed * time;
@@ -182,6 +187,34 @@ public:
 			m_CameraRotation.x -= m_CameraRotateSpeed * time;
 		}
 
+		//Cube Movement
+		if (Can::Input::IsKeyPressed(CAN_KEY_G))
+		{
+			m_CubePosition.x -= m_CameraMoveSpeed * time;
+		}
+		else if (Can::Input::IsKeyPressed(CAN_KEY_J))
+		{
+			m_CubePosition.x += m_CameraMoveSpeed * time;
+		}
+
+		if (Can::Input::IsKeyPressed(CAN_KEY_Y))
+		{
+			m_CubePosition.y += m_CameraMoveSpeed * time;
+		}
+		else if (Can::Input::IsKeyPressed(CAN_KEY_H))
+		{
+			m_CubePosition.y -= m_CameraMoveSpeed * time;
+		}
+
+		if (Can::Input::IsKeyPressed(CAN_KEY_T))
+		{
+			m_CubePosition.z += m_CameraMoveSpeed * time;
+		}
+		else if (Can::Input::IsKeyPressed(CAN_KEY_U))
+		{
+			m_CubePosition.z -= m_CameraMoveSpeed * time;
+		}
+
 		Can::RenderCommand::SetClearColor({ 0.15f, 0.15f, 0.15f, 1.0f });
 		Can::RenderCommand::Clear();
 
@@ -191,7 +224,8 @@ public:
 		Can::Renderer::BeginScene(m_Camera);
 
 		Can::Renderer::Submit(m_Shader, m_VertexArray);
-		Can::Renderer::Submit(m_Shader, VertexArray);
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_CubePosition);
+		Can::Renderer::Submit(m_Shader, VertexArray, transform);
 
 		Can::Renderer::EndScene();
 	}
@@ -213,6 +247,8 @@ private:
 
 	glm::vec3 m_CameraRotation;
 	float m_CameraRotateSpeed;
+
+	glm::vec3 m_CubePosition;
 
 };
 
