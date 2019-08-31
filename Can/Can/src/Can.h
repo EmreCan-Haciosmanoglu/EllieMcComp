@@ -4,6 +4,8 @@
 #include "Can/Input.h"
 #include "Can/Application.h"
 
+#include "Can/Core/TimeStep.h"
+
 #include "Can/Layers/Layer.h"
 #include "Can/Layers/ImGuiLayer.h"
 

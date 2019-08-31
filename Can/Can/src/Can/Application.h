@@ -3,10 +3,15 @@
 #include "Core.h"
 
 #include "Window.h"
+
 #include "Can/Events/Event.h"
 #include "Can/Events/ApplicationEvent.h"
+
 #include "Can/Layers/LayerStack.h"
 #include "Can/Layers/ImGuiLayer.h"
+
+#include "Can/Core/TimeStep.h"
+
 #include "Can/Renderer/Shader.h"
 #include "Can/Renderer/VertexArray.h"
 
@@ -30,6 +35,8 @@ namespace Can
 	private:
 		bool OnWindowClose(Event::WindowCloseEvent& e);
 
+	private:
+		float m_LastFrameTime = 0.0f;
 		std::unique_ptr<Window> m_Window;
 		Layer::ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;

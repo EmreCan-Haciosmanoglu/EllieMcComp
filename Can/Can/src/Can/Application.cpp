@@ -2,6 +2,7 @@
 
 #include "Application.h"
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 namespace Can
 {
@@ -41,13 +42,15 @@ namespace Can
 	{
 		while (m_Running)
 		{
-
+			float time = (float)glfwGetTime();
+			TimeStep timestep = time - m_LastFrameTime;
+			m_LastFrameTime = time;
 			glEnable(GL_CULL_FACE);
 			glCullFace(GL_BACK);
 			glFrontFace(GL_CCW);
 
 			for (Layer::Layer* layer : m_LayerStack)
-				layer->OnUpdate();
+				layer->OnUpdate(timestep);
 
 			m_ImGuiLayer->Begin();
 			for (Layer::Layer* layer : m_LayerStack)

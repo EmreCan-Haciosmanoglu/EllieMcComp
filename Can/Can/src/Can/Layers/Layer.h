@@ -2,6 +2,7 @@
 
 #include "Can/Core.h"
 #include "Can/Events/Event.h"
+#include "Can/Core/TimeStep.h"
 
 namespace Can::Layer
 {
@@ -13,7 +14,7 @@ namespace Can::Layer
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpdate() {}
+		virtual void OnUpdate(TimeStep ts) {}
 		virtual void OnImGuiRender() {}
 		virtual void OnEvent(Event::Event& event) {}
 

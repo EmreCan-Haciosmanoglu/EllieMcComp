@@ -9,8 +9,8 @@ public:
 		, m_Camera(-16.0f, 16.0f, -9.0f, 9.0f, -10.0f, 10.0f)
 		, m_CameraPosition(0.0f)
 		, m_CameraRotation(0.0f)
-		, m_CameraMoveSpeed(0.1f)
-		, m_CameraRotateSpeed(2.0f)
+		, m_CameraMoveSpeed(10.0f)
+		, m_CameraRotateSpeed(90.0f)
 	{
 		m_VertexArray.reset(Can::VertexArray::Create());
 
@@ -133,51 +133,53 @@ public:
 		VertexArray->SetIndexBuffer(cIndexBuffer);
 	}
 
-	void OnUpdate() override
+	void OnUpdate(Can::TimeStep ts) override
 	{
+		float time = ts;
+		//CAN_CORE_INFO("Timestep: {0}s ({1}ms)", time ,ts.GetMiliseconds());
 		if (Can::Input::IsKeyPressed(CAN_KEY_LEFT))
 		{
-			m_CameraPosition -= glm::vec3(m_CameraMoveSpeed, 0.0f, 0.0f);
+			m_CameraPosition -= glm::vec3(m_CameraMoveSpeed * time, 0.0f, 0.0f);
 		}
 		else if (Can::Input::IsKeyPressed(CAN_KEY_RIGHT))
 		{
-			m_CameraPosition += glm::vec3(m_CameraMoveSpeed, 0.0f, 0.0f);
+			m_CameraPosition += glm::vec3(m_CameraMoveSpeed * time, 0.0f, 0.0f);
 		}
 
 		if (Can::Input::IsKeyPressed(CAN_KEY_UP))
 		{
-			m_CameraPosition += glm::vec3(0.0f, m_CameraMoveSpeed, 0.0f);
+			m_CameraPosition += glm::vec3(0.0f, m_CameraMoveSpeed * time, 0.0f);
 		}
 		else if (Can::Input::IsKeyPressed(CAN_KEY_DOWN))
 		{
-			m_CameraPosition -= glm::vec3(0.0f, m_CameraMoveSpeed, 0.0f);
+			m_CameraPosition -= glm::vec3(0.0f, m_CameraMoveSpeed * time, 0.0f);
 		}
 
 		if (Can::Input::IsKeyPressed(CAN_KEY_A))
 		{
-			m_CameraRotation.z += m_CameraRotateSpeed;
+			m_CameraRotation.z += m_CameraRotateSpeed * time;
 		}
 		else if (Can::Input::IsKeyPressed(CAN_KEY_D))
 		{
-			m_CameraRotation.z -= m_CameraRotateSpeed;
+			m_CameraRotation.z -= m_CameraRotateSpeed * time;
 		}
 
 		if (Can::Input::IsKeyPressed(CAN_KEY_W))
 		{
-			m_CameraRotation.y += m_CameraRotateSpeed;
+			m_CameraRotation.y += m_CameraRotateSpeed * time;
 		}
 		else if (Can::Input::IsKeyPressed(CAN_KEY_S))
 		{
-			m_CameraRotation.y -= m_CameraRotateSpeed;
+			m_CameraRotation.y -= m_CameraRotateSpeed * time;
 		}
 
 		if (Can::Input::IsKeyPressed(CAN_KEY_Q))
 		{
-			m_CameraRotation.x += m_CameraRotateSpeed;
+			m_CameraRotation.x += m_CameraRotateSpeed * time;
 		}
 		else if (Can::Input::IsKeyPressed(CAN_KEY_E))
 		{
-			m_CameraRotation.x -= m_CameraRotateSpeed;
+			m_CameraRotation.x -= m_CameraRotateSpeed * time;
 		}
 
 		Can::RenderCommand::SetClearColor({ 0.15f, 0.15f, 0.15f, 1.0f });
