@@ -1,6 +1,9 @@
 #include "canpch.h"
 #include "Can.h"
 
+#include "imgui.h"
+#include <glm/gtc/type_ptr.hpp>
+
 class ExampleLayer : public Can::Layer::Layer
 {
 public:
@@ -58,15 +61,18 @@ public:
 			
 			layout(location = 0) out vec4 color;
 			
+			uniform vec3 u_Color;
+
 			in vec4 v_Color;
 			
 			void main()
 			{
 				color = v_Color;
+				//color = vec4(u_Color,1.0);
 			}
 		)";
 
-		m_Shader.reset(new Can::Shader(veS, frS));
+		m_Shader.reset(Can::Shader::Create(veS, frS));
 
 
 		VertexArray.reset(Can::VertexArray::Create());
@@ -223,7 +229,12 @@ public:
 
 		Can::Renderer::BeginScene(m_Camera);
 
-		Can::Renderer::Submit(m_Shader, m_VertexArray);
+		//Can::Renderer::Submit(m_Shader, m_VertexArray);
+		std::shared_ptr<Can::OpenGLShader> openglshader = std::dynamic_pointer_cast<Can::OpenGLShader>(m_Shader);
+		if (openglshader)
+		{
+			openglshader->UploadUniformFloat3("u_Color", m_LeftColor);
+		}
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_CubePosition);
 		Can::Renderer::Submit(m_Shader, VertexArray, transform);
 
@@ -232,6 +243,18 @@ public:
 
 	void OnEvent(Can::Event::Event& event) override
 	{
+	}
+
+	void OnImGuiRender() override
+	{
+		ImGui::Begin("Settings");
+		ImGui::ColorEdit3("Left Color", glm::value_ptr(m_LeftColor));
+		ImGui::ColorEdit3("Right Color", glm::value_ptr(m_RightColor));
+		ImGui::ColorEdit3("Top Color", glm::value_ptr(m_TopColor));
+		ImGui::ColorEdit3("Bottom Color", glm::value_ptr(m_BottomColor));
+		ImGui::ColorEdit3("Back Color", glm::value_ptr(m_BackColor));
+		ImGui::ColorEdit3("Front Color", glm::value_ptr(m_FrontColor));
+		ImGui::End();
 	}
 
 private:
@@ -249,6 +272,13 @@ private:
 	float m_CameraRotateSpeed;
 
 	glm::vec3 m_CubePosition;
+
+	glm::vec3 m_LeftColor = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 m_RightColor = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 m_TopColor = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 m_BottomColor = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 m_BackColor = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 m_FrontColor = glm::vec3(0.0f, 0.0f, 0.0f);
 
 };
 

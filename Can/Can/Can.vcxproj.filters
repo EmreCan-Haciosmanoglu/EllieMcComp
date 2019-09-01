@@ -4,6 +4,9 @@
     <Filter Include="Can">
       <UniqueIdentifier>{D7DC870B-43E6-877C-CC61-9E7C386A937C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Can\Core">
+      <UniqueIdentifier>{8F9FCF7F-7B6C-2A8B-A485-183390B15F19}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Can\Events">
       <UniqueIdentifier>{DBD057B7-C788-9904-3090-72601C6734F5}</UniqueIdentifier>
     </Filter>
@@ -30,6 +33,9 @@
     </ClInclude>
     <ClInclude Include="src\Can\Core.h">
       <Filter>Can</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Core\TimeStep.h">
+      <Filter>Can\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Can\EntryPoint.h">
       <Filter>Can</Filter>
@@ -103,6 +109,9 @@
     <ClInclude Include="src\Platform\OpenGl\OpenGLRendererAPI.h">
       <Filter>Platform\OpenGl</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\OpenGl\OpenGLShader.h">
+      <Filter>Platform\OpenGl</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\OpenGl\OpenGLVertexArray.h">
       <Filter>Platform\OpenGl</Filter>
     </ClInclude>
@@ -113,7 +122,6 @@
       <Filter>Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\canpch.h" />
-    <ClInclude Include="src\Can\Core\TimeStep.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -162,6 +170,9 @@
       <Filter>Platform\OpenGl</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGl\OpenGLRendererAPI.cpp">
+      <Filter>Platform\OpenGl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGl\OpenGLShader.cpp">
       <Filter>Platform\OpenGl</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGl\OpenGLVertexArray.cpp">

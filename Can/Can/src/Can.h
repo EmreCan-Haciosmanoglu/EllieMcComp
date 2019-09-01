@@ -14,6 +14,7 @@
 #include "Can/Renderer/Renderer.h"
 
 #include "Platform/OpenGl/OpenGLBuffer.h"
+#include "Platform/OpenGl/OpenGLShader.h"
 #include "Platform/OpenGl/OpenGLVertexArray.h"
 
 #include <glm/gtc/matrix_transform.hpp>

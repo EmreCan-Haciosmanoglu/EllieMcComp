@@ -109,11 +109,13 @@ project "Sandbox"
     {
         "Can/vendor/spdlog/include",
         "Can/src",
+        "%{IncludeDir.imgui}",
         "%{IncludeDir.glm}"
     }
     
     links
     {
+        "imgui",
         "Can"
     }
     
