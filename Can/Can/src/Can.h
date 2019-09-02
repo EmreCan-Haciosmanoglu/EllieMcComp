@@ -10,10 +10,12 @@
 #include "Can/Layers/ImGuiLayer.h"
 
 #include "Can/Renderer/Shader.h"
-#include "Can/Renderer/OrthographicCamera.h"
+#include "Can/Renderer/Texture.h"
 #include "Can/Renderer/Renderer.h"
+#include "Can/Renderer/OrthographicCamera.h"
 
 #include "Platform/OpenGl/OpenGLBuffer.h"
+#include "Platform/OpenGl/OpenGLTexture.h"
 #include "Platform/OpenGl/OpenGLShader.h"
 #include "Platform/OpenGl/OpenGLVertexArray.h"
 

@@ -15,6 +15,7 @@ IncludeDir["GLFW"] = "Can/vendor/glfw/include"
 IncludeDir["GLAD"] = "Can/vendor/glad/include"
 IncludeDir["imgui"] = "Can/vendor/imgui"
 IncludeDir["glm"] = "Can/vendor/glm"
+IncludeDir["stb"] = "Can/vendor/stb"
 
 startproject "Sandbox"
 
@@ -40,7 +41,11 @@ project "Can"
     files
     {
         "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp"
+        "%{prj.name}/src/**.cpp",
+        "%{prj.name}/vendor/glm/glm/**.hpp",
+        "%{prj.name}/vendor/glm/glm/**.inl",
+        "%{prj.name}/vendor/stb/stb_image.cpp",
+        "%{prj.name}/vendor/stb/stb_image.h"
     }
     
     includedirs
@@ -50,7 +55,8 @@ project "Can"
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.GLAD}",
         "%{IncludeDir.imgui}",
-        "%{IncludeDir.glm}"
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.stb}"
     }
     
     links

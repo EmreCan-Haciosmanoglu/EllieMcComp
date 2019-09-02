@@ -16,28 +16,64 @@ public:
 		, m_CubePosition(0.0f)
 		, m_CameraRotateSpeed(90.0f)
 	{
-		m_VertexArray.reset(Can::VertexArray::Create());
+		m_SquareVertexArray.reset(Can::VertexArray::Create());
 
-		float vertices[3 * (3 + 4)] = {
-			-0.57f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-			 0.57f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-			 0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f
+		float vertices[4 * (3 + 2)] = {
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 
+			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};
-		Can::Ref<Can::VertexBuffer> vertexBuffer;
-		vertexBuffer.reset(Can::VertexBuffer::Create(vertices, sizeof(vertices)));
+		Can::Ref<Can::VertexBuffer> squareVertexBuffer;
+		squareVertexBuffer.reset(Can::VertexBuffer::Create(vertices, sizeof(vertices)));
 
 		Can::BufferLayout layout = {
 			{Can::ShaderDataType::Float3, "a_Position"},
-			{Can::ShaderDataType::Float4, "a_Color"}
+			{Can::ShaderDataType::Float2, "a_TexCoord"}
 		};
 
-		vertexBuffer->SetLayout(layout);
-		m_VertexArray->AddVertexBuffer(vertexBuffer);
+		squareVertexBuffer->SetLayout(layout);
+		m_SquareVertexArray->AddVertexBuffer(squareVertexBuffer);
 
-		uint32_t indices[3]{ 0,1,2 };
-		Can::Ref<Can::IndexBuffer> indexBuffer;
-		indexBuffer.reset(Can::IndexBuffer::Create(indices, 3));
-		m_VertexArray->SetIndexBuffer(indexBuffer);
+		uint32_t indices[6]{ 0,1,2,0,2,3 };
+		Can::Ref<Can::IndexBuffer> squareIndexBuffer;
+		squareIndexBuffer.reset(Can::IndexBuffer::Create(indices, 6));
+		m_SquareVertexArray->SetIndexBuffer(squareIndexBuffer);
+
+		std::string SveS = R"(
+			#version 330 core
+			
+			layout(location = 0) in vec3 a_Position;
+			layout(location = 1) in vec2 a_TexCoord;
+			
+			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
+
+			out vec2 v_TexCoord;
+
+			void main()
+			{
+				v_TexCoord = a_TexCoord;
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position,1.0);
+			}
+		)";
+		std::string SfrS = R"(
+			#version 330 core
+			
+			layout(location = 0) out vec4 color;
+			
+			uniform sampler2D u_Texture;
+
+			in vec2 v_TexCoord;
+			
+			void main()
+			{
+				color = texture(u_Texture, v_TexCoord);
+				//color = vec4(u_Color,1.0);
+			}
+		)";
+
+
 		std::string veS = R"(
 			#version 330 core
 			
@@ -72,10 +108,13 @@ public:
 			}
 		)";
 
-		m_Shader.reset(Can::Shader::Create(veS, frS));
+		m_SquareShader.reset(Can::Shader::Create(SveS, SfrS));
+		m_SquareTexture = Can::Texture2D::Create("assets/textures/Man.png");
+
+		m_CubeShader.reset(Can::Shader::Create(veS, frS));
 
 
-		VertexArray.reset(Can::VertexArray::Create());
+		m_CubeVertexArray.reset(Can::VertexArray::Create());
 
 		float cubeVertexPositions[8 * (3 + 4) * 3] = {
 			+1.0f, +1.0f, +1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // Red		-- 0	-0
@@ -119,7 +158,7 @@ public:
 		};
 
 		vertexPositionBuffer->SetLayout(Positionlayout);
-		VertexArray->AddVertexBuffer(vertexPositionBuffer);
+		m_CubeVertexArray->AddVertexBuffer(vertexPositionBuffer);
 
 		uint32_t cubeIndices[12 * 3] = {
 			0,  6,  9,  // Red
@@ -138,7 +177,14 @@ public:
 
 		Can::Ref<Can::IndexBuffer> cIndexBuffer;
 		cIndexBuffer.reset(Can::IndexBuffer::Create(cubeIndices, 12 * 3));
-		VertexArray->SetIndexBuffer(cIndexBuffer);
+		m_CubeVertexArray->SetIndexBuffer(cIndexBuffer);
+
+		Can::Ref<Can::OpenGLShader> openglshader = std::dynamic_pointer_cast<Can::OpenGLShader>(m_SquareShader);
+		if (openglshader)
+		{
+			openglshader->Bind();
+			openglshader->UploadUniformInt("u_Texture", 0);
+		}
 	}
 
 	void OnUpdate(Can::TimeStep ts) override
@@ -229,14 +275,17 @@ public:
 
 		Can::Renderer::BeginScene(m_Camera);
 
-		//Can::Renderer::Submit(m_Shader, m_VertexArray);
-		Can::Ref<Can::OpenGLShader> openglshader = std::dynamic_pointer_cast<Can::OpenGLShader>(m_Shader);
+		m_SquareTexture->Bind();
+		Can::Renderer::Submit(m_SquareShader, m_SquareVertexArray);
+		
+		Can::Ref<Can::OpenGLShader> openglshader = std::dynamic_pointer_cast<Can::OpenGLShader>(m_CubeShader);
 		if (openglshader)
 		{
+			openglshader->Bind();
 			openglshader->UploadUniformFloat3("u_Color", m_LeftColor);
 		}
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_CubePosition);
-		Can::Renderer::Submit(m_Shader, VertexArray, transform);
+		Can::Renderer::Submit(m_CubeShader, m_CubeVertexArray, transform);
 
 		Can::Renderer::EndScene();
 	}
@@ -258,10 +307,13 @@ public:
 	}
 
 private:
-	Can::Ref<Can::Shader> m_Shader;
-	Can::Ref<Can::VertexArray> m_VertexArray;
+	Can::Ref<Can::Shader> m_CubeShader;
+	Can::Ref<Can::Shader> m_SquareShader;
 
-	Can::Ref<Can::VertexArray> VertexArray;
+	Can::Ref<Can::VertexArray> m_CubeVertexArray;
+	Can::Ref<Can::VertexArray> m_SquareVertexArray;
+
+	Can::Ref<Can::Texture2D> m_SquareTexture;
 
 	Can::OrthographicCamera m_Camera;
 
