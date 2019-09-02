@@ -10,3 +10,6 @@
 [submodule "Can/Can/vendor/glm"]
 	path = Can/Can/vendor/glm
 	url = https://github.com/g-truc/glm
+[submodule "Can/Can/vendor/stb"]
+	path = Can/Can/vendor/stb
+	url = https://github.com/EmreCan-Haciosmanoglu/stb
