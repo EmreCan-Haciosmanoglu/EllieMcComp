@@ -16,13 +16,13 @@ namespace Can
 	}
 
 	void Renderer::Submit(
-		const std::shared_ptr<Shader>& shader,
-		const std::shared_ptr<VertexArray>& vertexArray,
+		const Ref<Shader>& shader,
+		const Ref<VertexArray>& vertexArray,
 		const glm::mat4& transform
 	)
 	{
 		shader->Bind();
-		std::shared_ptr<OpenGLShader> openglshader = std::dynamic_pointer_cast<OpenGLShader>(shader);
+		Ref<OpenGLShader> openglshader = std::dynamic_pointer_cast<OpenGLShader>(shader);
 		if (openglshader)
 		{
 			openglshader->UploadUniformMat4("u_ViewProjection", m_SceneData->ViewProjectMatrix);

@@ -37,7 +37,7 @@ namespace Can
 
 	private:
 		float m_LastFrameTime = 0.0f;
-		std::unique_ptr<Window> m_Window;
+		Scope<Window> m_Window;
 		Layer::ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		Layer::LayerStack m_LayerStack;

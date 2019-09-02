@@ -23,7 +23,7 @@ public:
 			 0.57f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
 			 0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f
 		};
-		std::shared_ptr<Can::VertexBuffer> vertexBuffer;
+		Can::Ref<Can::VertexBuffer> vertexBuffer;
 		vertexBuffer.reset(Can::VertexBuffer::Create(vertices, sizeof(vertices)));
 
 		Can::BufferLayout layout = {
@@ -35,7 +35,7 @@ public:
 		m_VertexArray->AddVertexBuffer(vertexBuffer);
 
 		uint32_t indices[3]{ 0,1,2 };
-		std::shared_ptr<Can::IndexBuffer> indexBuffer;
+		Can::Ref<Can::IndexBuffer> indexBuffer;
 		indexBuffer.reset(Can::IndexBuffer::Create(indices, 3));
 		m_VertexArray->SetIndexBuffer(indexBuffer);
 		std::string veS = R"(
@@ -110,7 +110,7 @@ public:
 			-1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 0.0f, 1.0f, // Yellow	-- 22	-7
 			-1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f  // Cyan	-- 23	-7
 		};
-		std::shared_ptr<Can::VertexBuffer> vertexPositionBuffer;
+		Can::Ref<Can::VertexBuffer> vertexPositionBuffer;
 		vertexPositionBuffer.reset(Can::VertexBuffer::Create(cubeVertexPositions, sizeof(cubeVertexPositions)));
 
 		Can::BufferLayout Positionlayout = {
@@ -136,7 +136,7 @@ public:
 			14, 8,  2   // Magenta
 		};
 
-		std::shared_ptr<Can::IndexBuffer> cIndexBuffer;
+		Can::Ref<Can::IndexBuffer> cIndexBuffer;
 		cIndexBuffer.reset(Can::IndexBuffer::Create(cubeIndices, 12 * 3));
 		VertexArray->SetIndexBuffer(cIndexBuffer);
 	}
@@ -230,7 +230,7 @@ public:
 		Can::Renderer::BeginScene(m_Camera);
 
 		//Can::Renderer::Submit(m_Shader, m_VertexArray);
-		std::shared_ptr<Can::OpenGLShader> openglshader = std::dynamic_pointer_cast<Can::OpenGLShader>(m_Shader);
+		Can::Ref<Can::OpenGLShader> openglshader = std::dynamic_pointer_cast<Can::OpenGLShader>(m_Shader);
 		if (openglshader)
 		{
 			openglshader->UploadUniformFloat3("u_Color", m_LeftColor);
@@ -258,10 +258,10 @@ public:
 	}
 
 private:
-	std::shared_ptr<Can::Shader> m_Shader;
-	std::shared_ptr <Can::VertexArray> m_VertexArray;
+	Can::Ref<Can::Shader> m_Shader;
+	Can::Ref<Can::VertexArray> m_VertexArray;
 
-	std::shared_ptr <Can::VertexArray> VertexArray;
+	Can::Ref<Can::VertexArray> VertexArray;
 
 	Can::OrthographicCamera m_Camera;
 

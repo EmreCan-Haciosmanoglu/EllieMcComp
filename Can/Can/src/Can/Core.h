@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #ifdef CAN_PLATFORM_WINDOWS
 #ifdef CAN_DYNAMIC_LINK
 #ifdef CAN_BUILD_DLL
@@ -29,3 +31,12 @@
 #define BIT(x) (1 << x)
 
 #define CAN_BIND_EVENT_FN(x) std::bind(&Can::Layer::x,this,std::placeholders::_1)
+
+namespace Can
+{
+	template<typename T>
+	using Scope = std::unique_ptr<T>;
+
+	template<typename T>
+	using Ref = std::shared_ptr<T>;
+}
