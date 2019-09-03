@@ -1,6 +1,8 @@
 #include "canpch.h"
 
 #include "Application.h"
+#include "Can/Renderer/Renderer.h"
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -16,6 +18,9 @@ namespace Can
 
 		m_Window = Scope<Window>(Window::Create());
 		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+
+		Renderer::Init();
+
 
 		m_ImGuiLayer = new Layer::ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
@@ -45,9 +50,6 @@ namespace Can
 			float time = (float)glfwGetTime();
 			TimeStep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
-			glEnable(GL_CULL_FACE);
-			glCullFace(GL_BACK);
-			glFrontFace(GL_CCW);
 
 			for (Layer::Layer* layer : m_LayerStack)
 				layer->OnUpdate(timestep);

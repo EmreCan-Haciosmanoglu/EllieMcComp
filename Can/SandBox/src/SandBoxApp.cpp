@@ -110,6 +110,7 @@ public:
 
 		m_SquareShader.reset(Can::Shader::Create(SveS, SfrS));
 		m_SquareTexture = Can::Texture2D::Create("assets/textures/Man.png");
+		m_NameTexture = Can::Texture2D::Create("assets/textures/Name.png");
 
 		m_CubeShader.reset(Can::Shader::Create(veS, frS));
 
@@ -185,6 +186,7 @@ public:
 			openglshader->Bind();
 			openglshader->UploadUniformInt("u_Texture", 0);
 		}
+
 	}
 
 	void OnUpdate(Can::TimeStep ts) override
@@ -277,6 +279,10 @@ public:
 
 		m_SquareTexture->Bind();
 		Can::Renderer::Submit(m_SquareShader, m_SquareVertexArray);
+
+		m_NameTexture->Bind();
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_CubePosition);
+		Can::Renderer::Submit(m_SquareShader, m_SquareVertexArray, transform);
 		
 		Can::Ref<Can::OpenGLShader> openglshader = std::dynamic_pointer_cast<Can::OpenGLShader>(m_CubeShader);
 		if (openglshader)
@@ -284,7 +290,7 @@ public:
 			openglshader->Bind();
 			openglshader->UploadUniformFloat3("u_Color", m_LeftColor);
 		}
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_CubePosition);
+		transform = glm::translate(transform, m_CubePosition);
 		Can::Renderer::Submit(m_CubeShader, m_CubeVertexArray, transform);
 
 		Can::Renderer::EndScene();
@@ -314,6 +320,7 @@ private:
 	Can::Ref<Can::VertexArray> m_SquareVertexArray;
 
 	Can::Ref<Can::Texture2D> m_SquareTexture;
+	Can::Ref<Can::Texture2D> m_NameTexture;
 
 	Can::OrthographicCamera m_Camera;
 
