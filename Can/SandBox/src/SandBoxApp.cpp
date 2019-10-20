@@ -195,78 +195,84 @@ public:
 		//CAN_CORE_INFO("Timestep: {0}s ({1}ms)", time ,ts.GetMiliseconds());
 		
 		//Camera Movement
-		if (Can::Input::IsKeyPressed(CAN_KEY_LEFT))
 		{
-			m_CameraPosition -= glm::vec3(m_CameraMoveSpeed * time, 0.0f, 0.0f);
-		}
-		else if (Can::Input::IsKeyPressed(CAN_KEY_RIGHT))
-		{
-			m_CameraPosition += glm::vec3(m_CameraMoveSpeed * time, 0.0f, 0.0f);
-		}
+			if (Can::Input::IsKeyPressed(CAN_KEY_LEFT))
+			{
+				m_CameraPosition -= glm::vec3(m_CameraMoveSpeed * time, 0.0f, 0.0f);
+			}
+			else if (Can::Input::IsKeyPressed(CAN_KEY_RIGHT))
+			{
+				m_CameraPosition += glm::vec3(m_CameraMoveSpeed * time, 0.0f, 0.0f);
+			}
 
-		if (Can::Input::IsKeyPressed(CAN_KEY_UP))
-		{
-			m_CameraPosition += glm::vec3(0.0f, m_CameraMoveSpeed * time, 0.0f);
-		}
-		else if (Can::Input::IsKeyPressed(CAN_KEY_DOWN))
-		{
-			m_CameraPosition -= glm::vec3(0.0f, m_CameraMoveSpeed * time, 0.0f);
+			if (Can::Input::IsKeyPressed(CAN_KEY_UP))
+			{
+				m_CameraPosition += glm::vec3(0.0f, m_CameraMoveSpeed * time, 0.0f);
+			}
+			else if (Can::Input::IsKeyPressed(CAN_KEY_DOWN))
+			{
+				m_CameraPosition -= glm::vec3(0.0f, m_CameraMoveSpeed * time, 0.0f);
+			}
 		}
 
 		//Camera Rotation
-		if (Can::Input::IsKeyPressed(CAN_KEY_A))
 		{
-			m_CameraRotation.z += m_CameraRotateSpeed * time;
-		}
-		else if (Can::Input::IsKeyPressed(CAN_KEY_D))
-		{
-			m_CameraRotation.z -= m_CameraRotateSpeed * time;
-		}
+			if (Can::Input::IsKeyPressed(CAN_KEY_A))
+			{
+				m_CameraRotation.z += m_CameraRotateSpeed * time;
+			}
+			else if (Can::Input::IsKeyPressed(CAN_KEY_D))
+			{
+				m_CameraRotation.z -= m_CameraRotateSpeed * time;
+			}
 
-		if (Can::Input::IsKeyPressed(CAN_KEY_W))
-		{
-			m_CameraRotation.y += m_CameraRotateSpeed * time;
-		}
-		else if (Can::Input::IsKeyPressed(CAN_KEY_S))
-		{
-			m_CameraRotation.y -= m_CameraRotateSpeed * time;
-		}
+			if (Can::Input::IsKeyPressed(CAN_KEY_W))
+			{
+				m_CameraRotation.y += m_CameraRotateSpeed * time;
+			}
+			else if (Can::Input::IsKeyPressed(CAN_KEY_S))
+			{
+				m_CameraRotation.y -= m_CameraRotateSpeed * time;
+			}
 
-		if (Can::Input::IsKeyPressed(CAN_KEY_Q))
-		{
-			m_CameraRotation.x += m_CameraRotateSpeed * time;
-		}
-		else if (Can::Input::IsKeyPressed(CAN_KEY_E))
-		{
-			m_CameraRotation.x -= m_CameraRotateSpeed * time;
+			if (Can::Input::IsKeyPressed(CAN_KEY_Q))
+			{
+				m_CameraRotation.x += m_CameraRotateSpeed * time;
+			}
+			else if (Can::Input::IsKeyPressed(CAN_KEY_E))
+			{
+				m_CameraRotation.x -= m_CameraRotateSpeed * time;
+			}
 		}
 
 		//Cube Movement
-		if (Can::Input::IsKeyPressed(CAN_KEY_G))
 		{
-			m_CubePosition.x -= m_CameraMoveSpeed * time;
-		}
-		else if (Can::Input::IsKeyPressed(CAN_KEY_J))
-		{
-			m_CubePosition.x += m_CameraMoveSpeed * time;
-		}
+			if (Can::Input::IsKeyPressed(CAN_KEY_G))
+			{
+				m_CubePosition.x -= m_CameraMoveSpeed * time;
+			}
+			else if (Can::Input::IsKeyPressed(CAN_KEY_J))
+			{
+				m_CubePosition.x += m_CameraMoveSpeed * time;
+			}
 
-		if (Can::Input::IsKeyPressed(CAN_KEY_Y))
-		{
-			m_CubePosition.y += m_CameraMoveSpeed * time;
-		}
-		else if (Can::Input::IsKeyPressed(CAN_KEY_H))
-		{
-			m_CubePosition.y -= m_CameraMoveSpeed * time;
-		}
+			if (Can::Input::IsKeyPressed(CAN_KEY_Y))
+			{
+				m_CubePosition.y += m_CameraMoveSpeed * time;
+			}
+			else if (Can::Input::IsKeyPressed(CAN_KEY_H))
+			{
+				m_CubePosition.y -= m_CameraMoveSpeed * time;
+			}
 
-		if (Can::Input::IsKeyPressed(CAN_KEY_T))
-		{
-			m_CubePosition.z += m_CameraMoveSpeed * time;
-		}
-		else if (Can::Input::IsKeyPressed(CAN_KEY_U))
-		{
-			m_CubePosition.z -= m_CameraMoveSpeed * time;
+			if (Can::Input::IsKeyPressed(CAN_KEY_T))
+			{
+				m_CubePosition.z += m_CameraMoveSpeed * time;
+			}
+			else if (Can::Input::IsKeyPressed(CAN_KEY_U))
+			{
+				m_CubePosition.z -= m_CameraMoveSpeed * time;
+			}
 		}
 
 		Can::RenderCommand::SetClearColor({ 0.15f, 0.15f, 0.15f, 1.0f });
@@ -322,7 +328,7 @@ private:
 	Can::Ref<Can::Texture2D> m_SquareTexture;
 	Can::Ref<Can::Texture2D> m_NameTexture;
 
-	Can::OrthographicCamera m_Camera;
+	Can::Camera::OrthographicCamera m_Camera;
 
 	glm::vec3 m_CameraPosition;
 	float m_CameraMoveSpeed;

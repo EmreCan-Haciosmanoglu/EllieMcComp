@@ -1,7 +1,7 @@
 #pragma once
 
 #include "RenderCommand.h"
-#include "OrthographicCamera.h"
+#include "Can/Camera/Camera.h"
 #include "Shader.h"
 
 namespace Can
@@ -11,7 +11,7 @@ namespace Can
 	public:
 		static void Init();
 
-		static void BeginScene(OrthographicCamera& camera);
+		static void BeginScene(Camera::Camera& camera);
 		static void EndScene();
 
 		static void Submit(

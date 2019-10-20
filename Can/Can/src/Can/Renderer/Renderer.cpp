@@ -12,7 +12,7 @@ namespace Can
 		RenderCommand::Init();
 	}
 
-	void Renderer::BeginScene(OrthographicCamera& camera)
+	void Renderer::BeginScene(Camera::Camera& camera)
 	{
 		m_SceneData->ViewProjectMatrix = camera.GetViewProjectionMatrix();
 	}
