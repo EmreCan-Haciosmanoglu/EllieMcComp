@@ -2,6 +2,7 @@
 #include"OpenGLShader.h"
 #include <fstream>
 #include <glad/glad.h>
+#include <array>
 #include <glm/gtc/type_ptr.hpp>
 
 namespace Can
@@ -79,9 +80,9 @@ namespace Can
 	void OpenGLShader::Compile(std::unordered_map<GLenum, std::string> sources)
 	{
 		GLuint program = glCreateProgram();
-		std::vector<GLenum> glShaderIDs;
-		glShaderIDs.reserve(sources.size());
-
+		CAN_CORE_ASSERT(sources.size() <= 2, "We only support 2 shaders");
+		std::array<GLenum,2> glShaderIDs;
+		int shaderIDIndex = 0;
 		for (auto& kv : sources)
 		{
 			GLenum type = kv.first;
@@ -110,7 +111,7 @@ namespace Can
 				CAN_CORE_ASSERT(false, "Shader compilation failure!!!");
 			}
 			glAttachShader(program, shader);
-			glShaderIDs.push_back(shader);
+			glShaderIDs[shaderIDIndex++]= shader;
 		}
 
 		m_RendererID = program;
