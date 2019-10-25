@@ -22,9 +22,16 @@ namespace Can
 		std::string source = ReadFile(filepath);
 		auto shaderSources = PreProcess(source);
 		Compile(shaderSources);
+
+		auto lastSlash = filepath.find_last_of("/\\");
+		lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
+		auto lastDot = filepath.rfind('.');
+		auto count = lastDot == std::string::npos ? filepath.size() - lastSlash : lastDot - lastSlash;
+		m_Name = filepath.substr(lastSlash, count);
 	}
 
-	OpenGLShader::OpenGLShader(const std::string & vertexSrc, const std::string & fragmentSrc)
+	OpenGLShader::OpenGLShader(const std::string & name, const std::string & vertexSrc, const std::string & fragmentSrc)
+		:m_Name(name)
 	{
 		std::unordered_map<GLenum, std::string> shaderSources;
 		shaderSources[GL_VERTEX_SHADER] = vertexSrc;
@@ -81,7 +88,7 @@ namespace Can
 	{
 		GLuint program = glCreateProgram();
 		CAN_CORE_ASSERT(sources.size() <= 2, "We only support 2 shaders");
-		std::array<GLenum,2> glShaderIDs;
+		std::array<GLenum, 2> glShaderIDs;
 		int shaderIDIndex = 0;
 		for (auto& kv : sources)
 		{
@@ -111,7 +118,7 @@ namespace Can
 				CAN_CORE_ASSERT(false, "Shader compilation failure!!!");
 			}
 			glAttachShader(program, shader);
-			glShaderIDs[shaderIDIndex++]= shader;
+			glShaderIDs[shaderIDIndex++] = shader;
 		}
 
 		m_RendererID = program;

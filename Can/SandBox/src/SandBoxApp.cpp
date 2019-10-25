@@ -75,11 +75,11 @@ public:
 			}
 		)";
 
-		m_SquareShader.reset(Can::Shader::Create("assets/shaders/Texture.glsl"));
+		auto textureShader = m_ShaderLibrary.Load("assets/shaders/Texture.glsl");
 		m_SquareTexture = Can::Texture2D::Create("assets/textures/Man.png");
 		m_NameTexture = Can::Texture2D::Create("assets/textures/Name.png");
 
-		m_CubeShader.reset(Can::Shader::Create(veS, frS));
+		m_CubeShader = Can::Shader::Create("CubeShader",veS, frS);
 
 
 		m_CubeVertexArray.reset(Can::VertexArray::Create());
@@ -147,7 +147,7 @@ public:
 		cIndexBuffer.reset(Can::IndexBuffer::Create(cubeIndices, 12 * 3));
 		m_CubeVertexArray->SetIndexBuffer(cIndexBuffer);
 
-		Can::Ref<Can::OpenGLShader> openglshader = std::dynamic_pointer_cast<Can::OpenGLShader>(m_SquareShader);
+		Can::Ref<Can::OpenGLShader> openglshader = std::dynamic_pointer_cast<Can::OpenGLShader>(textureShader);
 		if (openglshader)
 		{
 			openglshader->Bind();
@@ -250,12 +250,14 @@ public:
 
 		Can::Renderer::BeginScene(m_Camera);
 
+		auto textureShader = m_ShaderLibrary.Get("Texture");
+
 		m_SquareTexture->Bind();
-		Can::Renderer::Submit(m_SquareShader, m_SquareVertexArray);
+		Can::Renderer::Submit(textureShader, m_SquareVertexArray);
 
 		m_NameTexture->Bind();
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_CubePosition);
-		Can::Renderer::Submit(m_SquareShader, m_SquareVertexArray, transform);
+		Can::Renderer::Submit(textureShader, m_SquareVertexArray, transform);
 		
 		Can::Ref<Can::OpenGLShader> openglshader = std::dynamic_pointer_cast<Can::OpenGLShader>(m_CubeShader);
 		if (openglshader)
@@ -286,8 +288,8 @@ public:
 	}
 
 private:
+	Can::ShaderLibrary m_ShaderLibrary;
 	Can::Ref<Can::Shader> m_CubeShader;
-	Can::Ref<Can::Shader> m_SquareShader;
 
 	Can::Ref<Can::VertexArray> m_CubeVertexArray;
 	Can::Ref<Can::VertexArray> m_SquareVertexArray;
