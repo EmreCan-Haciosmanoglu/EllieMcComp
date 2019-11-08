@@ -30,7 +30,7 @@
 
 #define BIT(x) (1 << x)
 
-#define CAN_BIND_EVENT_FN(x) std::bind(&Can::Layer::x,this,std::placeholders::_1)
+#define CAN_BIND_EVENT_FN(x) std::bind(&Can::x,this,std::placeholders::_1)
 
 namespace Can
 {

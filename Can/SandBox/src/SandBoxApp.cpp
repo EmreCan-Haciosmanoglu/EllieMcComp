@@ -9,12 +9,8 @@ class ExampleLayer : public Can::Layer::Layer
 public:
 	ExampleLayer()
 		: Can::Layer::Layer("Example")
-		, m_Camera(-16.0f, 16.0f, -9.0f, 9.0f, -10.0f, 10.0f)
-		, m_CameraPosition(0.0f)
-		, m_CameraRotation(0.0f)
-		, m_CameraMoveSpeed(10.0f)
+		, m_CameraController(1280.0f / 720.0f, true)
 		, m_CubePosition(0.0f)
-		, m_CameraRotateSpeed(90.0f)
 	{
 		m_SquareVertexArray.reset(Can::VertexArray::Create());
 
@@ -158,97 +154,43 @@ public:
 
 	void OnUpdate(Can::TimeStep ts) override
 	{
-		float time = ts;
 		//CAN_CORE_INFO("Timestep: {0}s ({1}ms)", time ,ts.GetMiliseconds());
-		
-		//Camera Movement
-		{
-			if (Can::Input::IsKeyPressed(CAN_KEY_LEFT))
-			{
-				m_CameraPosition -= glm::vec3(m_CameraMoveSpeed * time, 0.0f, 0.0f);
-			}
-			else if (Can::Input::IsKeyPressed(CAN_KEY_RIGHT))
-			{
-				m_CameraPosition += glm::vec3(m_CameraMoveSpeed * time, 0.0f, 0.0f);
-			}
-
-			if (Can::Input::IsKeyPressed(CAN_KEY_UP))
-			{
-				m_CameraPosition += glm::vec3(0.0f, m_CameraMoveSpeed * time, 0.0f);
-			}
-			else if (Can::Input::IsKeyPressed(CAN_KEY_DOWN))
-			{
-				m_CameraPosition -= glm::vec3(0.0f, m_CameraMoveSpeed * time, 0.0f);
-			}
-		}
-
-		//Camera Rotation
-		{
-			if (Can::Input::IsKeyPressed(CAN_KEY_A))
-			{
-				m_CameraRotation.z += m_CameraRotateSpeed * time;
-			}
-			else if (Can::Input::IsKeyPressed(CAN_KEY_D))
-			{
-				m_CameraRotation.z -= m_CameraRotateSpeed * time;
-			}
-
-			if (Can::Input::IsKeyPressed(CAN_KEY_W))
-			{
-				m_CameraRotation.y += m_CameraRotateSpeed * time;
-			}
-			else if (Can::Input::IsKeyPressed(CAN_KEY_S))
-			{
-				m_CameraRotation.y -= m_CameraRotateSpeed * time;
-			}
-
-			if (Can::Input::IsKeyPressed(CAN_KEY_Q))
-			{
-				m_CameraRotation.x += m_CameraRotateSpeed * time;
-			}
-			else if (Can::Input::IsKeyPressed(CAN_KEY_E))
-			{
-				m_CameraRotation.x -= m_CameraRotateSpeed * time;
-			}
-		}
+		m_CameraController.OnUpdate(ts);
 
 		//Cube Movement
 		{
 			if (Can::Input::IsKeyPressed(CAN_KEY_G))
 			{
-				m_CubePosition.x -= m_CameraMoveSpeed * time;
+				m_CubePosition.x -= m_CubeMoveSpeed * ts;
 			}
 			else if (Can::Input::IsKeyPressed(CAN_KEY_J))
 			{
-				m_CubePosition.x += m_CameraMoveSpeed * time;
+				m_CubePosition.x += m_CubeMoveSpeed * ts;
 			}
 
 			if (Can::Input::IsKeyPressed(CAN_KEY_Y))
 			{
-				m_CubePosition.y += m_CameraMoveSpeed * time;
+				m_CubePosition.y += m_CubeMoveSpeed * ts;
 			}
 			else if (Can::Input::IsKeyPressed(CAN_KEY_H))
 			{
-				m_CubePosition.y -= m_CameraMoveSpeed * time;
+				m_CubePosition.y -= m_CubeMoveSpeed * ts;
 			}
 
 			if (Can::Input::IsKeyPressed(CAN_KEY_T))
 			{
-				m_CubePosition.z += m_CameraMoveSpeed * time;
+				m_CubePosition.z += m_CubeMoveSpeed * ts;
 			}
 			else if (Can::Input::IsKeyPressed(CAN_KEY_U))
 			{
-				m_CubePosition.z -= m_CameraMoveSpeed * time;
+				m_CubePosition.z -= m_CubeMoveSpeed * ts;
 			}
 		}
 
 		Can::RenderCommand::SetClearColor({ 0.15f, 0.15f, 0.15f, 1.0f });
 		Can::RenderCommand::Clear();
 
-		m_Camera.SetPosition(m_CameraPosition);
-		m_Camera.SetRotation(m_CameraRotation);
-
-		Can::Renderer::BeginScene(m_Camera);
+		Can::Renderer::BeginScene(m_CameraController.GetCamera());
 
 		auto textureShader = m_ShaderLibrary.Get("Texture");
 
@@ -273,6 +215,7 @@ public:
 
 	void OnEvent(Can::Event::Event& event) override
 	{
+		m_CameraController.OnEvent(event);
 	}
 
 	void OnImGuiRender() override
@@ -297,13 +240,9 @@ private:
 	Can::Ref<Can::Texture2D> m_SquareTexture;
 	Can::Ref<Can::Texture2D> m_NameTexture;
 
-	Can::Camera::OrthographicCamera m_Camera;
+	Can::Camera::OrthographicCameraController m_CameraController;
 
-	glm::vec3 m_CameraPosition;
-	float m_CameraMoveSpeed;
-
-	glm::vec3 m_CameraRotation;
-	float m_CameraRotateSpeed;
+	float m_CubeMoveSpeed = 1.0f;
 
 	glm::vec3 m_CubePosition;
 

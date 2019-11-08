@@ -39,10 +39,14 @@ namespace Can::Camera
 
 	OrthographicCamera::OrthographicCamera(float left, float right, float bottom, float top, float n, float f)	
 	{
+		SetProjection( left,  right,  bottom,  top,  n,  f);
+	}
+	void OrthographicCamera::SetProjection(float left, float right, float bottom, float top, float n, float f)
+	{
 		m_ProjectionMatrix = glm::ortho(left, right, bottom, top, n, f);
 		m_ViewProjectionMatrix = m_ProjectionMatrix * view;
-
 	}
+
 	void OrthographicCamera::RecalculateViewMatrix()
 	{
 		glm::mat4 transform = glm::mat4(1.0f);

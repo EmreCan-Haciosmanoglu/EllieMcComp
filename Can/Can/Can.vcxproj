@@ -143,6 +143,7 @@
     <ClInclude Include="src\Can.h" />
     <ClInclude Include="src\Can\Application.h" />
     <ClInclude Include="src\Can\Camera\Camera.h" />
+    <ClInclude Include="src\Can\Camera\CameraController.h" />
     <ClInclude Include="src\Can\Core.h" />
     <ClInclude Include="src\Can\Core\TimeStep.h" />
     <ClInclude Include="src\Can\EntryPoint.h" />
@@ -548,6 +549,7 @@
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp" />
     <ClCompile Include="src\Can\Camera\Camera.cpp" />
+    <ClCompile Include="src\Can\Camera\CameraController.cpp" />
     <ClCompile Include="src\Can\Layers\ImGuiBuild.cpp" />
     <ClCompile Include="src\Can\Layers\ImGuiLayer.cpp" />
     <ClCompile Include="src\Can\Layers\Layer.cpp" />

@@ -52,6 +52,8 @@ namespace Can::Camera
 	{
 	public:
 		OrthographicCamera(float left, float right, float bottom, float top, float n = -1.0f, float f = 1.0f);
+		void SetProjection(float left, float right, float bottom, float top, float n = -1.0f, float f = 1.0f);
+
 		virtual ~OrthographicCamera() {}
 
 		const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }

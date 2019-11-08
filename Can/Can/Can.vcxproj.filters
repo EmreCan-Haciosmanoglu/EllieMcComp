@@ -1264,6 +1264,7 @@
       <Filter>vendor\stb</Filter>
     </ClInclude>
     <ClInclude Include="src\Can\Camera\Camera.h" />
+    <ClInclude Include="src\Can\Camera\CameraController.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -1336,5 +1337,6 @@
       <Filter>vendor\stb</Filter>
     </ClCompile>
     <ClCompile Include="src\Can\Camera\Camera.cpp" />
+    <ClCompile Include="src\Can\Camera\CameraController.cpp" />
   </ItemGroup>
 </Project>

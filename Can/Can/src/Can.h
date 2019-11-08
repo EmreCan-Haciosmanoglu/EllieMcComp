@@ -14,6 +14,7 @@
 #include "Can/Renderer/Renderer.h"
 
 #include "Can/Camera/Camera.h"
+#include "Can/Camera/CameraController.h"
 
 
 #include "Platform/OpenGl/OpenGLBuffer.h"
