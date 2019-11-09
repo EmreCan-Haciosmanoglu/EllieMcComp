@@ -34,12 +34,14 @@ namespace Can
 		inline Window& GetWindow() { return *m_Window; }
 	private:
 		bool OnWindowClose(Event::WindowCloseEvent& e);
+		bool OnWindowResize(Event::WindowResizeEvent& e);
 
 	private:
 		float m_LastFrameTime = 0.0f;
 		Scope<Window> m_Window;
 		Layer::ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
+		bool m_Minimized = false;
 		Layer::LayerStack m_LayerStack;
 
 		static Application* s_Instance;
