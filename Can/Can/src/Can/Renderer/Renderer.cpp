@@ -5,7 +5,7 @@
 
 namespace Can
 {
-	Renderer::SceneData* Renderer::m_SceneData = new Renderer::SceneData;
+	Renderer::SceneData* Renderer::s_SceneData = new Renderer::SceneData;
 
 	void Renderer::Init()
 	{
@@ -19,7 +19,7 @@ namespace Can
 
 	void Renderer::BeginScene(Camera::Camera& camera)
 	{
-		m_SceneData->ViewProjectMatrix = camera.GetViewProjectionMatrix();
+		s_SceneData->ViewProjectMatrix = camera.GetViewProjectionMatrix();
 	}
 
 	void Renderer::EndScene()
@@ -36,7 +36,7 @@ namespace Can
 		Ref<OpenGLShader> openglshader = std::dynamic_pointer_cast<OpenGLShader>(shader);
 		if (openglshader)
 		{
-			openglshader->UploadUniformMat4("u_ViewProjection", m_SceneData->ViewProjectMatrix);
+			openglshader->UploadUniformMat4("u_ViewProjection", s_SceneData->ViewProjectMatrix);
 			openglshader->UploadUniformMat4("u_Transform", transform);
 		}
 
