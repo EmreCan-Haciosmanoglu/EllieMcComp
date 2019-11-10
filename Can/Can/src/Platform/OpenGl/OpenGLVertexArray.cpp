@@ -54,9 +54,9 @@ namespace Can
 		const auto& layout = vertexbuffer->GetLayout();
 		for (const auto& element : layout)
 		{
-			glEnableVertexAttribArray(index);
+			glEnableVertexAttribArray(index + m_VertexBufferIndexOffset);
 			glVertexAttribPointer(
-				index,
+				index + m_VertexBufferIndexOffset,
 				element.GetComponentCount(),
 				ShaderDataTypeToOpenGLBaseType(element.Type),
 				element.Normalized ? GL_TRUE : GL_FALSE,
@@ -66,6 +66,7 @@ namespace Can
 			index++;
 		}
 		m_VertexBuffers.push_back(vertexbuffer);
+		m_VertexBufferIndexOffset += layout.GetElements().size();
 	}
 	void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& indexbuffer) 
 	{
