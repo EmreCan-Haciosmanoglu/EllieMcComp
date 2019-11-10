@@ -20,10 +20,6 @@ namespace Can::Layer
 	{
 	}
 
-	ImGuiLayer::~ImGuiLayer()
-	{
-	}
-
 	void ImGuiLayer::OnAttach()
 	{
 		IMGUI_CHECKVERSION();

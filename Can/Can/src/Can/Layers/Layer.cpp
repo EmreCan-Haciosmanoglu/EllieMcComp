@@ -7,8 +7,4 @@ namespace Can::Layer
 		:m_DebugName(name), m_Enabled(true)
 	{
 	}
-
-	Layer::~Layer()
-	{
-	}
 }

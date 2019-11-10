@@ -26,10 +26,6 @@ namespace Can
 		PushOverlay(m_ImGuiLayer);
 	}
 
-	Application::~Application()
-	{
-	}
-
 	void Application::OnEvent(Event::Event& e)
 	{
 		Event::EventDispatcher dispatcher(e);
