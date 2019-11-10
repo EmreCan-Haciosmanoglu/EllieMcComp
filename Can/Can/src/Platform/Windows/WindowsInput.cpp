@@ -6,7 +6,7 @@
 
 namespace Can
 {
-	Scope<Input> Input::s_Instance = CreateScope<WindowsInput>();
+	Scope<Input> Input::s_Instance = CreateScope<Platform::Windows::WindowsInput>();
 }
 
 namespace Can::Platform::Windows
