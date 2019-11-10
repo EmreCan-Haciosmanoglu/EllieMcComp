@@ -77,7 +77,6 @@ project "Can"
         
         defines
         {
-            "CAN_PLATFORM_WINDOWS",
             "CAN_BUILD_DLL",
             "GLFW_INCLUDE_NONE",
             "_CRT_SECURE_NO_WARNINGS"
@@ -132,11 +131,6 @@ project "Sandbox"
     
     filter "system:windows"
         systemversion "latest"
-        
-        defines
-        {
-            "CAN_PLATFORM_WINDOWS"
-        }
     
     filter "configurations:Debug"
         defines "CAN_DEBUG"
