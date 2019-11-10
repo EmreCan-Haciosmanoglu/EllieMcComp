@@ -1,6 +1,7 @@
 #include "canpch.h"
 #include"OpenGLShader.h"
-#include <fstream>
+
+#include <fstream>
 #include <glad/glad.h>
 #include <array>
 #include <glm/gtc/type_ptr.hpp>
@@ -152,7 +153,10 @@ namespace Can
 
 		// Always detach shaders after a successful link.
 		for (auto id : glShaderIDs)
+		{
 			glDetachShader(program, id);
+			glDeleteShader(id);
+		}
 	}
 
 	void OpenGLShader::Bind() const
