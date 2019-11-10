@@ -28,6 +28,6 @@ namespace Can
 			glm::mat4 ViewProjectMatrix;
 		};
 
-		static SceneData* s_SceneData;
+		static Scope<SceneData> s_SceneData;
 	};
 }

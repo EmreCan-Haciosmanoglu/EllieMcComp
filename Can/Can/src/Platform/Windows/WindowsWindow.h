@@ -27,7 +27,7 @@ namespace Can::Platform::Windows
 		virtual void ShutDown();
 	private:
 		GLFWwindow* m_Window;
-		GraphicsContext* m_Context;
+		Scope<GraphicsContext> m_Context;
 		struct WindowData
 		{
 			std::string Title;

@@ -24,6 +24,6 @@ namespace Can
 		virtual float GetMouseYImp() = 0;
 		virtual std::pair<float, float> GetMousePosImp() = 0;
 	private:
-		static Input* s_Instance;
+		static Scope <Input> s_Instance;
 	};
 }
