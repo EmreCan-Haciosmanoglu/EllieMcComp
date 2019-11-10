@@ -68,13 +68,11 @@ namespace Can
 	void Application::PushLayer(Layer::Layer * layer)
 	{
 		m_LayerStack.PushLayer(layer);
-		layer->OnAttach();
 	}
 
-	void Application::PushOverlay(Layer::Layer * layer)
+	void Application::PushOverlay(Layer::Layer * overlay)
 	{
-		m_LayerStack.PushOverlay(layer);
-		layer->OnAttach();
+		m_LayerStack.PushOverlay(overlay);
 	}
 
 	bool Application::OnWindowClose(Event::WindowCloseEvent & e)
