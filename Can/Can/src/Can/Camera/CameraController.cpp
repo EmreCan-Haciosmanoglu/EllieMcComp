@@ -15,32 +15,38 @@ namespace Can::Camera
 	{
 		if (Input::IsKeyPressed(CAN_KEY_A))
 		{
-			m_CameraPosition -= glm::vec3(m_CameraTranslationSpeed * ts, 0.0f, 0.0f);
+			m_CameraPosition.x -= cos(glm::radians(m_CameraRotation)) * m_CameraTranslationSpeed * ts;
+			m_CameraPosition.y -= sin(glm::radians(m_CameraRotation)) * m_CameraTranslationSpeed * ts;
 		}
 		else if (Input::IsKeyPressed(CAN_KEY_D))
 		{
-			m_CameraPosition += glm::vec3(m_CameraTranslationSpeed * ts, 0.0f, 0.0f);
+			m_CameraPosition.x += cos(glm::radians(m_CameraRotation)) * m_CameraTranslationSpeed * ts;
+			m_CameraPosition.y += sin(glm::radians(m_CameraRotation)) * m_CameraTranslationSpeed * ts;
 		}
 
 		if (Input::IsKeyPressed(CAN_KEY_W))
 		{
-			m_CameraPosition += glm::vec3(0.0f, m_CameraTranslationSpeed * ts, 0.0f);
+			m_CameraPosition.x += -sin(glm::radians(m_CameraRotation)) * m_CameraTranslationSpeed * ts;
+			m_CameraPosition.y += cos(glm::radians(m_CameraRotation)) * m_CameraTranslationSpeed * ts;
 		}
 		else if (Input::IsKeyPressed(CAN_KEY_S))
 		{
-			m_CameraPosition -= glm::vec3(0.0f, m_CameraTranslationSpeed * ts, 0.0f);
+			m_CameraPosition.x -= -sin(glm::radians(m_CameraRotation)) * m_CameraTranslationSpeed * ts;
+			m_CameraPosition.y -= cos(glm::radians(m_CameraRotation)) * m_CameraTranslationSpeed * ts;
 		}
 
 		if (m_Rotation)
 		{
 			if (Input::IsKeyPressed(CAN_KEY_Q))
-			{
 				m_CameraRotation += m_CameraRotationSpeed * ts;
-			}
 			else if (Input::IsKeyPressed(CAN_KEY_E))
-			{
 				m_CameraRotation -= m_CameraRotationSpeed * ts;
-			}
+
+			if (m_CameraRotation > 180.0f)
+				m_CameraRotation -= 360.0f;
+			else if (m_CameraRotation <= -180.0f)
+				m_CameraRotation += 360.0f;
+
 			m_Camera.SetRotation({ m_Camera.GetRotation().x, m_Camera.GetRotation().y, m_CameraRotation });
 		}
 
