@@ -1,8 +1,12 @@
 #include "canpch.h"
 #include "Can.h"
 
+#include "Can/EntryPoint.h"
+
 #include "imgui.h"
 #include <glm/gtc/type_ptr.hpp>
+
+#include "SandBox2DLayer.h"
 
 class ExampleLayer : public Can::Layer::Layer
 {
@@ -12,7 +16,7 @@ public:
 		, m_CameraController(1280.0f / 720.0f, true)
 		, m_CubePosition(0.0f)
 	{
-		m_SquareVertexArray.reset(Can::VertexArray::Create());
+		m_SquareVertexArray = Can::VertexArray::Create();
 
 		float vertices[4 * (3 + 2)] = {
 			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 
@@ -78,7 +82,7 @@ public:
 		m_CubeShader = Can::Shader::Create("CubeShader",veS, frS);
 
 
-		m_CubeVertexArray.reset(Can::VertexArray::Create());
+		m_CubeVertexArray = Can::VertexArray::Create();
 
 		float cubeVertexPositions[8 * (3 + 4) * 3] = {
 			+1.0f, +1.0f, +1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // Red		-- 0	-0
@@ -260,7 +264,8 @@ class Sandbox : public Can::Application
 public:
 	Sandbox()
 	{
-		PushLayer(new ExampleLayer());
+		//PushLayer(new ExampleLayer());
+		PushLayer(new SandBox2DLayer());
 	}
 
 	~Sandbox()
