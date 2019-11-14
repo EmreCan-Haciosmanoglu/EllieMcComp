@@ -1,19 +1,63 @@
 #include <iostream>
 #include <fstream>
 #include <windows.h>
-#include <chrono>
 #include <atlimage.h> 
 #include <Gdiplusimaging.h> 
 #include <thread>
 
 #include <time.h>
 #include "NeuralNetwork.h"
+#include <chrono>
+#include <vector>
 
 #if 1
+struct ProfileResult
+{
+	const char* Name;
+	float Time;
+};
+
 /* Globals */
 int ScreenX = 0;
 int ScreenY = 0;
 BYTE* ScreenData = 0;
+float* RGBData = 0;
+std::vector<ProfileResult> m_ProfileResults;
+
+
+class Timer
+{
+public:
+	Timer(const char* name)
+		: m_Name(name), m_Stopped(false)
+	{
+		m_StartTimepoint = std::chrono::high_resolution_clock::now();
+	}
+
+	~Timer()
+	{
+		if (!m_Stopped)
+			Stop();
+	}
+
+	void Stop()
+	{
+		auto endTimepoint = std::chrono::high_resolution_clock::now();
+
+		long long start = std::chrono::time_point_cast<std::chrono::microseconds>(m_StartTimepoint).time_since_epoch().count();
+		long long end = std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint).time_since_epoch().count();
+
+		m_Stopped = true;
+
+		float duration = (end - start) * 0.001f;
+		m_ProfileResults.push_back({ m_Name, duration });
+	}
+private:
+	const char* m_Name;
+	std::chrono::time_point<std::chrono::steady_clock> m_StartTimepoint;
+	bool m_Stopped;
+};
+
 
 void ScreenCap()
 {
@@ -46,7 +90,27 @@ void ScreenCap()
 	DeleteDC(hdcMem);
 	DeleteObject(hBitmap);
 }
+inline void Prepare()
+{
+	int size = 3 * ScreenX * ScreenY;
+	if (RGBData)
+		free(RGBData);
+	RGBData = (float*)malloc(size * sizeof(float));
+	BYTE* ptrOld = ScreenData;
+	float* ptrNew = RGBData;
+	for (int y = 0; y < ScreenY; y++)
+	{
+		for (int x = 0; x < ScreenX; x++)
+		{
+			ptrNew[0] = ptrOld[0] / 255.0f;
+			ptrNew[1] = ptrOld[1] / 255.0f;
+			ptrNew[2] = ptrOld[2] / 255.0f;
 
+			ptrOld += 4;
+			ptrNew += 3;
+		}
+	}
+}
 inline int PosB(int x, int y)
 {
 	return ScreenData[4 * ((y * ScreenX) + x)];
@@ -74,55 +138,53 @@ bool ButtonPress(int Key)
 
 int main()
 {
-	while (true)
+	srand((unsigned int)time(NULL));
+	int x = GetSystemMetrics(SM_CXSCREEN);
+	int y = GetSystemMetrics(SM_CYSCREEN);
+	int layers[3] = { x * y * 3, 5 , 50 };
+	NeuralNetwork* nn = new NeuralNetwork(layers, 3, 0.01f);
+	for (int k = 0; k < 5; k++)
 	{
-		if (ButtonPress(VK_SPACE))
 		{
+			Timer time("Total Process");
+			{
+				Timer time("ScreenShot");
+				ScreenCap();
+			}
+			{
+				Timer time("Prepare the data");
+				Prepare();
+			}
+			{
+				Timer time("NeuralNetwork Calculations");
 
-			// Print out current cursor position
-			POINT p;
-			GetCursorPos(&p);
-			printf("X:%d Y:%d \n", p.x, p.y);
-			// Print out RGB value at that position
-			std::cout << "Bitmap: r: " << PosR(p.x, p.y) << " g: " << PosG(p.x, p.y) << " b: " << PosB(p.x, p.y) << "\n";
+				int size = 3 * ScreenX * ScreenY;
+				Matrix* input = new Matrix(size, 1, RGBData);
+				Matrix* result = nn->FeedForward(input);
+				delete result;
+			}
 
+			for (auto& result : m_ProfileResults)
+			{
+				char label[50];
+				strcpy_s(label, "%.3fms ");
+				strcat_s(label, result.Name);
+				strcat_s(label, "\n");
+				printf_s(label, result.Time);
+			}
 		}
-		else if (ButtonPress(VK_ESCAPE))
-		{
-			printf("Quit\n");
-			break;
-		}
-		else if (ButtonPress(VK_SHIFT))
-		{
-			ScreenCap();
-			printf("Captured\n");
-		}
+		printf("\n");
+		m_ProfileResults.clear();
 	}
 
 	system("PAUSE");
 	return 0;
 }
 /*int main() {
-	srand(time(NULL));
-	int layers[3] = { 2, 5 ,2 };
-	NeuralNetwork* nn = new NeuralNetwork(layers, 3, 0.01f);
 	int times = 2000000;
 	for (int i = 0; i < times; i++)
 	{
-		if (0 == i % (times / 100))
-		{
-			int perc = (i / (times / 100));
-			//system("CLS");
-			for (int i = 0; i < perc; i++)
-			{
-				std::cout << "|";
-			}
-			for (int i = 0; i < 100 - perc; i++)
-			{
-				std::cout << " ";
-			}
-			std::cout << "| " << perc << "%" << std::endl;
-		}
+
 		int r = rand() % 4;
 		if (r == 0)
 		{
