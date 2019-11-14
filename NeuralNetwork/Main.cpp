@@ -1,85 +1,108 @@
 #include <iostream>
+#include <fstream>
+#include <windows.h>
+#include <chrono>
+#include <atlimage.h> 
+#include <Gdiplusimaging.h> 
+#include <thread>
 
 #include <time.h>
 #include "NeuralNetwork.h"
 
-#if 0
+#if 1
+/* Globals */
+int ScreenX = 0;
+int ScreenY = 0;
+BYTE* ScreenData = 0;
+
+void ScreenCap()
+{
+	HDC hScreen = GetDC(NULL);
+	ScreenX = GetDeviceCaps(hScreen, HORZRES);
+	ScreenY = GetDeviceCaps(hScreen, VERTRES);
+
+	HDC hdcMem = CreateCompatibleDC(hScreen);
+	HBITMAP hBitmap = CreateCompatibleBitmap(hScreen, ScreenX, ScreenY);
+	HGDIOBJ hOld = SelectObject(hdcMem, hBitmap);
+	BitBlt(hdcMem, 0, 0, ScreenX, ScreenY, hScreen, 0, 0, SRCCOPY);
+	SelectObject(hdcMem, hOld);
+
+	BITMAPINFOHEADER bmi = { 0 };
+	bmi.biSize = sizeof(BITMAPINFOHEADER);
+	bmi.biPlanes = 1;
+	bmi.biBitCount = 32;
+	bmi.biWidth = ScreenX;
+	bmi.biHeight = -ScreenY;
+	bmi.biCompression = BI_RGB;
+	bmi.biSizeImage = 0;// 3 * ScreenX * ScreenY;
+
+	if (ScreenData)
+		free(ScreenData);
+	ScreenData = (BYTE*)malloc(4 * ScreenX * ScreenY);
+
+	GetDIBits(hdcMem, hBitmap, 0, ScreenY, ScreenData, (BITMAPINFO*)& bmi, DIB_RGB_COLORS);
+
+	ReleaseDC(GetDesktopWindow(), hScreen);
+	DeleteDC(hdcMem);
+	DeleteObject(hBitmap);
+}
+
+inline int PosB(int x, int y)
+{
+	return ScreenData[4 * ((y * ScreenX) + x)];
+}
+
+inline int PosG(int x, int y)
+{
+	return ScreenData[4 * ((y * ScreenX) + x) + 1];
+}
+
+inline int PosR(int x, int y)
+{
+	return ScreenData[4 * ((y * ScreenX) + x) + 2];
+}
+
+bool ButtonPress(int Key)
+{
+	bool button_pressed = false;
+
+	while (GetAsyncKeyState(Key))
+		button_pressed = true;
+
+	return button_pressed;
+}
+
 int main()
 {
-	srand(time(NULL));
-	float arr1[6] = { 1,5,2,4,8,3 };
-	float arr2[6] = { 4,-1,12,-6,4,1 };
+	while (true)
+	{
+		if (ButtonPress(VK_SPACE))
+		{
 
-	Matrix* m1 = new Matrix(3, 2, arr1);
-	Matrix* m2 = new Matrix(3, 2, arr2);
-	Matrix* m3 = *m1 + *m2;
-	Matrix* m4 = *m1 - *m2;
-	Matrix* m5 = *m1 * *m2;
-	Matrix* m6 = *m1 / *m2;
+			// Print out current cursor position
+			POINT p;
+			GetCursorPos(&p);
+			printf("X:%d Y:%d \n", p.x, p.y);
+			// Print out RGB value at that position
+			std::cout << "Bitmap: r: " << PosR(p.x, p.y) << " g: " << PosG(p.x, p.y) << " b: " << PosB(p.x, p.y) << "\n";
 
+		}
+		else if (ButtonPress(VK_ESCAPE))
+		{
+			printf("Quit\n");
+			break;
+		}
+		else if (ButtonPress(VK_SHIFT))
+		{
+			ScreenCap();
+			printf("Captured\n");
+		}
+	}
 
-	std::cout << "M1" << std::endl;
-	m1->Print();
-	std::cout << std::endl;
-	std::cout << "M2" << std::endl;
-	m2->Print();
-	std::cout << std::endl;
-	std::cout << "M3 << M1 + M2" << std::endl;
-	m3->Print();
-	std::cout << std::endl;
-	std::cout << "M4 << M1 - M2" << std::endl;
-	m4->Print();
-	std::cout << std::endl;
-	std::cout << "M5 << M1 * M2" << std::endl;
-	m5->Print();
-	std::cout << std::endl;
-	std::cout << "M6 << M1 / M2" << std::endl;
-	m6->Print();
-	std::cout << std::endl;
-
-	std::cout << std::endl;
-	*m6 += *m1;
-	std::cout << "M1" << std::endl;
-	m1->Print();
-	std::cout << std::endl;
-	std::cout << "M6 << M6 + M1" << std::endl;
-	m6->Print();
-	std::cout << std::endl;
-	std::cout << std::endl;
-
-	Matrix* m7 = Matrix::Transpose(m6);
-	std::cout << "M6" << std::endl;
-	m6->Print();
-	std::cout << std::endl;
-	std::cout << "M7 << M6T" << std::endl;
-	m7->Print();
-	std::cout << std::endl;
-	std::cout << std::endl;
-
-	Matrix* m8 = Matrix::MatrixMultiplication(*m1, *Matrix::Transpose(m2));
-
-	std::cout << "M1" << std::endl;
-	m1->Print();
-	std::cout << std::endl;
-	std::cout << "M2" << std::endl;
-	m2->Print();
-	std::cout << std::endl;
-	std::cout << "M2T" << std::endl;
-	Matrix::Transpose(m2)->Print();
-	std::cout << std::endl;
-	std::cout << "M8 << M1 . M2T" << std::endl;
-	m8->Print();
-
-
-	delete m1;
-
-	int wait = 0;
-	std::cin >> wait;
+	system("PAUSE");
 	return 0;
 }
-#endif
-#if 1
-int main() {
+/*int main() {
 	srand(time(NULL));
 	int layers[3] = { 2, 5 ,2 };
 	NeuralNetwork* nn = new NeuralNetwork(layers, 3, 0.01f);
@@ -161,4 +184,5 @@ int main() {
 	std::cin >> wait;
 	return 0;
 }
+*/
 #endif
