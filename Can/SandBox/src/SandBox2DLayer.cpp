@@ -10,27 +10,6 @@ SandBox2DLayer::SandBox2DLayer()
 
 void SandBox2DLayer::OnAttach()
 {
-	m_SquareVA = Can::VertexArray::Create();
-
-	float vertices[4 * (3)] = {
-		-0.5f, -0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f,
-		 0.5f,  0.5f, 0.0f,
-		-0.5f,  0.5f, 0.0f
-	};
-	Can::Ref<Can::VertexBuffer> squareVB;
-	squareVB.reset(Can::VertexBuffer::Create(vertices, sizeof(vertices)));
-	squareVB->SetLayout({
-		{Can::ShaderDataType::Float3, "a_Position"}
-		});
-	m_SquareVA->AddVertexBuffer(squareVB);
-
-	uint32_t indices[6]{ 0,1,2,2,3,0 };
-	Can::Ref<Can::IndexBuffer> squareIB;
-	squareIB.reset(Can::IndexBuffer::Create(indices, 6));
-	m_SquareVA->SetIndexBuffer(squareIB);
-
-	m_SquareShader = Can::Shader::Create("assets/shaders/Square.glsl");
 }
 
 void SandBox2DLayer::OnDetach()
@@ -44,8 +23,11 @@ void SandBox2DLayer::OnUpdate(Can::TimeStep ts)
 	Can::RenderCommand::SetClearColor({ 0.15f, 0.15f, 0.15f, 1.0f });
 	Can::RenderCommand::Clear();
 
-	Can::Renderer::BeginScene(m_CameraController.GetCamera());
+	Can::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
+	Can::Renderer2D::DrawQuad({ 0.0f,0.0f }, { 1.0f,1.0f }, { 0.8f,0.2f,0.3f,1.0f });
+
+	Can::Renderer2D::EndScene();
 
 	Can::Ref<Can::OpenGLShader> openglshader = std::dynamic_pointer_cast<Can::OpenGLShader>(m_SquareShader);
 	if (openglshader)
@@ -54,9 +36,6 @@ void SandBox2DLayer::OnUpdate(Can::TimeStep ts)
 		openglshader->UploadUniformFloat4("u_Color", m_SquareColor);
 	}
 
-	Can::Renderer::Submit(m_SquareShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
-
-	Can::Renderer::EndScene();
 }
 
 void SandBox2DLayer::OnEvent(Can::Event::Event& event)

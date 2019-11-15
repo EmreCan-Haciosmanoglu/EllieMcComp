@@ -12,6 +12,7 @@
 #include "Can/Renderer/Shader.h"
 #include "Can/Renderer/Texture.h"
 #include "Can/Renderer/Renderer.h"
+#include "Can/Renderer/Renderer2D.h"
 
 #include "Can/Camera/Camera.h"
 #include "Can/Camera/CameraController.h"

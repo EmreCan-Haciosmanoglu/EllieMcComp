@@ -1265,6 +1265,7 @@
     </ClInclude>
     <ClInclude Include="src\Can\Camera\Camera.h" />
     <ClInclude Include="src\Can\Camera\CameraController.h" />
+    <ClInclude Include="src\Can\Renderer\Renderer2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -1338,5 +1339,6 @@
     </ClCompile>
     <ClCompile Include="src\Can\Camera\Camera.cpp" />
     <ClCompile Include="src\Can\Camera\CameraController.cpp" />
+    <ClCompile Include="src\Can\Renderer\Renderer2D.cpp" />
   </ItemGroup>
 </Project>
