@@ -21,6 +21,8 @@ private:
 	Can::Ref<Can::Shader> m_SquareShader;
 	Can::Ref<Can::VertexArray> m_SquareVA;
 
+	Can::Ref<Can::Texture2D> m_Tex;
+
 	glm::vec4 m_SquareColor = { 0.0f, 1.0f, 0.0f, 1.0f };
 
 };

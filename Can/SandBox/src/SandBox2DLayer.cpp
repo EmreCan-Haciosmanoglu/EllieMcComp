@@ -10,6 +10,7 @@ SandBox2DLayer::SandBox2DLayer()
 
 void SandBox2DLayer::OnAttach()
 {
+	m_Tex = Can::Texture2D::Create("assets/textures/Name.png");
 }
 
 void SandBox2DLayer::OnDetach()
@@ -25,9 +26,11 @@ void SandBox2DLayer::OnUpdate(Can::TimeStep ts)
 
 	Can::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-	Can::Renderer2D::DrawQuad({ 0.0f,-0.2f }, { 1.0f,1.0f }, { 0.8f,0.2f,0.3f,1.0f });
-	Can::Renderer2D::DrawQuad({ -0.5f,1.5f }, { 1.5f,0.5f }, { 0.2f,0.8f,0.3f,1.0f });
-	Can::Renderer2D::DrawQuad({ 2.3f,-1.0f }, { 0.5f,5.0f }, { 0.8f,0.3f,0.8f,1.0f });
+	Can::Renderer2D::DrawQuad({ 0.0f, -0.2f }, { 1.0f, 1.0f }, { 0.8f, 0.2f, 0.3f, 1.0f });
+	Can::Renderer2D::DrawQuad({ -0.5f, 1.5f }, { 1.5f, 0.5f }, { 0.2f, 0.8f, 0.3f, 1.0f });
+	Can::Renderer2D::DrawQuad({ 2.3f, -1.0f }, { 0.5f, 5.0f }, { 0.8f, 0.3f, 0.8f, 1.0f });
+	
+	Can::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f}, { 5.0f, 5.0f }, m_Tex);
 
 	Can::Renderer2D::EndScene();
 
