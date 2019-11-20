@@ -25,6 +25,7 @@ namespace Can::Camera
 		float camZ = (float)cos(glfwGetTime()) * radius;
 		view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
 	}
+	
 	void Camera::RecalculateViewMatrix()
 	{
 		glm::mat4 transform = glm::mat4(1.0f);
@@ -48,6 +49,31 @@ namespace Can::Camera
 	}
 
 	void OrthographicCamera::RecalculateViewMatrix()
+	{
+		glm::mat4 transform = glm::mat4(1.0f);
+		transform = glm::translate(transform, m_Position);
+		transform = glm::rotate(transform, glm::radians(m_Rotation.z), glm::vec3(0, 0, 1));
+		transform = glm::rotate(transform, glm::radians(m_Rotation.y), glm::vec3(0, 1, 0));
+		transform = glm::rotate(transform, glm::radians(m_Rotation.x), glm::vec3(1, 0, 0));
+
+		view = glm::inverse(transform);
+		m_ViewProjectionMatrix = m_ProjectionMatrix * view;
+	}
+
+
+	PerspectiveCamera::PerspectiveCamera(float fovy, float aspect, float n, float f)
+		: m_ProjectionMatrix(glm::perspective(fovy, aspect, n, f))
+		, m_ViewProjectionMatrix(m_ProjectionMatrix* view)
+	{
+	}
+
+	void PerspectiveCamera::SetProjection(float fovy, float aspect, float n, float f)
+	{
+		m_ProjectionMatrix = glm::perspective(fovy, aspect, n, f);
+		m_ViewProjectionMatrix = m_ProjectionMatrix * view;
+	}
+
+	void PerspectiveCamera::RecalculateViewMatrix()
 	{
 		glm::mat4 transform = glm::mat4(1.0f);
 		transform = glm::translate(transform, m_Position);
