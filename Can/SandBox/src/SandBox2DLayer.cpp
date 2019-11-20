@@ -12,7 +12,6 @@ void SandBox2DLayer::OnAttach()
 {
 	m_Tex = Can::Texture2D::Create("assets/textures/Name.png");
 }
-
 void SandBox2DLayer::OnDetach()
 {
 }
@@ -40,7 +39,6 @@ void SandBox2DLayer::OnUpdate(Can::TimeStep ts)
 		openglshader->Bind();
 		openglshader->UploadUniformFloat4("u_Color", m_SquareColor);
 	}
-
 }
 
 void SandBox2DLayer::OnEvent(Can::Event::Event& event)

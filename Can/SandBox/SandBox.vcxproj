@@ -132,6 +132,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\SandBox2DLayer.cpp" />
+    <ClCompile Include="src\SandBox3D.cpp" />
     <ClCompile Include="src\SandBoxApp.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -143,11 +144,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="assets\shaders\Cube.glsl" />
     <None Include="assets\shaders\Square.glsl" />
     <None Include="assets\shaders\Texture.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\SandBox2DLayer.h" />
+    <ClInclude Include="src\SandBox3D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -7,6 +7,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "SandBox2DLayer.h"
+#include "SandBox3D.h"
 
 class ExampleLayer : public Can::Layer::Layer
 {
@@ -265,7 +266,8 @@ public:
 	Sandbox()
 	{
 		//PushLayer(new ExampleLayer());
-		PushLayer(new SandBox2DLayer());
+		//PushLayer(new SandBox2DLayer());
+		PushLayer(new SandBox3D());
 	}
 
 	~Sandbox()
