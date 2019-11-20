@@ -59,7 +59,6 @@ namespace Can
 	{
 		s_Data->TextureShader->Bind();
 		s_Data->TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
-
 	}
 	void Renderer2D::EndScene()
 	{
