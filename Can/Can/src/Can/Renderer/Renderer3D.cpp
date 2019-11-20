@@ -101,11 +101,22 @@ namespace Can
 	{
 	}
 	
+	void Renderer3D::DrawCube(const glm::vec3& position, const glm::vec3& scale)
+	{
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), scale);
+
+		s_3DData->CubeShader->Bind();
+		s_3DData->CubeShader->SetMat4("u_Transform", transform);
+
+		s_3DData->CubeVertexArray->Bind();
+		RenderCommand::DrawIndexed(s_3DData->CubeVertexArray);
+	}
+
 	void Renderer3D::DrawCube(const glm::vec3& position, const glm::vec3& scale, const Ref<Texture2D>& texture)
 	{
 		texture->Bind();
 
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x,size.y,1.0f });
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), scale);
 
 		s_3DData->CubeShader->Bind();
 		s_3DData->CubeShader->SetMat4("u_Transform", transform);
