@@ -1,12 +1,11 @@
 #include "canpch.h"
 #include "Renderer3D.h"
 
-#include "VertexArray.h"
-#include "Shader.h"
 #include "RenderCommand.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
+#define RESOLUTION 10
 namespace Can
 {
 	struct Renderer3DStorage
@@ -14,13 +13,67 @@ namespace Can
 		Ref<VertexArray> CubeVertexArray;
 		Ref<Shader> CubeShader;
 	};
+
 	static Renderer3DStorage* s_3DData;
 	
 	void Renderer3D::Init()
 	{
+		glm::vec3 localUp(0.0f, 0.0f, 1.0f);
+		glm::vec3 axisA = glm::vec3(localUp.y, localUp.z, localUp.x);
+		glm::vec3 axisB = glm::cross(localUp, axisA);
+
+		float m_Vertices[RESOLUTION * RESOLUTION * (3 + 4)];
+		uint32_t m_Indices[(RESOLUTION - 1) * (RESOLUTION - 1) * 2 * 3];
+
+		int vertexIndex = 0;
+		for (float j = 0; j < RESOLUTION; j++)
+		{
+			for (float i = 0; i < RESOLUTION; i++)
+			{
+				glm::vec2 percent = glm::vec2(i / (RESOLUTION - 1.0f), j / (RESOLUTION - 1.0f));
+				glm::vec3 pointOnUnitCube = glm::vec3(
+					localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
+					localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
+					localUp.z + (percent.x - 0.5f) * 2.0f * axisA.z + (percent.y - 0.5f) * 2.0f * axisB.z
+				);
+				glm::vec3 pointOnUnitSphere = glm::normalize(pointOnUnitCube);
+				
+				std::cout << pointOnUnitCube.x << ", " << pointOnUnitCube.y << ", " << pointOnUnitCube.z << std::endl;
+				std::cout << pointOnUnitSphere.x << ", " << pointOnUnitSphere.y << ", " << pointOnUnitSphere.z << std::endl << std::endl;
+				
+				m_Vertices[vertexIndex++] = pointOnUnitSphere.x;
+				m_Vertices[vertexIndex++] = pointOnUnitSphere.y;
+				m_Vertices[vertexIndex++] = pointOnUnitSphere.z;
+									  
+				m_Vertices[vertexIndex++] = 1.0f * percent.x;
+				m_Vertices[vertexIndex++] = 1.0f * percent.x;
+				m_Vertices[vertexIndex++] = 1.0f * percent.y;
+				m_Vertices[vertexIndex++] = 1.0f;
+			}
+		}
+		int indicesIndex = 0;
+		vertexIndex = 0;
+		for (int j = 0; j < RESOLUTION; j++)
+		{
+			for (int i = 0; i < RESOLUTION; i++)
+			{
+				if(i < RESOLUTION - 1 && j < RESOLUTION - 1)
+				{
+				m_Indices[indicesIndex++] = vertexIndex;
+				m_Indices[indicesIndex++] = vertexIndex + RESOLUTION + 1;
+				m_Indices[indicesIndex++] = vertexIndex + RESOLUTION;
+				m_Indices[indicesIndex++] = vertexIndex;
+				m_Indices[indicesIndex++] = vertexIndex + 1;
+				m_Indices[indicesIndex++] = vertexIndex + RESOLUTION + 1;
+				}
+				vertexIndex++;
+			}
+		}
+		
 		s_3DData = new Renderer3DStorage();
 		s_3DData->CubeVertexArray = VertexArray::Create();
-
+		
+		
 		float cubeVertexPositions[8 * (3 + 4) * 3] = {
 			+1.0f, +1.0f, +1.0f, 1.0f, 0.0f, 0.0f, 1.0f, // Red		-- 0	-0
 			+1.0f, +1.0f, +1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // Blue	-- 1	-0
@@ -54,15 +107,17 @@ namespace Can
 			-1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 0.0f, 1.0f, // Yellow	-- 22	-7
 			-1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f  // Cyan	-- 23	-7
 		};
-
+		
+		
 		Ref< VertexBuffer> cubeVB;
-		cubeVB.reset(VertexBuffer::Create(cubeVertexPositions, sizeof(cubeVertexPositions)));
+		cubeVB.reset(VertexBuffer::Create(m_Vertices, sizeof(m_Vertices)));
 		cubeVB->SetLayout({
 		   { ShaderDataType::Float3, "a_Position"},
 		   { ShaderDataType::Float4, "a_Color"}
 			});
 		s_3DData->CubeVertexArray->AddVertexBuffer(cubeVB);
-
+		
+		
 		uint32_t cubeIndices[12 * 3] = {
 			0,  6,  9,  // Red
 			0,  9,  3,  // Red
@@ -77,9 +132,10 @@ namespace Can
 			14, 20, 8,  // Magenta
 			14, 8,  2   // Magenta
 		};
-
+		
+		
 		Ref<IndexBuffer> cubeIB;
-		cubeIB.reset(IndexBuffer::Create(cubeIndices, 12 * 3));
+		cubeIB.reset(IndexBuffer::Create(m_Indices, (RESOLUTION - 1)* (RESOLUTION - 1) * 2 * 3));
 		s_3DData->CubeVertexArray->SetIndexBuffer(cubeIB);
 
 		s_3DData->CubeShader = Shader::Create("assets/shaders/Cube.glsl");
@@ -111,7 +167,6 @@ namespace Can
 		s_3DData->CubeVertexArray->Bind();
 		RenderCommand::DrawIndexed(s_3DData->CubeVertexArray);
 	}
-
 	void Renderer3D::DrawCube(const glm::vec3& position, const glm::vec3& scale, const Ref<Texture2D>& texture)
 	{
 		texture->Bind();

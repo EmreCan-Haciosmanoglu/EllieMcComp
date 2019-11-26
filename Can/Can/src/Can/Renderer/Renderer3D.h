@@ -1,6 +1,8 @@
 #pragma once
 #include "Can/Camera/Camera.h"
 #include "Texture.h"
+#include "VertexArray.h"
+#include "Shader.h"
 
 namespace Can
 {

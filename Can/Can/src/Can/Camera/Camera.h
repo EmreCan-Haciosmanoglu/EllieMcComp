@@ -69,8 +69,9 @@ namespace Can::Camera
 	class PerspectiveCamera
 	{
 	public:
-		PerspectiveCamera(float fovy, float aspect, float n = 0.2f, float f = 10.0f); 
-		void SetProjection(float fovy, float aspect, float n = -0.1f, float f = 10.0f);
+		PerspectiveCamera(float fovy, float aspect, float n = 0.1f, float f = 10.0f); 
+		void SetProjection(float fovy, float aspect, float n = 0.1f, float f = 10.0f);
+		void SetProjection(float fovy);
 
 		const glm::vec3& GetPosition() const { return m_Position; }
 		void SetPosition(const glm::vec3& position) { m_Position = position; RecalculateViewMatrix(); }

@@ -1,9 +1,10 @@
 #include "canpch.h"
 #include "SandBox3D.h"
 
+
 SandBox3D::SandBox3D()
 	: Layer("3D Layer")
-	, m_CameraController(60.0f, 1280.0f / 720.0f)
+	, m_CameraController(90.0f, 1280.0f / 720.0f, 0.1f, 100.0f)
 {
 }
 
@@ -23,12 +24,12 @@ void SandBox3D::OnUpdate(Can::TimeStep ts)
 
 	Can::Renderer3D::BeginScene(m_CameraController.GetCamera());
 
-	Can::Renderer3D::DrawCube({ 0.0f,0.0f,-3.0f }, { 1.0f,1.0f,1.0f });
+	Can::Renderer3D::DrawCube({ 0.0f,0.0f,-2.0f }, { 1.0f,1.0f,1.0f });
 
 	Can::Renderer2D::EndScene();
 }
 
-void SandBox3D::OnEvent(Can::Event::Event& event)
+void SandBox3D::OnEvent(Can::Event::Event & event)
 {
 	m_CameraController.OnEvent(event);
 }

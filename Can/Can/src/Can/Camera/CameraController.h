@@ -51,7 +51,7 @@ namespace Can::Camera::Controller
 	class Perspective : public CameraController
 	{
 	public:
-		Perspective(float fovy, float aspectRatio);
+		Perspective(float fovy, float aspectRatio, float n = 0.1f, float f = 10.0f);
 
 		void OnUpdate(Can::TimeStep ts);
 		void OnEvent(Can::Event::Event& e);

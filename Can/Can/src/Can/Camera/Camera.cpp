@@ -73,6 +73,14 @@ namespace Can::Camera
 		m_ViewProjectionMatrix = m_ProjectionMatrix * view;
 	}
 
+	void PerspectiveCamera::SetProjection(float fovy)
+	{
+		float n = 0.1f;
+		float f = 10.0f;
+		m_ProjectionMatrix = glm::perspective(fovy, 1280.0f / 720.0f, n, f);
+		m_ViewProjectionMatrix = m_ProjectionMatrix * view;
+	}
+
 	void PerspectiveCamera::RecalculateViewMatrix()
 	{
 		glm::mat4 transform = glm::mat4(1.0f);

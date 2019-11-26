@@ -1,6 +1,5 @@
 #pragma once
 #include "Can.h"
-
 #include "imgui.h"
 
 class SandBox3D : public Can::Layer::Layer
@@ -19,5 +18,4 @@ private:
 
 	Can::Ref<Can::Shader> m_CubeShader;
 	Can::Ref<Can::VertexArray> m_CubeVA;
-
 };
