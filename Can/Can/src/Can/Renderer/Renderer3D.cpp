@@ -5,7 +5,8 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-#define RESOLUTION 4
+#define RESOLUTION 20
+
 #define SCALE 2
 namespace Can
 {
@@ -64,7 +65,7 @@ namespace Can
 					}
 					{
 						float x = i + 1;
-						float y = j + 1;
+						float y = j;
 						glm::vec2 percent = glm::vec2(x / (RESOLUTION - 1.0f), y / (RESOLUTION - 1.0f));
 						glm::vec3 pointOnUnitCube = glm::vec3(
 							localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
@@ -85,7 +86,7 @@ namespace Can
 					}
 					{
 						float x = i + 1;
-						float y = j;
+						float y = j + 1;
 						glm::vec2 percent = glm::vec2(x / (RESOLUTION - 1.0f), y / (RESOLUTION - 1.0f));
 						glm::vec3 pointOnUnitCube = glm::vec3(
 							localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
@@ -126,7 +127,7 @@ namespace Can
 						vertexIndex += 3;
 					}
 					{
-						float x = i;
+						float x = i + 1;
 						float y = j + 1;
 						glm::vec2 percent = glm::vec2(x / (RESOLUTION - 1.0f), y / (RESOLUTION - 1.0f));
 						glm::vec3 pointOnUnitCube = glm::vec3(
@@ -147,7 +148,7 @@ namespace Can
 						vertexIndex += 3;
 					}
 					{
-						float x = i + 1;
+						float x = i;
 						float y = j + 1;
 						glm::vec2 percent = glm::vec2(x / (RESOLUTION - 1.0f), y / (RESOLUTION - 1.0f));
 						glm::vec3 pointOnUnitCube = glm::vec3(
@@ -177,10 +178,10 @@ namespace Can
 			{
 				for (float i = 0; i < RESOLUTION - 1; i++)
 				{
-					glm::vec3 a00(vertexIndex + 0 + 0, vertexIndex + 0 + 1, vertexIndex + 0 + 2);
-					glm::vec3 a11(vertexIndex + 7 + 0, vertexIndex + 7 + 1, vertexIndex + 7 + 2);
-					glm::vec3 a10(vertexIndex + 14 + 0, vertexIndex + 14 + 1, vertexIndex + 14 + 2);
-					glm::vec3 a01(vertexIndex + 28 + 0, vertexIndex + 28 + 1, vertexIndex + 28 + 2);
+					glm::vec3 a00(m_Vertices[vertexIndex + 0 + 0],  m_Vertices[vertexIndex + 0 + 1],  m_Vertices[vertexIndex + 0 + 2]);
+					glm::vec3 a10(m_Vertices[vertexIndex + 10 + 0], m_Vertices[vertexIndex + 10 + 1], m_Vertices[vertexIndex + 10 + 2]);
+					glm::vec3 a11(m_Vertices[vertexIndex + 20 + 0], m_Vertices[vertexIndex + 20 + 1], m_Vertices[vertexIndex + 20 + 2]);
+					glm::vec3 a01(m_Vertices[vertexIndex + 50 + 0], m_Vertices[vertexIndex + 50 + 1], m_Vertices[vertexIndex + 50 + 2]);
 
 					glm::vec3 u1 = a11 - a00;
 					glm::vec3 v1 = a10 - a00;
@@ -188,8 +189,8 @@ namespace Can
 					glm::vec3 u2 = a01 - a00;
 					glm::vec3 v2 = a11 - a00;
 
-					glm::vec3 norm1 = glm::cross(u1, v1);
-					glm::vec3 norm2 = glm::cross(u2, v2);
+					glm::vec3 norm1 = glm::cross(v1, u1);
+					glm::vec3 norm2 = glm::cross(v2, u2);
 
 					m_Vertices[vertexIndex + 0 + 7] = norm1.x;
 					m_Vertices[vertexIndex + 0 + 8] = norm1.y;
@@ -214,6 +215,7 @@ namespace Can
 					m_Vertices[vertexIndex + 50 + 7] = norm2.x;
 					m_Vertices[vertexIndex + 50 + 8] = norm2.y;
 					m_Vertices[vertexIndex + 50 + 9] = norm2.z;
+					vertexIndex += 60;
 				}
 			}
 		}

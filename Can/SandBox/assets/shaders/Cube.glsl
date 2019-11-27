@@ -40,7 +40,7 @@ void main()
 
 	vec3 diffuse = (diff) * vec3(1.0, 1.0, 1.0);
 
-	vec3 result = vec3(diffuse.x + 0.1, diffuse.y + 0.1, diffuse.z + 0.1) * vec3(v_Color);
+	vec3 result = vec3(diffuse.x + 0.1, diffuse.y + 0.1, diffuse.z + 0.1);// * vec3(v_Color);
 
 	color = vec4( result, 1.0 );
 }
