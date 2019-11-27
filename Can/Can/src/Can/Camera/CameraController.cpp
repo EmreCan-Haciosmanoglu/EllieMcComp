@@ -151,6 +151,8 @@ namespace Can::Camera::Controller
 
 	bool Perspective::OnWindowResized(Event::WindowResizeEvent & e)
 	{
+		if (e.GetWidth() == 0 || e.GetHeight() == 0)
+			return false;
 		m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
 		m_Camera.SetProjection(m_Fovy, m_AspectRatio);
 
