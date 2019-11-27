@@ -24,7 +24,7 @@ void SandBox3D::OnUpdate(Can::TimeStep ts)
 
 	Can::Renderer3D::BeginScene(m_CameraController.GetCamera());
 
-	Can::Renderer3D::DrawCube({ 0.0f,0.0f,-2.0f }, { 1.0f,1.0f,1.0f });
+	Can::Renderer3D::DrawCube({ 0.0f,0.0f,-3.0f }, { 1.0f,1.0f,1.0f });
 
 	Can::Renderer2D::EndScene();
 }
