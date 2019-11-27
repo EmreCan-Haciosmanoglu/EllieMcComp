@@ -5,7 +5,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-#define RESOLUTION 8
+#define RESOLUTION 4
 #define SCALE 2
 namespace Can
 {
@@ -28,7 +28,7 @@ namespace Can
 			{+0.0f, +0.0f, -1.0f}
 		};
 
-		float m_Vertices[6 * RESOLUTION * RESOLUTION * (3 + 4)];
+		float m_Vertices[6 * (RESOLUTION - 1) * (RESOLUTION - 1) * 2 * 3 * (3 + 4 + 3)];
 		uint32_t m_Indices[6 * (RESOLUTION - 1) * (RESOLUTION - 1) * 2 * 3];
 
 		int vertexIndex = 0;
@@ -37,26 +37,183 @@ namespace Can
 			glm::vec3 localUp = localUps[k];
 			glm::vec3 axisA = glm::vec3(localUp.y, localUp.z, localUp.x);
 			glm::vec3 axisB = glm::cross(localUp, axisA);
-			for (float j = 0; j < RESOLUTION; j++)
+			for (float j = 0; j < RESOLUTION - 1; j++)
 			{
-				for (float i = 0; i < RESOLUTION; i++)
+				for (float i = 0; i < RESOLUTION - 1; i++)
 				{
-					glm::vec2 percent = glm::vec2(i / (RESOLUTION - 1.0f), j / (RESOLUTION - 1.0f));
-					glm::vec3 pointOnUnitCube = glm::vec3(
-						localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
-						localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
-						localUp.z + (percent.x - 0.5f) * 2.0f * axisA.z + (percent.y - 0.5f) * 2.0f * axisB.z
-					);
-					glm::vec3 pointOnUnitSphere = glm::normalize(pointOnUnitCube);
+					{
+						float x = i;
+						float y = j;
+						glm::vec2 percent = glm::vec2(x / (RESOLUTION - 1.0f), y / (RESOLUTION - 1.0f));
+						glm::vec3 pointOnUnitCube = glm::vec3(
+							localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
+							localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
+							localUp.z + (percent.x - 0.5f) * 2.0f * axisA.z + (percent.y - 0.5f) * 2.0f * axisB.z
+						);
+						glm::vec3 pointOnUnitSphere = glm::normalize(pointOnUnitCube);
 
-					m_Vertices[vertexIndex++] = pointOnUnitSphere.x * SCALE;
-					m_Vertices[vertexIndex++] = pointOnUnitSphere.y * SCALE;
-					m_Vertices[vertexIndex++] = pointOnUnitSphere.z * SCALE;
+						m_Vertices[vertexIndex++] = pointOnUnitSphere.x * SCALE;
+						m_Vertices[vertexIndex++] = pointOnUnitSphere.y * SCALE;
+						m_Vertices[vertexIndex++] = pointOnUnitSphere.z * SCALE;
 
-					m_Vertices[vertexIndex++] = 1.0f * percent.x;
-					m_Vertices[vertexIndex++] = 1.0f * percent.x;
-					m_Vertices[vertexIndex++] = 1.0f * percent.y;
-					m_Vertices[vertexIndex++] = 1.0f;
+						m_Vertices[vertexIndex++] = 1.0f * percent.x;
+						m_Vertices[vertexIndex++] = 1.0f * percent.x;
+						m_Vertices[vertexIndex++] = 1.0f * percent.y;
+						m_Vertices[vertexIndex++] = 1.0f;
+						vertexIndex += 3;
+					}
+					{
+						float x = i + 1;
+						float y = j + 1;
+						glm::vec2 percent = glm::vec2(x / (RESOLUTION - 1.0f), y / (RESOLUTION - 1.0f));
+						glm::vec3 pointOnUnitCube = glm::vec3(
+							localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
+							localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
+							localUp.z + (percent.x - 0.5f) * 2.0f * axisA.z + (percent.y - 0.5f) * 2.0f * axisB.z
+						);
+						glm::vec3 pointOnUnitSphere = glm::normalize(pointOnUnitCube);
+
+						m_Vertices[vertexIndex++] = pointOnUnitSphere.x * SCALE;
+						m_Vertices[vertexIndex++] = pointOnUnitSphere.y * SCALE;
+						m_Vertices[vertexIndex++] = pointOnUnitSphere.z * SCALE;
+
+						m_Vertices[vertexIndex++] = 1.0f * percent.x;
+						m_Vertices[vertexIndex++] = 1.0f * percent.x;
+						m_Vertices[vertexIndex++] = 1.0f * percent.y;
+						m_Vertices[vertexIndex++] = 1.0f;
+						vertexIndex += 3;
+					}
+					{
+						float x = i + 1;
+						float y = j;
+						glm::vec2 percent = glm::vec2(x / (RESOLUTION - 1.0f), y / (RESOLUTION - 1.0f));
+						glm::vec3 pointOnUnitCube = glm::vec3(
+							localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
+							localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
+							localUp.z + (percent.x - 0.5f) * 2.0f * axisA.z + (percent.y - 0.5f) * 2.0f * axisB.z
+						);
+						glm::vec3 pointOnUnitSphere = glm::normalize(pointOnUnitCube);
+
+						m_Vertices[vertexIndex++] = pointOnUnitSphere.x * SCALE;
+						m_Vertices[vertexIndex++] = pointOnUnitSphere.y * SCALE;
+						m_Vertices[vertexIndex++] = pointOnUnitSphere.z * SCALE;
+
+						m_Vertices[vertexIndex++] = 1.0f * percent.x;
+						m_Vertices[vertexIndex++] = 1.0f * percent.x;
+						m_Vertices[vertexIndex++] = 1.0f * percent.y;
+						m_Vertices[vertexIndex++] = 1.0f;
+						vertexIndex += 3;
+					}
+					{
+						float x = i;
+						float y = j;
+						glm::vec2 percent = glm::vec2(x / (RESOLUTION - 1.0f), y / (RESOLUTION - 1.0f));
+						glm::vec3 pointOnUnitCube = glm::vec3(
+							localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
+							localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
+							localUp.z + (percent.x - 0.5f) * 2.0f * axisA.z + (percent.y - 0.5f) * 2.0f * axisB.z
+						);
+						glm::vec3 pointOnUnitSphere = glm::normalize(pointOnUnitCube);
+
+						m_Vertices[vertexIndex++] = pointOnUnitSphere.x * SCALE;
+						m_Vertices[vertexIndex++] = pointOnUnitSphere.y * SCALE;
+						m_Vertices[vertexIndex++] = pointOnUnitSphere.z * SCALE;
+
+						m_Vertices[vertexIndex++] = 1.0f * percent.x;
+						m_Vertices[vertexIndex++] = 1.0f * percent.x;
+						m_Vertices[vertexIndex++] = 1.0f * percent.y;
+						m_Vertices[vertexIndex++] = 1.0f;
+						vertexIndex += 3;
+					}
+					{
+						float x = i;
+						float y = j + 1;
+						glm::vec2 percent = glm::vec2(x / (RESOLUTION - 1.0f), y / (RESOLUTION - 1.0f));
+						glm::vec3 pointOnUnitCube = glm::vec3(
+							localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
+							localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
+							localUp.z + (percent.x - 0.5f) * 2.0f * axisA.z + (percent.y - 0.5f) * 2.0f * axisB.z
+						);
+						glm::vec3 pointOnUnitSphere = glm::normalize(pointOnUnitCube);
+
+						m_Vertices[vertexIndex++] = pointOnUnitSphere.x * SCALE;
+						m_Vertices[vertexIndex++] = pointOnUnitSphere.y * SCALE;
+						m_Vertices[vertexIndex++] = pointOnUnitSphere.z * SCALE;
+
+						m_Vertices[vertexIndex++] = 1.0f * percent.x;
+						m_Vertices[vertexIndex++] = 1.0f * percent.x;
+						m_Vertices[vertexIndex++] = 1.0f * percent.y;
+						m_Vertices[vertexIndex++] = 1.0f;
+						vertexIndex += 3;
+					}
+					{
+						float x = i + 1;
+						float y = j + 1;
+						glm::vec2 percent = glm::vec2(x / (RESOLUTION - 1.0f), y / (RESOLUTION - 1.0f));
+						glm::vec3 pointOnUnitCube = glm::vec3(
+							localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
+							localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
+							localUp.z + (percent.x - 0.5f) * 2.0f * axisA.z + (percent.y - 0.5f) * 2.0f * axisB.z
+						);
+						glm::vec3 pointOnUnitSphere = glm::normalize(pointOnUnitCube);
+
+						m_Vertices[vertexIndex++] = pointOnUnitSphere.x * SCALE;
+						m_Vertices[vertexIndex++] = pointOnUnitSphere.y * SCALE;
+						m_Vertices[vertexIndex++] = pointOnUnitSphere.z * SCALE;
+
+						m_Vertices[vertexIndex++] = 1.0f * percent.x;
+						m_Vertices[vertexIndex++] = 1.0f * percent.x;
+						m_Vertices[vertexIndex++] = 1.0f * percent.y;
+						m_Vertices[vertexIndex++] = 1.0f;
+						vertexIndex += 3;
+					}
+				}
+			}
+		}
+		vertexIndex = 0;
+		for (int k = 0; k < 6; k++)
+		{
+			for (float j = 0; j < RESOLUTION - 1; j++)
+			{
+				for (float i = 0; i < RESOLUTION - 1; i++)
+				{
+					glm::vec3 a00(vertexIndex + 0 + 0, vertexIndex + 0 + 1, vertexIndex + 0 + 2);
+					glm::vec3 a11(vertexIndex + 7 + 0, vertexIndex + 7 + 1, vertexIndex + 7 + 2);
+					glm::vec3 a10(vertexIndex + 14 + 0, vertexIndex + 14 + 1, vertexIndex + 14 + 2);
+					glm::vec3 a01(vertexIndex + 28 + 0, vertexIndex + 28 + 1, vertexIndex + 28 + 2);
+
+					glm::vec3 u1 = a11 - a00;
+					glm::vec3 v1 = a10 - a00;
+
+					glm::vec3 u2 = a01 - a00;
+					glm::vec3 v2 = a11 - a00;
+
+					glm::vec3 norm1 = glm::cross(u1, v1);
+					glm::vec3 norm2 = glm::cross(u2, v2);
+
+					m_Vertices[vertexIndex + 0 + 7] = norm1.x;
+					m_Vertices[vertexIndex + 0 + 8] = norm1.y;
+					m_Vertices[vertexIndex + 0 + 9] = norm1.z;
+
+					m_Vertices[vertexIndex + 10 + 7] = norm1.x;
+					m_Vertices[vertexIndex + 10 + 8] = norm1.y;
+					m_Vertices[vertexIndex + 10 + 9] = norm1.z;
+
+					m_Vertices[vertexIndex + 20 + 7] = norm1.x;
+					m_Vertices[vertexIndex + 20 + 8] = norm1.y;
+					m_Vertices[vertexIndex + 20 + 9] = norm1.z;
+
+					m_Vertices[vertexIndex + 30 + 7] = norm2.x;
+					m_Vertices[vertexIndex + 30 + 8] = norm2.y;
+					m_Vertices[vertexIndex + 30 + 9] = norm2.z;
+
+					m_Vertices[vertexIndex + 40 + 7] = norm2.x;
+					m_Vertices[vertexIndex + 40 + 8] = norm2.y;
+					m_Vertices[vertexIndex + 40 + 9] = norm2.z;
+
+					m_Vertices[vertexIndex + 50 + 7] = norm2.x;
+					m_Vertices[vertexIndex + 50 + 8] = norm2.y;
+					m_Vertices[vertexIndex + 50 + 9] = norm2.z;
 				}
 			}
 		}
@@ -64,22 +221,20 @@ namespace Can
 		int indicesIndex = 0;
 		vertexIndex = 0;
 		for (int k = 0; k < 6; k++)
-			for (int j = 0; j < RESOLUTION; j++)
+		{
+			for (int j = 0; j < RESOLUTION - 1; j++)
 			{
-				for (int i = 0; i < RESOLUTION; i++)
+				for (int i = 0; i < RESOLUTION - 1; i++)
 				{
-					if (i < RESOLUTION - 1 && j < RESOLUTION - 1)
-					{
-						m_Indices[indicesIndex++] = vertexIndex;
-						m_Indices[indicesIndex++] = vertexIndex + RESOLUTION + 1;
-						m_Indices[indicesIndex++] = vertexIndex + RESOLUTION;
-						m_Indices[indicesIndex++] = vertexIndex;
-						m_Indices[indicesIndex++] = vertexIndex + 1;
-						m_Indices[indicesIndex++] = vertexIndex + RESOLUTION + 1;
-					}
-					vertexIndex++;
+					m_Indices[indicesIndex++] = vertexIndex++;
+					m_Indices[indicesIndex++] = vertexIndex++;
+					m_Indices[indicesIndex++] = vertexIndex++;
+					m_Indices[indicesIndex++] = vertexIndex++;
+					m_Indices[indicesIndex++] = vertexIndex++;
+					m_Indices[indicesIndex++] = vertexIndex++;
 				}
 			}
+		}
 
 		s_3DData = new Renderer3DStorage();
 		s_3DData->CubeVertexArray = VertexArray::Create();
@@ -124,7 +279,8 @@ namespace Can
 		cubeVB.reset(VertexBuffer::Create(m_Vertices, sizeof(m_Vertices)));
 		cubeVB->SetLayout({
 		   { ShaderDataType::Float3, "a_Position"},
-		   { ShaderDataType::Float4, "a_Color"}
+		   { ShaderDataType::Float4, "a_Color"},
+		   { ShaderDataType::Float3, "a_Normal"}
 			});
 		s_3DData->CubeVertexArray->AddVertexBuffer(cubeVB);
 
@@ -144,15 +300,16 @@ namespace Can
 			14, 8,  2   // Magenta
 		};
 
-
+		
 		Ref<IndexBuffer> cubeIB;
 		cubeIB.reset(IndexBuffer::Create(m_Indices, 6 * (RESOLUTION - 1) * (RESOLUTION - 1) * 2 * 3));
 		s_3DData->CubeVertexArray->SetIndexBuffer(cubeIB);
-
+		
 		s_3DData->CubeShader = Shader::Create("assets/shaders/Cube.glsl");
 
 		s_3DData->CubeShader->Bind();
 		s_3DData->CubeShader->SetInt("u_Texture", 0);
+		s_3DData->CubeShader->SetFloat3("u_LightPos", { 4.0f, 0.0f, 0.0f });
 	}
 	void Renderer3D::Shutdown()
 	{
