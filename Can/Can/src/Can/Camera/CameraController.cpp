@@ -91,14 +91,19 @@ namespace Can::Camera::Controller
 	{
 		float rotx = glm::radians(m_CameraRotation.x);
 		float roty = glm::radians(m_CameraRotation.y);
-		float rotz = glm::radians(m_CameraRotation.z);
 		float tSpeed = m_CameraTranslationSpeed * ts;
 		float rSpeed = m_CameraRotationSpeed * ts;
 
 		if (Input::IsKeyPressed(CAN_KEY_D))
-			m_CameraPosition.x -= tSpeed;
+		{
+			m_CameraPosition.x += cos(roty) * tSpeed;
+			m_CameraPosition.z -= sin(roty) * tSpeed;
+		}
 		else if (Input::IsKeyPressed(CAN_KEY_A))
-			m_CameraPosition.x += tSpeed;
+		{
+			m_CameraPosition.x -= cos(roty) * tSpeed;
+			m_CameraPosition.z += sin(roty) * tSpeed;
+		}
 
 		if (Input::IsKeyPressed(CAN_KEY_W))
 			m_CameraPosition.z -= tSpeed;
@@ -106,22 +111,28 @@ namespace Can::Camera::Controller
 			m_CameraPosition.z += tSpeed;
 
 		if (Input::IsKeyPressed(CAN_KEY_SPACE))
-			m_CameraPosition.y -= tSpeed;
+		{
+			m_CameraPosition.y -= cos(rotx) * tSpeed;
+			m_CameraPosition.z -= sin(rotx) * tSpeed;
+		}
 		else if(Input::IsKeyPressed(CAN_KEY_LEFT_SHIFT))
-			m_CameraPosition.y += tSpeed;
+		{
+			m_CameraPosition.y += cos(rotx) * tSpeed;
+			m_CameraPosition.z += sin(rotx) * tSpeed;
+		}
 
 
 		m_Camera.SetPosition(m_CameraPosition);
 
 		if (Input::IsKeyPressed(CAN_KEY_G))
-			m_CameraRotation.y += m_CameraRotationSpeed * ts;
+			m_CameraRotation.y += rSpeed;
 		else if (Input::IsKeyPressed(CAN_KEY_J))
-			m_CameraRotation.y -= m_CameraRotationSpeed * ts;
+			m_CameraRotation.y -= rSpeed;
 
 		if (Input::IsKeyPressed(CAN_KEY_Y))
-			m_CameraRotation.x += m_CameraRotationSpeed * ts;
+			m_CameraRotation.x += rSpeed;
 		else if (Input::IsKeyPressed(CAN_KEY_H))
-			m_CameraRotation.x -= m_CameraRotationSpeed * ts;
+			m_CameraRotation.x -= rSpeed;
 
 		if (m_CameraRotation.x > 180.0f)
 			m_CameraRotation.x -= 360.0f;
