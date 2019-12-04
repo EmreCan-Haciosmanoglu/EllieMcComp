@@ -26,7 +26,7 @@ public:
 			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};
 		Can::Ref<Can::VertexBuffer> squareVertexBuffer;
-		squareVertexBuffer.reset(Can::VertexBuffer::Create(vertices, sizeof(vertices)));
+		squareVertexBuffer= Can::VertexBuffer::Create(vertices, sizeof(vertices));
 
 		Can::BufferLayout layout = {
 			{Can::ShaderDataType::Float3, "a_Position"},
@@ -38,7 +38,7 @@ public:
 
 		uint32_t indices[6]{ 0,1,2,0,2,3 };
 		Can::Ref<Can::IndexBuffer> squareIndexBuffer;
-		squareIndexBuffer.reset(Can::IndexBuffer::Create(indices, 6));
+		squareIndexBuffer = Can::IndexBuffer::Create(indices, 6);
 		m_SquareVertexArray->SetIndexBuffer(squareIndexBuffer);
 
 
@@ -119,7 +119,7 @@ public:
 			-1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f  // Cyan	-- 23	-7
 		};
 		Can::Ref<Can::VertexBuffer> vertexPositionBuffer;
-		vertexPositionBuffer.reset(Can::VertexBuffer::Create(cubeVertexPositions, sizeof(cubeVertexPositions)));
+		vertexPositionBuffer = Can::VertexBuffer::Create(cubeVertexPositions, sizeof(cubeVertexPositions));
 
 		Can::BufferLayout Positionlayout = {
 			{Can::ShaderDataType::Float3, "a_Position"},
@@ -145,7 +145,7 @@ public:
 		};
 
 		Can::Ref<Can::IndexBuffer> cIndexBuffer;
-		cIndexBuffer.reset(Can::IndexBuffer::Create(cubeIndices, 12 * 3));
+		cIndexBuffer = Can::IndexBuffer::Create(cubeIndices, 12 * 3);
 		m_CubeVertexArray->SetIndexBuffer(cIndexBuffer);
 
 		Can::Ref<Can::OpenGLShader> openglshader = std::dynamic_pointer_cast<Can::OpenGLShader>(textureShader);

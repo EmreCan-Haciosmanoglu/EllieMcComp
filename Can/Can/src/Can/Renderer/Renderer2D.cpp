@@ -30,7 +30,7 @@ namespace Can
 			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};							  
 		Ref<VertexBuffer> squareVB;
-		squareVB.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
+		squareVB =VertexBuffer::Create(vertices, sizeof(vertices));
 		squareVB->SetLayout({
 			{ShaderDataType::Float3, "a_Position"},
 			{ShaderDataType::Float2, "a_TexCoord"}
@@ -39,7 +39,7 @@ namespace Can
 
 		uint32_t indices[6]{ 0,1,2,2,3,0 };
 		Ref<IndexBuffer> squareIB;
-		squareIB.reset(IndexBuffer::Create(indices, 6));
+		squareIB = IndexBuffer::Create(indices, 6);
 		s_Data->QuadVertexArray->SetIndexBuffer(squareIB);
 
 		s_Data->TextureShader = Shader::Create("assets/shaders/Texture.glsl");

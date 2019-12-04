@@ -105,24 +105,30 @@ namespace Can
 	public:
 		virtual ~VertexBuffer() = default;
 
+		virtual void ReDo(float* vertices, uint32_t size) = 0;
+		virtual void Resize(uint32_t size) = 0;
+		virtual void SetSubData(float* vertices, int start, int offset) = 0;
+
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 
 		virtual void SetLayout(const BufferLayout& layout) = 0;
 		virtual const BufferLayout& GetLayout() const = 0;
 
-		static VertexBuffer* Create(float* vertices, uint32_t size);
+		static Ref<VertexBuffer> Create(float* vertices, uint32_t size,bool isDynamic = false);
 	};
 	class IndexBuffer
 	{
 	public:
 		virtual ~IndexBuffer() = default;
 
+		virtual void ReDo(uint32_t* indices, uint32_t count) = 0;
+
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 
 		virtual uint32_t GetCount() const = 0;
 
-		static IndexBuffer* Create(uint32_t* indices, uint32_t size);
+		static Ref<IndexBuffer> Create(uint32_t* indices, uint32_t size);
 	};
 }
