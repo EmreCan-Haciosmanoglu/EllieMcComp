@@ -8,6 +8,7 @@
 
 #include "SandBox2DLayer.h"
 #include "SandBox3D.h"
+#include "SnakeAI.h"
 
 class ExampleLayer : public Can::Layer::Layer
 {
@@ -225,6 +226,7 @@ public:
 
 	void OnImGuiRender() override
 	{
+		
 		ImGui::Begin("Settings");
 		ImGui::ColorEdit3("Left Color", glm::value_ptr(m_LeftColor));
 		ImGui::ColorEdit3("Right Color", glm::value_ptr(m_RightColor));
@@ -267,7 +269,8 @@ public:
 	{
 		//PushLayer(new ExampleLayer());
 		//PushLayer(new SandBox2DLayer());
-		PushLayer(new SandBox3D());
+		//PushLayer(new SandBox3D());
+		PushLayer(new SnakeAI());
 	}
 
 	~Sandbox()

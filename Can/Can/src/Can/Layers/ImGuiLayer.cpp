@@ -78,11 +78,4 @@ namespace Can::Layer
 			glfwMakeContextCurrent(backup_curremt_context);
 		}
 	}
-
-	void ImGuiLayer::OnImGuiRender()
-	{
-		static bool show = true;
-
-		ImGui::ShowDemoWindow(&show);
-	}
 }
