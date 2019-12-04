@@ -4,6 +4,7 @@
 class NeuralNetwork
 {
 public:
+	NeuralNetwork() = default;
 	NeuralNetwork(int* nodes, int length, float lr);
 
 	~NeuralNetwork();
