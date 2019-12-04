@@ -260,6 +260,7 @@ namespace Can
 		s_3DData->CubeShader->Bind();
 		s_3DData->CubeShader->SetInt("u_Texture", 0);
 		s_3DData->CubeShader->SetFloat3("u_LightPos", { 4.0f, 0.0f, 0.0f });
+
 		delete[] m_Vertices;
 		delete[] m_Indices;
 	}
@@ -499,6 +500,9 @@ namespace Can
 		s_3DData->CubeIndexBuffer->ReDo(m_Indices, IndexCount);
 		s_3DData->CubeVertexArray->SetIndexBuffer(s_3DData->CubeIndexBuffer);
 		s_3DData->CubeIndexBuffer->Unbind();
+
+		delete[] m_Vertices;
+		delete[] m_Indices;
 	}
 
 	void Renderer3D::DrawCube(const glm::vec3 & position, const glm::vec3 & scale)
