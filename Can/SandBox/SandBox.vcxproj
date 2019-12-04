@@ -135,6 +135,10 @@
     <ClCompile Include="src\SandBox3D.cpp" />
     <ClCompile Include="src\SandBoxApp.cpp" />
     <ClCompile Include="src\SnakeAI.cpp" />
+    <ClCompile Include="temps\KeySimulation.cpp" />
+    <ClCompile Include="temps\Matrix.cpp" />
+    <ClCompile Include="temps\NeuralNetwork.cpp" />
+    <ClCompile Include="temps\Perceptron.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Can\vendor\imgui\ImGui.vcxproj">
@@ -153,6 +157,10 @@
     <ClInclude Include="src\SandBox2DLayer.h" />
     <ClInclude Include="src\SandBox3D.h" />
     <ClInclude Include="src\SnakeAI.h" />
+    <ClInclude Include="temps\Keys.h" />
+    <ClInclude Include="temps\Matrix.h" />
+    <ClInclude Include="temps\NeuralNetwork.h" />
+    <ClInclude Include="temps\Perceptron.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

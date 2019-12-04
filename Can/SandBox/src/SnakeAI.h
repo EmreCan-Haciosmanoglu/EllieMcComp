@@ -1,5 +1,6 @@
 #pragma once
 #include "Can.h"
+#include "../temps/NeuralNetwork.h"
 
 #include "imgui.h"
 
@@ -47,4 +48,6 @@ private:
 	std::vector<glm::vec2> m_Snake;
 	glm::vec2 m_Directions[4] = { {0,1}, {1,0}, {0,-1}, {-1,0} };
 	glm::vec2 m_CurrentDirection = m_Directions[0];
+
+	NeuralNetwork* nn;
 };
