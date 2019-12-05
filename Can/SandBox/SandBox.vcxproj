@@ -135,6 +135,8 @@
     <ClCompile Include="src\SandBox3D.cpp" />
     <ClCompile Include="src\SandBoxApp.cpp" />
     <ClCompile Include="src\SnakeAI.cpp" />
+    <ClCompile Include="src\SnakeGame\Game.cpp" />
+    <ClCompile Include="src\SnakeGame\Play.cpp" />
     <ClCompile Include="temps\KeySimulation.cpp" />
     <ClCompile Include="temps\Matrix.cpp" />
     <ClCompile Include="temps\NeuralNetwork.cpp" />
@@ -157,6 +159,8 @@
     <ClInclude Include="src\SandBox2DLayer.h" />
     <ClInclude Include="src\SandBox3D.h" />
     <ClInclude Include="src\SnakeAI.h" />
+    <ClInclude Include="src\SnakeGame\Game.h" />
+    <ClInclude Include="src\SnakeGame\Play.h" />
     <ClInclude Include="temps\Keys.h" />
     <ClInclude Include="temps\Matrix.h" />
     <ClInclude Include="temps\NeuralNetwork.h" />
