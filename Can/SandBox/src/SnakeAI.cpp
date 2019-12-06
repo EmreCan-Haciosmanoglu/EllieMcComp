@@ -15,22 +15,6 @@ SnakeAI::SnakeAI()
 	float m_ZoomLevel = 10.0f;
 	m_CameraController.GetCamera().SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 
-
-	int x = std::rand() % 11;
-	int y = std::rand() % 11;
-	while (x == 5 && y == 5)
-	{
-		x = std::rand() % 11;
-		y = std::rand() % 11;
-	}
-
-	m_State[y][x] = 1;
-
-	m_Snake.push_back({ 5, 5 });
-	m_State[5][5] = -1;
-
-	int nodes[4] = { 11 * 11 + 2 , 50 , 20, 4 };
-	nn = new NeuralNetwork(nodes, 4, 0.05f);
 }
 
 void SnakeAI::OnAttach() {}
@@ -44,6 +28,7 @@ void SnakeAI::OnUpdate(Can::TimeStep ts)
 
 	if (stop)
 		return;
+	std::random_shuffle(indices.begin(), indices.end());
 
 
 	time += ts;

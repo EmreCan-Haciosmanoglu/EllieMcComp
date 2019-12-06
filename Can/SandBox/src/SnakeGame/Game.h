@@ -17,5 +17,6 @@ public:
 private:
 	glm::vec2 m_Offset = { -7.0f, +3.0f };
 	unsigned int m_PlayCount;
+	unsigned int m_PlayLeft;
 	Play** m_Plays;
 };

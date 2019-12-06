@@ -3,53 +3,69 @@
 
 Game::Game(unsigned int playCount)
 	: m_PlayCount(playCount)
+	, m_PlayLeft(m_PlayCount)
 	, m_Plays(new Play*[m_PlayCount])
 {
+	for (int i = 0; i < m_PlayCount; i++)
+	{
+		m_Plays[i] = new Play(this, m_Directions[0], 20);
+	}
 }
 
 Game::~Game()
 {
+	for (int i = 0; i < m_PlayCount; i++)
+		delete m_Plays[i];
+
+	delete[] m_Plays;
 }
 
 void Game::DrawBestPlay()
 {
+	int* points = new int[m_PlayCount];
+
+	for (int i = 0; i < m_PlayCount; i++)
+		points[i] = m_Plays[i]->GetPoints();
+
+	int* maxElement = std::max_element(points, points + m_PlayCount);
+	int index = std::distance(points, maxElement);
+
+	m_Plays[index]->Draw(m_Offset);
+
+	delete[] points;
+	delete maxElement;
 }
 
 void Game::Tick()
 {
+	if (m_PlayLeft <= 0)
+	{
+		NeuralNetwork** brains = new NeuralNetwork * [m_PlayCount];
+		float* points = new float[m_PlayCount];
+		float total = 0;
+		for (int i = 0; i < m_PlayCount; i++)
+		{
+			brains[i] = m_Plays[i]->GetBrain();
+			points[i] = m_Plays[i]->GetPoints();
+			total += points[i];
+		}
+		for (int i = 0; i < m_PlayCount; i++)
+		{
+			points[i] /= total;
+			points[i] *= 100.0f;
+		}
+
+		brains = NeuralNetwork::Generate(brains, points, m_PlayCount, m_PlayCount);
+		brains = NeuralNetwork::Mutate(brains, 0.01f);
+		m_PlayLeft = m_PlayCount;
+
+		delete[] points;
+		return;
+	}
 	for (int i = 0; i < m_PlayCount; i++)
 	{
 		if (m_Plays[i]->IsDeath())
 			continue;
+		m_Plays[i]->Tick();
 	}
-
-	float state[11 * 11 + 2];
-
-	for (int i = 0; i < 11; i++)
-	{
-		for (int j = 0; j < 11; j++)
-		{
-			state[i * 11 + j] = (m_State[i][j]);
-		}
-	}
-	state[11 * 11] = m_Snake.back().x;
-	state[11 * 11 + 1] = m_Snake.back().y;
-
-	int size = 11 * 11 + 2;
-	Matrix* input = new Matrix(size, 1, state);
-	Matrix* result = nn->FeedForward(input);
-	result->Print();
-
-	float A[4] = {
-		result->data[0],
-		result->data[1],
-		result->data[2],
-		result->data[3]
-	};
-	float* maxElement = std::max_element(A, A + 4);
-	int dist = std::distance(A, maxElement);
-	m_CurrentDirection = m_Directions[dist];
-	delete result;
-
-	stop = UpdateGameState();
 }
