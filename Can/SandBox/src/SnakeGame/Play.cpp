@@ -7,8 +7,43 @@ Play::Play(Game* game, glm::vec2 direction, int health)
 	, m_Health(health)
 	, m_Game(game)
 {
-	int nodes[4] = { 11 * 11 + 2 , 50 , 20, 4 };
+	int* nodes = new int[4]{ 12 * 12 + 2 , 50 , 30, 4 };
 	m_Brain = new NeuralNetwork(nodes, 4, 0.05f);
+	m_Snake.push_back({ 5, 4 });
+	m_State[4][5] = -1;
+	m_Snake.push_back({ 5, 5 });
+	m_State[5][5] = -1;
+
+	int x = std::rand() % 12;
+	int y = std::rand() % 12;
+	while (m_State[y][x] != 0.01f)
+	{
+		x = std::rand() % 12;
+		y = std::rand() % 12;
+	}
+	m_ApplePosition = glm::vec2(x, y);
+	m_State[y][x] = 1;
+}
+
+Play::Play(Game* game, glm::vec2 direction, int health, NeuralNetwork* brain)
+	: m_CurrentDirection(direction)
+	, m_Health(health)
+	, m_Game(game)
+	, m_Brain(brain)
+{
+	m_Snake.push_back({ 5, 4 });
+	m_State[4][5] = -1;
+	m_Snake.push_back({ 5, 5 });
+	m_State[5][5] = -1;
+	int x = std::rand() % 12;
+	int y = std::rand() % 12;
+	while (m_State[y][x] != 0.01f)
+	{
+		x = std::rand() % 12;
+		y = std::rand() % 12;
+	}
+	m_ApplePosition = glm::vec2(x, y);
+	m_State[y][x] = 1;
 }
 
 Play::~Play()
@@ -19,22 +54,21 @@ Play::~Play()
 void Play::Tick()
 {
 
-	float state[11 * 11 + 2];
+	float state[12 * 12 + 2];
 
-	for (int i = 0; i < 11; i++)
+	for (int i = 0; i < 12; i++)
 	{
-		for (int j = 0; j < 11; j++)
+		for (int j = 0; j < 12; j++)
 		{
-			state[i * 11 + j] = (m_State[i][j]);
+			state[i * 12 + j] = (m_State[i][j]);
 		}
 	}
-	state[11 * 11] = m_Snake.back().x;
-	state[11 * 11 + 1] = m_Snake.back().y;
+	state[12 * 12] = m_Snake.back().x;
+	state[12 * 12 + 1] = m_Snake.back().y;
 
-	int size = 11 * 11 + 2;
+	int size = 12 * 12 + 2;
 	Matrix* input = new Matrix(size, 1, state);
 	Matrix* result = m_Brain->FeedForward(input);
-	result->Print();
 
 	float A[4] = {
 		result->data[0],
@@ -48,16 +82,31 @@ void Play::Tick()
 	delete result;
 
 	b_IsDeath = Update();
+	if (b_IsDeath)
+		m_Game->PlayerDeath();
 }
 
 bool Play::Update()
 {
-	glm::vec2 tailPos = m_Snake.front();
-	m_State[(int)tailPos.y][(int)tailPos.x] = 0;
+	m_Health--;
+	m_Points++;
 
 	glm::vec2 position = m_Snake.back();
 	glm::vec2 nextPos = position + m_CurrentDirection;
-	if (nextPos.x < 0 || nextPos.y < 0 || nextPos.x > 10 || nextPos.y > 10)
+	if (nextPos.x < 0 || nextPos.x > 11 || nextPos.y < 0 || nextPos.y > 11 || m_State[(int)nextPos.y][(int)nextPos.x] == -1)
+	{
+		return true;
+	}
+	glm::vec2 tailPos = m_Snake.front();
+	m_State[(int)tailPos.y][(int)tailPos.x] = 0.01f;
+	if (nextPos.x == m_ApplePosition.x && nextPos.y == m_ApplePosition.y)
+	{
+		m_Snake.insert(m_Snake.begin(), m_Snake.front());
+		m_Health += 10;
+		m_Points += 5;
+		m_ApplePosition = GetNewApplePosition();
+	}
+	if (m_Health <= 0)
 		return true;
 	m_Snake.push_back(nextPos);
 	m_State[(int)nextPos.y][(int)nextPos.x] = -1;
@@ -67,21 +116,35 @@ bool Play::Update()
 
 void Play::Draw(glm::vec2 offset)
 {
-	for (int y = -6; y < 5; y++)
+	for (int y = -7; y < 5; y++)
 	{
-		for (int x = -5; x < 6; x++)
+		for (int x = -5; x < 7; x++)
 		{
-			switch ((int)m_State[y + 6][x + 5])
+			switch ((int)m_State[y + 7][x + 5])
 			{
 			case 1:
 				Can::Renderer2D::DrawQuad({ x + offset.x, y + offset.y , 0.1f }, { 0.9f, 0.9f }, m_Game->m_RedColor);
 				break;
 			case -1:
-				Can::Renderer2D::DrawQuad({ x + offset.x, y + offset.y , 0.1f }, { 0.9f, 0.9f }, m_Game->m_WhitishColor);
+				Can::Renderer2D::DrawQuad({ x + offset.x, y + offset.y , 0.1f }, { 0.9f, 0.9f }, m_Game->m_BlackishColor);
 				break;
 			default:
+				Can::Renderer2D::DrawQuad({ x + offset.x, y + offset.y , 0.1f }, { 0.9f, 0.9f }, { 1.0f ,1.0f ,1.0f ,1.0f });
 				break;
 			}
 		}
 	}
+}
+
+glm::vec2 Play::GetNewApplePosition()
+{
+	int x = std::rand() % 12;
+	int y = std::rand() % 12;
+	while (m_State[y][x] != 0.01f)
+	{
+		x = std::rand() % 12;
+		y = std::rand() % 12;
+	}
+	m_State[y][x] = 1;
+	return glm::vec2(x, y);
 }

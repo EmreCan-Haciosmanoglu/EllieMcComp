@@ -10,6 +10,7 @@
 SnakeAI::SnakeAI()
 	:Layer("Snake Game")
 	, m_CameraController(1920.0f / 1080.0f)
+	, m_Game(new Game(100))
 {
 	float m_AspectRatio = 1920.0f / 1080.0f;
 	float m_ZoomLevel = 10.0f;
@@ -23,34 +24,34 @@ void SnakeAI::OnDetach() {}
 void SnakeAI::OnUpdate(Can::TimeStep ts)
 {
 	//m_CameraController.OnUpdate(ts);
-	static float time = 0.0f;
-	static bool stop = false;
+	m_Game->Tick(ts);
 
-	if (stop)
-		return;
-	std::random_shuffle(indices.begin(), indices.end());
-
-
-	time += ts;
-	if (time >= 0.5f)
-	{
-		time -= 0.5f;
-		m_Game->Tick();
-	}
-
-	Can::RenderCommand::SetClearColor({ 0.0f, 0.0f, 0.0f, 1.0f });
+	Can::RenderCommand::SetClearColor({ 0.9f, 0.9f, 0.9f, 1.0f });
 	Can::RenderCommand::Clear();
 
 
 	Can::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
+	Can::Renderer2D::DrawQuad({ -8.5f, +1.5f, -0.2f }, { 12.0f, 12.0f }, { 0.85f, 0.85f, 0.85f, 1.0f });
 	m_Game->DrawBestPlay();
 
 	Can::Renderer2D::EndScene();
 }
 
-void SnakeAI::OnEvent(Can::Event::Event& event)
+void SnakeAI::OnEvent(Can::Event::Event & event)
 {
 	m_CameraController.OnEvent(event);
 }
 
+
+
+void SnakeAI::OnImGuiRender()
+{
+	ImGui::Begin("Generation");
+	int size = m_Game->m_GenerationData.size();
+	for (int i = size-1; i >= 0; i--)
+	{
+		ImGui::Text("Generation-%d: %.1f", i, m_Game->m_GenerationData[i]);
+	}
+	ImGui::End();
+}
