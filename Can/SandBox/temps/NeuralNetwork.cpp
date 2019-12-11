@@ -27,7 +27,7 @@ NeuralNetwork::NeuralNetwork(int* nodes, int length, float lr)
 		biases[i]->Randomize(-2.0f, 2.0f);
 	}
 }
-NeuralNetwork::NeuralNetwork(int* nodes, int length, float lr, Matrix** w, Matrix** b)
+NeuralNetwork::NeuralNetwork(int* nodes, int length, float lr, Matrix * *w, Matrix * *b)
 	: Nodes(nodes)
 	, Length(length)
 	, learning_rate(lr)
@@ -39,7 +39,11 @@ NeuralNetwork::NeuralNetwork(int* nodes, int length, float lr, Matrix** w, Matri
 NeuralNetwork::~NeuralNetwork()
 {
 	delete Nodes;
+	for (int i = 0; i < Length - 1; i++)
+		delete weights[i];
 	delete[] weights;
+	for (int i = 0; i < Length - 1; i++)
+		delete biases[i];
 	delete[] biases;
 }
 
@@ -114,36 +118,40 @@ void NeuralNetwork::Train(Matrix * inputs, Matrix * targets)
 	delete[] errors;
 }
 
-NeuralNetwork** NeuralNetwork::Generate(NeuralNetwork * *parents, float* fitnessScores, int parentCount, int childrenCount)
+NeuralNetwork** NeuralNetwork::Generate(NeuralNetwork * *parents, int* fitnessScores, int totalScore, int parentCount, int childrenCount)
 {
 	NeuralNetwork** children = new NeuralNetwork * [childrenCount];
-
+	totalScore *= totalScore;
 
 	auto rng = std::default_random_engine{};
 	for (int j = 0; j < childrenCount; j++)
 	{
 		NeuralNetwork* parentA = nullptr;
-		int guess = std::rand() % 100;
-		int line = 0;
-		for (int i = 0; i < parentCount; i++)
 		{
-			line += (int)fitnessScores[i];
-			if (guess < line)
+			int guess = std::rand() % totalScore;
+			int line = 0;
+			for (int i = 0; i < parentCount; i++)
 			{
-				parentA = parents[i];
-				break;
+				line += fitnessScores[i]* fitnessScores[i];
+				if (guess < line || i == parentCount - 1)
+				{
+					parentA = parents[i];
+					break;
+				}
 			}
 		}
 		NeuralNetwork* parentB = nullptr;
-		guess = std::rand() % 100;
-		line = 0;
-		for (int i = 0; i < parentCount; i++)
 		{
-			line += (int)fitnessScores[i];
-			if (guess < line)
+			int guess = std::rand() % totalScore;
+			int line = 0;
+			for (int i = 0; i < parentCount; i++)
 			{
-				parentB = parents[i];
-				break;
+				line += fitnessScores[i]* fitnessScores[i];
+				if (guess < line || i == parentCount - 1)
+				{
+					parentB = parents[i];
+					break;
+				}
 			}
 		}
 		int len = parentA->GetLength();
@@ -163,7 +171,7 @@ NeuralNetwork** NeuralNetwork::Generate(NeuralNetwork * *parents, float* fitness
 			weights[i] = new Matrix(nodes[i + 1], nodes[i]);
 		}
 
-		Matrix** biases = new Matrix * [len - 1];
+		Matrix * *biases = new Matrix * [len - 1];
 		for (int i = 0; i < len - 1; i++)
 		{
 			size += nodes[i + 1];
@@ -171,68 +179,128 @@ NeuralNetwork** NeuralNetwork::Generate(NeuralNetwork * *parents, float* fitness
 		}
 
 		std::vector<int> indexes;
-		int half = size / 2;
-		for (int i = 0; i < half; i++)
-			indexes.push_back(1);
-		for (int i = half; i < size; i++)
-			indexes.push_back(0);
 
-		std::shuffle(std::begin(indexes), std::end(indexes), rng);
-
-		int index1 = 0;
-		for (int i = 0; i < len - 1; i++)
 		{
-			int index2 = 0;
-			int leng = nodes[i + 1] * nodes[i];
-			float* dataA = parentA->GetWeights()[i]->data;
-			float* dataB = parentB->GetWeights()[i]->data;
-			float* dataC = weights[i]->data;
-			for (int f = 0; f < leng; f++)
+			int half = size / 2;
+			for (int i = 0; i < half; i++)
+				indexes.push_back(1);
+			for (int i = half; i < size; i++)
+				indexes.push_back(0);
+
+			std::shuffle(std::begin(indexes), std::end(indexes), rng);
+		}
+
+		{
+			int index1 = 0;
+			for (int i = 0; i < len - 1; i++)
 			{
-				if (indexes[index1])
-					dataC[f] = dataA[f];
-				else
-					dataC[f] = dataB[f];
-				index1++;
-				index2++;
+				int index2 = 0;
+				int leng = nodes[i + 1] * nodes[i];
+				float* dataA = parentA->GetWeights()[i]->data;
+				float* dataB = parentB->GetWeights()[i]->data;
+				float* dataC = weights[i]->data;
+				for (int f = 0; f < leng; f++)
+				{
+					if (indexes[index1])
+						dataC[f] = dataA[f];
+					else
+						dataC[f] = dataB[f];
+					index1++;
+					index2++;
+				}
+			}
+			for (int i = 0; i < len - 1; i++)
+			{
+				int index2 = 0;
+				int leng = nodes[i + 1];
+				float* dataA = parentA->GetBiases()[i]->data;
+				float* dataB = parentB->GetBiases()[i]->data;
+				float* dataC = biases[i]->data;
+				for (int f = 0; f < leng; f++)
+				{
+					if (indexes[index1])
+						dataC[f] = dataA[f];
+					else
+						dataC[f] = dataB[f];
+					index1++;
+					index2++;
+				}
 			}
 		}
-		for (int i = 0; i < len - 1; i++)
-		{
-			int index2 = 0;
-			int leng = nodes[i + 1];
-			float* dataA = parentA->GetBiases()[i]->data;
-			float* dataB = parentB->GetBiases()[i]->data;
-			float* dataC = biases[i]->data;
-			for (int f = 0; f < leng; f++)
-			{
-				if (indexes[index1])
-					dataC[f] = dataA[f];
-				else
-					dataC[f] = dataB[f];
-				index1++;
-				index2++;
-			}
-		}
+		indexes.clear();
 		children[j] = new NeuralNetwork(nodes, len, parentA->GetLR(), weights, biases);
 	}
-
-	for (int i = 0; i < parentCount; i++)
-		delete parents[i];
-	delete[] parents;
 
 	return children;
 }
 
-NeuralNetwork** NeuralNetwork::Mutate(NeuralNetwork * *source, float mutationRate)
+NeuralNetwork** NeuralNetwork::Mutate(NeuralNetwork * *source, int mutationRate, int sourceCount)
 {
+	for (int i = 0; i < sourceCount; i++)
+	{
+		NeuralNetwork* brain = source[i];
+		int* nodes = brain->GetNodes();
+		int len = brain->GetLength();
+		Matrix** weights = brain->GetWeights();
+		Matrix** biases = brain->GetBiases();
+
+
+		for (int j = 0; j < len - 1; j++)
+		{
+			int leng = nodes[j + 1] * nodes[j];
+			float* data = weights[j]->data;
+			for (int k = 0; k < leng; k++)
+			{
+				int guess = std::rand() % 100;
+				if (guess < mutationRate)
+					data[k] = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * 4.0f - 2.0f;
+
+			}
+		}
+
+		for (int j = 0; j < len - 1; j++)
+		{
+			int leng = nodes[j + 1];
+			float* data = biases[j]->data;
+			for (int k = 0; k < leng; k++)
+			{
+				int guess = std::rand() % 100;
+				if (guess < mutationRate)
+					data[k] = (static_cast <float> (rand()) / static_cast <float> (RAND_MAX)) * 4.0f - 2.0f;
+
+			}
+		}
+	}
+
 	return source;
 }
 
-void NeuralNetwork::SetWeights(Matrix** weigths)
+void NeuralNetwork::SetWeights(Matrix * *w)
 {
+	if (weights != nullptr)
+	{
+		for (int j = 0; j < Length - 1; j++)
+		{
+			if (weights[j] != nullptr)
+				delete weights[j];
+		}
+
+		delete[] weights;
+	}
+	weights = w;
 }
 
-void NeuralNetwork::SetBiases(Matrix** biases)
+void NeuralNetwork::SetBiases(Matrix * *b)
 {
+	if (biases != nullptr)
+	{
+		for (int j = 0; j < Length - 1; j++)
+		{
+			if (biases[j] != nullptr)
+				delete biases[j];
+		}
+
+		delete[] biases;
+	}
+	biases = b;
 }

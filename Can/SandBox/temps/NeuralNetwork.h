@@ -15,11 +15,11 @@ public:
 	void FeedForward(Matrix** outputs) const;
 	void Train(Matrix *inputs, Matrix* targets);
 
-	static NeuralNetwork** Generate(NeuralNetwork** parents, float* fitnessScores, int parentCount, int childrenCount);
-	static NeuralNetwork** Mutate(NeuralNetwork** source, float mutationRate);
+	static NeuralNetwork** Generate(NeuralNetwork** parents, int* fitnessScores, int totalScore, int parentCount, int childrenCount);
+	static NeuralNetwork** Mutate(NeuralNetwork** source, int mutationRate, int sourceCount);
 
-	void SetWeights(Matrix** weights);
-	void SetBiases(Matrix** biases);
+	void SetWeights(Matrix** w);
+	void SetBiases(Matrix** b);
 
 	inline int* GetNodes() const { return Nodes; }
 	inline Matrix** GetWeights() const { return weights; }

@@ -9,13 +9,14 @@
 #include "SandBox2DLayer.h"
 #include "SandBox3D.h"
 #include "SnakeAI.h"
+#include "SnakeTake2.h"
 
 class ExampleLayer : public Can::Layer::Layer
 {
 public:
 	ExampleLayer()
 		: Can::Layer::Layer("Example")
-		, m_CameraController(1280.0f / 720.0f, true)
+		, m_CameraController(1920.0f / 1080.0f, true)
 		, m_CubePosition(0.0f)
 	{
 		m_SquareVertexArray = Can::VertexArray::Create();
@@ -270,7 +271,8 @@ public:
 		//PushLayer(new ExampleLayer());
 		//PushLayer(new SandBox2DLayer());
 		//PushLayer(new SandBox3D());
-		PushLayer(new SnakeAI());
+		//PushLayer(new SnakeAI());
+		PushLayer(new SnakeAI2());
 	}
 
 	~Sandbox()

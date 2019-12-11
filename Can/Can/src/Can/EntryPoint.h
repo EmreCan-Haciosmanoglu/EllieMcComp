@@ -7,7 +7,7 @@ extern Can::Application* Can::CreateApplication();
 int main(int argc, char** argv)
 {
 	Can::Log::Init();
-	std::srand(std::time(nullptr));
+	std::srand((unsigned int)std::time(nullptr));
 	auto app = Can::CreateApplication();
 	app->Run();
 	delete app;

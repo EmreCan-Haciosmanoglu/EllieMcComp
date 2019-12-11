@@ -77,7 +77,7 @@ namespace Can::Camera
 	{
 		float n = 0.1f;
 		float f = 10.0f;
-		m_ProjectionMatrix = glm::perspective(fovy, 1280.0f / 720.0f, n, f);
+		m_ProjectionMatrix = glm::perspective(fovy, 1920.0f / 1080.0f, n, f);
 		m_ViewProjectionMatrix = m_ProjectionMatrix * view;
 	}
 

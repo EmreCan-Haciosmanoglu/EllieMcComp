@@ -4,7 +4,7 @@
 
 SandBox2DLayer::SandBox2DLayer()
 	:Layer("2DLayer")
-	, m_CameraController(1280.0f / 720.0f, true)
+	, m_CameraController(1920.0f / 1080.0f, true)
 {
 }
 

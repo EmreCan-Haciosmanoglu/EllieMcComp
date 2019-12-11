@@ -4,7 +4,7 @@
 
 SandBox3D::SandBox3D()
 	: Layer("3D Layer")
-	, m_CameraController(45.0f, 1280.0f / 720.0f, 0.1f, 30.0f)
+	, m_CameraController(45.0f, 1920.0f / 1080.0f, 0.1f, 30.0f)
 {
 }
 
