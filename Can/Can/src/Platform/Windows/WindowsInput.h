@@ -4,7 +4,7 @@
 
 namespace Can::Platform::Windows
 {
-	class CAN_API WindowsInput : public Input
+	class WindowsInput : public Input
 	{
 	public:
 

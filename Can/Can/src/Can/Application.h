@@ -17,7 +17,7 @@
 
 namespace Can
 {
-	class CAN_API Application
+	class  Application
 	{
 	public:
 		Application();
