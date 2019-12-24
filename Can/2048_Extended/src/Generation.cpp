@@ -65,7 +65,7 @@ void Generation::Tick()
 		}
 		m_GenerationData = (--b.end())->first;
 		int start = (int)((m_PlayerCount * 1.0f) / 100.0f);
-		int middle = (int)((m_PlayerCount * 95.0f) / 100.0f);
+		int middle = (int)((m_PlayerCount * 98.0f) / 100.0f);
 		int end = start + middle;
 
 		NeuralNetwork** newBrains = NeuralNetwork::Generate(b, total, m_PlayerCount, middle);
@@ -78,7 +78,7 @@ void Generation::Tick()
 		for (int i = start; i < end; i++)
 		{
 			delete brains[i];
-			brains[i] = newBrains[j]->Mutate(0.04f);
+			brains[i] = newBrains[j]->Mutate(0.02f);
 			j++;
 		}
 

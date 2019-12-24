@@ -15,10 +15,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{F4C124E3-60A1-A37E-69B9-2E55D5170AE0}</ProjectGuid>
+    <ProjectGuid>{C3298227-2FEA-FD5D-F824-47DB64A4423A}</ProjectGuid>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Sandbox</RootNamespace>
+    <RootNamespace>2048_Extended</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -55,23 +55,23 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\bin\Debug-windows-x86_64\Sandbox\</OutDir>
-    <IntDir>..\bin-int\Debug-windows-x86_64\Sandbox\</IntDir>
-    <TargetName>Sandbox</TargetName>
+    <OutDir>..\bin\Debug-windows-x86_64\2048_Extended\</OutDir>
+    <IntDir>..\bin-int\Debug-windows-x86_64\2048_Extended\</IntDir>
+    <TargetName>2048_Extended</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\Release-windows-x86_64\Sandbox\</OutDir>
-    <IntDir>..\bin-int\Release-windows-x86_64\Sandbox\</IntDir>
-    <TargetName>Sandbox</TargetName>
+    <OutDir>..\bin\Release-windows-x86_64\2048_Extended\</OutDir>
+    <IntDir>..\bin-int\Release-windows-x86_64\2048_Extended\</IntDir>
+    <TargetName>2048_Extended</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\Dist-windows-x86_64\Sandbox\</OutDir>
-    <IntDir>..\bin-int\Dist-windows-x86_64\Sandbox\</IntDir>
-    <TargetName>Sandbox</TargetName>
+    <OutDir>..\bin\Dist-windows-x86_64\2048_Extended\</OutDir>
+    <IntDir>..\bin-int\Dist-windows-x86_64\2048_Extended\</IntDir>
+    <TargetName>2048_Extended</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -135,41 +135,48 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\SandBox2DLayer.h" />
-    <ClInclude Include="src\SandBox3D.h" />
-    <ClInclude Include="src\SnakeAI.h" />
-    <ClInclude Include="src\SnakeGame\Game.h" />
-    <ClInclude Include="src\SnakeGame\Play.h" />
-    <ClInclude Include="src\SnakeGame2\Game2.h" />
-    <ClInclude Include="src\SnakeGame2\Play2.h" />
-    <ClInclude Include="src\SnakeTake2.h" />
-    <ClInclude Include="temps\Keys.h" />
-    <ClInclude Include="temps\Matrix.h" />
-    <ClInclude Include="temps\NeuralNetwork.h" />
-    <ClInclude Include="temps\Perceptron.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\SandBox2DLayer.cpp" />
-    <ClCompile Include="src\SandBox3D.cpp" />
-    <ClCompile Include="src\SandBoxApp.cpp" />
-    <ClCompile Include="src\SnakeAI.cpp" />
-    <ClCompile Include="src\SnakeGame\Game.cpp" />
-    <ClCompile Include="src\SnakeGame\Play.cpp" />
-    <ClCompile Include="src\SnakeGame2\Game2.cpp" />
-    <ClCompile Include="src\SnakeGame2\Play2.cpp" />
-    <ClCompile Include="src\SnakeTake2.cpp" />
-    <ClCompile Include="temps\KeySimulation.cpp" />
-    <ClCompile Include="temps\Matrix.cpp" />
-    <ClCompile Include="temps\NeuralNetwork.cpp" />
-    <ClCompile Include="temps\Perceptron.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Can\vendor\imgui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Can\Can.vcxproj">
       <Project>{D7DC870B-43E6-877C-CC61-9E7C386A937C}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\2048_Extended.cpp" />
+    <ClCompile Include="src\GameLayer.cpp" />
+    <ClCompile Include="src\Generation.cpp" />
+    <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\Puppet.cpp" />
+    <ClCompile Include="src\SingleBrain.cpp" />
+    <ClCompile Include="temps\KeySimulation.cpp" />
+    <ClCompile Include="temps\Matrix.cpp" />
+    <ClCompile Include="temps\NeuralNetwork.cpp" />
+    <ClCompile Include="temps\Perceptron.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\GameLayer.h" />
+    <ClInclude Include="src\Generation.h" />
+    <ClInclude Include="src\Player.h" />
+    <ClInclude Include="src\Puppet.h" />
+    <ClInclude Include="src\SingleBrain.h" />
+    <ClInclude Include="temps\Keys.h" />
+    <ClInclude Include="temps\Matrix.h" />
+    <ClInclude Include="temps\NeuralNetwork.h" />
+    <ClInclude Include="temps\Perceptron.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\textures\_1024.png" />
+    <Image Include="assets\textures\_128.png" />
+    <Image Include="assets\textures\_16.png" />
+    <Image Include="assets\textures\_2.png" />
+    <Image Include="assets\textures\_2048.png" />
+    <Image Include="assets\textures\_256.png" />
+    <Image Include="assets\textures\_32.png" />
+    <Image Include="assets\textures\_4.png" />
+    <Image Include="assets\textures\_512.png" />
+    <Image Include="assets\textures\_64.png" />
+    <Image Include="assets\textures\_8.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

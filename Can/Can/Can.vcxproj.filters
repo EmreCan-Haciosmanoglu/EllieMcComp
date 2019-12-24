@@ -7,6 +7,9 @@
     <Filter Include="src\Can">
       <UniqueIdentifier>{6E692FA9-DA48-AE44-E360-391B4FBF14A6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Can\Camera">
+      <UniqueIdentifier>{26563CE8-1224-30EE-FBB7-A014E7240C53}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Can\Core">
       <UniqueIdentifier>{86A249B0-7205-D954-1B8B-110B07CDA4D7}</UniqueIdentifier>
     </Filter>
@@ -60,6 +63,12 @@
     <ClInclude Include="src\Can\Application.h">
       <Filter>src\Can</Filter>
     </ClInclude>
+    <ClInclude Include="src\Can\Camera\Camera.h">
+      <Filter>src\Can\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Camera\CameraController.h">
+      <Filter>src\Can\Camera</Filter>
+    </ClInclude>
     <ClInclude Include="src\Can\Core.h">
       <Filter>src\Can</Filter>
     </ClInclude>
@@ -112,6 +121,12 @@
       <Filter>src\Can\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Can\Renderer\Renderer.h">
+      <Filter>src\Can\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Renderer\Renderer2D.h">
+      <Filter>src\Can\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Renderer\Renderer3D.h">
       <Filter>src\Can\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Can\Renderer\RendererAPI.h">
@@ -1263,14 +1278,16 @@
     <ClInclude Include="vendor\stb\stb_image.h">
       <Filter>vendor\stb</Filter>
     </ClInclude>
-    <ClInclude Include="src\Can\Camera\Camera.h" />
-    <ClInclude Include="src\Can\Camera\CameraController.h" />
-    <ClInclude Include="src\Can\Renderer\Renderer2D.h" />
-    <ClInclude Include="src\Can\Renderer\Renderer3D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
       <Filter>src\Can</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Camera\Camera.cpp">
+      <Filter>src\Can\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Camera\CameraController.cpp">
+      <Filter>src\Can\Camera</Filter>
     </ClCompile>
     <ClCompile Include="src\Can\Layers\ImGuiBuild.cpp">
       <Filter>src\Can\Layers</Filter>
@@ -1294,6 +1311,12 @@
       <Filter>src\Can\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Can\Renderer\Renderer.cpp">
+      <Filter>src\Can\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Renderer\Renderer2D.cpp">
+      <Filter>src\Can\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Renderer\Renderer3D.cpp">
       <Filter>src\Can\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Can\Renderer\RendererAPI.cpp">
@@ -1338,9 +1361,5 @@
     <ClCompile Include="vendor\stb\stb_image.cpp">
       <Filter>vendor\stb</Filter>
     </ClCompile>
-    <ClCompile Include="src\Can\Camera\Camera.cpp" />
-    <ClCompile Include="src\Can\Camera\CameraController.cpp" />
-    <ClCompile Include="src\Can\Renderer\Renderer2D.cpp" />
-    <ClCompile Include="src\Can\Renderer\Renderer3D.cpp" />
   </ItemGroup>
 </Project>

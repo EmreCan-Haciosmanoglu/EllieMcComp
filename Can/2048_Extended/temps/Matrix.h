@@ -2,6 +2,8 @@
 #include <cmath>
 
 typedef float (*func)(float x);
+typedef float (*func2)(float x, float y);
+
 class Matrix
 {
 public:
@@ -16,6 +18,7 @@ public:
 	Matrix& Transpose();
 	static Matrix* Transpose(Matrix* matrix);
 	Matrix* Activation(func f);
+	Matrix* Activation(func2 f);
 	static Matrix* Map(Matrix* matrix, func f);
 
 	friend Matrix* operator+(float left, const Matrix& right);

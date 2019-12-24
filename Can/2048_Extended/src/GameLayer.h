@@ -22,5 +22,5 @@ private:
 	Can::Camera::OrthographicCameraController m_CameraController;
 	Generation* m_Generation;
 	SingleBrain* m_Game;
-	int maxScore = 0;
+	int max = 0;
 };

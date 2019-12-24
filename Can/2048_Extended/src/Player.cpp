@@ -399,30 +399,30 @@ int* Player::Foresee(int* state, int dimension, int step)
 glm::vec2 Player::Think(int step)
 {
 	int size = std::pow(4, step);
-	float* state = new float[m_InputSize + size];
+	//float* state = new float[m_InputSize + size];
+	float* state = new float[m_InputSize];
 	int index = 0;
 	for (int i = 0; i < m_InputSize; i++)
 	{
 		state[index] = std::pow(2, m_State[i]);
 		index++;
 	}
-	int* foreseeResults = Foresee(m_State, m_Dimensions, step);
+	/*int* foreseeResults = Foresee(m_State, m_Dimensions, step);
 	for (int i = 0; i < size; i++)
 	{
 		state[index] = foreseeResults[i];
 		index++;
 	}
-	delete[] foreseeResults;
+	delete[] foreseeResults;*/
 	Matrix* input = new Matrix(m_InputSize + size, 1, state);
 	Matrix* result = m_Brain->FeedForward(input);
 
-	float A[4] = {
+	float A[3] = {
 		result->data[0],
 		result->data[1],
-		result->data[2],
-		result->data[3]
+		result->data[2]
 	};
-	float* maxElement = std::max_element(A, A + 4);
+	float* maxElement = std::max_element(A, A + 3);
 	_int64 dist = std::distance(A, maxElement);
 
 	delete result;

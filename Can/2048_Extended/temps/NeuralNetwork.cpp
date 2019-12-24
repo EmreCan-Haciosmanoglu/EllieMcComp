@@ -5,6 +5,7 @@
 #define D_SIGMOID (func)([](float y) {return y*(1.0f-y);})
 #define LEAKY_RELU (func)([](float x){return std::max(x*0.1f,x);})
 #define D_LEAKY_RELU (func)([](float x){return x < 0? -0.1f:1.0f;})
+#define SOFT_MAX (func2)([](float x, float sum){return x/sum;})
 
 NeuralNetwork::NeuralNetwork(int* nodes, int length, float lr)
 	: Nodes(nodes)
@@ -15,13 +16,13 @@ NeuralNetwork::NeuralNetwork(int* nodes, int length, float lr)
 	for (int i = 0; i < length - 1; i++)
 	{
 		weights[i] = new Matrix(nodes[i + 1], nodes[i]);
-		weights[i]->Randomize(-2.0f, 2.0f);
+		weights[i]->Randomize(-1.0f, 1.0f);
 	}
 	biases = new Matrix * [length - 1];
 	for (int i = 0; i < length - 1; i++)
 	{
 		biases[i] = new Matrix(nodes[i + 1], 1);
-		biases[i]->Randomize(-2.0f, 2.0f);
+		biases[i]->Randomize(-1.0f, 1.0f);
 	}
 }
 NeuralNetwork::NeuralNetwork(int* nodes, int length, float lr, Matrix * *w, Matrix * *b)
@@ -48,12 +49,19 @@ Matrix* NeuralNetwork::FeedForward(Matrix * inputs) const
 {
 	Matrix** layerOutputs = new Matrix * [Length];
 	layerOutputs[0] = inputs;
-	for (int i = 1; i < Length; i++)
+	for (int i = 1; i < Length-1; i++)
 	{
 		layerOutputs[i] = Matrix::MatrixMultiplication(weights[i - 1], layerOutputs[i - 1]);
 		*layerOutputs[i] += *biases[i - 1];
 		layerOutputs[i]->Activation(LEAKY_RELU);
 	}
+
+	{
+		layerOutputs[Length - 1] = Matrix::MatrixMultiplication(weights[Length - 2], layerOutputs[Length - 2]);
+		*layerOutputs[Length - 1] += *biases[Length - 2];
+		layerOutputs[Length - 1]->Activation(SOFT_MAX);
+	}
+
 	Matrix * result = new Matrix(*layerOutputs[Length - 1]);
 	for (int i = 0; i < Length; i++)
 	{
@@ -65,11 +73,16 @@ Matrix* NeuralNetwork::FeedForward(Matrix * inputs) const
 
 void NeuralNetwork::FeedForward(Matrix * *outputs) const
 {
-	for (int i = 1; i < Length; i++)
+	for (int i = 1; i < Length-1; i++)
 	{
 		outputs[i] = Matrix::MatrixMultiplication(weights[i - 1], outputs[i - 1]);
 		*outputs[i] += *biases[i - 1];
 		outputs[i]->Activation(LEAKY_RELU);
+	}
+	{
+		outputs[Length - 1] = Matrix::MatrixMultiplication(weights[Length - 2], outputs[Length - 2]);
+		*outputs[Length - 1] += *biases[Length - 2];
+		outputs[Length - 1]->Activation(SOFT_MAX);
 	}
 }
 

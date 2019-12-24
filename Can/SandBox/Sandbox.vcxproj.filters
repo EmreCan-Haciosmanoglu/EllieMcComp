@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="SnakeGame">
+      <UniqueIdentifier>{F1EB7366-5D56-28DD-A694-D982123E0632}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SnakeGame2">
+      <UniqueIdentifier>{436AF134-2F22-3382-9829-0CDE8400CE72}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\SandBox2DLayer.h" />
+    <ClInclude Include="src\SandBox3D.h" />
+    <ClInclude Include="src\SnakeAI.h" />
+    <ClInclude Include="src\SnakeGame\Game.h">
+      <Filter>SnakeGame</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SnakeGame\Play.h">
+      <Filter>SnakeGame</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SnakeGame2\Game2.h">
+      <Filter>SnakeGame2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SnakeGame2\Play2.h">
+      <Filter>SnakeGame2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SnakeTake2.h" />
+    <ClInclude Include="temps\Keys.h" />
+    <ClInclude Include="temps\Matrix.h" />
+    <ClInclude Include="temps\NeuralNetwork.h" />
+    <ClInclude Include="temps\Perceptron.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\SandBox2DLayer.cpp" />
+    <ClCompile Include="src\SandBox3D.cpp" />
+    <ClCompile Include="src\SandBoxApp.cpp" />
+    <ClCompile Include="src\SnakeAI.cpp" />
+    <ClCompile Include="src\SnakeGame\Game.cpp">
+      <Filter>SnakeGame</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SnakeGame\Play.cpp">
+      <Filter>SnakeGame</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SnakeGame2\Game2.cpp">
+      <Filter>SnakeGame2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SnakeGame2\Play2.cpp">
+      <Filter>SnakeGame2</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SnakeTake2.cpp" />
+    <ClCompile Include="temps\KeySimulation.cpp" />
+    <ClCompile Include="temps\Matrix.cpp" />
+    <ClCompile Include="temps\NeuralNetwork.cpp" />
+    <ClCompile Include="temps\Perceptron.cpp" />
+  </ItemGroup>
+</Project>

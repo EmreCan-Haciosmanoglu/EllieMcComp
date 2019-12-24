@@ -295,6 +295,17 @@ Matrix* Matrix::Activation(func f)
 	return this;
 }
 
+Matrix* Matrix::Activation(func2 f)
+{
+	float sum = 0.0f;
+	for (int i = 0; i < size; i++)
+		sum += data[i];
+	for (int i = 0; i < size; i++)
+		data[i] = f(data[i],sum);
+
+	return this;
+}
+
 Matrix* Matrix::Map(Matrix* matrix, func f)
 {
 	Matrix* result = new Matrix(matrix->GetRows(), matrix->GetColumns());
