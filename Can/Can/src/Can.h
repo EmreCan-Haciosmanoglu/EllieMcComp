@@ -1,6 +1,7 @@
 #pragma once
 #include "canpch.h"
 
+#include "Can/Random.h"
 #include "Can/Input.h"
 #include "Can/Application.h"
 
