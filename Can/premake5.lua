@@ -77,9 +77,9 @@ project "Can"
         
         defines
         {
-            "CAN_BUILD_DLL",
+            
             "GLFW_INCLUDE_NONE",
-            "_CRT_SECURE_NO_WARNINGS"
+			"_CRT_SECURE_NO_WARNINGS"
         }
         
     filter "configurations:Debug"
@@ -103,10 +103,10 @@ project "Sandbox"
     language "C++"
     cppdialect "C++17"
     staticruntime "On"
-    
+        
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-    
+        
     files
     {
         "%{prj.name}/src/**.h",
@@ -114,7 +114,7 @@ project "Sandbox"
         "%{prj.name}/vendor/glm/glm/**.hpp",
         "%{prj.name}/vendor/glm/glm/**.inl"
     }
-    
+        
     includedirs
     {
         "Can/vendor/spdlog/include",
@@ -128,20 +128,70 @@ project "Sandbox"
         "imgui",
         "Can"
     }
-    
+        
     filter "system:windows"
         systemversion "latest"
-    
+        
     filter "configurations:Debug"
         defines "CAN_DEBUG"
         runtime "Debug"
         symbols "on"
-    
+        
     filter "configurations:Release"
         defines "CAN_RELEASE"
         runtime "Release"
         optimize "on"
-    
+        
+    filter "configurations:Dist"
+        defines "CAN_DIST"
+        runtime "Release"
+        optimize "on"
+            
+project "2048_Extended"
+    location "2048_Extended"
+    kind "ConsoleApp"
+    language "C++"
+    cppdialect "C++17"
+    staticruntime "On"
+
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+    files
+    {
+        "%{prj.name}/src/**.h",
+        "%{prj.name}/src/**.cpp",
+        "%{prj.name}/vendor/glm/glm/**.hpp",
+        "%{prj.name}/vendor/glm/glm/**.inl"
+    }
+
+    includedirs
+    {
+        "Can/vendor/spdlog/include",
+        "Can/src",
+        "%{IncludeDir.imgui}",
+        "%{IncludeDir.glm}"
+    }
+
+    links
+    {
+        "imgui",
+        "Can"
+    }
+
+    filter "system:windows"
+        systemversion "latest"
+
+    filter "configurations:Debug"
+        defines "CAN_DEBUG"
+        runtime "Debug"
+        symbols "on"
+
+    filter "configurations:Release"
+        defines "CAN_RELEASE"
+        runtime "Release"
+        optimize "on"
+
     filter "configurations:Dist"
         defines "CAN_DIST"
         runtime "Release"
