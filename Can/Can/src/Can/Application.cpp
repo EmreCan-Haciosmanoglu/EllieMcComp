@@ -1,4 +1,5 @@
 #include "canpch.h"
+#include "Can/Random.h"
 
 #include "Application.h"
 #include "Can/Renderer/Renderer.h"
@@ -15,7 +16,7 @@ namespace Can
 	Application::Application()
 	{
 		s_Instance = this;
-
+		Utility::Random rand;
 		m_Window = Scope<Window>(Window::Create());
 		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 
