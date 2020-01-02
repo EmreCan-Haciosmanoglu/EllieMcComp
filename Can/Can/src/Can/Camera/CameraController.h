@@ -21,6 +21,7 @@ namespace Can::Camera
 	{
 	public:
 		OrthographicCameraController(float aspectRatio, bool rotation = false);
+		OrthographicCameraController(float aspectRatio, float zoomLevel, bool rotation = false);
 
 		void OnUpdate(Can::TimeStep ts);
 		void OnEvent(Can::Event::Event& e);
@@ -32,8 +33,8 @@ namespace Can::Camera
 		bool OnWindowResized(Event::WindowResizeEvent& e);
 
 	private:
-		float m_AspectRatio;
 		float m_ZoomLevel = 10.0f;
+		float m_AspectRatio;
 		OrthographicCamera m_Camera;
 
 		bool m_Rotation;

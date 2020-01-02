@@ -10,6 +10,13 @@ namespace Can::Camera
 		, m_Camera(-aspectRatio * m_ZoomLevel, aspectRatio* m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel)
 	{
 	}
+	OrthographicCameraController::OrthographicCameraController(float aspectRatio, float zoomLevel, bool rotation)
+		: m_AspectRatio(aspectRatio)
+		, m_ZoomLevel(zoomLevel)
+		, m_Rotation(rotation)
+		, m_Camera(-aspectRatio * m_ZoomLevel, aspectRatio* m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel)
+	{
+	}
 
 	void OrthographicCameraController::OnUpdate(TimeStep ts)
 	{
