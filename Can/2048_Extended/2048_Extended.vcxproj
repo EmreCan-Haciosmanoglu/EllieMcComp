@@ -135,12 +135,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Can\vendor\imgui\ImGui.vcxproj">
-      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Can\Can.vcxproj">
-      <Project>{D7DC870B-43E6-877C-CC61-9E7C386A937C}</Project>
-    </ProjectReference>
+    <ClInclude Include="src\GameLayer.h" />
+    <ClInclude Include="src\Generation.h" />
+    <ClInclude Include="src\Player.h" />
+    <ClInclude Include="src\Puppet.h" />
+    <ClInclude Include="src\SingleBrain.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\2048_Extended.cpp" />
@@ -149,34 +148,14 @@
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Puppet.cpp" />
     <ClCompile Include="src\SingleBrain.cpp" />
-    <ClCompile Include="temps\KeySimulation.cpp" />
-    <ClCompile Include="temps\Matrix.cpp" />
-    <ClCompile Include="temps\NeuralNetwork.cpp" />
-    <ClCompile Include="temps\Perceptron.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\GameLayer.h" />
-    <ClInclude Include="src\Generation.h" />
-    <ClInclude Include="src\Player.h" />
-    <ClInclude Include="src\Puppet.h" />
-    <ClInclude Include="src\SingleBrain.h" />
-    <ClInclude Include="temps\Keys.h" />
-    <ClInclude Include="temps\Matrix.h" />
-    <ClInclude Include="temps\NeuralNetwork.h" />
-    <ClInclude Include="temps\Perceptron.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="assets\textures\_1024.png" />
-    <Image Include="assets\textures\_128.png" />
-    <Image Include="assets\textures\_16.png" />
-    <Image Include="assets\textures\_2.png" />
-    <Image Include="assets\textures\_2048.png" />
-    <Image Include="assets\textures\_256.png" />
-    <Image Include="assets\textures\_32.png" />
-    <Image Include="assets\textures\_4.png" />
-    <Image Include="assets\textures\_512.png" />
-    <Image Include="assets\textures\_64.png" />
-    <Image Include="assets\textures\_8.png" />
+    <ProjectReference Include="..\Can\vendor\imgui\ImGui.vcxproj">
+      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Can\Can.vcxproj">
+      <Project>{D7DC870B-43E6-877C-CC61-9E7C386A937C}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

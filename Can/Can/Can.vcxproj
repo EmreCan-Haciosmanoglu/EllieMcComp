@@ -162,6 +162,7 @@
     <ClInclude Include="src\Can\Layers\LayerStack.h" />
     <ClInclude Include="src\Can\Log.h" />
     <ClInclude Include="src\Can\MouseButtonCode.h" />
+    <ClInclude Include="src\Can\Random.h" />
     <ClInclude Include="src\Can\Renderer\Buffer.h" />
     <ClInclude Include="src\Can\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Can\Renderer\RenderCommand.h" />
@@ -561,6 +562,7 @@
     <ClCompile Include="src\Can\Layers\Layer.cpp" />
     <ClCompile Include="src\Can\Layers\LayerStack.cpp" />
     <ClCompile Include="src\Can\Log.cpp" />
+    <ClCompile Include="src\Can\Random.cpp" />
     <ClCompile Include="src\Can\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Can\Renderer\RenderCommand.cpp" />
     <ClCompile Include="src\Can\Renderer\Renderer.cpp" />
@@ -597,4 +599,4 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-</Project>
+</Project> 

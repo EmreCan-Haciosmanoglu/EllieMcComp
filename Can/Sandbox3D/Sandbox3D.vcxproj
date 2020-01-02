@@ -15,10 +15,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{F4C124E3-60A1-A37E-69B9-2E55D5170AE0}</ProjectGuid>
+    <ProjectGuid>{CB155D3F-3780-11B6-80BE-C25BEC67EF0A}</ProjectGuid>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Sandbox</RootNamespace>
+    <RootNamespace>Sandbox3D</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -55,23 +55,23 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\bin\Debug-windows-x86_64\Sandbox\</OutDir>
-    <IntDir>..\bin-int\Debug-windows-x86_64\Sandbox\</IntDir>
-    <TargetName>Sandbox</TargetName>
+    <OutDir>..\bin\Debug-windows-x86_64\Sandbox3D\</OutDir>
+    <IntDir>..\bin-int\Debug-windows-x86_64\Sandbox3D\</IntDir>
+    <TargetName>Sandbox3D</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\Release-windows-x86_64\Sandbox\</OutDir>
-    <IntDir>..\bin-int\Release-windows-x86_64\Sandbox\</IntDir>
-    <TargetName>Sandbox</TargetName>
+    <OutDir>..\bin\Release-windows-x86_64\Sandbox3D\</OutDir>
+    <IntDir>..\bin-int\Release-windows-x86_64\Sandbox3D\</IntDir>
+    <TargetName>Sandbox3D</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\Dist-windows-x86_64\Sandbox\</OutDir>
-    <IntDir>..\bin-int\Dist-windows-x86_64\Sandbox\</IntDir>
-    <TargetName>Sandbox</TargetName>
+    <OutDir>..\bin\Dist-windows-x86_64\Sandbox3D\</OutDir>
+    <IntDir>..\bin-int\Dist-windows-x86_64\Sandbox3D\</IntDir>
+    <TargetName>Sandbox3D</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -134,27 +134,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="src\SandBox2DLayer.h" />
-    <ClInclude Include="src\SandBox3D.h" />
-    <ClInclude Include="src\SnakeAI.h" />
-    <ClInclude Include="src\SnakeGame\Game.h" />
-    <ClInclude Include="src\SnakeGame\Play.h" />
-    <ClInclude Include="src\SnakeGame2\Game2.h" />
-    <ClInclude Include="src\SnakeGame2\Play2.h" />
-    <ClInclude Include="src\SnakeTake2.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\SandBox2DLayer.cpp" />
-    <ClCompile Include="src\SandBox3D.cpp" />
-    <ClCompile Include="src\SandBoxApp.cpp" />
-    <ClCompile Include="src\SnakeAI.cpp" />
-    <ClCompile Include="src\SnakeGame\Game.cpp" />
-    <ClCompile Include="src\SnakeGame\Play.cpp" />
-    <ClCompile Include="src\SnakeGame2\Game2.cpp" />
-    <ClCompile Include="src\SnakeGame2\Play2.cpp" />
-    <ClCompile Include="src\SnakeTake2.cpp" />
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Can\vendor\imgui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>

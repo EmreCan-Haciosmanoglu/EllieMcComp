@@ -111,6 +111,9 @@
     <ClInclude Include="src\Can\MouseButtonCode.h">
       <Filter>src\Can</Filter>
     </ClInclude>
+    <ClInclude Include="src\Can\Random.h">
+      <Filter>src\Can</Filter>
+    </ClInclude>
     <ClInclude Include="src\Can\Renderer\Buffer.h">
       <Filter>src\Can\Renderer</Filter>
     </ClInclude>
@@ -1302,6 +1305,9 @@
       <Filter>src\Can\Layers</Filter>
     </ClCompile>
     <ClCompile Include="src\Can\Log.cpp">
+      <Filter>src\Can</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Random.cpp">
       <Filter>src\Can</Filter>
     </ClCompile>
     <ClCompile Include="src\Can\Renderer\Buffer.cpp">
