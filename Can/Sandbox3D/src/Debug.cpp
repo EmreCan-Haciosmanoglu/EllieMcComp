@@ -29,6 +29,6 @@ void Debug::OnImGuiRender()
 	int* resolution = m_Parent->GetResolutionPtr();
 	bool isChanged = ImGui::SliderInt("Resolution", resolution, 1, 25);
 	if (isChanged)
-		Can::Renderer3D::UpdateSphere(*resolution);
+		m_Parent->UpdateSphere(*resolution);
 	ImGui::End();
 }

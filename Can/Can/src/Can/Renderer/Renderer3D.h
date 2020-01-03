@@ -6,6 +6,18 @@
 
 namespace Can
 {
+	struct Object
+	{
+		Ref<VertexBuffer> VB;
+		Ref<IndexBuffer> IB;
+		Ref<VertexArray> VA;
+		Ref<Texture2D> T;
+		Ref<Shader> S;
+		glm::mat4 transform;
+		glm::vec3 position;
+		glm::vec3 scale;
+	};
+
 	class Renderer3D
 	{
 	public:
@@ -14,10 +26,9 @@ namespace Can
 
 		static void BeginScene(const Camera::PerspectiveCamera& camera);
 		static void EndScene();
+		
+		static void AddObject(Object* obj);
 
-		static void UpdateSphere(int resolution);
-
-		static void DrawCube(const glm::vec3& position, const glm::vec3& scale);
-		static void DrawCube(const glm::vec3& position, const glm::vec3& scale, const Ref<Texture2D>& texture);
+		static void DrawObjects();
 	};
 }

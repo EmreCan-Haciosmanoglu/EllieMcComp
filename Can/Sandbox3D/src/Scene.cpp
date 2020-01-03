@@ -17,7 +17,7 @@ void Scene::OnUpdate(Can::TimeStep ts)
 
 	Can::Renderer3D::BeginScene(m_MainCameraController.GetCamera());
 
-	Can::Renderer3D::DrawCube({ 0.0f, 0.0f, -4.0f }, { 0.5f, 0.5f, 0.5f });
+	Can::Renderer3D::DrawObjects();
 
 	Can::Renderer3D::EndScene();
 }
