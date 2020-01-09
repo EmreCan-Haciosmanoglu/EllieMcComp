@@ -49,7 +49,7 @@ public:
 
 	Noise(int seed = 0);
 
-	float Evaluate(glm::vec3 point);
+	float Evaluate(const glm::vec3& point);
 	void Randomize(int seed);
 
 	static inline double Dot(int g[4], double x, double y, double z, double t);

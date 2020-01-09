@@ -6,7 +6,7 @@ Noise::Noise(int seed)
 	Randomize(seed);
 }
 
-float Noise::Evaluate(glm::vec3 point)
+float Noise::Evaluate(const glm::vec3& point)
 {
 	double x = point.x;
 	double y = point.y;

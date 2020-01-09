@@ -136,13 +136,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Debug.h" />
-    <ClInclude Include="src\Noise.h" />
+    <ClInclude Include="src\Generator\NoiseFilter.h" />
+    <ClInclude Include="src\Generator\ShapeGenerator.h" />
+    <ClInclude Include="src\Generator\Noise.h" />
+    <ClInclude Include="src\Generator\ShapeSettings.h" />
     <ClInclude Include="src\SandBox3DApp.h" />
     <ClInclude Include="src\Scene.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Debug.cpp" />
-    <ClCompile Include="src\Noise.cpp" />
+    <ClCompile Include="src\Generator\NoiseFilter.cpp" />
+    <ClCompile Include="src\Generator\ShapeGenerator.cpp" />
+    <ClCompile Include="src\Generator\Noise.cpp" />
+    <ClCompile Include="src\Generator\ShapeSettings.cpp" />
     <ClCompile Include="src\SandBox3DApp.cpp" />
     <ClCompile Include="src\Scene.cpp" />
   </ItemGroup>

@@ -3,7 +3,7 @@
 
 #include "Scene.h"
 #include "Debug.h"
-
+#include "Generator/ShapeGenerator.h"
 
 class Sandbox3D : public Can::Application
 {
@@ -32,6 +32,7 @@ private:
 private:
 	int m_Resolution = 4;
 
+	ShapeGenerator* m_ShapeGenerator;
 	Scene* m_Scene;
 	Debug* m_Debug;
 	Can::Object* m_Sphere;
