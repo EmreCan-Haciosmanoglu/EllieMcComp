@@ -23,7 +23,7 @@ Sandbox3D::Sandbox3D()
 
 	std::vector< glm::vec3 > vertices;
 	std::vector< glm::vec2 > uvs;
-	std::vector< glm::vec3 > normals; // Won't be used at the moment.
+	std::vector< glm::vec3 > normals;
 	bool res = loadOBJ("assets/objects/test.obj", vertices, uvs, normals);
 	if (res)
 	{
@@ -72,11 +72,12 @@ void Sandbox3D::ConstructSphere()
 					);
 					glm::vec3 pointOnUnitSphere = glm::normalize(pointOnUnitCube);
 
-					glm::vec3* point = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
-
-					m_Vertices[vertexIndex++] = point->x * SCALE;
-					m_Vertices[vertexIndex++] = point->y * SCALE;
-					m_Vertices[vertexIndex++] = point->z * SCALE;
+					glm::vec3* p = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
+					glm::vec3 point(p->x, p->y, p->z);
+					m_Vertices[vertexIndex++] = point.x * SCALE;
+					m_Vertices[vertexIndex++] = point.y * SCALE;
+					m_Vertices[vertexIndex++] = point.z * SCALE;
+					delete p;
 
 					m_Vertices[vertexIndex++] = 1.0f * percent.x;
 					m_Vertices[vertexIndex++] = 1.0f * percent.x;
@@ -95,11 +96,12 @@ void Sandbox3D::ConstructSphere()
 					);
 					glm::vec3 pointOnUnitSphere = glm::normalize(pointOnUnitCube);
 
-					glm::vec3* point = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
-
-					m_Vertices[vertexIndex++] = point->x * SCALE;
-					m_Vertices[vertexIndex++] = point->y * SCALE;
-					m_Vertices[vertexIndex++] = point->z * SCALE;
+					glm::vec3* p = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
+					glm::vec3 point(p->x, p->y, p->z);
+					m_Vertices[vertexIndex++] = point.x * SCALE;
+					m_Vertices[vertexIndex++] = point.y * SCALE;
+					m_Vertices[vertexIndex++] = point.z * SCALE;
+					delete p;
 
 					m_Vertices[vertexIndex++] = 1.0f * percent.x;
 					m_Vertices[vertexIndex++] = 1.0f * percent.x;
@@ -118,11 +120,12 @@ void Sandbox3D::ConstructSphere()
 					);
 					glm::vec3 pointOnUnitSphere = glm::normalize(pointOnUnitCube);
 
-					glm::vec3* point = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
-
-					m_Vertices[vertexIndex++] = point->x * SCALE;
-					m_Vertices[vertexIndex++] = point->y * SCALE;
-					m_Vertices[vertexIndex++] = point->z * SCALE;
+					glm::vec3* p = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
+					glm::vec3 point(p->x, p->y, p->z);
+					m_Vertices[vertexIndex++] = point.x * SCALE;
+					m_Vertices[vertexIndex++] = point.y * SCALE;
+					m_Vertices[vertexIndex++] = point.z * SCALE;
+					delete p;
 
 					m_Vertices[vertexIndex++] = 1.0f * percent.x;
 					m_Vertices[vertexIndex++] = 1.0f * percent.x;
@@ -141,11 +144,12 @@ void Sandbox3D::ConstructSphere()
 					);
 					glm::vec3 pointOnUnitSphere = glm::normalize(pointOnUnitCube);
 
-					glm::vec3* point = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
-
-					m_Vertices[vertexIndex++] = point->x * SCALE;
-					m_Vertices[vertexIndex++] = point->y * SCALE;
-					m_Vertices[vertexIndex++] = point->z * SCALE;
+					glm::vec3* p = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
+					glm::vec3 point(p->x, p->y, p->z);
+					m_Vertices[vertexIndex++] = point.x * SCALE;
+					m_Vertices[vertexIndex++] = point.y * SCALE;
+					m_Vertices[vertexIndex++] = point.z * SCALE;
+					delete p;
 
 					m_Vertices[vertexIndex++] = 1.0f * percent.x;
 					m_Vertices[vertexIndex++] = 1.0f * percent.x;
@@ -164,11 +168,12 @@ void Sandbox3D::ConstructSphere()
 					);
 					glm::vec3 pointOnUnitSphere = glm::normalize(pointOnUnitCube);
 
-					glm::vec3* point = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
-
-					m_Vertices[vertexIndex++] = point->x * SCALE;
-					m_Vertices[vertexIndex++] = point->y * SCALE;
-					m_Vertices[vertexIndex++] = point->z * SCALE;
+					glm::vec3* p = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
+					glm::vec3 point(p->x, p->y, p->z);
+					m_Vertices[vertexIndex++] = point.x * SCALE;
+					m_Vertices[vertexIndex++] = point.y * SCALE;
+					m_Vertices[vertexIndex++] = point.z * SCALE;
+					delete p;
 
 					m_Vertices[vertexIndex++] = 1.0f * percent.x;
 					m_Vertices[vertexIndex++] = 1.0f * percent.x;
@@ -187,11 +192,12 @@ void Sandbox3D::ConstructSphere()
 					);
 					glm::vec3 pointOnUnitSphere = glm::normalize(pointOnUnitCube);
 
-					glm::vec3* point = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
-
-					m_Vertices[vertexIndex++] = point->x * SCALE;
-					m_Vertices[vertexIndex++] = point->y * SCALE;
-					m_Vertices[vertexIndex++] = point->z * SCALE;
+					glm::vec3* p = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
+					glm::vec3 point(p->x, p->y, p->z);
+					m_Vertices[vertexIndex++] = point.x * SCALE;
+					m_Vertices[vertexIndex++] = point.y * SCALE;
+					m_Vertices[vertexIndex++] = point.z * SCALE;
+					delete p;
 
 					m_Vertices[vertexIndex++] = 1.0f * percent.x;
 					m_Vertices[vertexIndex++] = 1.0f * percent.x;
@@ -427,12 +433,12 @@ bool Sandbox3D::loadOBJ(const char* path, std::vector<glm::vec3> & out_vertices,
 	return true;
 }
 
-void Sandbox3D::UpdateSphere(int resolution)
+void Sandbox3D::UpdateSphere()
 {
-	int vertexCount = 6 * resolution * resolution * 2 * 3 * (3 + 4 + 3);
+	int vertexCount = 6 * m_Resolution * m_Resolution * 2 * 3 * (3 + 4 + 3);
 	float* m_Vertices = new float[vertexCount];
 
-	int IndexCount = 6 * resolution * resolution * 2 * 3;
+	int IndexCount = 6 * m_Resolution * m_Resolution * 2 * 3;
 	uint32_t * m_Indices = new uint32_t[IndexCount];
 
 	{
@@ -450,14 +456,14 @@ void Sandbox3D::UpdateSphere(int resolution)
 			glm::vec3 localUp = localUps[k];
 			glm::vec3 axisA = glm::vec3(localUp.y, localUp.z, localUp.x);
 			glm::vec3 axisB = glm::cross(localUp, axisA);
-			for (float j = 0; j < resolution; j++)
+			for (float j = 0; j < m_Resolution; j++)
 			{
-				for (float i = 0; i < resolution; i++)
+				for (float i = 0; i < m_Resolution; i++)
 				{
 					{
 						float x = i;
 						float y = j;
-						glm::vec2 percent = glm::vec2(x / resolution, y / resolution);
+						glm::vec2 percent = glm::vec2(x / m_Resolution, y / m_Resolution);
 						glm::vec3 pointOnUnitCube = glm::vec3(
 							localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
 							localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
@@ -465,11 +471,12 @@ void Sandbox3D::UpdateSphere(int resolution)
 						);
 						glm::vec3 pointOnUnitSphere = glm::normalize(pointOnUnitCube);
 
-						glm::vec3* point = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
-
-						m_Vertices[vertexIndex++] = point->x * SCALE;
-						m_Vertices[vertexIndex++] = point->y * SCALE;
-						m_Vertices[vertexIndex++] = point->z * SCALE;
+						glm::vec3* p = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
+						glm::vec3 point(p->x, p->y, p->z);
+						m_Vertices[vertexIndex++] = point.x * SCALE;
+						m_Vertices[vertexIndex++] = point.y * SCALE;
+						m_Vertices[vertexIndex++] = point.z * SCALE;
+						delete p;
 
 						m_Vertices[vertexIndex++] = 1.0f * percent.x;
 						m_Vertices[vertexIndex++] = 1.0f * percent.x;
@@ -480,7 +487,7 @@ void Sandbox3D::UpdateSphere(int resolution)
 					{
 						float x = i + 1;
 						float y = j;
-						glm::vec2 percent = glm::vec2(x / resolution, y / resolution);
+						glm::vec2 percent = glm::vec2(x / m_Resolution, y / m_Resolution);
 						glm::vec3 pointOnUnitCube = glm::vec3(
 							localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
 							localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
@@ -488,11 +495,12 @@ void Sandbox3D::UpdateSphere(int resolution)
 						);
 						glm::vec3 pointOnUnitSphere = glm::normalize(pointOnUnitCube);
 
-						glm::vec3* point = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
-
-						m_Vertices[vertexIndex++] = point->x * SCALE;
-						m_Vertices[vertexIndex++] = point->y * SCALE;
-						m_Vertices[vertexIndex++] = point->z * SCALE;
+						glm::vec3* p = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
+						glm::vec3 point(p->x, p->y, p->z);
+						m_Vertices[vertexIndex++] = point.x * SCALE;
+						m_Vertices[vertexIndex++] = point.y * SCALE;
+						m_Vertices[vertexIndex++] = point.z * SCALE;
+						delete p;
 
 						m_Vertices[vertexIndex++] = 1.0f * percent.x;
 						m_Vertices[vertexIndex++] = 1.0f * percent.x;
@@ -503,7 +511,7 @@ void Sandbox3D::UpdateSphere(int resolution)
 					{
 						float x = i + 1;
 						float y = j + 1;
-						glm::vec2 percent = glm::vec2(x / resolution, y / resolution);
+						glm::vec2 percent = glm::vec2(x / m_Resolution, y / m_Resolution);
 						glm::vec3 pointOnUnitCube = glm::vec3(
 							localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
 							localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
@@ -511,11 +519,12 @@ void Sandbox3D::UpdateSphere(int resolution)
 						);
 						glm::vec3 pointOnUnitSphere = glm::normalize(pointOnUnitCube);
 
-						glm::vec3* point = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
-
-						m_Vertices[vertexIndex++] = point->x * SCALE;
-						m_Vertices[vertexIndex++] = point->y * SCALE;
-						m_Vertices[vertexIndex++] = point->z * SCALE;
+						glm::vec3* p = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
+						glm::vec3 point(p->x, p->y, p->z);
+						m_Vertices[vertexIndex++] = point.x * SCALE;
+						m_Vertices[vertexIndex++] = point.y * SCALE;
+						m_Vertices[vertexIndex++] = point.z * SCALE;
+						delete p;
 
 						m_Vertices[vertexIndex++] = 1.0f * percent.x;
 						m_Vertices[vertexIndex++] = 1.0f * percent.x;
@@ -526,7 +535,7 @@ void Sandbox3D::UpdateSphere(int resolution)
 					{
 						float x = i;
 						float y = j;
-						glm::vec2 percent = glm::vec2(x / resolution, y / resolution);
+						glm::vec2 percent = glm::vec2(x / m_Resolution, y / m_Resolution);
 						glm::vec3 pointOnUnitCube = glm::vec3(
 							localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
 							localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
@@ -534,11 +543,12 @@ void Sandbox3D::UpdateSphere(int resolution)
 						);
 						glm::vec3 pointOnUnitSphere = glm::normalize(pointOnUnitCube);
 
-						glm::vec3* point = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
-
-						m_Vertices[vertexIndex++] = point->x * SCALE;
-						m_Vertices[vertexIndex++] = point->y * SCALE;
-						m_Vertices[vertexIndex++] = point->z * SCALE;
+						glm::vec3* p = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
+						glm::vec3 point(p->x, p->y, p->z);
+						m_Vertices[vertexIndex++] = point.x * SCALE;
+						m_Vertices[vertexIndex++] = point.y * SCALE;
+						m_Vertices[vertexIndex++] = point.z * SCALE;
+						delete p;
 
 						m_Vertices[vertexIndex++] = 1.0f * percent.x;
 						m_Vertices[vertexIndex++] = 1.0f * percent.x;
@@ -549,7 +559,7 @@ void Sandbox3D::UpdateSphere(int resolution)
 					{
 						float x = i + 1;
 						float y = j + 1;
-						glm::vec2 percent = glm::vec2(x / resolution, y / resolution);
+						glm::vec2 percent = glm::vec2(x / m_Resolution, y / m_Resolution);
 						glm::vec3 pointOnUnitCube = glm::vec3(
 							localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
 							localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
@@ -557,11 +567,12 @@ void Sandbox3D::UpdateSphere(int resolution)
 						);
 						glm::vec3 pointOnUnitSphere = glm::normalize(pointOnUnitCube);
 
-						glm::vec3* point = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
-
-						m_Vertices[vertexIndex++] = point->x * SCALE;
-						m_Vertices[vertexIndex++] = point->y * SCALE;
-						m_Vertices[vertexIndex++] = point->z * SCALE;
+						glm::vec3* p = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
+						glm::vec3 point(p->x, p->y, p->z);
+						m_Vertices[vertexIndex++] = point.x * SCALE;
+						m_Vertices[vertexIndex++] = point.y * SCALE;
+						m_Vertices[vertexIndex++] = point.z * SCALE;
+						delete p;
 
 						m_Vertices[vertexIndex++] = 1.0f * percent.x;
 						m_Vertices[vertexIndex++] = 1.0f * percent.x;
@@ -572,7 +583,7 @@ void Sandbox3D::UpdateSphere(int resolution)
 					{
 						float x = i;
 						float y = j + 1;
-						glm::vec2 percent = glm::vec2(x / resolution, y / resolution);
+						glm::vec2 percent = glm::vec2(x / m_Resolution, y / m_Resolution);
 						glm::vec3 pointOnUnitCube = glm::vec3(
 							localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
 							localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
@@ -580,11 +591,12 @@ void Sandbox3D::UpdateSphere(int resolution)
 						);
 						glm::vec3 pointOnUnitSphere = glm::normalize(pointOnUnitCube);
 
-						glm::vec3* point = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
-
-						m_Vertices[vertexIndex++] = point->x * SCALE;
-						m_Vertices[vertexIndex++] = point->y * SCALE;
-						m_Vertices[vertexIndex++] = point->z * SCALE;
+						glm::vec3* p = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
+						glm::vec3 point(p->x, p->y, p->z);
+						m_Vertices[vertexIndex++] = point.x * SCALE;
+						m_Vertices[vertexIndex++] = point.y * SCALE;
+						m_Vertices[vertexIndex++] = point.z * SCALE;
+						delete p;
 
 						m_Vertices[vertexIndex++] = 1.0f * percent.x;
 						m_Vertices[vertexIndex++] = 1.0f * percent.x;
@@ -598,9 +610,9 @@ void Sandbox3D::UpdateSphere(int resolution)
 		vertexIndex = 0;
 		for (int k = 0; k < 6; k++)
 		{
-			for (float j = 0; j < resolution; j++)
+			for (float j = 0; j < m_Resolution; j++)
 			{
-				for (float i = 0; i < resolution; i++)
+				for (float i = 0; i < m_Resolution; i++)
 				{
 					glm::vec3 a00(m_Vertices[vertexIndex + 0 + 0], m_Vertices[vertexIndex + 0 + 1], m_Vertices[vertexIndex + 0 + 2]);
 					glm::vec3 a10(m_Vertices[vertexIndex + 10 + 0], m_Vertices[vertexIndex + 10 + 1], m_Vertices[vertexIndex + 10 + 2]);
@@ -672,4 +684,3 @@ void Sandbox3D::SetTransform(Can::Object* object, glm::vec3 pos, glm::vec3 scale
 	object->scale = scale;
 	object->transform = glm::translate(glm::mat4(1.0f), object->position) * glm::scale(glm::mat4(1.0f), object->scale);
 }
-

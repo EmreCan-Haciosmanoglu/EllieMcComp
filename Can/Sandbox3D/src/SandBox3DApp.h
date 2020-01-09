@@ -18,8 +18,9 @@ public:
 		std::vector < glm::vec2 >& out_uvs,
 		std::vector < glm::vec3 >& out_normals
 	);
-	void UpdateSphere(int resolution);
+	void UpdateSphere();
 	void SetTransform(Can::Object* object, glm::vec3 pos, glm::vec3 scale);
+	inline ShapeGenerator* GetShapeGenerator() { return m_ShapeGenerator; }
 private:
 	void ConstructSphere();
 	Can::Object* ConstructObject(

@@ -26,9 +26,19 @@ void Debug::OnEvent(Can::Event::Event& event)
 void Debug::OnImGuiRender()
 {
 	ImGui::Begin("Settings");
+
 	int* resolution = m_Parent->GetResolutionPtr();
-	bool isChanged = ImGui::SliderInt("Resolution", resolution, 1, 25);
-	if (isChanged)
-		m_Parent->UpdateSphere(*resolution);
+	bool isChanged = ImGui::SliderInt("Resolution", resolution, 1, 100);
+
+	NoiseSettings* settings = m_Parent->GetShapeGenerator()->GetShapeSettings()->GetNoiseSettings();
+
+	bool isStrengthChanged = ImGui::SliderFloat("Strength", settings->GetStrengthPtr(), 0.0f, 1.0f);
+	bool isRoughnessChanged = ImGui::SliderFloat("Roughness", settings->GetRoughnessPtr(), 0.0f, 1.0f);
+
+	if (isChanged || isStrengthChanged || isRoughnessChanged)
+		m_Parent->UpdateSphere();
+
+
 	ImGui::End();
+
 }

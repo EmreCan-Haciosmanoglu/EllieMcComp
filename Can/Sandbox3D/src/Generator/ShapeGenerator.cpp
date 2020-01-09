@@ -3,7 +3,7 @@
 
 ShapeGenerator::ShapeGenerator(ShapeSettings* shapeSettings)
 	: m_ShapeSettings(shapeSettings)
-	, m_NoiseFilter(new NoiseFilter())
+	, m_NoiseFilter(new NoiseFilter(shapeSettings->GetNoiseSettings()))
 {
 }
 
