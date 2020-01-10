@@ -18,10 +18,14 @@ public:
 		std::vector < glm::vec2 >& out_uvs,
 		std::vector < glm::vec3 >& out_normals
 	);
-	void UpdateSphere();
+	void UpdateSphere(bool resolutionChanged);
 	void SetTransform(Can::Object* object, glm::vec3 pos, glm::vec3 scale);
 	inline ShapeGenerator* GetShapeGenerator() { return m_ShapeGenerator; }
 private:
+	float* CreateSphere();
+	float* ShapeSphere(float* cube);
+	float* FillNormals(float* sphere);
+	uint32_t* FillIndices();
 	void ConstructSphere();
 	Can::Object* ConstructObject(
 		const std::string& shaderPath,
@@ -31,7 +35,10 @@ private:
 		std::vector < glm::vec3 >& normals
 	);
 private:
-	int m_Resolution = 4;
+	int m_Resolution = 5;
+
+	float* m_Vertices = nullptr;
+	uint32_t* m_Indices = nullptr;
 
 	ShapeGenerator* m_ShapeGenerator;
 	Scene* m_Scene;
