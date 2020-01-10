@@ -137,6 +137,7 @@
   <ItemGroup>
     <ClInclude Include="src\Debug.h" />
     <ClInclude Include="src\Generator\NoiseFilter.h" />
+    <ClInclude Include="src\Generator\NoiseLayer.h" />
     <ClInclude Include="src\Generator\NoiseSettings.h" />
     <ClInclude Include="src\Generator\ShapeGenerator.h" />
     <ClInclude Include="src\Generator\Noise.h" />
@@ -147,6 +148,7 @@
   <ItemGroup>
     <ClCompile Include="src\Debug.cpp" />
     <ClCompile Include="src\Generator\NoiseFilter.cpp" />
+    <ClCompile Include="src\Generator\NoiseLayer.cpp" />
     <ClCompile Include="src\Generator\NoiseSettings.cpp" />
     <ClCompile Include="src\Generator\ShapeGenerator.cpp" />
     <ClCompile Include="src\Generator\Noise.cpp" />

@@ -1,15 +1,16 @@
 #pragma once
 #include "Can.h"
-#include "NoiseSettings.h"
-
+#include "NoiseLayer.h"
 class ShapeSettings
 {
 public:
-	ShapeSettings();
+	ShapeSettings(int layerCount);
 
+	inline int GetLayerCount() { return m_LayerCount; }
 	inline float GetPlanetRadius() { return m_PlanetRadius; }
-	inline NoiseSettings* GetNoiseSettings() { return m_NoiseSettings; }
+	inline NoiseLayer** GetNoiseLayers() { return m_NoiseLayers; }
 private:
-	float m_PlanetRadius = 1.0f;
-	NoiseSettings* m_NoiseSettings;
+	int m_LayerCount;
+	float m_PlanetRadius = 5.0f;
+	NoiseLayer** m_NoiseLayers;
 };

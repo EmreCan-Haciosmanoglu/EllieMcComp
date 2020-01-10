@@ -26,21 +26,31 @@ void Debug::OnEvent(Can::Event::Event& event)
 void Debug::OnImGuiRender()
 {
 	ImGui::Begin("Settings");
+	bool isChanged = false;
 
 	int* resolution = m_Parent->GetResolutionPtr();
 	bool isResolutionChanged = ImGui::SliderInt("Resolution", resolution, 1, 100);
 
-	NoiseSettings* settings = m_Parent->GetShapeGenerator()->GetShapeSettings()->GetNoiseSettings();
+	NoiseLayer** layers = m_Parent->GetShapeGenerator()->GetShapeSettings()->GetNoiseLayers();
+	int size = m_Parent->GetShapeGenerator()->GetShapeSettings()->GetLayerCount();
+	for (int i = 0; i < size; i++)
+	{
+		//ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+		ImGui::BeginChild(i + 1,ImVec2(800, 200),true);
+		NoiseSettings* settings = layers[i]->GetNoiseSettings();
+		isChanged = isChanged || ImGui::Checkbox("Enabled", layers[i]->GetEnabledPtr());
+		isChanged = isChanged || ImGui::Checkbox("Mask", layers[i]->GetMaskPtr());
+		isChanged = isChanged || ImGui::SliderFloat("Strength", settings->GetStrengthPtr(), 0.0f, 1.0f);
+		isChanged = isChanged || ImGui::SliderInt("NumLayer", settings->GetNumLayerPtr(), 1, 5);
+		isChanged = isChanged || ImGui::SliderFloat("Base Roughness", settings->GetBaseRoughnessPtr(), 0.0f, 5.0f);
+		isChanged = isChanged || ImGui::SliderFloat("Roughness", settings->GetRoughnessPtr(), 0.0f, 5.0f);
+		isChanged = isChanged || ImGui::SliderFloat("Persistence", settings->GetPersistencePtr(), 0.0f, 1.0f);
+		isChanged = isChanged || ImGui::SliderFloat("Min Value", settings->GetMinValuePtr(), 0.0f, 2.0f);
+		isChanged = isChanged || ImGui::SliderFloat3("Center X", (float*)settings->GetCenterPtr(), 0.0f, 10.0f);
+		ImGui::EndChild();
+	}
 
-	bool isStrengthChanged = ImGui::SliderFloat("Strength", settings->GetStrengthPtr(), 0.0f, 1.0f);
-	bool isNumLayerChanged = ImGui::SliderInt("NumLayer", settings->GetNumLayerPtr(), 1, 5);
-	bool isBaseRoughnessChanged = ImGui::SliderFloat("Base Roughness", settings->GetBaseRoughnessPtr(), 0.0f, 5.0f);
-	bool isRoughnessChanged = ImGui::SliderFloat("Roughness", settings->GetRoughnessPtr(), 0.0f, 5.0f);
-	bool isPersistenceChanged = ImGui::SliderFloat("Persistence", settings->GetPersistencePtr(), 0.0f, 1.0f);
-	bool isMinValueChanged = ImGui::SliderFloat("Min Value", settings->GetMinValuePtr(), 0.0f, 2.0f);
-	bool isCenterChanged = ImGui::SliderFloat3("Center X", (float *)settings->GetCenterPtr(), 0.0f, 10.0f);
-
-	if (isMinValueChanged || isPersistenceChanged || isNumLayerChanged || isBaseRoughnessChanged || isCenterChanged || isResolutionChanged || isStrengthChanged || isRoughnessChanged)
+	if (isChanged || isResolutionChanged)
 		m_Parent->UpdateSphere(isResolutionChanged);
 
 

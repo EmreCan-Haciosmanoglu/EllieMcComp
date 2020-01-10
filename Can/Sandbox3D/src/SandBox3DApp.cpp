@@ -9,7 +9,7 @@ Can::Application* Can::CreateApplication()
 }
 
 Sandbox3D::Sandbox3D()
-	: m_ShapeGenerator(new ShapeGenerator(new ShapeSettings()))
+	: m_ShapeGenerator(new ShapeGenerator(new ShapeSettings(3)))
 	, m_Scene(new Scene(this))
 	, m_Debug(new Debug(this))
 	, m_Sphere(new Can::Object())
@@ -193,12 +193,11 @@ float* Sandbox3D::ShapeSphere(float* cube)
 						cube[vertexIndex + 2]
 					);
 					glm::vec3 pointOnUnitSphere = glm::normalize(point);
-					glm::vec3 * p = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
+					glm::vec3 p = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
 
-					cube[vertexIndex + 0] = p->x;
-					cube[vertexIndex + 1] = p->y;
-					cube[vertexIndex + 2] = p->z;
-					delete p;
+					cube[vertexIndex + 0] = p.x;
+					cube[vertexIndex + 1] = p.y;
+					cube[vertexIndex + 2] = p.z;
 
 					vertexIndex += 10;
 				}
