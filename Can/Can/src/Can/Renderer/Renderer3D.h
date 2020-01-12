@@ -13,6 +13,8 @@ namespace Can
 		Ref<VertexArray> VA;
 		Ref<Texture2D> T;
 		Ref<Shader> S;
+		float* Vertices;
+		uint32_t* Indices;
 		glm::mat4 transform;
 		glm::vec3 position;
 		glm::vec3 scale;

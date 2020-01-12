@@ -28,6 +28,13 @@ void Debug::OnImGuiRender()
 	ImGui::Begin("Settings");
 	bool isChanged = false;
 
+	isChanged = isChanged || ImGui::Checkbox("Index1", &(m_Parent->m_FaceEnabled[0]));
+	isChanged = isChanged || ImGui::Checkbox("Index2", &(m_Parent->m_FaceEnabled[1]));
+	isChanged = isChanged || ImGui::Checkbox("Index3", &(m_Parent->m_FaceEnabled[2]));
+	isChanged = isChanged || ImGui::Checkbox("Index4", &(m_Parent->m_FaceEnabled[3]));
+	isChanged = isChanged || ImGui::Checkbox("Index5", &(m_Parent->m_FaceEnabled[4]));
+	isChanged = isChanged || ImGui::Checkbox("Index6", &(m_Parent->m_FaceEnabled[5]));
+
 	int* resolution = m_Parent->GetResolutionPtr();
 	bool isResolutionChanged = ImGui::SliderInt("Resolution", resolution, 1, 100);
 

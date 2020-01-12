@@ -12,10 +12,22 @@ Sandbox3D::Sandbox3D()
 	: m_ShapeGenerator(new ShapeGenerator(new ShapeSettings(3)))
 	, m_Scene(new Scene(this))
 	, m_Debug(new Debug(this))
-	, m_Sphere(new Can::Object())
+	, m_SphereFaces(new Can::Object* [6 * m_FaceResolution * m_FaceResolution])
 {
-	ConstructSphere();
-	Can::Renderer3D::AddObject(m_Sphere);
+	int index = 0;
+	for (int k = 0; k < 6; k++)
+	{
+		for (int i = 0; i < m_FaceResolution; i++)
+		{
+			for (int j = 0; j < m_FaceResolution; j++)
+			{
+				m_SphereFaces[index] = new Can::Object();
+				ConstructSphereFace(m_SphereFaces[index], k, index, m_LocalUps[k]);
+				Can::Renderer3D::AddObject(m_SphereFaces[index]);
+				index++;
+			}
+		}
+	}
 	PushLayer(m_Scene);
 	PushOverlay(m_Debug);
 
@@ -34,173 +46,159 @@ Sandbox3D::~Sandbox3D()
 {
 }
 
-float* Sandbox3D::CreateSphere()
+float* Sandbox3D::CreateSphere(const glm::vec3& localUp)
 {
-	glm::vec3 localUps[6] = {
-		{+1.0f, +0.0f, +0.0f},
-		{-1.0f, +0.0f, +0.0f},
-		{+0.0f, +1.0f, +0.0f},
-		{+0.0f, -1.0f, +0.0f},
-		{+0.0f, +0.0f, +1.0f},
-		{+0.0f, +0.0f, -1.0f}
-	};
-	float* result = new float[6 * m_Resolution * m_Resolution * 2 * 3 * (3 + 4 + 3)];
+	float* result = new float[m_Resolution * m_Resolution * 2 * 3 * (3 + 4 + 3)];
 
 	int vertexIndex = 0;
-	for (int k = 0; k < 6; k++)
+	glm::vec3 axisA = glm::vec3(localUp.y, localUp.z, localUp.x);
+	glm::vec3 axisB = glm::cross(localUp, axisA);
+	for (float j = 0; j < m_Resolution; j++)
 	{
-		glm::vec3 localUp = localUps[k];
-		glm::vec3 axisA = glm::vec3(localUp.y, localUp.z, localUp.x);
-		glm::vec3 axisB = glm::cross(localUp, axisA);
-		for (float j = 0; j < m_Resolution; j++)
+		for (float i = 0; i < m_Resolution; i++)
 		{
-			for (float i = 0; i < m_Resolution; i++)
 			{
-				{
-					float x = i;
-					float y = j;
-					glm::vec2 percent = glm::vec2(x / m_Resolution, y / m_Resolution);
-					glm::vec3 pointOnUnitCube = glm::vec3(
-						localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
-						localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
-						localUp.z + (percent.x - 0.5f) * 2.0f * axisA.z + (percent.y - 0.5f) * 2.0f * axisB.z
-					);
-					result[vertexIndex++] = pointOnUnitCube.x;
-					result[vertexIndex++] = pointOnUnitCube.y;
-					result[vertexIndex++] = pointOnUnitCube.z;
+				float x = i;
+				float y = j;
+				glm::vec2 percent = glm::vec2(x / m_Resolution, y / m_Resolution);
+				glm::vec3 pointOnUnitCube = glm::vec3(
+					localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
+					localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
+					localUp.z + (percent.x - 0.5f) * 2.0f * axisA.z + (percent.y - 0.5f) * 2.0f * axisB.z
+				);
+				result[vertexIndex++] = pointOnUnitCube.x;
+				result[vertexIndex++] = pointOnUnitCube.y;
+				result[vertexIndex++] = pointOnUnitCube.z;
 
-					result[vertexIndex++] = 1.0f * percent.x;
-					result[vertexIndex++] = 1.0f * percent.x;
-					result[vertexIndex++] = 1.0f * percent.y;
-					result[vertexIndex++] = 1.0f;
-					vertexIndex += 3;
-				}
-				{
-					float x = i + 1;
-					float y = j;
-					glm::vec2 percent = glm::vec2(x / m_Resolution, y / m_Resolution);
-					glm::vec3 pointOnUnitCube = glm::vec3(
-						localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
-						localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
-						localUp.z + (percent.x - 0.5f) * 2.0f * axisA.z + (percent.y - 0.5f) * 2.0f * axisB.z
-					);
-					result[vertexIndex++] = pointOnUnitCube.x;
-					result[vertexIndex++] = pointOnUnitCube.y;
-					result[vertexIndex++] = pointOnUnitCube.z;
+				result[vertexIndex++] = 1.0f * percent.x;
+				result[vertexIndex++] = 1.0f * percent.x;
+				result[vertexIndex++] = 1.0f * percent.y;
+				result[vertexIndex++] = 1.0f;
+				vertexIndex += 3;
+			}
+			{
+				float x = i + 1;
+				float y = j;
+				glm::vec2 percent = glm::vec2(x / m_Resolution, y / m_Resolution);
+				glm::vec3 pointOnUnitCube = glm::vec3(
+					localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
+					localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
+					localUp.z + (percent.x - 0.5f) * 2.0f * axisA.z + (percent.y - 0.5f) * 2.0f * axisB.z
+				);
+				result[vertexIndex++] = pointOnUnitCube.x;
+				result[vertexIndex++] = pointOnUnitCube.y;
+				result[vertexIndex++] = pointOnUnitCube.z;
 
-					result[vertexIndex++] = 1.0f * percent.x;
-					result[vertexIndex++] = 1.0f * percent.x;
-					result[vertexIndex++] = 1.0f * percent.y;
-					result[vertexIndex++] = 1.0f;
-					vertexIndex += 3;
-				}
-				{
-					float x = i + 1;
-					float y = j + 1;
-					glm::vec2 percent = glm::vec2(x / m_Resolution, y / m_Resolution);
-					glm::vec3 pointOnUnitCube = glm::vec3(
-						localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
-						localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
-						localUp.z + (percent.x - 0.5f) * 2.0f * axisA.z + (percent.y - 0.5f) * 2.0f * axisB.z
-					);
-					result[vertexIndex++] = pointOnUnitCube.x;
-					result[vertexIndex++] = pointOnUnitCube.y;
-					result[vertexIndex++] = pointOnUnitCube.z;
+				result[vertexIndex++] = 1.0f * percent.x;
+				result[vertexIndex++] = 1.0f * percent.x;
+				result[vertexIndex++] = 1.0f * percent.y;
+				result[vertexIndex++] = 1.0f;
+				vertexIndex += 3;
+			}
+			{
+				float x = i + 1;
+				float y = j + 1;
+				glm::vec2 percent = glm::vec2(x / m_Resolution, y / m_Resolution);
+				glm::vec3 pointOnUnitCube = glm::vec3(
+					localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
+					localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
+					localUp.z + (percent.x - 0.5f) * 2.0f * axisA.z + (percent.y - 0.5f) * 2.0f * axisB.z
+				);
+				result[vertexIndex++] = pointOnUnitCube.x;
+				result[vertexIndex++] = pointOnUnitCube.y;
+				result[vertexIndex++] = pointOnUnitCube.z;
 
-					result[vertexIndex++] = 1.0f * percent.x;
-					result[vertexIndex++] = 1.0f * percent.x;
-					result[vertexIndex++] = 1.0f * percent.y;
-					result[vertexIndex++] = 1.0f;
-					vertexIndex += 3;
-				}
-				{
-					float x = i;
-					float y = j;
-					glm::vec2 percent = glm::vec2(x / m_Resolution, y / m_Resolution);
-					glm::vec3 pointOnUnitCube = glm::vec3(
-						localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
-						localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
-						localUp.z + (percent.x - 0.5f) * 2.0f * axisA.z + (percent.y - 0.5f) * 2.0f * axisB.z
-					);
-					result[vertexIndex++] = pointOnUnitCube.x;
-					result[vertexIndex++] = pointOnUnitCube.y;
-					result[vertexIndex++] = pointOnUnitCube.z;
+				result[vertexIndex++] = 1.0f * percent.x;
+				result[vertexIndex++] = 1.0f * percent.x;
+				result[vertexIndex++] = 1.0f * percent.y;
+				result[vertexIndex++] = 1.0f;
+				vertexIndex += 3;
+			}
+			{
+				float x = i;
+				float y = j;
+				glm::vec2 percent = glm::vec2(x / m_Resolution, y / m_Resolution);
+				glm::vec3 pointOnUnitCube = glm::vec3(
+					localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
+					localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
+					localUp.z + (percent.x - 0.5f) * 2.0f * axisA.z + (percent.y - 0.5f) * 2.0f * axisB.z
+				);
+				result[vertexIndex++] = pointOnUnitCube.x;
+				result[vertexIndex++] = pointOnUnitCube.y;
+				result[vertexIndex++] = pointOnUnitCube.z;
 
-					result[vertexIndex++] = 1.0f * percent.x;
-					result[vertexIndex++] = 1.0f * percent.x;
-					result[vertexIndex++] = 1.0f * percent.y;
-					result[vertexIndex++] = 1.0f;
-					vertexIndex += 3;
-				}
-				{
-					float x = i + 1;
-					float y = j + 1;
-					glm::vec2 percent = glm::vec2(x / m_Resolution, y / m_Resolution);
-					glm::vec3 pointOnUnitCube = glm::vec3(
-						localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
-						localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
-						localUp.z + (percent.x - 0.5f) * 2.0f * axisA.z + (percent.y - 0.5f) * 2.0f * axisB.z
-					);
-					result[vertexIndex++] = pointOnUnitCube.x;
-					result[vertexIndex++] = pointOnUnitCube.y;
-					result[vertexIndex++] = pointOnUnitCube.z;
+				result[vertexIndex++] = 1.0f * percent.x;
+				result[vertexIndex++] = 1.0f * percent.x;
+				result[vertexIndex++] = 1.0f * percent.y;
+				result[vertexIndex++] = 1.0f;
+				vertexIndex += 3;
+			}
+			{
+				float x = i + 1;
+				float y = j + 1;
+				glm::vec2 percent = glm::vec2(x / m_Resolution, y / m_Resolution);
+				glm::vec3 pointOnUnitCube = glm::vec3(
+					localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
+					localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
+					localUp.z + (percent.x - 0.5f) * 2.0f * axisA.z + (percent.y - 0.5f) * 2.0f * axisB.z
+				);
+				result[vertexIndex++] = pointOnUnitCube.x;
+				result[vertexIndex++] = pointOnUnitCube.y;
+				result[vertexIndex++] = pointOnUnitCube.z;
 
-					result[vertexIndex++] = 1.0f * percent.x;
-					result[vertexIndex++] = 1.0f * percent.x;
-					result[vertexIndex++] = 1.0f * percent.y;
-					result[vertexIndex++] = 1.0f;
-					vertexIndex += 3;
-				}
-				{
-					float x = i;
-					float y = j + 1;
-					glm::vec2 percent = glm::vec2(x / m_Resolution, y / m_Resolution);
-					glm::vec3 pointOnUnitCube = glm::vec3(
-						localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
-						localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
-						localUp.z + (percent.x - 0.5f) * 2.0f * axisA.z + (percent.y - 0.5f) * 2.0f * axisB.z
-					);
-					result[vertexIndex++] = pointOnUnitCube.x;
-					result[vertexIndex++] = pointOnUnitCube.y;
-					result[vertexIndex++] = pointOnUnitCube.z;
+				result[vertexIndex++] = 1.0f * percent.x;
+				result[vertexIndex++] = 1.0f * percent.x;
+				result[vertexIndex++] = 1.0f * percent.y;
+				result[vertexIndex++] = 1.0f;
+				vertexIndex += 3;
+			}
+			{
+				float x = i;
+				float y = j + 1;
+				glm::vec2 percent = glm::vec2(x / m_Resolution, y / m_Resolution);
+				glm::vec3 pointOnUnitCube = glm::vec3(
+					localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
+					localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
+					localUp.z + (percent.x - 0.5f) * 2.0f * axisA.z + (percent.y - 0.5f) * 2.0f * axisB.z
+				);
+				result[vertexIndex++] = pointOnUnitCube.x;
+				result[vertexIndex++] = pointOnUnitCube.y;
+				result[vertexIndex++] = pointOnUnitCube.z;
 
-					result[vertexIndex++] = 1.0f * percent.x;
-					result[vertexIndex++] = 1.0f * percent.x;
-					result[vertexIndex++] = 1.0f * percent.y;
-					result[vertexIndex++] = 1.0f;
-					vertexIndex += 3;
-				}
+				result[vertexIndex++] = 1.0f * percent.x;
+				result[vertexIndex++] = 1.0f * percent.x;
+				result[vertexIndex++] = 1.0f * percent.y;
+				result[vertexIndex++] = 1.0f;
+				vertexIndex += 3;
 			}
 		}
 	}
+
 	return result;
 }
 
 float* Sandbox3D::ShapeSphere(float* cube)
 {
 	int vertexIndex = 0;
-	for (int k = 0; k < 6; k++)
+	for (float j = 0; j < m_Resolution; j++)
 	{
-		for (float j = 0; j < m_Resolution; j++)
+		for (float i = 0; i < m_Resolution; i++)
 		{
-			for (float i = 0; i < m_Resolution; i++)
+			for (float i2 = 0; i2 < 6; i2++)
 			{
-				for (float i2 = 0; i2 < 6; i2++)
-				{
-					glm::vec3 point = glm::vec3(
-						cube[vertexIndex + 0],
-						cube[vertexIndex + 1],
-						cube[vertexIndex + 2]
-					);
-					glm::vec3 pointOnUnitSphere = glm::normalize(point);
-					glm::vec3 p = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
+				glm::vec3 point = glm::vec3(
+					cube[vertexIndex + 0],
+					cube[vertexIndex + 1],
+					cube[vertexIndex + 2]
+				);
+				glm::vec3 pointOnUnitSphere = glm::normalize(point);
+				glm::vec3 p = m_ShapeGenerator->CalculatePointOnPlanet(pointOnUnitSphere);
 
-					cube[vertexIndex + 0] = p.x;
-					cube[vertexIndex + 1] = p.y;
-					cube[vertexIndex + 2] = p.z;
+				cube[vertexIndex + 0] = p.x;
+				cube[vertexIndex + 1] = p.y;
+				cube[vertexIndex + 2] = p.z;
 
-					vertexIndex += 10;
-				}
+				vertexIndex += 10;
 			}
 		}
 	}
@@ -210,117 +208,109 @@ float* Sandbox3D::ShapeSphere(float* cube)
 float* Sandbox3D::FillNormals(float* sphere)
 {
 	int vertexIndex = 0;
-	for (int k = 0; k < 6; k++)
+	for (float j = 0; j < m_Resolution; j++)
 	{
-		for (float j = 0; j < m_Resolution; j++)
+		for (float i = 0; i < m_Resolution; i++)
 		{
-			for (float i = 0; i < m_Resolution; i++)
-			{
-				glm::vec3 a00(sphere[vertexIndex + 0 + 0], sphere[vertexIndex + 0 + 1], sphere[vertexIndex + 0 + 2]);
-				glm::vec3 a10(sphere[vertexIndex + 10 + 0], sphere[vertexIndex + 10 + 1], sphere[vertexIndex + 10 + 2]);
-				glm::vec3 a11(sphere[vertexIndex + 20 + 0], sphere[vertexIndex + 20 + 1], sphere[vertexIndex + 20 + 2]);
-				glm::vec3 a01(sphere[vertexIndex + 50 + 0], sphere[vertexIndex + 50 + 1], sphere[vertexIndex + 50 + 2]);
+			glm::vec3 a00(sphere[vertexIndex + 0 + 0], sphere[vertexIndex + 0 + 1], sphere[vertexIndex + 0 + 2]);
+			glm::vec3 a10(sphere[vertexIndex + 10 + 0], sphere[vertexIndex + 10 + 1], sphere[vertexIndex + 10 + 2]);
+			glm::vec3 a11(sphere[vertexIndex + 20 + 0], sphere[vertexIndex + 20 + 1], sphere[vertexIndex + 20 + 2]);
+			glm::vec3 a01(sphere[vertexIndex + 50 + 0], sphere[vertexIndex + 50 + 1], sphere[vertexIndex + 50 + 2]);
 
-				glm::vec3 u1 = a11 - a00;
-				glm::vec3 v1 = a10 - a00;
+			glm::vec3 u1 = a11 - a00;
+			glm::vec3 v1 = a10 - a00;
 
-				glm::vec3 u2 = a01 - a00;
-				glm::vec3 v2 = a11 - a00;
+			glm::vec3 u2 = a01 - a00;
+			glm::vec3 v2 = a11 - a00;
 
-				glm::vec3 norm1 = glm::cross(v1, u1);
-				glm::vec3 norm2 = glm::cross(v2, u2);
+			glm::vec3 norm1 = glm::cross(v1, u1);
+			glm::vec3 norm2 = glm::cross(v2, u2);
 
-				sphere[vertexIndex + 0 + 7] = norm1.x;
-				sphere[vertexIndex + 0 + 8] = norm1.y;
-				sphere[vertexIndex + 0 + 9] = norm1.z;
+			sphere[vertexIndex + 0 + 7] = norm1.x;
+			sphere[vertexIndex + 0 + 8] = norm1.y;
+			sphere[vertexIndex + 0 + 9] = norm1.z;
 
-				sphere[vertexIndex + 10 + 7] = norm1.x;
-				sphere[vertexIndex + 10 + 8] = norm1.y;
-				sphere[vertexIndex + 10 + 9] = norm1.z;
+			sphere[vertexIndex + 10 + 7] = norm1.x;
+			sphere[vertexIndex + 10 + 8] = norm1.y;
+			sphere[vertexIndex + 10 + 9] = norm1.z;
 
-				sphere[vertexIndex + 20 + 7] = norm1.x;
-				sphere[vertexIndex + 20 + 8] = norm1.y;
-				sphere[vertexIndex + 20 + 9] = norm1.z;
+			sphere[vertexIndex + 20 + 7] = norm1.x;
+			sphere[vertexIndex + 20 + 8] = norm1.y;
+			sphere[vertexIndex + 20 + 9] = norm1.z;
 
-				sphere[vertexIndex + 30 + 7] = norm2.x;
-				sphere[vertexIndex + 30 + 8] = norm2.y;
-				sphere[vertexIndex + 30 + 9] = norm2.z;
+			sphere[vertexIndex + 30 + 7] = norm2.x;
+			sphere[vertexIndex + 30 + 8] = norm2.y;
+			sphere[vertexIndex + 30 + 9] = norm2.z;
 
-				sphere[vertexIndex + 40 + 7] = norm2.x;
-				sphere[vertexIndex + 40 + 8] = norm2.y;
-				sphere[vertexIndex + 40 + 9] = norm2.z;
+			sphere[vertexIndex + 40 + 7] = norm2.x;
+			sphere[vertexIndex + 40 + 8] = norm2.y;
+			sphere[vertexIndex + 40 + 9] = norm2.z;
 
-				sphere[vertexIndex + 50 + 7] = norm2.x;
-				sphere[vertexIndex + 50 + 8] = norm2.y;
-				sphere[vertexIndex + 50 + 9] = norm2.z;
-				vertexIndex += 60;
-			}
+			sphere[vertexIndex + 50 + 7] = norm2.x;
+			sphere[vertexIndex + 50 + 8] = norm2.y;
+			sphere[vertexIndex + 50 + 9] = norm2.z;
+			vertexIndex += 60;
 		}
 	}
 	return sphere;
 }
 
-uint32_t* Sandbox3D::FillIndices()
+uint32_t * Sandbox3D::FillIndices()
 {
-	uint32_t* indices = new uint32_t[6 * m_Resolution * m_Resolution * 2 * 3];
+	uint32_t* indices = new uint32_t[m_Resolution * m_Resolution * 2 * 3];
 	int indicesIndex = 0;
 	int vertexIndex = 0;
-	for (int k = 0; k < 6; k++)
+	for (int j = 0; j < m_Resolution; j++)
 	{
-		for (int j = 0; j < m_Resolution; j++)
+		for (int i = 0; i < m_Resolution; i++)
 		{
-			for (int i = 0; i < m_Resolution; i++)
-			{
-				indices[indicesIndex++] = vertexIndex++;
-				indices[indicesIndex++] = vertexIndex++;
-				indices[indicesIndex++] = vertexIndex++;
-				indices[indicesIndex++] = vertexIndex++;
-				indices[indicesIndex++] = vertexIndex++;
-				indices[indicesIndex++] = vertexIndex++;
-			}
+			indices[indicesIndex++] = vertexIndex++;
+			indices[indicesIndex++] = vertexIndex++;
+			indices[indicesIndex++] = vertexIndex++;
+			indices[indicesIndex++] = vertexIndex++;
+			indices[indicesIndex++] = vertexIndex++;
+			indices[indicesIndex++] = vertexIndex++;
 		}
 	}
 	return indices;
 }
 
-void Sandbox3D::ConstructSphere()
+void Sandbox3D::ConstructSphereFace(Can::Object * m_SphereFace, int faceID, int index, const glm::vec3 & localUp)
 {
-	m_Sphere->VA = Can::VertexArray::Create();
+	m_SphereFace->VA = Can::VertexArray::Create();
 
-	if(m_Vertices != nullptr)
-		delete[] m_Vertices;
+	if (m_SphereFace->Vertices != nullptr)
+		delete[] m_SphereFace->Vertices;
 
-	m_Vertices = FillNormals(ShapeSphere(CreateSphere()));
+	m_SphereFace->Vertices = FillNormals(ShapeSphere(CreateSphere(localUp)));
 
-
-	m_Sphere->VB = Can::VertexBuffer::Create(m_Vertices, sizeof(float) * 6 * m_Resolution * m_Resolution * 2 * 3 * (3 + 4 + 3), true);
-	m_Sphere->VB->SetLayout({
+	m_SphereFace->VB = Can::VertexBuffer::Create(m_SphereFace->Vertices, sizeof(float) * m_Resolution * m_Resolution * 2 * 3 * (3 + 4 + 3), true);
+	m_SphereFace->VB->SetLayout({
 	   { Can::ShaderDataType::Float3, "a_Position"},
 	   { Can::ShaderDataType::Float4, "a_Color"},
 	   { Can::ShaderDataType::Float3, "a_Normal"}
 		});
-	m_Sphere->VA->AddVertexBuffer(m_Sphere->VB);
+	m_SphereFace->VA->AddVertexBuffer(m_SphereFace->VB);
 
-	if (m_Indices != nullptr)
-		delete[] m_Indices;
-	m_Indices = FillIndices();
+	if (m_SphereFace->Indices != nullptr)
+		delete[] m_SphereFace->Indices;
+	m_SphereFace->Indices = FillIndices();
 
-	m_Sphere->IB = Can::IndexBuffer::Create(m_Indices, 6 * m_Resolution * m_Resolution * 2 * 3);
-	m_Sphere->VA->SetIndexBuffer(m_Sphere->IB);
+	m_SphereFace->IB = Can::IndexBuffer::Create(m_SphereFace->Indices, m_Resolution * m_Resolution * 2 * 3);
+	m_SphereFace->VA->SetIndexBuffer(m_SphereFace->IB);
 
-	m_Sphere->S = Can::Shader::Create("assets/shaders/Cube.glsl");
+	m_SphereFace->S = Can::Shader::Create("assets/shaders/Cube.glsl");
 
-	m_Sphere->S->Bind();
-	m_Sphere->S->SetInt("u_Texture", 0);
-	m_Sphere->S->SetFloat3("u_LightPos", { 4.0f, 0.0f, 0.0f });
+	m_SphereFace->S->Bind();
+	m_SphereFace->S->SetInt("u_Texture", 0);
+	m_SphereFace->S->SetFloat3("u_LightPos", { 4.0f, 0.0f, 0.0f });
 
-	m_Sphere->position = { 0.0f, 0.0f, -4.0f };
-	m_Sphere->scale = { 0.5f, 0.5f, 0.5f };
-	m_Sphere->transform = glm::translate(glm::mat4(1.0f), m_Sphere->position) * glm::scale(glm::mat4(1.0f), m_Sphere->scale);
-
+	m_SphereFace->position = { 0.0f, 0.0f, -4.0f };
+	m_SphereFace->scale = { 0.5f, 0.5f, 0.5f };
+	m_SphereFace->transform = glm::translate(glm::mat4(1.0f), m_SphereFace->position) * glm::scale(glm::mat4(1.0f), m_SphereFace->scale);
 }
 
-Can::Object* Sandbox3D::ConstructObject(const std::string & shaderPath, const std::string & texturePath, std::vector<glm::vec3> & vertices, std::vector<glm::vec2> & uvs, std::vector<glm::vec3> & normals)
+Can::Object * Sandbox3D::ConstructObject(const std::string & shaderPath, const std::string & texturePath, std::vector<glm::vec3> & vertices, std::vector<glm::vec2> & uvs, std::vector<glm::vec3> & normals)
 {
 	Can::Object* object = new Can::Object();
 	object->VA = Can::VertexArray::Create();
@@ -452,31 +442,47 @@ bool Sandbox3D::loadOBJ(const char* path, std::vector<glm::vec3> & out_vertices,
 
 void Sandbox3D::UpdateSphere(bool resolutionChanged)
 {
+	int size = m_FaceResolution * m_FaceResolution;
+	int index = 0;
+	for (int i = 0; i < 6; i++)
+	{
+		if (m_FaceEnabled[i])
+		{
+			for (int j = 0; j < size; j++)
+			{
+				UpdateSphereFace(m_SphereFaces[index], m_LocalUps[i],resolutionChanged);
+				index++;
+			}
+		}
+	}
+}
+
+void Sandbox3D::UpdateSphereFace(Can::Object* m_SphereFace, const glm::vec3& localUp, bool resolutionChanged)
+{
 	if (resolutionChanged)
 	{
-		delete[] m_Vertices;
-		m_Vertices = CreateSphere();
+		delete[] m_SphereFace->Vertices;
+		m_SphereFace->Vertices = CreateSphere(localUp);
 	}
 
-	m_Vertices = FillNormals(ShapeSphere(m_Vertices));
+	m_SphereFace->Vertices = FillNormals(ShapeSphere(m_SphereFace->Vertices));
 
-	int vertexCount = 6 * m_Resolution * m_Resolution * 2 * 3 * (3 + 4 + 3);
-	m_Sphere->VB->Bind();
-	m_Sphere->VB->ReDo(m_Vertices, sizeof(float) * vertexCount);
-	m_Sphere->VB->Unbind();
+	int vertexCount = m_Resolution * m_Resolution * 2 * 3 * (3 + 4 + 3);
+	m_SphereFace->VB->Bind();
+	m_SphereFace->VB->ReDo(m_SphereFace->Vertices, sizeof(float) * vertexCount);
+	m_SphereFace->VB->Unbind();
 
 
-	int IndexCount = 6 * m_Resolution * m_Resolution * 2 * 3;
+	int IndexCount = m_Resolution * m_Resolution * 2 * 3;
 	if (resolutionChanged)
 	{
-		delete[] m_Indices;
-		m_Indices = FillIndices();
+		delete[] m_SphereFace->Indices;
+		m_SphereFace->Indices = FillIndices();
 	}
 
-	m_Sphere->IB->ReDo(m_Indices, IndexCount);
-	m_Sphere->VA->SetIndexBuffer(m_Sphere->IB);
-	m_Sphere->IB->Unbind();
-
+	m_SphereFace->IB->ReDo(m_SphereFace->Indices, IndexCount);
+	m_SphereFace->VA->SetIndexBuffer(m_SphereFace->IB);
+	m_SphereFace->IB->Unbind();
 }
 
 void Sandbox3D::SetTransform(Can::Object * object, glm::vec3 pos, glm::vec3 scale)
