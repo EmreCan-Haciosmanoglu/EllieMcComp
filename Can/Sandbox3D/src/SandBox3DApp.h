@@ -18,10 +18,13 @@ public:
 		std::vector < glm::vec2 >& out_uvs,
 		std::vector < glm::vec3 >& out_normals
 	);
-	void UpdateSphere(bool resolutionChanged);
-	void UpdateSphereFace(Can::Object* m_SphereFace, const glm::vec3& localUp, bool resolutionChanged);
+	void UpdateSphere();
+	void UpdateSphereFace(Can::Object* m_SphereFace, const glm::vec3& localUp);
 	void SetTransform(Can::Object* object, glm::vec3 pos, glm::vec3 scale);
+	
 	inline ShapeGenerator* GetShapeGenerator() { return m_ShapeGenerator; }
+	inline int GetFaceCount() { return 6 * m_FaceResolution * m_FaceResolution; }
+	inline Can::Object** GetFaces() { return m_SphereFaces; }
 
 private:
 	float* CreateSphere(const glm::vec3& localUp);
@@ -36,9 +39,6 @@ private:
 		std::vector < glm::vec2 >& uvs,
 		std::vector < glm::vec3 >& normals
 	);
-
-public:
-	bool* m_FaceEnabled = new bool[6]{ true, true, true, true, true, true };
 
 private:
 	int m_Resolution = 5;

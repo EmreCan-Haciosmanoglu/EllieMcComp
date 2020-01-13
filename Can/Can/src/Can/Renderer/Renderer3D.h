@@ -8,6 +8,7 @@ namespace Can
 {
 	struct Object
 	{
+		bool isEnabled = true;
 		Ref<VertexBuffer> VB;
 		Ref<IndexBuffer> IB;
 		Ref<VertexArray> VA;

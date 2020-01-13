@@ -440,32 +440,26 @@ bool Sandbox3D::loadOBJ(const char* path, std::vector<glm::vec3> & out_vertices,
 	return true;
 }
 
-void Sandbox3D::UpdateSphere(bool resolutionChanged)
+void Sandbox3D::UpdateSphere()
 {
 	int size = m_FaceResolution * m_FaceResolution;
 	int index = 0;
 	for (int i = 0; i < 6; i++)
 	{
-		if (m_FaceEnabled[i])
+		for (int j = 0; j < size; j++)
 		{
-			for (int j = 0; j < size; j++)
-			{
-				UpdateSphereFace(m_SphereFaces[index], m_LocalUps[i],resolutionChanged);
-				index++;
-			}
+			UpdateSphereFace(m_SphereFaces[index], m_LocalUps[i]);
+			index++;
 		}
 	}
 }
 
-void Sandbox3D::UpdateSphereFace(Can::Object* m_SphereFace, const glm::vec3& localUp, bool resolutionChanged)
+void Sandbox3D::UpdateSphereFace(Can::Object * m_SphereFace, const glm::vec3 & localUp)
 {
-	if (resolutionChanged)
-	{
-		delete[] m_SphereFace->Vertices;
-		m_SphereFace->Vertices = CreateSphere(localUp);
-	}
-
-	m_SphereFace->Vertices = FillNormals(ShapeSphere(m_SphereFace->Vertices));
+	if (!m_SphereFace->isEnabled)
+		return;
+	delete[] m_SphereFace->Vertices;
+	m_SphereFace->Vertices = FillNormals(ShapeSphere(CreateSphere(localUp)));
 
 	int vertexCount = m_Resolution * m_Resolution * 2 * 3 * (3 + 4 + 3);
 	m_SphereFace->VB->Bind();
@@ -474,11 +468,8 @@ void Sandbox3D::UpdateSphereFace(Can::Object* m_SphereFace, const glm::vec3& loc
 
 
 	int IndexCount = m_Resolution * m_Resolution * 2 * 3;
-	if (resolutionChanged)
-	{
-		delete[] m_SphereFace->Indices;
-		m_SphereFace->Indices = FillIndices();
-	}
+	delete[] m_SphereFace->Indices;
+	m_SphereFace->Indices = FillIndices();
 
 	m_SphereFace->IB->ReDo(m_SphereFace->Indices, IndexCount);
 	m_SphereFace->VA->SetIndexBuffer(m_SphereFace->IB);

@@ -4,7 +4,7 @@
 
 Scene::Scene(Sandbox3D* parent)
 	: m_Parent(parent)
-	, m_MainCameraController(45.0f, 1920.0f / 1080.0f, 0.1f, 30.0f)
+	, m_MainCameraController(45.0f, 1920.0f / 1080.0f, 0.001f, 100.0f)
 {
 }
 

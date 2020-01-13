@@ -27,27 +27,31 @@ void Debug::OnImGuiRender()
 {
 	ImGui::Begin("Settings");
 	bool isChanged = false;
+	int faceCount = m_Parent->GetFaceCount();
+	Can::Object** faces = m_Parent->GetFaces();
+	for (int i = 0; i < faceCount; i++)
+	{
+		char integer_string[6];
+		sprintf(integer_string, "%d", i);
 
-	isChanged = isChanged || ImGui::Checkbox("Index1", &(m_Parent->m_FaceEnabled[0]));
-	isChanged = isChanged || ImGui::Checkbox("Index2", &(m_Parent->m_FaceEnabled[1]));
-	isChanged = isChanged || ImGui::Checkbox("Index3", &(m_Parent->m_FaceEnabled[2]));
-	isChanged = isChanged || ImGui::Checkbox("Index4", &(m_Parent->m_FaceEnabled[3]));
-	isChanged = isChanged || ImGui::Checkbox("Index5", &(m_Parent->m_FaceEnabled[4]));
-	isChanged = isChanged || ImGui::Checkbox("Index6", &(m_Parent->m_FaceEnabled[5]));
+		char other_string[26] = "Index: ";
+		strcat(other_string, integer_string);
+		isChanged = isChanged || ImGui::Checkbox(other_string, &(faces[i]->isEnabled));
+	}
 
 	int* resolution = m_Parent->GetResolutionPtr();
-	bool isResolutionChanged = ImGui::SliderInt("Resolution", resolution, 1, 100);
+	isChanged = isChanged || ImGui::SliderInt("Resolution", resolution, 1, 100);
 
 	NoiseLayer** layers = m_Parent->GetShapeGenerator()->GetShapeSettings()->GetNoiseLayers();
-	int size = m_Parent->GetShapeGenerator()->GetShapeSettings()->GetLayerCount();
-	for (int i = 0; i < size; i++)
+	int layercount = m_Parent->GetShapeGenerator()->GetShapeSettings()->GetLayerCount();
+	for (int i = 0; i < layercount; i++)
 	{
 		//ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
 		ImGui::BeginChild(i + 1,ImVec2(800, 200),true);
 		NoiseSettings* settings = layers[i]->GetNoiseSettings();
 		isChanged = isChanged || ImGui::Checkbox("Enabled", layers[i]->GetEnabledPtr());
 		isChanged = isChanged || ImGui::Checkbox("Mask", layers[i]->GetMaskPtr());
-		isChanged = isChanged || ImGui::SliderFloat("Strength", settings->GetStrengthPtr(), 0.0f, 1.0f);
+		isChanged = isChanged || ImGui::SliderFloat("Strength", settings->GetStrengthPtr(), 0.0f, 10.0f);
 		isChanged = isChanged || ImGui::SliderInt("NumLayer", settings->GetNumLayerPtr(), 1, 5);
 		isChanged = isChanged || ImGui::SliderFloat("Base Roughness", settings->GetBaseRoughnessPtr(), 0.0f, 5.0f);
 		isChanged = isChanged || ImGui::SliderFloat("Roughness", settings->GetRoughnessPtr(), 0.0f, 5.0f);
@@ -57,8 +61,8 @@ void Debug::OnImGuiRender()
 		ImGui::EndChild();
 	}
 
-	if (isChanged || isResolutionChanged)
-		m_Parent->UpdateSphere(isResolutionChanged);
+	if (isChanged)
+		m_Parent->UpdateSphere();
 
 
 	ImGui::End();

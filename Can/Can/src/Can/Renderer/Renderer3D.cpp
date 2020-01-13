@@ -38,6 +38,8 @@ namespace Can
 	{
 		for (Object* obj : s_Objects)
 		{
+			if (!obj->isEnabled)
+				continue;
 			if (obj->T)
 				obj->T->Bind();
 			obj->S->Bind();
