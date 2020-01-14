@@ -19,7 +19,7 @@ public:
 		std::vector < glm::vec3 >& out_normals
 	);
 	void UpdateSphere();
-	void UpdateSphereFace(Can::Object* m_SphereFace, const glm::vec3& localUp);
+	void UpdateSphereFace(Can::Object* m_SphereFace, const glm::vec3& localUp, float xOffSet, float yOffSet);
 	void SetTransform(Can::Object* object, glm::vec3 pos, glm::vec3 scale);
 	
 	inline ShapeGenerator* GetShapeGenerator() { return m_ShapeGenerator; }
@@ -27,11 +27,11 @@ public:
 	inline Can::Object** GetFaces() { return m_SphereFaces; }
 
 private:
-	float* CreateSphere(const glm::vec3& localUp);
+	float* CreateSphere(const glm::vec3& localUp, float xOffSet, float yOffSet);
 	float* ShapeSphere(float* cube);
 	float* FillNormals(float* sphere);
 	uint32_t* FillIndices();
-	void ConstructSphereFace(Can::Object* m_SphereFace, int faceID, int index, const glm::vec3& localUp);
+	void ConstructSphereFace(Can::Object* m_SphereFace, float xOffSet, float yOffSet, const glm::vec3& localUp);
 	Can::Object* ConstructObject(
 		const std::string& shaderPath,
 		const std::string& texturePath,
@@ -42,7 +42,7 @@ private:
 
 private:
 	int m_Resolution = 5;
-	int m_FaceResolution = 1;
+	int m_FaceResolution = 2;
 
 	glm::vec3 m_LocalUps[6] = {
 		{+1.0f, +0.0f, +0.0f},

@@ -9,7 +9,7 @@ Can::Application* Can::CreateApplication()
 }
 
 Sandbox3D::Sandbox3D()
-	: m_ShapeGenerator(new ShapeGenerator(new ShapeSettings(3)))
+	: m_ShapeGenerator(new ShapeGenerator(new ShapeSettings(2)))
 	, m_Scene(new Scene(this))
 	, m_Debug(new Debug(this))
 	, m_SphereFaces(new Can::Object* [6 * m_FaceResolution * m_FaceResolution])
@@ -22,7 +22,11 @@ Sandbox3D::Sandbox3D()
 			for (int j = 0; j < m_FaceResolution; j++)
 			{
 				m_SphereFaces[index] = new Can::Object();
-				ConstructSphereFace(m_SphereFaces[index], k, index, m_LocalUps[k]);
+				ConstructSphereFace(
+					m_SphereFaces[index],
+					(1.0f * i) / m_FaceResolution,
+					(1.0f * j) / m_FaceResolution,
+					m_LocalUps[k]);
 				Can::Renderer3D::AddObject(m_SphereFaces[index]);
 				index++;
 			}
@@ -38,7 +42,7 @@ Sandbox3D::Sandbox3D()
 	if (res)
 	{
 		m_TestObject = ConstructObject("assets/shaders/Object.glsl", "assets/objects/Test.png", vertices, uvs, normals);
-		Can::Renderer3D::AddObject(m_TestObject);
+		//Can::Renderer3D::AddObject(m_TestObject);
 	}
 }
 
@@ -46,7 +50,7 @@ Sandbox3D::~Sandbox3D()
 {
 }
 
-float* Sandbox3D::CreateSphere(const glm::vec3& localUp)
+float* Sandbox3D::CreateSphere(const glm::vec3& localUp, float xOffSet, float yOffSet)
 {
 	float* result = new float[m_Resolution * m_Resolution * 2 * 3 * (3 + 4 + 3)];
 
@@ -60,7 +64,10 @@ float* Sandbox3D::CreateSphere(const glm::vec3& localUp)
 			{
 				float x = i;
 				float y = j;
-				glm::vec2 percent = glm::vec2(x / m_Resolution, y / m_Resolution);
+				glm::vec2 percent = glm::vec2(
+					(x / (m_Resolution * m_FaceResolution)) + xOffSet,
+					(y / (m_Resolution * m_FaceResolution)) + yOffSet
+				);
 				glm::vec3 pointOnUnitCube = glm::vec3(
 					localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
 					localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
@@ -79,7 +86,10 @@ float* Sandbox3D::CreateSphere(const glm::vec3& localUp)
 			{
 				float x = i + 1;
 				float y = j;
-				glm::vec2 percent = glm::vec2(x / m_Resolution, y / m_Resolution);
+				glm::vec2 percent = glm::vec2(
+					(x / (m_Resolution * m_FaceResolution)) + xOffSet,
+					(y / (m_Resolution * m_FaceResolution)) + yOffSet
+				);
 				glm::vec3 pointOnUnitCube = glm::vec3(
 					localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
 					localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
@@ -98,7 +108,10 @@ float* Sandbox3D::CreateSphere(const glm::vec3& localUp)
 			{
 				float x = i + 1;
 				float y = j + 1;
-				glm::vec2 percent = glm::vec2(x / m_Resolution, y / m_Resolution);
+				glm::vec2 percent = glm::vec2(
+					(x / (m_Resolution * m_FaceResolution)) + xOffSet,
+					(y / (m_Resolution * m_FaceResolution)) + yOffSet
+				);
 				glm::vec3 pointOnUnitCube = glm::vec3(
 					localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
 					localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
@@ -117,7 +130,10 @@ float* Sandbox3D::CreateSphere(const glm::vec3& localUp)
 			{
 				float x = i;
 				float y = j;
-				glm::vec2 percent = glm::vec2(x / m_Resolution, y / m_Resolution);
+				glm::vec2 percent = glm::vec2(
+					(x / (m_Resolution * m_FaceResolution)) + xOffSet,
+					(y / (m_Resolution * m_FaceResolution)) + yOffSet
+				);
 				glm::vec3 pointOnUnitCube = glm::vec3(
 					localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
 					localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
@@ -136,7 +152,10 @@ float* Sandbox3D::CreateSphere(const glm::vec3& localUp)
 			{
 				float x = i + 1;
 				float y = j + 1;
-				glm::vec2 percent = glm::vec2(x / m_Resolution, y / m_Resolution);
+				glm::vec2 percent = glm::vec2(
+					(x / (m_Resolution * m_FaceResolution)) + xOffSet,
+					(y / (m_Resolution * m_FaceResolution)) + yOffSet
+				);
 				glm::vec3 pointOnUnitCube = glm::vec3(
 					localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
 					localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
@@ -155,7 +174,10 @@ float* Sandbox3D::CreateSphere(const glm::vec3& localUp)
 			{
 				float x = i;
 				float y = j + 1;
-				glm::vec2 percent = glm::vec2(x / m_Resolution, y / m_Resolution);
+				glm::vec2 percent = glm::vec2(
+					(x / (m_Resolution * m_FaceResolution)) + xOffSet,
+					(y / (m_Resolution * m_FaceResolution)) + yOffSet
+				);
 				glm::vec3 pointOnUnitCube = glm::vec3(
 					localUp.x + (percent.x - 0.5f) * 2.0f * axisA.x + (percent.y - 0.5f) * 2.0f * axisB.x,
 					localUp.y + (percent.x - 0.5f) * 2.0f * axisA.y + (percent.y - 0.5f) * 2.0f * axisB.y,
@@ -275,14 +297,14 @@ uint32_t * Sandbox3D::FillIndices()
 	return indices;
 }
 
-void Sandbox3D::ConstructSphereFace(Can::Object * m_SphereFace, int faceID, int index, const glm::vec3 & localUp)
+void Sandbox3D::ConstructSphereFace(Can::Object * m_SphereFace, float xOffSet, float yOffSet, const glm::vec3 & localUp)
 {
 	m_SphereFace->VA = Can::VertexArray::Create();
 
 	if (m_SphereFace->Vertices != nullptr)
 		delete[] m_SphereFace->Vertices;
 
-	m_SphereFace->Vertices = FillNormals(ShapeSphere(CreateSphere(localUp)));
+	m_SphereFace->Vertices = FillNormals(ShapeSphere(CreateSphere(localUp, xOffSet, yOffSet)));
 
 	m_SphereFace->VB = Can::VertexBuffer::Create(m_SphereFace->Vertices, sizeof(float) * m_Resolution * m_Resolution * 2 * 3 * (3 + 4 + 3), true);
 	m_SphereFace->VB->SetLayout({
@@ -444,22 +466,30 @@ void Sandbox3D::UpdateSphere()
 {
 	int size = m_FaceResolution * m_FaceResolution;
 	int index = 0;
-	for (int i = 0; i < 6; i++)
+	for (int k = 0; k < 6; k++)
 	{
-		for (int j = 0; j < size; j++)
+		for (int i = 0; i < m_FaceResolution; i++)
 		{
-			UpdateSphereFace(m_SphereFaces[index], m_LocalUps[i]);
-			index++;
+			for (int j = 0; j < m_FaceResolution; j++)
+			{
+				UpdateSphereFace(
+					m_SphereFaces[index],
+					m_LocalUps[k],
+					(1.0f * i) / m_FaceResolution,
+					(1.0f * j) / m_FaceResolution
+				);
+				index++;
+			}
 		}
 	}
 }
 
-void Sandbox3D::UpdateSphereFace(Can::Object * m_SphereFace, const glm::vec3 & localUp)
+void Sandbox3D::UpdateSphereFace(Can::Object * m_SphereFace, const glm::vec3 & localUp, float xOffSet, float yOffSet)
 {
 	if (!m_SphereFace->isEnabled)
 		return;
 	delete[] m_SphereFace->Vertices;
-	m_SphereFace->Vertices = FillNormals(ShapeSphere(CreateSphere(localUp)));
+	m_SphereFace->Vertices = FillNormals(ShapeSphere(CreateSphere(localUp, xOffSet, yOffSet)));
 
 	int vertexCount = m_Resolution * m_Resolution * 2 * 3 * (3 + 4 + 3);
 	m_SphereFace->VB->Bind();

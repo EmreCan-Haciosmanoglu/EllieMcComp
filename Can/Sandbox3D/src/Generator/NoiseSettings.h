@@ -27,7 +27,7 @@ public:
 	inline const glm::vec3& GetCenter() { return center; }
 	inline glm::vec3* GetCenterPtr() { return &center; }
 private:
-	int numLayer = 3;
+	int numLayer = 2;
 	float strength = 1.0f;
 	float baseRoughness = 1.0f;
 	float roughness = 2.0f;
