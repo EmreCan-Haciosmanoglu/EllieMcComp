@@ -1,3 +1,4 @@
+#include "..\..\Tetris\src\Player.h"
 #include "canpch.h"
 #include "Player.h"
 #include "GameLayer.h"
