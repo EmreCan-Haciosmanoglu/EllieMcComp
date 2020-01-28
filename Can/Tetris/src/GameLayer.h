@@ -20,13 +20,40 @@ public:
 
 	void PlayerDied() { m_PlayerLeft--; }
 
-	inline bool** GetBlock(int index) { return (m_Blocks[index]); }
+	inline std::vector<std::vector<bool>> GetBlock(int index) { return m_Blocks[index]; }
 private:
 	void UpdateGame(float ts);
 	void DrawGame();
 
 private:
+	int m_CurrenPlayerIndex = 0;
+	bool m_IsChecked = true;
 	Can::Camera::OrthographicCameraController m_CameraController;
+	std::vector< std::vector<std::vector<bool>>> m_Blocks = { {
+		{ 1 },
+		{ 1 },
+		{ 1 },
+		{ 1 }
+		},{
+		{ 1 , 0 },
+		{ 1 , 0 },
+		{ 1 , 1 }
+		},{
+		{ 1 , 1 },
+		{ 1 , 0 },
+		{ 1 , 0 }
+		},{
+		{ 1 , 0 },
+		{ 1 , 1 },
+		{ 0 , 1 }
+		},{
+		{ 0 , 1 },
+		{ 1 , 1 },
+		{ 1 , 0 }
+		},{
+		{ 1, 1 },
+		{ 1, 1 }
+	} };
 
 	int m_PlayerCount;
 	int m_PlayerLeft;
@@ -38,37 +65,6 @@ private:
 	int m_GameWidth = 7;
 	int m_GameHeight = 20;
 
-	bool*** m_Blocks = new bool**[6]{ new bool*[4]{
-		new bool[4] {true,false,false,false},
-		new bool[4] {true,false,false,false},
-		new bool[4] {true,false,false,false},
-		new bool[4] {true,false,false,false}
-		},new bool* [4]{
-		new bool[4] {true ,false,false,false},
-		new bool[4] {true ,false,false,false},
-		new bool[4] {true ,true ,false,false},
-		new bool[4] {false,false,false,false}
-		},new bool* [4]{
-		new bool[4] {true ,true ,false,false},
-		new bool[4] {true ,false,false,false},
-		new bool[4] {true ,false,false,false},
-		new bool[4] {false,false,false,false}
-		},new bool* [4]{
-		new bool[4] {true ,false,false,false},
-		new bool[4] {true ,true ,false,false},
-		new bool[4] {false,true ,false,false},
-		new bool[4] {false,false,false,false}
-		},new bool* [4]{
-		new bool[4] {false,true ,false,false},
-		new bool[4] {true ,true ,false,false},
-		new bool[4] {true ,false,false,false},
-		new bool[4] {false,false,false,false}
-		},new bool* [4]{
-		new bool[4] {true ,true ,false,false},
-		new bool[4] {true ,true ,false,false},
-		new bool[4] {false,false,false,false},
-		new bool[4] {false,false,false,false}
-	} };
 
 	Player * *m_Players;
 };
