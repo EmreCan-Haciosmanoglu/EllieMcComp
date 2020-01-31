@@ -1,6 +1,8 @@
 #pragma once
 #include "Can.h"
 #include "../temps/NeuralNetwork.h"
+#define BLOCK_QUEUE_SIZE  4
+#define STATE_SIZE 200 + BLOCK_QUEUE_SIZE + 4
 
 class GameLayer;
 
@@ -14,7 +16,6 @@ public:
 
 	inline int GetPoint() { return m_Point; }
 	inline bool IsDead() { return m_IsDead; }
-	inline NeuralNetwork* GetBrain() { return m_Brain; }
 
 	void MoveBlockDown();
 	void MoveHorizontal(bool isLeft);
@@ -27,6 +28,7 @@ private:
 	void IsGameOver();
 	void BlockToState();
 	void BreakFullRows();
+	std::array<float, STATE_SIZE> GetState();
 private:
 	bool m_IsDead = false;
 	int m_Point = 1;
@@ -36,12 +38,13 @@ private:
 	int m_CurrentX;
 	int m_CurrentY;
 
-	int m_MaxCount = (m_Width - 1) + 2;
+	int m_MaxCount = (m_Width/2) + 2;
 	int m_Counter = 0;
 
-	#define BLOCK_QUEUE_SIZE  4
 
 	int m_BlockIndex = 0;
+	int m_CurrentBlockIndex;
+	int m_CurrentBlockRotation = 0;
 	int m_BlockQueue[BLOCK_QUEUE_SIZE] = {-1, -1, -1, -1 };
 
 

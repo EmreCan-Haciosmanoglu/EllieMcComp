@@ -7,9 +7,10 @@ Player::Player(int width, int height, NeuralNetwork* brain, GameLayer* parent)
 	, m_Height(height)
 	, m_Brain(brain)
 	, m_Parent(parent)
-	, m_CurrentX(0)
+	, m_CurrentX(m_Width / 2)
 	, m_CurrentY(m_Height - 1)
-	, m_CurrentBlock(m_Parent->GetBlock(Can::Utility::Random::Integer(6)))
+	, m_CurrentBlockIndex(Can::Utility::Random::Integer(7))
+	, m_CurrentBlock(m_Parent->GetBlock(m_CurrentBlockIndex))
 {
 	for (int i = 0; i < m_Height; i++)
 	{
@@ -21,7 +22,7 @@ Player::Player(int width, int height, NeuralNetwork* brain, GameLayer* parent)
 	}
 	for (int i = 0; i < BLOCK_QUEUE_SIZE; i++)
 	{
-		m_BlockQueue[i] = Can::Utility::Random::Integer(6);
+		m_BlockQueue[i] = Can::Utility::Random::Integer(7);
 	}
 }
 
@@ -39,6 +40,7 @@ void Player::Update(float ts)
 	m_Counter++;
 	if (m_Counter >= m_MaxCount)
 	{
+		m_Parent->AddData(GetState());
 		if (MoveDown())
 		{
 			BlockToState();
@@ -252,6 +254,7 @@ void Player::Draw(const glm::vec2 & offset)
 
 void Player::MoveBlockDown()
 {
+	m_Parent->AddData(GetState());
 	while (!MoveDown());
 	m_Counter = 0;
 	BlockToState();
@@ -284,16 +287,18 @@ void Player::MoveHorizontal(bool isLeft)
 {
 	if ((isLeft) ? WillCrush({ -1, 0 }) : WillCrush({ 1, 0 }))
 		return;
+	m_Parent->AddData(GetState());
 	m_CurrentX -= isLeft;
 	m_CurrentX += !isLeft;
 }
 
 void Player::NewBlock()
 {
-	m_CurrentX = 0;
+	m_CurrentX = m_Width / 2;
 	m_CurrentY = m_Height - 1;
-	m_CurrentBlock = m_Parent->GetBlock(m_BlockQueue[m_BlockIndex]);
-	m_BlockQueue[m_BlockIndex] = Can::Utility::Random::Integer(6);
+	m_CurrentBlockIndex = m_BlockQueue[m_BlockIndex];
+	m_CurrentBlock = m_Parent->GetBlock(m_CurrentBlockIndex);
+	m_BlockQueue[m_BlockIndex] = Can::Utility::Random::Integer(7);
 	m_BlockIndex = (m_BlockIndex + 1) % BLOCK_QUEUE_SIZE;
 }
 
@@ -302,33 +307,34 @@ bool Player::MoveDown()
 	if (WillCrush({ 0, -1 }))
 		return true;
 
+	m_Parent->AddData(GetState());
 	m_CurrentY--;
 	return false;
 }
 
 int Player::Think()
 {
-	float* state = new float[(size_t)m_Width + BLOCK_QUEUE_SIZE + 2];
+	float* state = new float[STATE_SIZE];
 
-	for (int j = 0; j < m_Width; j++)
+	int index = 0;
+	for (int i = 0; i < m_Height; i++)
 	{
-		for (int i = m_Height - 1; i >= 0; i--)
+		for (int j = 0; j < m_Width; j++)
 		{
-			if (m_State[i][j])
-			{
-				state[j] = (float)i;
-				break;
-			}
+			state[index] = m_State[i][j];
+			index++;
 		}
 	}
 	for (int i = 0; i < BLOCK_QUEUE_SIZE; i++)
 	{
-		state[m_Width + i] = m_BlockQueue[i];
+		state[index + i] = m_BlockQueue[(i + m_BlockIndex) % BLOCK_QUEUE_SIZE] + 1;
 	}
-	state[m_Width + BLOCK_QUEUE_SIZE + 0] = m_CurrentX;
-	state[m_Width + BLOCK_QUEUE_SIZE + 1] = m_CurrentY;
+	state[index + BLOCK_QUEUE_SIZE + 0] = m_CurrentBlockIndex + 1;
+	state[index + BLOCK_QUEUE_SIZE + 1] = m_CurrentX + 1;
+	state[index + BLOCK_QUEUE_SIZE + 2] = m_CurrentY + 1;
+	state[index + BLOCK_QUEUE_SIZE + 3] = m_CurrentBlockRotation + 1;
 
-	Matrix* input = new Matrix(m_Width + BLOCK_QUEUE_SIZE + 2, 1, state);
+	Matrix* input = new Matrix(STATE_SIZE, 1, state);
 	Matrix* result = m_Brain->FeedForward(input);
 
 	float A[5] = {
@@ -374,7 +380,9 @@ void Player::Rotate()
 				available = false;
 		}
 	}
-	if (available) {
+	if (available)
+	{
+		m_Parent->AddData(GetState());
 		m_CurrentX = tempX;
 		m_CurrentBlock.clear();
 		for (int j = 0; j < temp.size(); j++)
@@ -385,6 +393,7 @@ void Player::Rotate()
 				m_CurrentBlock[j].push_back(temp[j][i]);
 			}
 		}
+		m_CurrentBlockRotation = (m_CurrentBlockRotation + 1) % 4;
 	}
 }
 
@@ -447,5 +456,28 @@ void Player::BreakFullRows()
 			m_State[i][j] = temp[(size_t)m_Height - 1 - i][j];
 		}
 	}
-	m_Point += count * count * 5;
+	m_Point += count * count * 10;
+}
+
+std::array<float, STATE_SIZE> Player::GetState()
+{
+	std::array<float, STATE_SIZE> result;
+	size_t index = 0;
+	for (int i = 0; i < m_Height; i++)
+	{
+		for (int j = 0; j < m_Width; j++)
+		{
+			result[index] = m_State[i][j];
+			index++;
+		}
+	}
+	for (int i = 0; i < BLOCK_QUEUE_SIZE; i++)
+	{
+		result[index + i] = m_BlockQueue[(i + m_BlockIndex) % BLOCK_QUEUE_SIZE] + 1;
+	}
+	result[index + BLOCK_QUEUE_SIZE + 0] = m_CurrentBlockIndex + 1;
+	result[index + BLOCK_QUEUE_SIZE + 1] = m_CurrentX + 1;
+	result[index + BLOCK_QUEUE_SIZE + 2] = m_CurrentY + 1;
+	result[index + BLOCK_QUEUE_SIZE + 3] = m_CurrentBlockRotation + 1;
+	return result;
 }

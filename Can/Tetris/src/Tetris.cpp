@@ -11,7 +11,7 @@ public:
 	Tetris()
 	{
 		ImGuiIO& io = ImGui::GetIO();
-		io.Fonts->AddFontFromFileTTF("assets/fonts/Poppins-Light.otf", 32.0f);
+		io.Fonts->AddFontFromFileTTF("assets/fonts/Poppins-Light.otf", 24.0f);
 		PushLayer(new GameLayer());
 	}
 
