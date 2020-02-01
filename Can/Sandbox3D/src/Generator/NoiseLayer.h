@@ -18,7 +18,7 @@ public:
 	inline bool* GetMaskPtr() { return &m_IsMask; }
 
 private:
-	bool m_Enabled = true;
-	bool m_IsMask = true;
+	bool m_Enabled = false;
+	bool m_IsMask = false;
 	NoiseSettings* m_NoiseSettings;
 };

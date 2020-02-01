@@ -42,7 +42,7 @@ private:
 
 private:
 	int m_Resolution = 5;
-	int m_FaceResolution = 2;
+	int m_FaceResolution = 1;
 
 	glm::vec3 m_LocalUps[6] = {
 		{+1.0f, +0.0f, +0.0f},
@@ -57,5 +57,5 @@ private:
 	Scene* m_Scene;
 	Debug* m_Debug;
 	Can::Object** m_SphereFaces;
-	Can::Object* m_TestObject;
+	Can::Object* m_TestObject = nullptr;
 };
