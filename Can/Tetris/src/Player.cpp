@@ -300,6 +300,7 @@ void Player::NewBlock()
 	m_CurrentBlock = m_Parent->GetBlock(m_CurrentBlockIndex);
 	m_BlockQueue[m_BlockIndex] = Can::Utility::Random::Integer(7);
 	m_BlockIndex = (m_BlockIndex + 1) % BLOCK_QUEUE_SIZE;
+	m_CurrentBlockRotation = 0;
 }
 
 bool Player::MoveDown()

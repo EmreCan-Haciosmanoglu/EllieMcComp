@@ -7,7 +7,7 @@ GameLayer::GameLayer()
 	, m_CameraController(1920.0f / 1080.0f, 12.0f)
 	, m_PlayerCount(1)
 	, m_PlayerLeft(m_PlayerCount)
-	, m_Brain(new NeuralNetwork(new int[3]{ STATE_SIZE, STATE_SIZE / 2, 5 }, 3, 0.05f))
+	, m_Brain(new NeuralNetwork(new int[3]{ STATE_SIZE, STATE_SIZE / 2, 5 }, 3, 0.02f))
 	, m_Players(new Player* [m_PlayerCount])
 {
 	for (int i = 0; i < m_PlayerCount; i++)
@@ -69,6 +69,7 @@ void GameLayer::OnImGuiRender()
 	{
 		ImGui::Begin("Decision", 0, 1);
 		ImGui::Text("Last Training Percentage %3.2f", m_LastPerc);
+		ImGui::Text("Labeled Data Size %3d", m_LabeledData.size());
 		ImGui::SliderInt("Label Index", &m_LabelIndex, 0, m_UnlabeledData.size() - 1);
 		ImGui::Text("");
 		const float ItemSpacing = ImGui::GetStyle().ItemSpacing.x;
@@ -407,7 +408,7 @@ void GameLayer::DrawToLabel()
 					Can::Renderer2D::DrawQuad(
 						{
 							offset.x + i + state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 1] - 1,
-							offset.y + j + state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 2] - 1 - blockXw,
+							offset.y + j + state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 2] - 1 - blockXw + 1,
 							0.011f
 						},
 						{ 0.9f, 0.9f },
@@ -416,8 +417,8 @@ void GameLayer::DrawToLabel()
 				else if (state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 3] - 1 == 2)
 					Can::Renderer2D::DrawQuad(
 						{
-							offset.x - j + state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 1] - 1 + blockXw,
-							offset.y + i + state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 2] - 1 - blockXh,
+							offset.x - j + state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 1] - 1 + blockXw - 1,
+							offset.y + i + state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 2] - 1 - blockXh + 1,
 							0.011f
 						},
 						{ 0.9f, 0.9f },
@@ -426,7 +427,7 @@ void GameLayer::DrawToLabel()
 				else if (state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 3] - 1 == 3)
 					Can::Renderer2D::DrawQuad(
 						{
-							offset.x - i + state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 1] - 1 + blockXh,
+							offset.x - i + state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 1] - 1 + blockXh - 1,
 							offset.y - j + state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 2] - 1,
 							0.011f
 						},
@@ -527,7 +528,7 @@ void GameLayer::Train()
 		{
 			in[i] = it->first[i];
 		}
-		float ta[5] = {};
+		float ta[5] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 		for (size_t i = 0; i < 5; i++)
 		{
 			ta[i] = it->second[i];
@@ -544,5 +545,5 @@ void GameLayer::NewBrain()
 {
 	if (m_Brain != nullptr)
 		delete m_Brain;
-	m_Brain = new NeuralNetwork(new int[3]{ STATE_SIZE, STATE_SIZE / 2, 5 }, 3, 0.05f);
+	m_Brain = new NeuralNetwork(new int[3]{ STATE_SIZE, STATE_SIZE / 2, 5 }, 3, 0.02f);
 }

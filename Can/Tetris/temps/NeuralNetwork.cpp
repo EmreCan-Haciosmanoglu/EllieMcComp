@@ -5,6 +5,8 @@
 #define D_SIGMOID (func)([](float y) {return y*(1.0f-y);})
 #define LEAKY_RELU (func)([](float x){return std::max(x*0.1f,x);})
 #define D_LEAKY_RELU (func)([](float x){return x < 0? -0.1f:1.0f;})
+#define RELU (func)([](float x){return std::max(0.0f,x);})
+#define D_RELU (func)([](float x){return x <= 0? 0.0f:1.0f;})
 #define SOFT_MAX (func2)([](float x, float sum){return x/sum;})
 
 NeuralNetwork::NeuralNetwork(int* nodes, int length, float lr)
@@ -53,13 +55,13 @@ Matrix* NeuralNetwork::FeedForward(Matrix * inputs) const
 	{
 		layerOutputs[i] = Matrix::MatrixMultiplication(weights[i - 1], layerOutputs[i - 1]);
 		*layerOutputs[i] += *biases[i - 1];
-		layerOutputs[i]->Activation(LEAKY_RELU);
+		layerOutputs[i]->Activation(SIGMOID);
 	}
 
 	{
 		layerOutputs[Length - 1] = Matrix::MatrixMultiplication(weights[Length - 2], layerOutputs[Length - 2]);
 		*layerOutputs[Length - 1] += *biases[Length - 2];
-		layerOutputs[Length - 1]->Activation(SOFT_MAX);
+		layerOutputs[Length - 1]->Activation(SIGMOID);
 	}
 
 	Matrix * result = new Matrix(*layerOutputs[Length - 1]);
@@ -77,12 +79,12 @@ void NeuralNetwork::FeedForward(Matrix * *outputs) const
 	{
 		outputs[i] = Matrix::MatrixMultiplication(weights[i - 1], outputs[i - 1]);
 		*outputs[i] += *biases[i - 1];
-		outputs[i]->Activation(LEAKY_RELU);
+		outputs[i]->Activation(SIGMOID);
 	}
 	{
 		outputs[Length - 1] = Matrix::MatrixMultiplication(weights[Length - 2], outputs[Length - 2]);
 		*outputs[Length - 1] += *biases[Length - 2];
-		outputs[Length - 1]->Activation(SOFT_MAX);
+		outputs[Length - 1]->Activation(SIGMOID);
 	}
 }
 
@@ -105,7 +107,7 @@ void NeuralNetwork::Train(Matrix * inputs, Matrix * targets)
 
 	for (int i = Length - 2; i >= 0; i--)
 	{
-		Matrix* gradients = Matrix::Map(outputs[i + 1], D_LEAKY_RELU);
+		Matrix* gradients = Matrix::Map(outputs[i + 1], D_SIGMOID);
 
 		*gradients *= *errors[i + 1];
 		*gradients *= learning_rate;
