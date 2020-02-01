@@ -88,9 +88,11 @@ namespace Can::Camera
 namespace Can::Camera::Controller
 {
 	Perspective::Perspective(float fovy, float aspectRatio, float n, float f)
-		: m_Fovy(fovy)
-		, m_AspectRatio(aspectRatio)
-		, m_Camera(m_Fovy, m_AspectRatio,n,f)
+		: m_AspectRatio(aspectRatio)
+		, m_Fovy(fovy)
+		, m_Near(n)
+		, m_Far(f)
+		, m_Camera(m_Fovy, m_AspectRatio, m_Near, m_Far)
 	{
 	}
 
@@ -122,7 +124,7 @@ namespace Can::Camera::Controller
 			m_CameraPosition.y -= cos(rotx) * tSpeed;
 			m_CameraPosition.z -= sin(rotx) * tSpeed;
 		}
-		else if(Input::IsKeyPressed(CAN_KEY_LEFT_SHIFT))
+		else if (Input::IsKeyPressed(CAN_KEY_LEFT_SHIFT))
 		{
 			m_CameraPosition.y += cos(rotx) * tSpeed;
 			m_CameraPosition.z += sin(rotx) * tSpeed;
@@ -157,7 +159,7 @@ namespace Can::Camera::Controller
 			m_Fovy -= 2.0f * ts;
 
 		m_Camera.SetRotation(m_CameraRotation);
-		m_Camera.SetProjection(m_Fovy);
+		m_Camera.SetProjection(m_Fovy, m_AspectRatio, m_Near, m_Far);
 
 	}
 

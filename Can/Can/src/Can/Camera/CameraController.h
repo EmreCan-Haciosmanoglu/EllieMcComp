@@ -64,6 +64,9 @@ namespace Can::Camera::Controller
 	private:
 		float m_AspectRatio;
 		float m_Fovy;
+		float m_Near;
+		float m_Far;
+
 		PerspectiveCamera m_Camera;
 
 		glm::vec3 m_CameraPosition = { 0.0f, 0.0f, 0.0f };
