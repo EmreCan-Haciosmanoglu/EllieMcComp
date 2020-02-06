@@ -143,6 +143,10 @@
     <ClInclude Include="src\SnakeGame2\Game2.h" />
     <ClInclude Include="src\SnakeGame2\Play2.h" />
     <ClInclude Include="src\SnakeTake2.h" />
+    <ClInclude Include="temps\Keys.h" />
+    <ClInclude Include="temps\Matrix.h" />
+    <ClInclude Include="temps\NeuralNetwork.h" />
+    <ClInclude Include="temps\Perceptron.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\SandBox2DLayer.cpp" />
@@ -154,6 +158,10 @@
     <ClCompile Include="src\SnakeGame2\Game2.cpp" />
     <ClCompile Include="src\SnakeGame2\Play2.cpp" />
     <ClCompile Include="src\SnakeTake2.cpp" />
+    <ClCompile Include="temps\KeySimulation.cpp" />
+    <ClCompile Include="temps\Matrix.cpp" />
+    <ClCompile Include="temps\NeuralNetwork.cpp" />
+    <ClCompile Include="temps\Perceptron.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Can\vendor\imgui\ImGui.vcxproj">

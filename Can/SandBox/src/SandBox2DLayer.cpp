@@ -18,7 +18,12 @@ void SandBox2DLayer::OnDetach()
 
 void SandBox2DLayer::OnUpdate(Can::TimeStep ts)
 {
-	m_CameraController.OnUpdate(ts);
+	CAN_PROFILE_FUNCTION();
+
+	{
+		CAN_PROFILE_SCOPE("CameraController::OnUpdate");
+		m_CameraController.OnUpdate(ts);
+	}
 
 	Can::RenderCommand::SetClearColor({ 0.15f, 0.15f, 0.15f, 1.0f });
 	Can::RenderCommand::Clear();
@@ -28,8 +33,8 @@ void SandBox2DLayer::OnUpdate(Can::TimeStep ts)
 	Can::Renderer2D::DrawQuad({ 0.0f, -0.2f }, { 1.0f, 1.0f }, { 0.8f, 0.2f, 0.3f, 1.0f });
 	Can::Renderer2D::DrawQuad({ -0.5f, 1.5f }, { 1.5f, 0.5f }, { 0.2f, 0.8f, 0.3f, 1.0f });
 	Can::Renderer2D::DrawQuad({ 2.3f, -1.0f }, { 0.5f, 5.0f }, { 0.8f, 0.3f, 0.8f, 1.0f });
-	
-	Can::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f}, { 5.0f, 5.0f }, m_Tex);
+
+	Can::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 5.0f, 5.0f }, m_Tex);
 
 	Can::Renderer2D::EndScene();
 
@@ -50,5 +55,14 @@ void SandBox2DLayer::OnImGuiRender()
 {
 	ImGui::Begin("Settings");
 	ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
+
+	for (auto& result : m_ProfileResults)
+	{
+		char label[50];
+		strcpy(label, result.Name);
+		strcat(label, "  %.6fns");
+		ImGui::Text("", result.Time);
+	}
+
 	ImGui::End();
 }

@@ -1,9 +1,10 @@
 #pragma once
 #include "canpch.h"
 
-#include "Can/Random.h"
-#include "Can/Input.h"
 #include "Can/Application.h"
+#include "Can/Instrumentor.h"
+#include "Can/Input.h"
+#include "Can/Random.h"
 
 #include "Can/Core/TimeStep.h"
 

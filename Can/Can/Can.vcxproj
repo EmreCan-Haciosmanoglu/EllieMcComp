@@ -156,6 +156,7 @@
     <ClInclude Include="src\Can\Events\KeyEvent.h" />
     <ClInclude Include="src\Can\Events\MouseEvent.h" />
     <ClInclude Include="src\Can\Input.h" />
+    <ClInclude Include="src\Can\Instrumentor.h" />
     <ClInclude Include="src\Can\KeyCode.h" />
     <ClInclude Include="src\Can\Layers\ImGuiLayer.h" />
     <ClInclude Include="src\Can\Layers\Layer.h" />

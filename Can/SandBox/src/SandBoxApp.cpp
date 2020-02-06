@@ -269,15 +269,14 @@ public:
 	Sandbox()
 	{
 		//PushLayer(new ExampleLayer());
-		//PushLayer(new SandBox2DLayer());
+		PushLayer(new SandBox2DLayer());
 		//PushLayer(new SandBox3D());
 		//PushLayer(new SnakeAI());
-		PushLayer(new SnakeAI2());
+		//PushLayer(new SnakeAI2());
 	}
 
 	~Sandbox()
 	{
-
 	}
 };
 
