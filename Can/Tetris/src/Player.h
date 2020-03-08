@@ -1,8 +1,9 @@
 #pragma once
 #include "Can.h"
 #include "../temps/NeuralNetwork.h"
-#define BLOCK_QUEUE_SIZE  4
-#define STATE_SIZE 200 + BLOCK_QUEUE_SIZE + 4
+#define BLOCK_QUEUE_SIZE  3
+#define GAME_SIZE 20 * 10
+#define STATE_SIZE GAME_SIZE + BLOCK_QUEUE_SIZE + 4
 
 class GameLayer;
 
@@ -38,14 +39,14 @@ private:
 	int m_CurrentX;
 	int m_CurrentY;
 
-	int m_MaxCount = (m_Width/2) + 2;
+	int m_MaxCount = ((int)m_Width/2) + 3;
 	int m_Counter = 0;
 
 
 	int m_BlockIndex = 0;
 	int m_CurrentBlockIndex;
 	int m_CurrentBlockRotation = 0;
-	int m_BlockQueue[BLOCK_QUEUE_SIZE] = {-1, -1, -1, -1 };
+	int m_BlockQueue[BLOCK_QUEUE_SIZE] = {-1, -1, -1};
 
 
 	std::vector<std::vector<bool>> m_State;

@@ -1,13 +1,16 @@
 #include "canpch.h"
 #include "GameLayer.h"
 #include "Player.h"
+#include <random>
+
+int myrandom(int i) { return std::rand() % i; }
 
 GameLayer::GameLayer()
 	:Layer("2048-Extended Game")
 	, m_CameraController(1920.0f / 1080.0f, 12.0f)
 	, m_PlayerCount(1)
 	, m_PlayerLeft(m_PlayerCount)
-	, m_Brain(new NeuralNetwork(new int[3]{ STATE_SIZE, STATE_SIZE / 2, 5 }, 3, 0.02f))
+	, m_Brain(new NeuralNetwork(new int[3]{ STATE_SIZE, STATE_SIZE, 5 }, 3, 0.005f))
 	, m_Players(new Player* [m_PlayerCount])
 {
 	for (int i = 0; i < m_PlayerCount; i++)
@@ -16,29 +19,9 @@ GameLayer::GameLayer()
 
 void GameLayer::OnUpdate(Can::TimeStep ts)
 {
-	/*static float time = 0.0f;
-	time += ts;
-	if (time > 0.05f)
-	{
-		if (Can::Input::IsKeyPressed(CAN_KEY_S))
-		{
-			m_Players[0]->MoveBlockDown();
-		}
-		else if (Can::Input::IsKeyPressed(CAN_KEY_A))
-		{
-			m_Players[0]->MoveHorizontal(true);
-		}
-		else if (Can::Input::IsKeyPressed(CAN_KEY_D))
-		{
-			m_Players[0]->MoveHorizontal(false);
-		}
-		else if (Can::Input::IsKeyPressed(CAN_KEY_SPACE))
-		{
-			m_Players[0]->Rotate();
-		}
-		time -= 0.05f;
-	}*/
 	UpdateGame(ts);
+	if (b_IsTraining)
+		Train();
 
 	Can::RenderCommand::SetClearColor({ 0.9f, 0.9f, 0.9f, 1.0f });
 	Can::RenderCommand::Clear();
@@ -58,19 +41,23 @@ void GameLayer::OnEvent(Can::Event::Event & event)
 void GameLayer::OnImGuiRender()
 {
 	ImGui::Begin("Details", 0, 1);
-	ImGui::Text("Player Count:  %03d", m_PlayerCount);
-	ImGui::Text("Player Left:   %03d", m_PlayerLeft);
-	ImGui::Text("Generation    #%03d", m_Generation);
-	ImGui::Text("Current Max    %03d", m_CurrentMaxPoint);
+	ImGui::Text("Generation  #%03d", m_Generation);
+	ImGui::Text("Current Max   %03d", m_CurrentMaxPoint);
 	ImGui::Text("Max Point      %03d", m_MaxPoint);
-	ImGui::SliderInt("Index", &m_CurrenPlayerIndex, 0, m_PlayerCount - 1);
 	ImGui::End();
 	if (label)
 	{
 		ImGui::Begin("Decision", 0, 1);
-		ImGui::Text("Last Training Percentage %3.2f", m_LastPerc);
+		ImGui::Text("Last Training Percentage %3.3f", m_LastPerc);
 		ImGui::Text("Labeled Data Size %3d", m_LabeledData.size());
-		ImGui::SliderInt("Label Index", &m_LabelIndex, 0, m_UnlabeledData.size() - 1);
+
+		ImGui::Text("L_Pass:    %03d", m_LabelCounts[0]);
+		ImGui::Text("L_Rotate: %03d", m_LabelCounts[1]);
+		ImGui::Text("L_Down:  %03d", m_LabelCounts[2]);
+		ImGui::Text("L_Left:      %03d", m_LabelCounts[3]);
+		ImGui::Text("L_Right:   %03d", m_LabelCounts[4]);
+
+		ImGui::SliderInt("Label Index", &m_LabelIndex, 0, (int)(m_UnlabeledData.size()) - 1);
 		ImGui::Text("");
 		const float ItemSpacing = ImGui::GetStyle().ItemSpacing.x;
 
@@ -79,7 +66,7 @@ void GameLayer::OnImGuiRender()
 		ImGui::SameLine(pos);
 		if (ImGui::Button("Pass"))
 		{
-			LabeTheData({ 1.0f, 0.0f, 0.0f, 0.0f, 0.0f });
+			LabelTheData({ 1.0f, 0.0f, 0.0f, 0.0f, 0.0f });
 		}
 		PassButtonWidth = ImGui::GetItemRectSize().x;
 
@@ -88,7 +75,7 @@ void GameLayer::OnImGuiRender()
 		ImGui::SameLine(pos);
 		if (ImGui::Button("Rotate"))
 		{
-			LabeTheData({ 0.0f, 1.0f, 0.0f, 0.0f, 0.0f });
+			LabelTheData({ 0.0f, 1.0f, 0.0f, 0.0f, 0.0f });
 		}
 		RotateButtonWidth = ImGui::GetItemRectSize().x;
 
@@ -97,7 +84,7 @@ void GameLayer::OnImGuiRender()
 		ImGui::SameLine(pos);
 		if (ImGui::Button("Down"))
 		{
-			LabeTheData({ 0.0f, 0.0f, 1.0f, 0.0f, 0.0f });
+			LabelTheData({ 0.0f, 0.0f, 1.0f, 0.0f, 0.0f });
 		}
 		DownButtonWidth = ImGui::GetItemRectSize().x;
 
@@ -106,7 +93,7 @@ void GameLayer::OnImGuiRender()
 		ImGui::SameLine(pos);
 		if (ImGui::Button("Left"))
 		{
-			LabeTheData({ 0.0f, 0.0f, 0.0f, 1.0f, 0.0f });
+			LabelTheData({ 0.0f, 0.0f, 0.0f, 1.0f, 0.0f });
 		}
 		LeftButtonWidth = ImGui::GetItemRectSize().x;
 
@@ -115,27 +102,70 @@ void GameLayer::OnImGuiRender()
 		ImGui::SameLine(pos);
 		if (ImGui::Button("Right"))
 		{
-			LabeTheData({ 0.0f, 0.0f, 0.0f, 0.0f, 1.0f });
+			LabelTheData({ 0.0f, 0.0f, 0.0f, 0.0f, 1.0f });
 		}
 		RightButtonWidth = ImGui::GetItemRectSize().x;
-
-		if (ImGui::Button("New Brain"))
+		ImGui::Checkbox("Custom Neural Network", &b_CustomNN);
+		if (b_CustomNN)
 		{
-			NewBrain();
+			static int layerC = 3;
+			static int layers[] = {
+				STATE_SIZE,
+				STATE_SIZE,
+				STATE_SIZE
+			};
+			static int lr = 2;
+
+			ImGui::SliderInt("Learning Rate", &lr, 1, 100);
+			ImGui::SliderInt("Layer Count", &layerC, 3, 5);
+			if (layerC == 3)
+			{
+				ImGui::InputInt("Layer", layers, 1, 10);
+			}
+			else if (layerC == 4)
+			{
+				ImGui::InputInt2("Layer", layers);
+			}
+			else
+			{
+				ImGui::InputInt3("Layer", layers);
+			}
+
+			if (ImGui::Button("New Brain"))
+			{
+				NewBrain(
+					lr / 100.0f,
+					layerC,
+					layerC == 3 ?
+					new int[3]{ STATE_SIZE, layers[0],5 } : layerC == 4 ?
+					new int[4]{ STATE_SIZE, layers[0], layers[1], 5 } :
+					new int[5]{ STATE_SIZE, layers[0], layers[1], layers[2], 5 },
+					false
+				);
+			}
+		}
+		else
+		{
+			if (ImGui::Button("New Brain"))
+			{
+				NewBrain(0.0f, 0, nullptr, true);
+			}
 		}
 		if (ImGui::Button("Next Generation"))
 		{
 			NextGeneration();
 		}
-		ImGui::InputInt("Testing Count", &m_TestingCount, 100, 1000);
 		if (ImGui::Button("Test"))
 		{
 			Test();
 		}
-		ImGui::InputInt("Training Count", &m_TrainingCount, 100, 1000);
-		if (ImGui::Button("Train"))
+		if (b_IsTraining)
+			ImGui::Text("Current Epoch : #%3d", m_CurrentEpoch);
+		ImGui::InputInt("Training Count", &m_Epoch, 10, 100);
+		if (ImGui::Button("Train") && m_LabeledData.size() > 0)
 		{
-			Train();
+			b_IsTraining = true;
+			ShuffleData();
 		}
 		ImGui::End();
 	}
@@ -145,15 +175,9 @@ void GameLayer::AddData(std::array<float, STATE_SIZE> data)
 {
 	if (m_LabeledData.find(data) != m_LabeledData.end())
 		return;
-	for (auto& element : m_UnlabeledData)
-	{
-		if (element.first == data)
-		{
-			element.second = element.second + 1;
-			return;
-		}
-	}
-	m_UnlabeledData.push_back(std::make_pair(data, 1));
+	auto it = std::find(m_UnlabeledData.begin(), m_UnlabeledData.end(), data);
+	if (it == m_UnlabeledData.end())
+		m_UnlabeledData.push_back(data);
 }
 
 void GameLayer::UpdateGame(float ts)
@@ -161,13 +185,12 @@ void GameLayer::UpdateGame(float ts)
 	if (m_PlayerLeft <= 0 && b_First)
 	{
 		b_First = false;
-		std::sort(m_UnlabeledData.begin(), m_UnlabeledData.end(), compFunctor);
 		label = true;
 	}
 	else
 	{
 		int* points = new int[m_PlayerCount];
-		for (unsigned int i = 0; i < m_PlayerCount; i++)
+		for (unsigned int i = 0; i < (unsigned int)m_PlayerCount; i++)
 		{
 			points[i] = m_Players[i]->GetPoint();
 		}
@@ -189,7 +212,7 @@ void GameLayer::UpdateGame(float ts)
 void GameLayer::DrawGame()
 {
 	int* points = new int[m_PlayerCount];
-	for (unsigned int i = 0; i < m_PlayerCount; i++)
+	for (unsigned int i = 0; i < (unsigned int)m_PlayerCount; i++)
 	{
 		points[i] = m_Players[i]->GetPoint();
 	}
@@ -208,8 +231,8 @@ void GameLayer::DrawGame()
 
 void GameLayer::DrawToLabel()
 {
-	std::array<float, STATE_SIZE> state = m_UnlabeledData[m_LabelIndex].first;
-	std::vector<std::vector<bool>> blockX = GetBlock(state[STATE_SIZE - 4] - 1);
+	std::array<float, STATE_SIZE> state = m_UnlabeledData[m_LabelIndex];
+	std::vector<std::vector<bool>> blockX = GetBlock(state[STATE_SIZE - 4]);
 	glm::vec2 offset = {
 			((m_GameWidth * 1.0f) / 2.0f) + 1,
 			m_GameHeight / -2.0f
@@ -240,12 +263,12 @@ void GameLayer::DrawToLabel()
 		}
 	}
 
-	std::vector<std::vector<bool>> block;
+
 	glm::vec2 pos = { m_GameWidth + 2, (m_GameHeight * 1.0f) / 4.0f - 1.0f };
-	block = GetBlock(state[index + 0] - 1);
-	for (int i = 0; i < block.size(); i++)
+	std::vector<std::vector<bool>> block1 = GetBlock(state[(size_t)(index)]);
+	for (int i = 0; i < block1.size(); i++)
 	{
-		for (int j = 0; j < block[0].size(); j++)
+		for (int j = 0; j < block1[0].size(); j++)
 		{
 			Can::Renderer2D::DrawQuad(
 				{
@@ -256,7 +279,7 @@ void GameLayer::DrawToLabel()
 				{ 0.05f, 0.05f, 0.05f, 1.0f }
 			);
 
-			if (block[i][j])
+			if (block1[i][j])
 				Can::Renderer2D::DrawQuad(
 					{
 						offset.x + j + pos.x,
@@ -278,10 +301,10 @@ void GameLayer::DrawToLabel()
 		}
 	}
 	pos = { m_GameWidth + 2, (m_GameHeight * 2.0f) / 4.0f - 1.0f };
-	block = GetBlock(state[index + 1] - 1);
-	for (int i = 0; i < block.size(); i++)
+	std::vector<std::vector<bool>> block2 = GetBlock(state[(size_t)(index + 1)]);
+	for (int i = 0; i < block2.size(); i++)
 	{
-		for (int j = 0; j < block[0].size(); j++)
+		for (int j = 0; j < block2[0].size(); j++)
 		{
 			Can::Renderer2D::DrawQuad(
 				{
@@ -292,7 +315,7 @@ void GameLayer::DrawToLabel()
 				{ 0.05f, 0.05f, 0.05f, 1.0f }
 			);
 
-			if (block[i][j])
+			if (block2[i][j])
 				Can::Renderer2D::DrawQuad(
 					{
 						offset.x + j + pos.x,
@@ -314,10 +337,10 @@ void GameLayer::DrawToLabel()
 		}
 	}
 	pos = { m_GameWidth + 2, (m_GameHeight * 3.0f) / 4.0f - 1.0f };
-	block = GetBlock(state[index + 2] - 1);
-	for (int i = 0; i < block.size(); i++)
+	std::vector<std::vector<bool>> block3 = GetBlock(state[(size_t)(index + 2)]);
+	for (int i = 0; i < block3.size(); i++)
 	{
-		for (int j = 0; j < block[0].size(); j++)
+		for (int j = 0; j < block3[0].size(); j++)
 		{
 			Can::Renderer2D::DrawQuad(
 				{
@@ -328,43 +351,7 @@ void GameLayer::DrawToLabel()
 				{ 0.05f, 0.05f, 0.05f, 1.0f }
 			);
 
-			if (block[i][j])
-				Can::Renderer2D::DrawQuad(
-					{
-						offset.x + j + pos.x,
-						offset.y - i + pos.y,
-						0.011f
-					},
-					{ 0.9f, 0.9f },
-					{ 0.3f, 0.2f, 0.8f, 1.0f }
-			);
-			else
-				Can::Renderer2D::DrawQuad(
-					{
-						offset.x + j + pos.x,
-						offset.y - i + pos.y,
-						0.011f },
-					{ 0.9f, 0.9f },
-					{ 0.9f, 0.9f, 0.9f, 1.0f }
-			);
-		}
-	}
-	pos = { m_GameWidth + 2, (m_GameHeight * 4.0f) / 4.0f - 1.0f };
-	block = GetBlock(state[index + 3] - 1);
-	for (int i = 0; i < block.size(); i++)
-	{
-		for (int j = 0; j < block[0].size(); j++)
-		{
-			Can::Renderer2D::DrawQuad(
-				{
-					offset.x + j + pos.x,
-					offset.y - i + pos.y
-				},
-				{ 1.0f, 1.0f },
-				{ 0.05f, 0.05f, 0.05f, 1.0f }
-			);
-
-			if (block[i][j])
+			if (block3[i][j])
 				Can::Renderer2D::DrawQuad(
 					{
 						offset.x + j + pos.x,
@@ -394,41 +381,41 @@ void GameLayer::DrawToLabel()
 		{
 			if (blockX[i][j])
 			{
-				if (state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 3] - 1 == 0)
+				if (state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 3] == 0)
 					Can::Renderer2D::DrawQuad(
 						{
-							offset.x + j + state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 1] - 1,
-							offset.y - i + state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 2] - 1,
+							offset.x + j + state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 1],
+							offset.y - i + state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 2],
 							0.011f
 						},
 						{ 0.9f, 0.9f },
 						{ 0.3f, 0.2f, 0.8f, 1.0f }
 				);
-				else if (state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 3] - 1 == 1)
+				else if (state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 3] == 1)
 					Can::Renderer2D::DrawQuad(
 						{
-							offset.x + i + state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 1] - 1,
-							offset.y + j + state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 2] - 1 - blockXw + 1,
+							offset.x - i + state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 1] + blockXh - 1,
+							offset.y - j + state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 2],
 							0.011f
 						},
 						{ 0.9f, 0.9f },
 						{ 0.3f, 0.2f, 0.8f, 1.0f }
 				);
-				else if (state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 3] - 1 == 2)
+				else if (state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 3] == 2)
 					Can::Renderer2D::DrawQuad(
 						{
-							offset.x - j + state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 1] - 1 + blockXw - 1,
-							offset.y + i + state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 2] - 1 - blockXh + 1,
+							offset.x - j + state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 1] + blockXw - 1,
+							offset.y + i + state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 2] - blockXh + 1,
 							0.011f
 						},
 						{ 0.9f, 0.9f },
 						{ 0.3f, 0.2f, 0.8f, 1.0f }
 				);
-				else if (state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 3] - 1 == 3)
+				else if (state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 3] == 3)
 					Can::Renderer2D::DrawQuad(
 						{
-							offset.x - i + state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 1] - 1 + blockXh - 1,
-							offset.y - j + state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 2] - 1,
+							offset.x + i + state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 1],
+							offset.y + j + state[(size_t)index + (size_t)BLOCK_QUEUE_SIZE + 2] - blockXw + 1,
 							0.011f
 						},
 						{ 0.9f, 0.9f },
@@ -437,17 +424,31 @@ void GameLayer::DrawToLabel()
 			}
 		}
 	}
-
 }
 
-void GameLayer::LabeTheData(std::array<float, 5> label)
+void GameLayer::LabelTheData(std::array<float, 5> label)
 {
-	std::array<float, STATE_SIZE> data = m_UnlabeledData[m_LabelIndex].first;
+	if (m_UnlabeledData.size() < 3)
+		return;
+
+	if (label[0] == 1)
+		m_LabelCounts[0]++;
+	else if (label[1] == 1)
+		m_LabelCounts[1]++;
+	else if (label[2] == 1)
+		m_LabelCounts[2]++;
+	else if (label[3] == 1)
+		m_LabelCounts[3]++;
+	else
+		m_LabelCounts[4]++;
+
+	std::array<float, STATE_SIZE> data = m_UnlabeledData[m_LabelIndex];
 	m_UnlabeledData.erase(m_UnlabeledData.begin() + m_LabelIndex);
-	m_LabelIndex = 0;
+
+	if (m_LabelIndex >= m_UnlabeledData.size() - 1)
+		m_LabelIndex--;
 
 	m_LabeledData.insert(std::pair<std::array<float, STATE_SIZE>, std::array<float, 5>>(data, label));
-
 }
 
 void GameLayer::NextGeneration()
@@ -478,21 +479,14 @@ void GameLayer::NextGeneration()
 void GameLayer::Test()
 {
 	float correct = 0;
-	float all = 0;
-
-	if (m_LabeledData.size() <= 0)
+	int labelCount = m_LabeledData.size();
+	if (labelCount <= 0)
 		return;
-	for (int i = 0; i < m_TestingCount; i++)
+	auto it = m_LabeledData.begin();
+	for (int i = 0; i < labelCount; i++)
 	{
-		int rnd = Can::Utility::Random::Integer(0, m_LabeledData.size());
-		auto it = m_LabeledData.begin();
-		std::advance(it, rnd);
+		float* state = GetRandomState(it);
 
-		float* state = new float[STATE_SIZE];
-		for (size_t i = 0; i < STATE_SIZE; i++)
-		{
-			state[i] = it->first[i];
-		}
 		Matrix* input = new Matrix(STATE_SIZE, 1, state);
 		Matrix* result = m_Brain->FeedForward(input);
 
@@ -508,26 +502,24 @@ void GameLayer::Test()
 
 		if (it->second[dist] == 1)
 			correct++;
-		all++;
+
 		delete result;
+		delete state;
+
+		std::advance(it, 1);
 	}
-	m_LastPerc = (correct * 100.0f) / all;
+	m_LastPerc = (correct * 100.0f) / labelCount;
 }
 
 void GameLayer::Train()
 {
-	if (m_LabeledData.size() <= 0)
-		return;
-	for (int i = 0; i < m_TrainingCount; i++)
+	int labelCount = m_LabeledData.size();
+	auto it = m_TrainingDataIndexVector.at(m_CurrentEpoch * labelCount);
+
+	for (int i = 0; i < labelCount; i++)
 	{
-		int rnd = Can::Utility::Random::Integer(0, m_LabeledData.size());
-		auto it = m_LabeledData.begin();
-		std::advance(it, rnd);
-		float in[STATE_SIZE] = {};
-		for (size_t i = 0; i < STATE_SIZE; i++)
-		{
-			in[i] = it->first[i];
-		}
+		float* in = GetRandomState(it);
+
 		float ta[5] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 		for (size_t i = 0; i < 5; i++)
 		{
@@ -538,12 +530,62 @@ void GameLayer::Train()
 		Matrix* target = new Matrix(5, 1, ta);
 
 		m_Brain->Train(input, target);
+
+		delete in;
+		std::advance(it, 1);
+	}
+	m_CurrentEpoch++;
+	if (m_Epoch <= m_CurrentEpoch)
+	{
+		b_IsTraining = false;
+		m_CurrentEpoch = 0;
 	}
 }
 
-void GameLayer::NewBrain()
+void GameLayer::NewBrain(float learningRate, int layerCount, int* nodes, bool default)
 {
-	if (m_Brain != nullptr)
-		delete m_Brain;
-	m_Brain = new NeuralNetwork(new int[3]{ STATE_SIZE, STATE_SIZE / 2, 5 }, 3, 0.02f);
+	if (default)
+		m_Brain = new NeuralNetwork(new int[3]{ STATE_SIZE, STATE_SIZE, 5 }, 3, 0.02f);
+	else
+		m_Brain = new NeuralNetwork(nodes, layerCount, learningRate);
+
+}
+
+void GameLayer::ShuffleData()
+{
+	m_TrainingDataIndexVector.clear();
+	auto& it = m_LabeledData.begin();
+	int size = m_LabeledData.size();
+
+	for (int j = 0; j < size; j++)
+	{
+		for (int i = 0; i < m_Epoch; i++)
+		{
+			m_TrainingDataIndexVector.push_back(it);
+		}
+		std::advance(it, 1);
+	}
+	std::random_device rd;
+	std::mt19937 g(rd());
+
+	std::shuffle(m_TrainingDataIndexVector.begin(), m_TrainingDataIndexVector.end(), g);
+}
+
+float* GameLayer::GetRandomState(std::map<std::array<float, STATE_SIZE>, std::array<float, 5>>::iterator it)
+{
+	float* state = new float[STATE_SIZE];
+	for (size_t i = 0; i < GAME_SIZE; i++)
+	{
+		state[i] = it->first[i];
+	}
+	for (size_t i = 0; i < BLOCK_QUEUE_SIZE; i++)
+	{
+		state[GAME_SIZE + i] = (it->first[GAME_SIZE + i] + 1.0f) / 4.0f;
+	}
+	state[GAME_SIZE + BLOCK_QUEUE_SIZE + 0] = (it->first[GAME_SIZE + BLOCK_QUEUE_SIZE + 0] + 1.0f) / (8.0f);
+	state[GAME_SIZE + BLOCK_QUEUE_SIZE + 1] = (it->first[GAME_SIZE + BLOCK_QUEUE_SIZE + 1] + 1.0f) / (m_GameWidth + 1.0f);
+	state[GAME_SIZE + BLOCK_QUEUE_SIZE + 2] = (it->first[GAME_SIZE + BLOCK_QUEUE_SIZE + 2] + 1.0f) / (m_GameHeight + 1.0f);
+	state[GAME_SIZE + BLOCK_QUEUE_SIZE + 3] = (it->first[GAME_SIZE + BLOCK_QUEUE_SIZE + 3] + 1.0f) / (4.0f);
+
+	return state;
 }

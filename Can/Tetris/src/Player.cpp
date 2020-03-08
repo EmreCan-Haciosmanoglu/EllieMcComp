@@ -213,42 +213,6 @@ void Player::Draw(const glm::vec2 & offset)
 				);
 			}
 		}
-		pos = { m_Width + 2, (m_Height * 4.0f) / 4.0f - 1.0f };
-		block = m_Parent->GetBlock(m_BlockQueue[(3 + m_BlockIndex) % BLOCK_QUEUE_SIZE]);
-		for (int i = 0; i < block.size(); i++)
-		{
-			for (int j = 0; j < block[0].size(); j++)
-			{
-				Can::Renderer2D::DrawQuad(
-					{
-						offset.x + j + pos.x,
-						offset.y - i + pos.y
-					},
-					{ 1.0f, 1.0f },
-					{ 0.05f, 0.05f, 0.05f, 1.0f }
-				);
-
-				if (block[i][j])
-					Can::Renderer2D::DrawQuad(
-						{
-							offset.x + j + pos.x,
-							offset.y - i + pos.y,
-							0.011f
-						},
-						{ 0.9f, 0.9f },
-						{ 0.3f, 0.2f, 0.8f, 1.0f }
-				);
-				else
-					Can::Renderer2D::DrawQuad(
-						{
-							offset.x + j + pos.x,
-							offset.y - i + pos.y,
-							0.011f },
-						{ 0.9f, 0.9f },
-						{ 0.9f, 0.9f, 0.9f, 1.0f }
-				);
-			}
-		}
 	}
 }
 
@@ -328,15 +292,15 @@ int Player::Think()
 	}
 	for (int i = 0; i < BLOCK_QUEUE_SIZE; i++)
 	{
-		state[index + i] = m_BlockQueue[(i + m_BlockIndex) % BLOCK_QUEUE_SIZE] + 1;
+		state[index + i] = (m_BlockQueue[(i + m_BlockIndex) % BLOCK_QUEUE_SIZE] + 1.0f) / (4.0f);
 	}
-	state[index + BLOCK_QUEUE_SIZE + 0] = m_CurrentBlockIndex + 1;
-	state[index + BLOCK_QUEUE_SIZE + 1] = m_CurrentX + 1;
-	state[index + BLOCK_QUEUE_SIZE + 2] = m_CurrentY + 1;
-	state[index + BLOCK_QUEUE_SIZE + 3] = m_CurrentBlockRotation + 1;
+	state[index + BLOCK_QUEUE_SIZE + 0] = (m_CurrentBlockIndex + 1.0f) / (8.0f);
+	state[index + BLOCK_QUEUE_SIZE + 1] = (m_CurrentX + 1.0f) / (m_Width + 1.0f);
+	state[index + BLOCK_QUEUE_SIZE + 2] = (m_CurrentY + 1.0f) / (m_Height + 1.0f);
+	state[index + BLOCK_QUEUE_SIZE + 3] = (m_CurrentBlockRotation + 1.0f) / (4.0f);
 
-	Matrix* input = new Matrix(STATE_SIZE, 1, state);
-	Matrix* result = m_Brain->FeedForward(input);
+	Matrix * input = new Matrix(STATE_SIZE, 1, state);
+	Matrix * result = m_Brain->FeedForward(input);
 
 	float A[5] = {
 		result->data[0],	// Don't Do anything
@@ -474,11 +438,11 @@ std::array<float, STATE_SIZE> Player::GetState()
 	}
 	for (int i = 0; i < BLOCK_QUEUE_SIZE; i++)
 	{
-		result[index + i] = m_BlockQueue[(i + m_BlockIndex) % BLOCK_QUEUE_SIZE] + 1;
+		result[index + i] = m_BlockQueue[(i + m_BlockIndex) % BLOCK_QUEUE_SIZE];
 	}
-	result[index + BLOCK_QUEUE_SIZE + 0] = m_CurrentBlockIndex + 1;
-	result[index + BLOCK_QUEUE_SIZE + 1] = m_CurrentX + 1;
-	result[index + BLOCK_QUEUE_SIZE + 2] = m_CurrentY + 1;
-	result[index + BLOCK_QUEUE_SIZE + 3] = m_CurrentBlockRotation + 1;
+	result[index + BLOCK_QUEUE_SIZE + 0] = m_CurrentBlockIndex;
+	result[index + BLOCK_QUEUE_SIZE + 1] = m_CurrentX;
+	result[index + BLOCK_QUEUE_SIZE + 2] = m_CurrentY;
+	result[index + BLOCK_QUEUE_SIZE + 3] = m_CurrentBlockRotation;
 	return result;
 }

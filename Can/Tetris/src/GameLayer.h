@@ -5,8 +5,6 @@
 #include "../temps/NeuralNetwork.h"
 #include "Player.h"
 
-typedef std::function<bool(std::pair<std::array<float, STATE_SIZE>, int>, std::pair<std::array<float, STATE_SIZE>, int>)> Comparator;
-
 class GameLayer : public Can::Layer::Layer
 {
 public:
@@ -28,30 +26,33 @@ private:
 	void UpdateGame(float ts);
 	void DrawGame();
 	void DrawToLabel();
-	void LabeTheData(std::array<float, 5> label);
+	void LabelTheData(std::array<float, 5> label);
 	void NextGeneration();
 	void Test();
 	void Train();
-	void NewBrain();
+	void NewBrain(float learningRate, int layerCount, int* nodes, bool default);
+	void ShuffleData();
+	float* GetRandomState(std::map<std::array<float, STATE_SIZE>, std::array<float, 5>>::iterator it);
 
 public:
 	float m_LastPerc = 0.0f;
-	int m_TestingCount = 100;
-	int m_TrainingCount = 100;
-	Comparator compFunctor =
-		[](std::pair<std::array<float, STATE_SIZE>, int> elem1, std::pair<std::array<float, STATE_SIZE>, int> elem2)
-	{
-		return elem1.second > elem2.second;
-	};
+	int m_Epoch = 100;
+	int m_CurrentEpoch = 0;
+	bool b_IsTraining = false;
 
 	int m_LabelIndex = 0;
 	int m_GameWidth = 10;
 	int m_GameHeight = 20;
-	std::map<std::array<float, STATE_SIZE>,std::array<float,5>> m_LabeledData;
-	std::vector<std::pair<std::array<float, STATE_SIZE>, int>> m_UnlabeledData;
+
+	bool b_CustomNN = false;
+
+	std::vector<std::map<std::array<float, STATE_SIZE>, std::array<float, 5>>::iterator> m_TrainingDataIndexVector;
+	std::map<std::array<float, STATE_SIZE>, std::array<float, 5>> m_LabeledData;
+	std::vector<std::array<float, STATE_SIZE>> m_UnlabeledData;
 	NeuralNetwork* m_Brain;
 
 private:
+	int m_LabelCounts[5] = { 0, 0, 0, 0, 0 };
 	bool b_First = true;
 	int m_CurrenPlayerIndex = 0;
 	bool label = false;
@@ -86,13 +87,13 @@ private:
 		{ 1, 0 }
 	} };
 
+
 	int m_PlayerCount;
 	int m_PlayerLeft;
 
 	int m_MaxPoint = 0;
 	int m_CurrentMaxPoint = 0;
 	int m_Generation = 0;
-
 
 
 	Player** m_Players;
