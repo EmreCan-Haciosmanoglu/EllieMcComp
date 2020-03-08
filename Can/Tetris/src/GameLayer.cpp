@@ -514,16 +514,17 @@ void GameLayer::Test()
 void GameLayer::Train()
 {
 	int labelCount = m_LabeledData.size();
-	auto it = m_TrainingDataIndexVector.at(m_CurrentEpoch * labelCount);
+	auto _it = m_TrainingDataIndexVector.begin();
+	std::advance(_it, m_CurrentEpoch * labelCount);
 
 	for (int i = 0; i < labelCount; i++)
 	{
-		float* in = GetRandomState(it);
+		float* in = GetRandomState(_it[0]);
 
 		float ta[5] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 		for (size_t i = 0; i < 5; i++)
 		{
-			ta[i] = it->second[i];
+			ta[i] = _it[0]->second[i];
 		}
 
 		Matrix* input = new Matrix(STATE_SIZE, 1, in);
@@ -532,7 +533,7 @@ void GameLayer::Train()
 		m_Brain->Train(input, target);
 
 		delete in;
-		std::advance(it, 1);
+		std::advance(_it, 1);
 	}
 	m_CurrentEpoch++;
 	if (m_Epoch <= m_CurrentEpoch)
