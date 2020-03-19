@@ -32,6 +32,8 @@ private:
 	void Train();
 	void NewBrain(float learningRate, int layerCount, int* nodes, bool default);
 	void ShuffleData();
+	void DataFromFile();
+	void DataToFile();
 	float* GetRandomState(std::map<std::array<float, STATE_SIZE>, std::array<float, 5>>::iterator it);
 
 public:

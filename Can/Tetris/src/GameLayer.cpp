@@ -15,6 +15,7 @@ GameLayer::GameLayer()
 {
 	for (int i = 0; i < m_PlayerCount; i++)
 		m_Players[i] = new Player(m_GameWidth, m_GameHeight, m_Brain, this);
+	DataFromFile();
 }
 
 void GameLayer::OnUpdate(Can::TimeStep ts)
@@ -155,6 +156,10 @@ void GameLayer::OnImGuiRender()
 		{
 			NextGeneration();
 		}
+		if (ImGui::Button("Data To File"))
+		{
+			DataToFile();
+		}
 		if (ImGui::Button("Test"))
 		{
 			Test();
@@ -165,7 +170,6 @@ void GameLayer::OnImGuiRender()
 		if (ImGui::Button("Train") && m_LabeledData.size() > 0)
 		{
 			b_IsTraining = true;
-			ShuffleData();
 		}
 		ImGui::End();
 	}
@@ -513,9 +517,10 @@ void GameLayer::Test()
 
 void GameLayer::Train()
 {
+	ShuffleData();
+
 	int labelCount = m_LabeledData.size();
 	auto _it = m_TrainingDataIndexVector.begin();
-	std::advance(_it, m_CurrentEpoch * labelCount);
 
 	for (int i = 0; i < labelCount; i++)
 	{
@@ -560,16 +565,79 @@ void GameLayer::ShuffleData()
 
 	for (int j = 0; j < size; j++)
 	{
-		for (int i = 0; i < m_Epoch; i++)
-		{
-			m_TrainingDataIndexVector.push_back(it);
-		}
+		m_TrainingDataIndexVector.push_back(it);
 		std::advance(it, 1);
 	}
 	std::random_device rd;
 	std::mt19937 g(rd());
 
 	std::shuffle(m_TrainingDataIndexVector.begin(), m_TrainingDataIndexVector.end(), g);
+}
+
+void GameLayer::DataFromFile()
+{
+	std::string line;
+	std::ifstream dataFile("LabeledData.txt");
+	if (dataFile.is_open())
+	{
+		while (std::getline(dataFile, line))
+		{
+			std::string delimiter = " "; 
+			size_t pos = 0;
+			std::string token;
+
+			std::array<float, STATE_SIZE> data;
+
+			for (int i = 0; i < STATE_SIZE; i++)
+			{
+				pos = line.find(delimiter);
+				token = line.substr(0, pos);
+				data[i] = std::strtof((token).c_str(), 0);
+
+				line.erase(0, pos + delimiter.length());
+			}
+			std::getline(dataFile, line);
+			std::array<float, 5> label;
+
+			for (int i = 0; i < 5; i++)
+			{
+				pos = line.find(delimiter);
+				token = line.substr(0, pos);
+				label[i] = std::strtof((token).c_str(), 0);
+
+				line.erase(0, pos + delimiter.length());
+			}
+			m_LabeledData.insert(std::pair<std::array<float, STATE_SIZE>, std::array<float, 5>>(data, label));
+		}
+		dataFile.close();
+	}
+}
+
+void GameLayer::DataToFile()
+{
+	std::ofstream dataFile("LabeledData.txt", std::ios::trunc | std::ios::out);
+	int size = m_LabeledData.size();
+	auto it = m_LabeledData.begin();
+
+	for (int i = 0; i < size; i++)
+	{
+		std::array<float, STATE_SIZE> data = it->first;
+
+		for (int j = 0; j < STATE_SIZE; j++)
+		{
+			dataFile << data[j] << " ";
+		}
+		dataFile << std::endl;
+
+		std::array<float, 5> label = it->second;
+		for (int j = 0; j < 5; j++)
+		{
+			dataFile << label[j] << " ";
+		}
+		dataFile << std::endl;
+		it++;
+	}
+	dataFile.close();
 }
 
 float* GameLayer::GetRandomState(std::map<std::array<float, STATE_SIZE>, std::array<float, 5>>::iterator it)
