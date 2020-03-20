@@ -604,7 +604,8 @@ void GameLayer::DataFromFile()
 				pos = line.find(delimiter);
 				token = line.substr(0, pos);
 				label[i] = std::strtof((token).c_str(), 0);
-
+				if (label[i] == 1.0f)
+					m_LabelCounts[i]++;
 				line.erase(0, pos + delimiter.length());
 			}
 			m_LabeledData.insert(std::pair<std::array<float, STATE_SIZE>, std::array<float, 5>>(data, label));
