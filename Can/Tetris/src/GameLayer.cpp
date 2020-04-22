@@ -34,7 +34,7 @@ void GameLayer::OnUpdate(Can::TimeStep ts)
 	Can::Renderer2D::EndScene();
 }
 
-void GameLayer::OnEvent(Can::Event::Event & event)
+void GameLayer::OnEvent(Can::Event::Event& event)
 {
 	m_CameraController.OnEvent(event);
 }
@@ -51,6 +51,7 @@ void GameLayer::OnImGuiRender()
 		ImGui::Begin("Decision", 0, 1);
 		ImGui::Text("Last Training Percentage %3.3f", m_LastPerc);
 		ImGui::Text("Labeled Data Size %3d", m_LabeledData.size());
+		ImGui::Text("Unlearned Data Size %3d", m_UnlearnedData.size());
 
 		ImGui::Text("L_Pass:    %03d", m_LabelCounts[0]);
 		ImGui::Text("L_Rotate: %03d", m_LabelCounts[1]);
@@ -58,7 +59,10 @@ void GameLayer::OnImGuiRender()
 		ImGui::Text("L_Left:      %03d", m_LabelCounts[3]);
 		ImGui::Text("L_Right:   %03d", m_LabelCounts[4]);
 
-		ImGui::SliderInt("Label Index", &m_LabelIndex, 0, (int)(m_UnlabeledData.size()) - 1);
+		if (b_Modify)
+			ImGui::SliderInt("Unlearned Data Index", &m_UnlearnedDataIndex, 0, (int)(m_UnlearnedData.size()) - 1);
+		else
+			ImGui::SliderInt("Label Index", &m_LabelIndex, 0, (int)(m_UnlabeledData.size()) - 1);
 		ImGui::Text("");
 		const float ItemSpacing = ImGui::GetStyle().ItemSpacing.x;
 
@@ -67,7 +71,10 @@ void GameLayer::OnImGuiRender()
 		ImGui::SameLine(pos);
 		if (ImGui::Button("Pass"))
 		{
-			LabelTheData({ 1.0f, 0.0f, 0.0f, 0.0f, 0.0f });
+			if (b_Modify)
+				ModifyTheData({ 1.0f, 0.0f, 0.0f, 0.0f, 0.0f });
+			else
+				LabelTheData({ 1.0f, 0.0f, 0.0f, 0.0f, 0.0f });
 		}
 		PassButtonWidth = ImGui::GetItemRectSize().x;
 
@@ -76,7 +83,10 @@ void GameLayer::OnImGuiRender()
 		ImGui::SameLine(pos);
 		if (ImGui::Button("Rotate"))
 		{
-			LabelTheData({ 0.0f, 1.0f, 0.0f, 0.0f, 0.0f });
+			if (b_Modify)
+				ModifyTheData({ 0.0f, 1.0f, 0.0f, 0.0f, 0.0f });
+			else
+				LabelTheData({ 0.0f, 1.0f, 0.0f, 0.0f, 0.0f });
 		}
 		RotateButtonWidth = ImGui::GetItemRectSize().x;
 
@@ -85,7 +95,10 @@ void GameLayer::OnImGuiRender()
 		ImGui::SameLine(pos);
 		if (ImGui::Button("Down"))
 		{
-			LabelTheData({ 0.0f, 0.0f, 1.0f, 0.0f, 0.0f });
+			if (b_Modify)
+				ModifyTheData({ 0.0f, 0.0f, 1.0f, 0.0f, 0.0f });
+			else
+				LabelTheData({ 0.0f, 0.0f, 1.0f, 0.0f, 0.0f });
 		}
 		DownButtonWidth = ImGui::GetItemRectSize().x;
 
@@ -94,7 +107,10 @@ void GameLayer::OnImGuiRender()
 		ImGui::SameLine(pos);
 		if (ImGui::Button("Left"))
 		{
-			LabelTheData({ 0.0f, 0.0f, 0.0f, 1.0f, 0.0f });
+			if (b_Modify)
+				ModifyTheData({ 0.0f, 0.0f, 0.0f, 1.0f, 0.0f });
+			else
+				LabelTheData({ 0.0f, 0.0f, 0.0f, 1.0f, 0.0f });
 		}
 		LeftButtonWidth = ImGui::GetItemRectSize().x;
 
@@ -103,9 +119,28 @@ void GameLayer::OnImGuiRender()
 		ImGui::SameLine(pos);
 		if (ImGui::Button("Right"))
 		{
-			LabelTheData({ 0.0f, 0.0f, 0.0f, 0.0f, 1.0f });
+			if (b_Modify)
+				ModifyTheData({ 0.0f, 0.0f, 0.0f, 0.0f, 1.0f });
+			else
+				LabelTheData({ 0.0f, 0.0f, 0.0f, 0.0f, 1.0f });
 		}
 		RightButtonWidth = ImGui::GetItemRectSize().x;
+		ImGui::Checkbox("Modify Data", &b_Modify);
+		if (b_Modify)
+		{
+			std::array<float, 5> label = m_LabeledData[m_UnlearnedData[m_UnlearnedDataIndex]];
+
+			if (label[0] == 1)
+				ImGui::Text("Current Data Label : Pass");
+			else if (label[1] == 1)
+				ImGui::Text("Current Data Label : Rotate");
+			else if (label[2] == 1)
+				ImGui::Text("Current Data Label : Down");
+			else if (label[3] == 1)
+				ImGui::Text("Current Data Label : Left");
+			else
+				ImGui::Text("Current Data Label : Right");
+		}
 		ImGui::Checkbox("Custom Neural Network", &b_CustomNN);
 		if (b_CustomNN)
 		{
@@ -160,12 +195,27 @@ void GameLayer::OnImGuiRender()
 		{
 			DataToFile();
 		}
+		if (ImGui::Button("Data To File 2"))
+		{
+			DataToFile2();
+		}
+		if (ImGui::Button("Data From File"))
+		{
+			DataFromFile();
+		}
+		if (ImGui::Button("Data From File 2"))
+		{
+			DataFromFile2();
+		}
 		if (ImGui::Button("Test"))
 		{
+			m_UnlearnedDataIndex = 0;
 			Test();
 		}
 		if (b_IsTraining)
+		{
 			ImGui::Text("Current Epoch : #%3d", m_CurrentEpoch);
+		}
 		ImGui::InputInt("Training Count", &m_Epoch, 10, 100);
 		if (ImGui::Button("Train") && m_LabeledData.size() > 0)
 		{
@@ -235,7 +285,7 @@ void GameLayer::DrawGame()
 
 void GameLayer::DrawToLabel()
 {
-	std::array<float, STATE_SIZE> state = m_UnlabeledData[m_LabelIndex];
+	std::array<float, STATE_SIZE> state = b_Modify ? m_UnlearnedData[m_UnlearnedDataIndex] : m_UnlabeledData[m_LabelIndex];
 	std::vector<std::vector<bool>> blockX = GetBlock(state[STATE_SIZE - 4]);
 	glm::vec2 offset = {
 			((m_GameWidth * 1.0f) / 2.0f) + 1,
@@ -430,6 +480,35 @@ void GameLayer::DrawToLabel()
 	}
 }
 
+void GameLayer::ModifyTheData(std::array<float, 5> label)
+{
+	std::array<float, 5> oldLabel = m_LabeledData[m_UnlearnedData[m_UnlearnedDataIndex]];
+
+	if (oldLabel[0] == 1)
+		m_LabelCounts[0]--;
+	else if (oldLabel[1] == 1)
+		m_LabelCounts[1]--;
+	else if (oldLabel[2] == 1)
+		m_LabelCounts[2]--;
+	else if (oldLabel[3] == 1)
+		m_LabelCounts[3]--;
+	else
+		m_LabelCounts[4]--;
+
+	if (label[0] == 1)
+		m_LabelCounts[0]++;
+	else if (label[1] == 1)
+		m_LabelCounts[1]++;
+	else if (label[2] == 1)
+		m_LabelCounts[2]++;
+	else if (label[3] == 1)
+		m_LabelCounts[3]++;
+	else
+		m_LabelCounts[4]++;
+
+	m_LabeledData[m_UnlearnedData[m_UnlearnedDataIndex]] = label;
+}
+
 void GameLayer::LabelTheData(std::array<float, 5> label)
 {
 	if (m_UnlabeledData.size() < 3)
@@ -484,6 +563,7 @@ void GameLayer::Test()
 {
 	float correct = 0;
 	int labelCount = m_LabeledData.size();
+	m_UnlearnedData.clear();
 	if (labelCount <= 0)
 		return;
 	auto it = m_LabeledData.begin();
@@ -506,6 +586,8 @@ void GameLayer::Test()
 
 		if (it->second[dist] == 1)
 			correct++;
+		else
+			m_UnlearnedData.push_back(it->first);
 
 		delete result;
 		delete state;
@@ -582,7 +664,7 @@ void GameLayer::DataFromFile()
 	{
 		while (std::getline(dataFile, line))
 		{
-			std::string delimiter = " "; 
+			std::string delimiter = " ";
 			size_t pos = 0;
 			std::string token;
 
@@ -591,6 +673,55 @@ void GameLayer::DataFromFile()
 			for (int i = 0; i < STATE_SIZE; i++)
 			{
 				pos = line.find(delimiter);
+				token = line.substr(0, pos);
+				data[i] = std::strtof((token).c_str(), 0);
+
+				line.erase(0, pos + delimiter.length());
+			}
+			std::getline(dataFile, line);
+			std::array<float, 5> label;
+
+			for (int i = 0; i < 5; i++)
+			{
+				pos = line.find(delimiter);
+				token = line.substr(0, pos);
+				label[i] = std::strtof((token).c_str(), 0);
+				if (label[i] == 1.0f)
+					m_LabelCounts[i]++;
+				line.erase(0, pos + delimiter.length());
+			}
+			m_LabeledData.insert(std::pair<std::array<float, STATE_SIZE>, std::array<float, 5>>(data, label));
+		}
+		dataFile.close();
+	}
+}
+
+void GameLayer::DataFromFile2()
+{
+	std::string line;
+	std::ifstream dataFile("LabeledData2.txt");
+	if (dataFile.is_open())
+	{
+		while (std::getline(dataFile, line))
+		{
+			std::string delimiter = "";
+			std::string delimiter2 = " ";
+			size_t pos = 0;
+			std::string token;
+
+			std::array<float, STATE_SIZE> data;
+
+			for (int i = 0; i < GAME_SIZE; i++)
+			{
+				pos = line.find(delimiter);
+				token = line.substr(0, pos);
+				data[i] = std::strtof((token).c_str(), 0);
+
+				line.erase(0, pos + delimiter.length());
+			}
+			for (int i = GAME_SIZE; i < STATE_SIZE; i++)
+			{
+				pos = line.find(delimiter2);
 				token = line.substr(0, pos);
 				data[i] = std::strtof((token).c_str(), 0);
 
@@ -634,6 +765,37 @@ void GameLayer::DataToFile()
 		for (int j = 0; j < 5; j++)
 		{
 			dataFile << label[j] << " ";
+		}
+		dataFile << std::endl;
+		it++;
+	}
+	dataFile.close();
+}
+
+void GameLayer::DataToFile2()
+{
+	std::ofstream dataFile("LabeledData1.txt", std::ios::trunc | std::ios::out);
+	int size = m_LabeledData.size();
+	auto it = m_LabeledData.begin();
+
+	for (int i = 0; i < size; i++)
+	{
+		std::array<float, STATE_SIZE> data = it->first;
+
+		for (int j = 0; j < GAME_SIZE; j++)
+		{
+			dataFile << data[j];
+		}
+		for (int j = GAME_SIZE; j < STATE_SIZE; j++)
+		{
+			dataFile << " " << data[j];
+		}
+		dataFile << std::endl;
+
+		std::array<float, 5> label = it->second;
+		for (int j = 0; j < 5; j++)
+		{
+			dataFile << label[j];
 		}
 		dataFile << std::endl;
 		it++;

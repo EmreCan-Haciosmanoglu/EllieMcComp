@@ -26,6 +26,7 @@ private:
 	void UpdateGame(float ts);
 	void DrawGame();
 	void DrawToLabel();
+	void ModifyTheData(std::array<float, 5> label);
 	void LabelTheData(std::array<float, 5> label);
 	void NextGeneration();
 	void Test();
@@ -33,7 +34,9 @@ private:
 	void NewBrain(float learningRate, int layerCount, int* nodes, bool default);
 	void ShuffleData();
 	void DataFromFile();
+	void DataFromFile2();
 	void DataToFile();
+	void DataToFile2();
 	float* GetRandomState(std::map<std::array<float, STATE_SIZE>, std::array<float, 5>>::iterator it);
 
 public:
@@ -43,14 +46,17 @@ public:
 	bool b_IsTraining = false;
 
 	int m_LabelIndex = 0;
+	int m_UnlearnedDataIndex = 0;
 	int m_GameWidth = 10;
 	int m_GameHeight = 20;
 
 	bool b_CustomNN = false;
+	bool b_Modify = false;
 
 	std::vector<std::map<std::array<float, STATE_SIZE>, std::array<float, 5>>::iterator> m_TrainingDataIndexVector;
 	std::map<std::array<float, STATE_SIZE>, std::array<float, 5>> m_LabeledData;
 	std::vector<std::array<float, STATE_SIZE>> m_UnlabeledData;
+	std::vector<std::array<float, STATE_SIZE>> m_UnlearnedData;
 	NeuralNetwork* m_Brain;
 
 private:
