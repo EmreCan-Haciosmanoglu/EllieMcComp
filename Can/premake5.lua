@@ -396,3 +396,5 @@ project "Tetris"
         defines "CAN_DIST"
         runtime "Release"
         optimize "on"
+
+include "../../"

@@ -1,3 +1,4 @@
+#include "..\..\..\..\..\Game\src\GameApp.h"
 #include "canpch.h"
 #include "Game.h"
 

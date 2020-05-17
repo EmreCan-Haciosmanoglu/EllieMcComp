@@ -59,6 +59,8 @@ namespace Can::Camera::Controller
 
 		PerspectiveCamera& GetCamera() { return m_Camera; }
 		const PerspectiveCamera& GetCamera() const { return m_Camera; }
+
+		inline float GetFOV() { return m_Fovy; }
 	private:
 		bool OnWindowResized(Event::WindowResizeEvent& e);
 	private:
@@ -72,7 +74,7 @@ namespace Can::Camera::Controller
 		glm::vec3 m_CameraPosition = { 0.0f, 0.0f, 0.0f };
 		glm::vec3 m_CameraRotation = { 0.0f, 0.0f, 0.0f };
 
-		float m_CameraTranslationSpeed = 5.0f;
+		float m_CameraTranslationSpeed = 1.0f;
 		float m_CameraRotationSpeed = 90.0f;
 	};
 }

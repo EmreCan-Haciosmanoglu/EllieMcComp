@@ -53,7 +53,7 @@ namespace Can::Platform::Windows
 			s_GLFWInitialized = true;
 		}
 
-		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), glfwGetPrimaryMonitor(), nullptr);
 		
 		m_Context = CreateScope<OpenGLContext>(m_Window);
 		m_Context->Init();

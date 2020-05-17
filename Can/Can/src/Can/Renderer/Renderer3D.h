@@ -19,6 +19,7 @@ namespace Can
 		glm::mat4 transform;
 		glm::vec3 position;
 		glm::vec3 scale;
+		int indexCount = 0;
 	};
 
 	class Renderer3D
