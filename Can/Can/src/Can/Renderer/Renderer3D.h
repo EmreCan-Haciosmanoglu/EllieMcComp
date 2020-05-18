@@ -20,6 +20,8 @@ namespace Can
 		glm::vec3 position;
 		glm::vec3 scale;
 		int indexCount = 0;
+		int w = 0;
+		int h = 0;
 	};
 
 	class Renderer3D
