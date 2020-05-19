@@ -19,6 +19,7 @@ namespace Can
 		glm::mat4 transform;
 		glm::vec3 position;
 		glm::vec3 scale;
+		glm::vec3 rotation = { 0.0f, 0.0f, 0.0f };
 		int indexCount = 0;
 		int w = 0;
 		int h = 0;
@@ -32,7 +33,7 @@ namespace Can
 
 		static void BeginScene(const Camera::PerspectiveCamera& camera);
 		static void EndScene();
-		
+
 		static void AddObject(Object* obj);
 
 		static void DrawObjects();
