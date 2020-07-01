@@ -69,7 +69,13 @@ namespace Can::Camera
 	class PerspectiveCamera
 	{
 	public:
-		PerspectiveCamera(float fovy, float aspect, float n = 0.1f, float f = 10.0f); 
+		PerspectiveCamera(
+			float fovy, 
+			float aspect, 
+			float n = 0.1f, 
+			float f = 10.0f,
+			const glm::vec3& pos = { 0,0,0 },
+			const glm::vec3& rot = { 0,0,0 });
 		void SetProjection(float fovy, float aspect, float n = 0.1f, float f = 10.0f);
 		void SetProjection(float fovy);
 

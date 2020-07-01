@@ -61,10 +61,19 @@ namespace Can::Camera
 	}
 
 
-	PerspectiveCamera::PerspectiveCamera(float fovy, float aspect, float n, float f)
+	PerspectiveCamera::PerspectiveCamera(
+		float fovy,
+		float aspect,
+		float n,
+		float f,
+		const glm::vec3& pos,
+		const glm::vec3& rot
+	)
 		: m_ProjectionMatrix(glm::perspective(fovy, aspect, n, f))
 		, m_ViewProjectionMatrix(m_ProjectionMatrix* view)
 	{
+		SetPosition(pos);
+		SetRotation(rot);
 	}
 
 	void PerspectiveCamera::SetProjection(float fovy, float aspect, float n, float f)
@@ -77,7 +86,7 @@ namespace Can::Camera
 	{
 		float n = 0.1f;
 		float f = 10.0f;
-		m_ProjectionMatrix = glm::perspective(fovy, 1920.0f / 1080.0f, n, f);
+		m_ProjectionMatrix = glm::perspective(fovy, 1280.0f / 720.0f, n, f);
 		m_ViewProjectionMatrix = m_ProjectionMatrix * view;
 	}
 

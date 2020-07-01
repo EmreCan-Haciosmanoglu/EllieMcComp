@@ -21,6 +21,8 @@ namespace Can
 	{
 		for (Object* o : s_Objects)
 		{
+			if (!o->isEnabled)
+				continue;
 			o->S->Bind();
 			o->S->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 		}
@@ -32,6 +34,15 @@ namespace Can
 	void Renderer3D::AddObject(Object* obj)
 	{
 		s_Objects.push_back(obj);
+	}
+
+	void Renderer3D::DeleteObject(Object* obj)
+	{
+		auto e = std::find(s_Objects.begin(), s_Objects.end(), obj);
+
+		if (e != s_Objects.end()) {
+			s_Objects.erase(e);
+		}
 	}
 
 	void Renderer3D::DrawObjects()

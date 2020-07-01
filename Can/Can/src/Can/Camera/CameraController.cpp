@@ -1,6 +1,8 @@
 #include "canpch.h"
 #include "CameraController.h"
 #include "Can/Input.h"
+#include "../../../../Game/src/GameApp.h"
+
 
 namespace Can::Camera
 {
@@ -87,13 +89,23 @@ namespace Can::Camera
 
 namespace Can::Camera::Controller
 {
-	Perspective::Perspective(float fovy, float aspectRatio, float n, float f)
+	Perspective::Perspective(
+		float fovy, 
+		float aspectRatio, 
+		float n, float f, 
+		const glm::vec3& pos,
+		const glm::vec3& rot
+	)
 		: m_AspectRatio(aspectRatio)
 		, m_Fovy(fovy)
 		, m_Near(n)
 		, m_Far(f)
+		, m_CameraPosition(pos)
+		, m_CameraRotation(rot)
 		, m_Camera(m_Fovy, m_AspectRatio, m_Near, m_Far)
 	{
+		m_Camera.SetPosition(pos);
+		m_Camera.SetRotation(rot);
 	}
 
 	void Perspective::OnUpdate(Can::TimeStep ts)
@@ -115,20 +127,46 @@ namespace Can::Camera::Controller
 		}
 
 		if (Input::IsKeyPressed(CAN_KEY_W))
-			m_CameraPosition.z -= tSpeed;
-		else if (Input::IsKeyPressed(CAN_KEY_S))
-			m_CameraPosition.z += tSpeed;
-
-		/*if (Input::IsKeyPressed(CAN_KEY_SPACE))
 		{
-			m_CameraPosition.y -= cos(rotx) * tSpeed;
-			m_CameraPosition.z -= sin(rotx) * tSpeed;
+			m_CameraPosition.x -= sin(roty) * tSpeed;
+			m_CameraPosition.z -= cos(roty) * tSpeed;
 		}
-		else if (Input::IsKeyPressed(CAN_KEY_LEFT_SHIFT))
+		else if (Input::IsKeyPressed(CAN_KEY_S))
 		{
-			m_CameraPosition.y += cos(rotx) * tSpeed;
-			m_CameraPosition.z += sin(rotx) * tSpeed;
-		}*/
+			m_CameraPosition.x += sin(roty) * tSpeed;
+			m_CameraPosition.z += cos(roty) * tSpeed;
+		}
+
+		if (Input::IsKeyPressed(CAN_KEY_Q))
+		{
+			float angle = glm::radians(rSpeed);
+			glm::vec3 direction = {
+					-glm::sin(glm::radians(m_CameraRotation.y)) * glm::cos(glm::radians(m_CameraRotation.x)),
+					glm::sin(glm::radians(m_CameraRotation.x)),
+					-glm::cos(glm::radians(m_CameraRotation.x)) * glm::cos(glm::radians(m_CameraRotation.y))
+			};
+			glm::vec3 center = GameApp::RayPlaneIntersection(m_CameraPosition, direction, { 0,0,0 }, { 0,1,0 });
+			float rotatedX = glm::cos(angle) * (m_CameraPosition.x - center.x) - glm::sin(angle) * (m_CameraPosition.z - center.z) + center.x;
+
+			float rotatedZ = glm::sin(angle) * (m_CameraPosition.x - center.x) + glm::cos(angle) * (m_CameraPosition.z - center.z) + center.z;
+			m_CameraRotation.y -= rSpeed;
+			m_CameraPosition = { rotatedX, m_CameraPosition.y, rotatedZ };
+		}
+		else if (Input::IsKeyPressed(CAN_KEY_E))
+		{
+			float angle = glm::radians(-rSpeed);
+			glm::vec3 direction = {
+					-glm::sin(glm::radians(m_CameraRotation.y)) * glm::cos(glm::radians(m_CameraRotation.x)),
+					glm::sin(glm::radians(m_CameraRotation.x)),
+					-glm::cos(glm::radians(m_CameraRotation.x)) * glm::cos(glm::radians(m_CameraRotation.y))
+			};
+			glm::vec3 center = GameApp::RayPlaneIntersection(m_CameraPosition, direction, { 0,0,0 }, { 0,1,0 });
+			float rotatedX = glm::cos(angle) * (m_CameraPosition.x - center.x) - glm::sin(angle) * (m_CameraPosition.z - center.z) + center.x;
+
+			float rotatedZ = glm::sin(angle) * (m_CameraPosition.x - center.x) + glm::cos(angle) * (m_CameraPosition.z - center.z) + center.z;
+			m_CameraRotation.y += rSpeed;
+			m_CameraPosition = { rotatedX, m_CameraPosition.y, rotatedZ };
+		}
 
 		if (Input::IsKeyPressed(CAN_KEY_SPACE))
 		{
@@ -139,13 +177,6 @@ namespace Can::Camera::Controller
 			m_CameraPosition.y += tSpeed;
 		}
 
-
-		m_Camera.SetPosition(m_CameraPosition);
-
-		if (Input::IsKeyPressed(CAN_KEY_G))
-			m_CameraRotation.y += rSpeed;
-		else if (Input::IsKeyPressed(CAN_KEY_J))
-			m_CameraRotation.y -= rSpeed;
 
 		if (Input::IsKeyPressed(CAN_KEY_Y))
 			m_CameraRotation.x += rSpeed;
@@ -167,6 +198,7 @@ namespace Can::Camera::Controller
 		else if (Input::IsKeyPressed(CAN_KEY_KP_ENTER))
 			m_Fovy -= 2.0f * ts;
 
+		m_Camera.SetPosition(m_CameraPosition);
 		m_Camera.SetRotation(m_CameraRotation);
 		m_Camera.SetProjection(m_Fovy, m_AspectRatio, m_Near, m_Far);
 

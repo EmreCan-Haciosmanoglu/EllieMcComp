@@ -23,6 +23,12 @@ namespace Can
 		int indexCount = 0;
 		int w = 0;
 		int h = 0;
+
+		~Object()
+		{
+			delete[] Vertices;
+			delete[] Indices;
+		}
 	};
 
 	class Renderer3D
@@ -35,6 +41,7 @@ namespace Can
 		static void EndScene();
 
 		static void AddObject(Object* obj);
+		static void DeleteObject(Object* obj);
 
 		static void DrawObjects();
 	};
