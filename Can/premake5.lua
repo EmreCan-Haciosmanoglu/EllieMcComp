@@ -21,7 +21,7 @@ IncludeDir["GLAD"] = "Can/vendor/glad/include"
 IncludeDir["imgui"] = "Can/vendor/imgui"
 IncludeDir["glm"] = "Can/vendor/glm"
 IncludeDir["stb"] = "Can/vendor/stb"
-IncludeDir["entt"] = "Can/vendor/entt"
+IncludeDir["EnTT"] = "Can/vendor/entt"
 
 startproject "Sandbox"
 
@@ -62,7 +62,8 @@ project "Can"
         "%{IncludeDir.GLAD}",
         "%{IncludeDir.imgui}",
         "%{IncludeDir.glm}",
-        "%{IncludeDir.stb}"
+        "%{IncludeDir.stb}",
+        "%{IncludeDir.EnTT}"
     }
     
     links
