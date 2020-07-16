@@ -37,6 +37,7 @@ private:
 	void DataFromFile2();
 	void DataToFile();
 	void DataToFile2();
+	void DataToFile3();
 	float* GetRandomState(std::map<std::array<float, STATE_SIZE>, std::array<float, 5>>::iterator it);
 
 public:

@@ -10,7 +10,7 @@ GameLayer::GameLayer()
 	, m_CameraController(1920.0f / 1080.0f, 12.0f)
 	, m_PlayerCount(1)
 	, m_PlayerLeft(m_PlayerCount)
-	, m_Brain(new NeuralNetwork(new int[3]{ STATE_SIZE, STATE_SIZE, 5 }, 3, 0.005f))
+	, m_Brain(new NeuralNetwork(new int[3]{ STATE_SIZE, STATE_SIZE * 2, 5 }, 3, 0.01f))
 	, m_Players(new Player* [m_PlayerCount])
 {
 	for (int i = 0; i < m_PlayerCount; i++)
@@ -147,10 +147,10 @@ void GameLayer::OnImGuiRender()
 			static int layerC = 3;
 			static int layers[] = {
 				STATE_SIZE,
-				STATE_SIZE,
-				STATE_SIZE
+				STATE_SIZE * 2,
+				STATE_SIZE * 2
 			};
-			static int lr = 2;
+			static int lr = 1;
 
 			ImGui::SliderInt("Learning Rate", &lr, 1, 100);
 			ImGui::SliderInt("Layer Count", &layerC, 3, 5);
@@ -198,6 +198,10 @@ void GameLayer::OnImGuiRender()
 		if (ImGui::Button("Data To File 2"))
 		{
 			DataToFile2();
+		}
+		if (ImGui::Button("Data To File 3"))
+		{
+			DataToFile3();
 		}
 		if (ImGui::Button("Data From File"))
 		{
@@ -318,7 +322,7 @@ void GameLayer::DrawToLabel()
 	}
 
 
-	glm::vec2 pos = { m_GameWidth + 2, (m_GameHeight * 1.0f) / 4.0f - 1.0f };
+	glm::vec2 pos = { m_GameWidth + 2, (m_GameHeight * 1.0f) / 2.0f - 1.0f };
 	std::vector<std::vector<bool>> block1 = GetBlock(state[(size_t)(index)]);
 	for (int i = 0; i < block1.size(); i++)
 	{
@@ -354,7 +358,7 @@ void GameLayer::DrawToLabel()
 			);
 		}
 	}
-	pos = { m_GameWidth + 2, (m_GameHeight * 2.0f) / 4.0f - 1.0f };
+	pos = { m_GameWidth + 2, (m_GameHeight * 2.0f) / 2.0f - 2.0f };
 	std::vector<std::vector<bool>> block2 = GetBlock(state[(size_t)(index + 1)]);
 	for (int i = 0; i < block2.size(); i++)
 	{
@@ -370,42 +374,6 @@ void GameLayer::DrawToLabel()
 			);
 
 			if (block2[i][j])
-				Can::Renderer2D::DrawQuad(
-					{
-						offset.x + j + pos.x,
-						offset.y - i + pos.y,
-						0.011f
-					},
-					{ 0.9f, 0.9f },
-					{ 0.3f, 0.2f, 0.8f, 1.0f }
-			);
-			else
-				Can::Renderer2D::DrawQuad(
-					{
-						offset.x + j + pos.x,
-						offset.y - i + pos.y,
-						0.011f },
-					{ 0.9f, 0.9f },
-					{ 0.9f, 0.9f, 0.9f, 1.0f }
-			);
-		}
-	}
-	pos = { m_GameWidth + 2, (m_GameHeight * 3.0f) / 4.0f - 1.0f };
-	std::vector<std::vector<bool>> block3 = GetBlock(state[(size_t)(index + 2)]);
-	for (int i = 0; i < block3.size(); i++)
-	{
-		for (int j = 0; j < block3[0].size(); j++)
-		{
-			Can::Renderer2D::DrawQuad(
-				{
-					offset.x + j + pos.x,
-					offset.y - i + pos.y
-				},
-				{ 1.0f, 1.0f },
-				{ 0.05f, 0.05f, 0.05f, 1.0f }
-			);
-
-			if (block3[i][j])
 				Can::Renderer2D::DrawQuad(
 					{
 						offset.x + j + pos.x,
@@ -633,7 +601,7 @@ void GameLayer::Train()
 void GameLayer::NewBrain(float learningRate, int layerCount, int* nodes, bool default)
 {
 	if (default)
-		m_Brain = new NeuralNetwork(new int[3]{ STATE_SIZE, STATE_SIZE, 5 }, 3, 0.02f);
+		m_Brain = new NeuralNetwork(new int[3]{ STATE_SIZE, STATE_SIZE * 2, 5 }, 3, 0.01f);
 	else
 		m_Brain = new NeuralNetwork(nodes, layerCount, learningRate);
 
@@ -659,7 +627,7 @@ void GameLayer::ShuffleData()
 void GameLayer::DataFromFile()
 {
 	std::string line;
-	std::ifstream dataFile("LabeledData.txt");
+	std::ifstream dataFile("LabeledData3.txt");
 	if (dataFile.is_open())
 	{
 		while (std::getline(dataFile, line))
@@ -690,6 +658,8 @@ void GameLayer::DataFromFile()
 					m_LabelCounts[i]++;
 				line.erase(0, pos + delimiter.length());
 			}
+			if (m_LabeledData.find(data) != m_LabeledData.end())
+				continue;
 			m_LabeledData.insert(std::pair<std::array<float, STATE_SIZE>, std::array<float, 5>>(data, label));
 		}
 		dataFile.close();
@@ -747,7 +717,7 @@ void GameLayer::DataFromFile2()
 
 void GameLayer::DataToFile()
 {
-	std::ofstream dataFile("LabeledData.txt", std::ios::trunc | std::ios::out);
+	std::ofstream dataFile("LabeledData3.txt", std::ios::trunc | std::ios::out);
 	int size = m_LabeledData.size();
 	auto it = m_LabeledData.begin();
 
@@ -796,6 +766,35 @@ void GameLayer::DataToFile2()
 		for (int j = 0; j < 5; j++)
 		{
 			dataFile << label[j];
+		}
+		dataFile << std::endl;
+		it++;
+	}
+	dataFile.close();
+}
+
+void GameLayer::DataToFile3()
+{
+	std::ofstream dataFile("LabeledData3.txt", std::ios::trunc | std::ios::out);
+	int size = m_LabeledData.size();
+	auto it = m_LabeledData.begin();
+
+	for (int i = 0; i < size; i++)
+	{
+		std::array<float, STATE_SIZE> data = it->first;
+
+		for (int j = 0; j < STATE_SIZE; j++)
+		{
+			if (j == GAME_SIZE + 2)
+				j++;
+			dataFile  << data[j] << " ";
+		}
+		dataFile << std::endl;
+
+		std::array<float, 5> label = it->second;
+		for (int j = 0; j < 5; j++)
+		{
+			dataFile  << label[j] << " ";
 		}
 		dataFile << std::endl;
 		it++;

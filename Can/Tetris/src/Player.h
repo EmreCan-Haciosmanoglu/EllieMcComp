@@ -1,7 +1,7 @@
 #pragma once
 #include "Can.h"
 #include "../temps/NeuralNetwork.h"
-#define BLOCK_QUEUE_SIZE  3
+#define BLOCK_QUEUE_SIZE  2
 #define GAME_SIZE 20 * 10
 #define STATE_SIZE GAME_SIZE + BLOCK_QUEUE_SIZE + 4
 
@@ -46,7 +46,7 @@ private:
 	int m_BlockIndex = 0;
 	int m_CurrentBlockIndex;
 	int m_CurrentBlockRotation = 0;
-	int m_BlockQueue[BLOCK_QUEUE_SIZE] = {-1, -1, -1};
+	int m_BlockQueue[BLOCK_QUEUE_SIZE] = {-1, -1};
 
 
 	std::vector<std::vector<bool>> m_State;

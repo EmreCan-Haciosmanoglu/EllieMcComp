@@ -105,7 +105,7 @@ void Player::Draw(const glm::vec2 & offset)
 	if (true)
 	{
 		std::vector<std::vector<bool>> block;
-		glm::vec2 pos = { m_Width + 2, (m_Height * 1.0f) / 4.0f - 1.0f };
+		glm::vec2 pos = { m_Width + 2, (m_Height * 1.0f) / 2.0f - 1.0f };
 		block = m_Parent->GetBlock(m_BlockQueue[(0 + m_BlockIndex) % BLOCK_QUEUE_SIZE]);
 		for (int i = 0; i < block.size(); i++)
 		{
@@ -141,7 +141,7 @@ void Player::Draw(const glm::vec2 & offset)
 				);
 			}
 		}
-		pos = { m_Width + 2, (m_Height * 2.0f) / 4.0f - 1.0f };
+		pos = { m_Width + 2, (m_Height * 2.0f) / 2.0f - 2.0f };
 		block = m_Parent->GetBlock(m_BlockQueue[(1 + m_BlockIndex) % BLOCK_QUEUE_SIZE]);
 		for (int i = 0; i < block.size(); i++)
 		{
@@ -177,42 +177,7 @@ void Player::Draw(const glm::vec2 & offset)
 				);
 			}
 		}
-		pos = { m_Width + 2, (m_Height * 3.0f) / 4.0f - 1.0f };
-		block = m_Parent->GetBlock(m_BlockQueue[(2 + m_BlockIndex) % BLOCK_QUEUE_SIZE]);
-		for (int i = 0; i < block.size(); i++)
-		{
-			for (int j = 0; j < block[0].size(); j++)
-			{
-				Can::Renderer2D::DrawQuad(
-					{
-						offset.x + j + pos.x,
-						offset.y - i + pos.y
-					},
-					{ 1.0f, 1.0f },
-					{ 0.05f, 0.05f, 0.05f, 1.0f }
-				);
-
-				if (block[i][j])
-					Can::Renderer2D::DrawQuad(
-						{
-							offset.x + j + pos.x,
-							offset.y - i + pos.y,
-							0.011f
-						},
-						{ 0.9f, 0.9f },
-						{ 0.3f, 0.2f, 0.8f, 1.0f }
-				);
-				else
-					Can::Renderer2D::DrawQuad(
-						{
-							offset.x + j + pos.x,
-							offset.y - i + pos.y,
-							0.011f },
-						{ 0.9f, 0.9f },
-						{ 0.9f, 0.9f, 0.9f, 1.0f }
-				);
-			}
-		}
+		
 	}
 }
 
