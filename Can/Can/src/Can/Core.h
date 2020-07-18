@@ -52,6 +52,8 @@
 
 namespace Can
 {
+	typedef void (*OnclickCallbackFn)();
+
 	template<typename T>
 	using Scope = std::unique_ptr<T>;
 	template<typename T, typename ... Args>
