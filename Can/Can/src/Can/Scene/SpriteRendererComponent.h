@@ -7,8 +7,8 @@ namespace Can
 	{
 		SpriteRendererComponent();
 		SpriteRendererComponent(const SpriteRendererComponent&) = default;
-		SpriteRendererComponent(const glm::vec2& size, glm::vec4& color);
-		SpriteRendererComponent(const glm::vec2& size, const Ref<Texture2D>& texture, glm::vec4& tintColor);
+		SpriteRendererComponent(const glm::vec2& size, const glm::vec4& color);
+		SpriteRendererComponent(const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4& tintColor);
 		
 		operator glm::vec4& () { return color; }
 		operator const glm::vec4& () const { return color; }
