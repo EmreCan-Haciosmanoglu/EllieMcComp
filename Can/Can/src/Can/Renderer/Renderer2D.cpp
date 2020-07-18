@@ -28,9 +28,9 @@ namespace Can
 			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
 			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
 			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
-		};							  
+		};
 		Ref<VertexBuffer> squareVB;
-		squareVB =VertexBuffer::Create(vertices, sizeof(vertices));
+		squareVB = VertexBuffer::Create(vertices, sizeof(vertices));
 		squareVB->SetLayout({
 			{ShaderDataType::Float3, "a_Position"},
 			{ShaderDataType::Float2, "a_TexCoord"}
@@ -64,6 +64,25 @@ namespace Can
 	{
 	}
 
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color)
+	{
+		DrawQuad(transform, s_Data->WhiteTexture, color);
+	}
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, const glm::vec4& tintColor)
+	{
+		texture->Bind();
+
+		s_Data->TextureShader->Bind();
+		s_Data->TextureShader->SetFloat4("u_Color", tintColor);
+		s_Data->TextureShader->SetInt("u_TextureScale", 1);
+
+		s_Data->TextureShader->SetMat4("u_Transform", transform);
+
+		s_Data->QuadVertexArray->Bind();
+		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
+
+	}
+
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
 	{
 		DrawQuad({ position.x, position.y, 0.0f }, size, color);
@@ -81,7 +100,7 @@ namespace Can
 	{
 		DrawQuad(position, size, rotation, s_Data->WhiteTexture, color);
 	}
-	
+
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4& tintColor)
 	{
@@ -89,37 +108,17 @@ namespace Can
 	}
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4& tintColor)
 	{
-		texture->Bind();
-
-		s_Data->TextureShader->Bind();
-		s_Data->TextureShader->SetFloat4("u_Color", tintColor);
-		s_Data->TextureShader->SetInt("u_TextureScale", 1);
-
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x,size.y,1.0f });
-		s_Data->TextureShader->SetMat4("u_Transform", transform);
-
-
-		s_Data->QuadVertexArray->Bind();
-		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
+		DrawQuad(transform, texture, tintColor);
 	}
-	
+
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, const glm::vec4& tintColor)
 	{
 		DrawQuad({ position.x, position.y, 0.0f }, size, rotation, texture);
 	}
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, const glm::vec4& tintColor)
 	{
-		texture->Bind();
-
-		s_Data->TextureShader->Bind();
-		s_Data->TextureShader->SetFloat4("u_Color", tintColor);
-		s_Data->TextureShader->SetInt("u_TextureScale", 1);
-
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::rotate(glm::mat4(1.0f), glm::radians(rotation), glm::vec3(0,0,1)) * glm::scale(glm::mat4(1.0f), { size.x,size.y,1.0f });
-		s_Data->TextureShader->SetMat4("u_Transform", transform);
-
-
-		s_Data->QuadVertexArray->Bind();
-		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::rotate(glm::mat4(1.0f), glm::radians(rotation), glm::vec3(0, 0, 1)) * glm::scale(glm::mat4(1.0f), { size.x,size.y,1.0f });
+		DrawQuad(transform, texture, tintColor);
 	}
 }
