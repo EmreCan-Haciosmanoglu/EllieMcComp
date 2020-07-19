@@ -5,7 +5,6 @@ namespace Can
 {
 	struct ChildrenComponent
 	{
-		ChildrenComponent() = default;
 		ChildrenComponent(const ChildrenComponent&) = default;
 		ChildrenComponent(std::vector<entt::entity> children);
 
