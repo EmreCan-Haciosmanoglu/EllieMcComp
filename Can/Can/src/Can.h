@@ -20,6 +20,17 @@
 #include "Can/Camera/Camera.h"
 #include "Can/Camera/CameraController.h"
 
+#include "Can/Scene/Panel.h"
+#include "Can/Scene/Scene.h"
+#include "Can/Scene/Button.h"
+#include "Can/Scene/Components/ParentComponent.h"
+#include "Can/Scene/Components/TransformComponent.h"
+#include "Can/Scene/Components/SpriteRendererComponent.h"
+#include "Can/Scene/Components/DisabledComponent.h"
+#include "Can/Scene/Components/HiddenComponent.h"
+#include "Can/Scene/Components/ChildrenComponent.h"
+#include "Can/Scene/Components/OnClickCallbackComponent.h"
+
 
 #include "Platform/OpenGl/OpenGLBuffer.h"
 #include "Platform/OpenGl/OpenGLTexture.h"
