@@ -10,7 +10,7 @@ namespace Can
 		Scene();
 		~Scene();
 
-		entt::entity entityID;
 		entt::registry m_Registry;
+		entt::entity entityID;
 	};
 }
