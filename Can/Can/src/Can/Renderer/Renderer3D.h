@@ -6,31 +6,6 @@
 
 namespace Can
 {
-	struct Object
-	{
-		bool isEnabled = true;
-		Ref<VertexBuffer> VB;
-		Ref<IndexBuffer> IB;
-		Ref<VertexArray> VA;
-		Ref<Texture2D> T;
-		Ref<Shader> S;
-		float* Vertices;
-		uint32_t* Indices;
-		glm::mat4 transform;
-		glm::vec3 position;
-		glm::vec3 scale;
-		glm::vec3 rotation = { 0.0f, 0.0f, 0.0f };
-		int indexCount = 0;
-		int w = 0;
-		int h = 0;
-
-		~Object()
-		{
-			delete[] Vertices;
-			delete[] Indices;
-		}
-	};
-
 	class Renderer3D
 	{
 	public:
