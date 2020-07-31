@@ -5,6 +5,7 @@
 #include <utility>
 #include <algorithm>
 #include <functional>
+#include <limits>
 
 #include <string>
 #include <ctime>
@@ -15,6 +16,12 @@
 #include <array>
 #include <unordered_map>
 #include <unordered_set>
+#include <filesystem>
+#include <glm/glm.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
+#include <glm/gtx/vector_angle.hpp> 
+
+#include "../stb/stb_image.h"
 
 #include "Can/Log.h"
 #include "Can/KeyCode.h"
