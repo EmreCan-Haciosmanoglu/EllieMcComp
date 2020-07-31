@@ -5,12 +5,15 @@
 #include "Can/Instrumentor.h"
 #include "Can/Input.h"
 #include "Can/Random.h"
+#include "Can/AssetLoader.h"
 
 #include "Can/Core/TimeStep.h"
 
 #include "Can/Layers/Layer.h"
 #include "Can/Layers/ImGuiLayer.h"
 
+#include "Can/Renderer/Prefab.h"
+#include "Can/Renderer/Object.h"
 #include "Can/Renderer/Shader.h"
 #include "Can/Renderer/Texture.h"
 #include "Can/Renderer/Renderer.h"

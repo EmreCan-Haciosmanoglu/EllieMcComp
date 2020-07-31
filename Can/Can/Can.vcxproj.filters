@@ -1309,6 +1309,9 @@
     <ClInclude Include="src\Can\Scene\Components\TransformComponent.h">
       <Filter>src\Can\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\Can\Renderer\Object.h" />
+    <ClInclude Include="src\Can\AssetLoader.h" />
+    <ClInclude Include="src\Can\Renderer\Prefab.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -1417,5 +1420,8 @@
     <ClCompile Include="src\Can\Scene\Components\TransformComponent.cpp">
       <Filter>src\Can\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\Can\Renderer\Object.cpp" />
+    <ClCompile Include="src\Can\AssetLoader.cpp" />
+    <ClCompile Include="src\Can\Renderer\Prefab.cpp" />
   </ItemGroup>
 </Project>
