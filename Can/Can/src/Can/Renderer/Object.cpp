@@ -3,38 +3,43 @@
 
 namespace Can
 {
-	Object::Object(const Ref<Prefab>& prefab, bool enabled)
+	Object::Object(const Ref<Prefab>& prefab, const Ref<Prefab>& type, bool enabled)
 		: prefab(prefab)
+		, type(type)
 		, position({ 0.0f, 0.0f, 0.0f })
 		, scale({ 1.0f, 1.0f, 1.0f })
 		, transform(glm::mat4(1.0f))
 	{
 	}
-	Object::Object(const Ref<Prefab>& prefab, const glm::mat4& transform, bool enabled)
+	Object::Object(const Ref<Prefab>& prefab, const Ref<Prefab>& type, const glm::mat4& transform, bool enabled)
 		: prefab(prefab)
+		, type(type)
 		, transform(transform)
 		, enabled(enabled)
 	{
 		glm::decompose(transform, scale, q, position, skew, perspective);
 	}
-	Object::Object(const Ref<Prefab>& prefab, const glm::vec3& position, bool enabled)
+	Object::Object(const Ref<Prefab>& prefab, const Ref<Prefab>& type, const glm::vec3& position, bool enabled)
 		: prefab(prefab)
+		, type(type)
 		, position(position)
 		, scale({ 1.0f, 1.0f, 1.0f })
 		, transform(glm::translate(glm::mat4(1.0f), position))
 		, enabled(enabled)
 	{
 	}
-	Object::Object(const Ref<Prefab>& prefab, const glm::vec3& position, const glm::vec3& scale, bool enabled)
+	Object::Object(const Ref<Prefab>& prefab, const Ref<Prefab>& type, const glm::vec3& position, const glm::vec3& scale, bool enabled)
 		: prefab(prefab)
+		, type(type)
 		, position(position)
 		, scale(scale)
 		, transform(glm::translate(glm::mat4(1.0f), position)* glm::scale(glm::mat4(1.0f), scale))
 		, enabled(enabled)
 	{
 	}
-	Object::Object(const Ref<Prefab>& prefab, const glm::vec3& position, const glm::vec3& scale, const glm::vec3& rotation, bool enabled)
+	Object::Object(const Ref<Prefab>& prefab, const Ref<Prefab>& type, const glm::vec3& position, const glm::vec3& scale, const glm::vec3& rotation, bool enabled)
 		: prefab(prefab)
+		, type(type)
 		, position(position)
 		, scale(scale)
 		, rotation(rotation)
@@ -43,8 +48,9 @@ namespace Can
 		, enabled(enabled)
 	{
 	}
-	Object::Object(const Ref<Prefab>& prefab, const glm::vec3& position, const glm::vec3& scale, const glm::quat& q, bool enabled)
+	Object::Object(const Ref<Prefab>& prefab, const Ref<Prefab>& type, const glm::vec3& position, const glm::vec3& scale, const glm::quat& q, bool enabled)
 		: prefab(prefab)
+		, type(type)
 		, position(position)
 		, scale(scale)
 		, rotation({ 0.0f, 0.0f, 0.0f })
