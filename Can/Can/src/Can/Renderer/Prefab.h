@@ -1,5 +1,10 @@
 #pragma once
-#include "Can.h"
+#include <string>
+#include "Can/Renderer/Texture.h"
+#include "Buffer.h"
+#include "VertexArray.h"
+#include "Shader.h"
+#include <glm/glm.hpp>
 
 namespace Can
 {

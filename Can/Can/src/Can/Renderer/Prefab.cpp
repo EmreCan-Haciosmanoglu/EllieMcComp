@@ -1,8 +1,10 @@
 #include "canpch.h"
 #include "Prefab.h"
+#include "Can.h"
 
 namespace Can
 {
+#define SCALE_DOWN 10.0f
 	Prefab::Prefab(const std::string& objectPath, const std::string& shaderPath, const std::string& texturePath)
 		: objectPath(objectPath)
 		, texturePath(texturePath)
@@ -27,22 +29,22 @@ namespace Can
 			for (int i = 0; i < indexCount; i++)
 			{
 				int index = i * 8;
-				vertices[index + 0] = vertexList[i].x;
-				vertices[index + 1] = vertexList[i].y;
-				vertices[index + 2] = vertexList[i].z;
+				vertices[index + 0] = vertexList[i].x / SCALE_DOWN;
+				vertices[index + 1] = (vertexList[i].y / SCALE_DOWN) + 0.1f;
+				vertices[index + 2] = vertexList[i].z / SCALE_DOWN;
 				vertices[index + 3] = uvList[i].x;
 				vertices[index + 4] = uvList[i].y;
 				vertices[index + 5] = normalList[i].x;
 				vertices[index + 6] = normalList[i].y;
 				vertices[index + 7] = normalList[i].z;
 
-				boundingBoxL.x = std::min(boundingBoxL.x, vertexList[i].x);
-				boundingBoxL.y = std::min(boundingBoxL.y, vertexList[i].y);
-				boundingBoxL.z = std::min(boundingBoxL.z, vertexList[i].z);
+				boundingBoxL.x = std::min(boundingBoxL.x, vertices[index + 0]);
+				boundingBoxL.y = std::min(boundingBoxL.y, vertices[index + 1]);
+				boundingBoxL.z = std::min(boundingBoxL.z, vertices[index + 2]);
 
-				boundingBoxM.x = std::max(boundingBoxM.x, vertexList[i].x);
-				boundingBoxM.y = std::max(boundingBoxM.y, vertexList[i].y);
-				boundingBoxM.z = std::max(boundingBoxM.z, vertexList[i].z);
+				boundingBoxM.x = std::max(boundingBoxM.x, vertices[index + 0]);
+				boundingBoxM.y = std::max(boundingBoxM.y, vertices[index + 1]);
+				boundingBoxM.z = std::max(boundingBoxM.z, vertices[index + 2]);
 			}
 
 			vertexBuffer = VertexBuffer::Create(vertices, sizeof(float) * vertexCount, true);

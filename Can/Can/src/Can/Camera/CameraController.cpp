@@ -1,7 +1,7 @@
 #include "canpch.h"
 #include "CameraController.h"
 #include "Can/Input.h"
-#include "../../../../Game/src/GameApp.h"
+#include "../../../../Game/src/Helper.h"
 
 
 namespace Can::Camera
@@ -145,7 +145,7 @@ namespace Can::Camera::Controller
 					glm::sin(glm::radians(m_CameraRotation.x)),
 					-glm::cos(glm::radians(m_CameraRotation.x)) * glm::cos(glm::radians(m_CameraRotation.y))
 			};
-			glm::vec3 center = GameApp::RayPlaneIntersection(m_CameraPosition, direction, { 0,0,0 }, { 0,1,0 });
+			glm::vec3 center = Helper::RayPlaneIntersection(m_CameraPosition, direction, { 0,0,0 }, { 0,1,0 });
 			float rotatedX = glm::cos(angle) * (m_CameraPosition.x - center.x) - glm::sin(angle) * (m_CameraPosition.z - center.z) + center.x;
 
 			float rotatedZ = glm::sin(angle) * (m_CameraPosition.x - center.x) + glm::cos(angle) * (m_CameraPosition.z - center.z) + center.z;
@@ -160,7 +160,7 @@ namespace Can::Camera::Controller
 					glm::sin(glm::radians(m_CameraRotation.x)),
 					-glm::cos(glm::radians(m_CameraRotation.x)) * glm::cos(glm::radians(m_CameraRotation.y))
 			};
-			glm::vec3 center = GameApp::RayPlaneIntersection(m_CameraPosition, direction, { 0,0,0 }, { 0,1,0 });
+			glm::vec3 center = Helper::RayPlaneIntersection(m_CameraPosition, direction, { 0,0,0 }, { 0,1,0 });
 			float rotatedX = glm::cos(angle) * (m_CameraPosition.x - center.x) - glm::sin(angle) * (m_CameraPosition.z - center.z) + center.x;
 
 			float rotatedZ = glm::sin(angle) * (m_CameraPosition.x - center.x) + glm::cos(angle) * (m_CameraPosition.z - center.z) + center.z;

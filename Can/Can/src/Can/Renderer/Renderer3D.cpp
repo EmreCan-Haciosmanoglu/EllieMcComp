@@ -1,9 +1,6 @@
 #include "canpch.h"
 #include "Renderer3D.h"
-
-#include "RenderCommand.h"
-
-#include <glm/gtc/matrix_transform.hpp>
+#include "Can.h"
 
 
 namespace Can
@@ -21,10 +18,10 @@ namespace Can
 	{
 		for (Object* o : s_Objects)
 		{
-			if (!o->isEnabled)
+			if (!o->enabled)
 				continue;
-			o->S->Bind();
-			o->S->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+			o->prefab->shader->Bind();
+			o->prefab->shader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 		}
 	}
 	void Renderer3D::EndScene()
@@ -49,15 +46,15 @@ namespace Can
 	{
 		for (Object* obj : s_Objects)
 		{
-			if (!obj->isEnabled)
+			if (!obj->enabled)
 				continue;
-			if (obj->T)
-				obj->T->Bind();
-			obj->S->Bind();
-			obj->S->SetMat4("u_Transform", obj->transform);
+			if (obj->prefab->texture)
+				obj->prefab->texture->Bind();
+			obj->prefab->shader->Bind();
+			obj->prefab->shader->SetMat4("u_Transform", obj->transform);
 
-			obj->VA->Bind();
-			RenderCommand::DrawIndexed(obj->VA);
+			obj->prefab->vertexArray->Bind();
+			RenderCommand::DrawIndexed(obj->prefab->vertexArray);
 		}
 	}
 }
