@@ -4,7 +4,6 @@
 #include "stb_image.h"
 #include <glad/glad.h>
 
-
 namespace Can
 {
 	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
