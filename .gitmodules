@@ -21,3 +21,4 @@
 [submodule "Can/Can/vendor/entt"]
 	path = Can/Can/vendor/entt
 	url = https://github.com/EmreCan-Haciosmanoglu/entt
+	branch = master
