@@ -6,6 +6,8 @@
 #include "Can/Events/MouseEvent.h"
 #include "Can/Events/ApplicationEvent.h"
 
+#include "Can/Renderer/Renderer.h"
+
 #include "Platform/OpenGl/OpenGLContext.h"
 
 
@@ -56,6 +58,10 @@ namespace Can::Platform::Windows
 		{
 			CAN_PROFILE_SCOPE("glfwCreateWindow Create");
 
+#if defined(CAN_DEBUG)
+			if (Renderer::GetAPI() == RendererAPI::API::OpenGL)
+				glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
+#endif
 			m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr/*glfwGetPrimaryMonitor()*/, nullptr);
 			++s_GLFWWindowCount;
 		}
