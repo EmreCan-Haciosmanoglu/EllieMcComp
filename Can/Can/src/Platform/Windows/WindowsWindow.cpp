@@ -11,9 +11,9 @@
 
 namespace Can
 {
-	Window* Window::Create(const WindowProps& props)
+	Scope<Window> Window::Create(const WindowProps& props)
 	{
-		return new Platform::Windows::WindowsWindow(props);
+		return CreateScope<Platform::Windows::WindowsWindow>(props);
 	}
 }
 namespace Can::Platform::Windows
@@ -29,7 +29,6 @@ namespace Can::Platform::Windows
 	{
 		Init(props);
 	}
-
 
 	WindowsWindow::~WindowsWindow()
 	{
@@ -179,4 +178,5 @@ namespace Can::Platform::Windows
 	{
 		return m_Data.VSync;
 	}
+	
 }

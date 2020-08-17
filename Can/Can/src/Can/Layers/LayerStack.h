@@ -7,10 +7,10 @@
 
 namespace Can::Layer
 {
-	class  LayerStack
+	class LayerStack
 	{
 	public:
-		LayerStack();
+		LayerStack() = default;
 		~LayerStack();
 
 		void PushLayer(Layer* layer);

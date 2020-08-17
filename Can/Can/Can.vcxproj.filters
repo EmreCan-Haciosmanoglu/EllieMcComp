@@ -1423,5 +1423,6 @@
     <ClCompile Include="src\Can\Renderer\Object.cpp" />
     <ClCompile Include="src\Can\AssetLoader.cpp" />
     <ClCompile Include="src\Can\Renderer\Prefab.cpp" />
+    <ClCompile Include="src\Can\Renderer\GraphicsContext.cpp" />
   </ItemGroup>
 </Project>

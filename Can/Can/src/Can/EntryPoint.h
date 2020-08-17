@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Core.h"
+
 #ifdef CAN_PLATFORM_WINDOWS
 
 extern Can::Application* Can::CreateApplication();
@@ -7,6 +9,7 @@ extern Can::Application* Can::CreateApplication();
 int main(int argc, char** argv)
 {
 	Can::Log::Init();
+	CAN_CORE_WARN("Initialized Log!");
 	
 	CAN_PROFILE_BEGIN_SESSION("Startup", "CanProfile-Startup.json");
 	std::srand((unsigned int)std::time(nullptr));
