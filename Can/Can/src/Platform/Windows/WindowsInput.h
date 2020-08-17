@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Can/Input.h"
+#include "Can/KeyCodes.h"
+#include "Can/MouseCodes.h"
 
 namespace Can::Platform::Windows
 {
@@ -9,8 +11,8 @@ namespace Can::Platform::Windows
 	public:
 
 	protected:
-		virtual bool IsKeyPressedImp(int keycode) override;
-		virtual bool IsMouseButtonPressedImp(int button) override;
+		virtual bool IsKeyPressedImp(KeyCode keycode) override;
+		virtual bool IsMouseButtonPressedImp(MouseCode button) override;
 		virtual float GetMouseXImp() override;
 		virtual float GetMouseYImp() override;
 		virtual std::pair<float, float> GetMousePosImp() override;

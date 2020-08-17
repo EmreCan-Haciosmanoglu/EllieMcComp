@@ -99,9 +99,6 @@
     <ClInclude Include="src\Can\Instrumentor.h">
       <Filter>src\Can</Filter>
     </ClInclude>
-    <ClInclude Include="src\Can\KeyCode.h">
-      <Filter>src\Can</Filter>
-    </ClInclude>
     <ClInclude Include="src\Can\Layers\ImGuiLayer.h">
       <Filter>src\Can\Layers</Filter>
     </ClInclude>
@@ -112,9 +109,6 @@
       <Filter>src\Can\Layers</Filter>
     </ClInclude>
     <ClInclude Include="src\Can\Log.h">
-      <Filter>src\Can</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Can\MouseButtonCode.h">
       <Filter>src\Can</Filter>
     </ClInclude>
     <ClInclude Include="src\Can\Random.h">
@@ -1312,6 +1306,12 @@
     <ClInclude Include="src\Can\Renderer\Object.h" />
     <ClInclude Include="src\Can\AssetLoader.h" />
     <ClInclude Include="src\Can\Renderer\Prefab.h" />
+    <ClInclude Include="src\Can\MouseCodes.h">
+      <Filter>src\Can</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\KeyCodes.h">
+      <Filter>src\Can</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">

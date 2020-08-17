@@ -24,8 +24,8 @@
 #include "../stb/stb_image.h"
 
 #include "Can/Log.h"
-#include "Can/KeyCode.h"
-#include "Can/MouseButtonCode.h"
+#include "Can/KeyCodes.h"
+#include "Can/MouseCodes.h"
 
 #ifdef CAN_PLATFORM_WINDOWS
 	#include <Windows.h>

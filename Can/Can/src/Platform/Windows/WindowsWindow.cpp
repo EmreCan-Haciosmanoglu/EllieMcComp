@@ -6,6 +6,8 @@
 #include "Can/Events/MouseEvent.h"
 #include "Can/Events/ApplicationEvent.h"
 
+#include "Can/Input.h"
+
 #include "Can/Renderer/Renderer.h"
 
 #include "Platform/OpenGl/OpenGLContext.h"
@@ -97,19 +99,19 @@ namespace Can::Platform::Windows
 				{
 				case GLFW_PRESS:
 				{
-					Event::KeyPressedEvent event(key, 0);
+					Event::KeyPressedEvent event(static_cast<KeyCode>(key), 0);
 					data.EventCallback(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
-					Event::KeyReleasedEvent event(key);
+					Event::KeyReleasedEvent event(static_cast<KeyCode>(key));
 					data.EventCallback(event);
 					break;
 				}
 				case GLFW_REPEAT:
 				{
-					Event::KeyPressedEvent event(key, 1);
+					Event::KeyPressedEvent event(static_cast<KeyCode>(key), 1);
 					data.EventCallback(event);
 					break;
 				}
@@ -119,7 +121,7 @@ namespace Can::Platform::Windows
 		glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int keycode)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-				Event::KeyTypedEvent event(keycode);
+				Event::KeyTypedEvent event(static_cast<KeyCode>(keycode));
 				data.EventCallback(event);
 			});
 
@@ -131,13 +133,13 @@ namespace Can::Platform::Windows
 				{
 				case GLFW_PRESS:
 				{
-					Event::MouseButtonPressedEvent event(button);
+					Event::MouseButtonPressedEvent event(static_cast<MouseCode>(button));
 					data.EventCallback(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
-					Event::MouseButtonReleasedEvent event(button);
+					Event::MouseButtonReleasedEvent event(static_cast<MouseCode>(button));
 					data.EventCallback(event);
 					break;
 				}
