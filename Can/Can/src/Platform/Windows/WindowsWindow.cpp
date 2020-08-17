@@ -46,14 +46,19 @@ namespace Can::Platform::Windows
 
 		if (s_GLFWWindowCount == 0)
 		{
+			CAN_PROFILE_SCOPE("glfwCreateWindow Init");
 			CAN_CORE_INFO("Initializing GLFW");
 			int success = glfwInit();
 			CAN_CORE_ASSERT(success, "Could not initialize GLFW!");
 			glfwSetErrorCallback(GLFWErrorCallback);
 		}
 
-		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr/*glfwGetPrimaryMonitor()*/, nullptr);
-		++s_GLFWWindowCount;
+		{
+			CAN_PROFILE_SCOPE("glfwCreateWindow Create");
+
+			m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr/*glfwGetPrimaryMonitor()*/, nullptr);
+			++s_GLFWWindowCount;
+		}
 
 		m_Context = CreateScope<OpenGLContext>(m_Window);
 		m_Context->Init();
@@ -178,5 +183,5 @@ namespace Can::Platform::Windows
 	{
 		return m_Data.VSync;
 	}
-	
+
 }

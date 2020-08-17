@@ -10,6 +10,8 @@ namespace Can
 		, texturePath(texturePath)
 		, shaderPath(shaderPath)
 	{
+		CAN_PROFILE_FUNCTION();
+
 		bool result = false;
 		std::vector< glm::vec3 > vertexList;
 		std::vector< glm::vec2 > uvList;
@@ -85,6 +87,8 @@ namespace Can
 		, vertexCount(indexCount * (3 + 2 + 3))
 		, vertices(vertices)
 	{
+		CAN_PROFILE_FUNCTION();
+
 		vertexArray = VertexArray::Create();
 
 		vertexBuffer = VertexBuffer::Create(vertices, sizeof(float) * vertexCount, true);
@@ -122,6 +126,8 @@ namespace Can
 		, vertexCount(vertexCount)
 		, vertices(vertices)
 	{
+		CAN_PROFILE_FUNCTION();
+
 		vertexArray = VertexArray::Create();
 
 		vertexBuffer = VertexBuffer::Create(vertices, sizeof(float) * vertexCount, true);

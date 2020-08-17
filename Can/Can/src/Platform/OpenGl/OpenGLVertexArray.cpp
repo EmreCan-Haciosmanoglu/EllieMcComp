@@ -7,6 +7,8 @@ namespace Can
 {
 	static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type)
 	{
+		CAN_PROFILE_FUNCTION();
+
 		switch (type)
 		{
 		case ShaderDataType::Float: return GL_FLOAT;
@@ -28,24 +30,34 @@ namespace Can
 
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
+		CAN_PROFILE_FUNCTION();
+
 		glCreateVertexArrays(1, &m_RendererID);
 	}
 	OpenGLVertexArray::~OpenGLVertexArray()
 	{
+		CAN_PROFILE_FUNCTION();
+
 		glDeleteVertexArrays(1, &m_RendererID);
 	}
 
 	void OpenGLVertexArray::Bind() const
 	{
+		CAN_PROFILE_FUNCTION();
+
 		glBindVertexArray(m_RendererID);
 	}
 	void OpenGLVertexArray::Unbind() const
 	{
+		CAN_PROFILE_FUNCTION();
+
 		glBindVertexArray(0);
 	}
 
 	void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertexbuffer)
 	{
+		CAN_PROFILE_FUNCTION();
+
 		CAN_CORE_ASSERT(vertexbuffer->GetLayout().GetElements().size(), "Vertex buffer has no layout");
 
 		glBindVertexArray(m_RendererID);
@@ -68,6 +80,8 @@ namespace Can
 	}
 	void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& indexbuffer)
 	{
+		CAN_PROFILE_FUNCTION();
+
 		glBindVertexArray(m_RendererID);
 		indexbuffer->Bind();
 

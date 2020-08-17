@@ -20,6 +20,8 @@ namespace Can
 
 	void Renderer2D::Init()
 	{
+		CAN_PROFILE_FUNCTION();
+
 		s_Data = new Renderer2DStorage();
 		s_Data->QuadVertexArray = VertexArray::Create();
 
@@ -52,16 +54,22 @@ namespace Can
 	}
 	void Renderer2D::Shutdown()
 	{
+		CAN_PROFILE_FUNCTION();
+
 		delete s_Data;
 	}
 
 	void Renderer2D::BeginScene(const Camera::OrthographicCamera& camera)
 	{
+		CAN_PROFILE_FUNCTION();
+
 		s_Data->TextureShader->Bind();
 		s_Data->TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 	}
 	void Renderer2D::EndScene()
 	{
+		CAN_PROFILE_FUNCTION();
+
 	}
 
 	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color)
@@ -70,6 +78,8 @@ namespace Can
 	}
 	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, const glm::vec4& tintColor)
 	{
+		CAN_PROFILE_FUNCTION();
+
 		texture->Bind();
 
 		s_Data->TextureShader->Bind();
@@ -108,6 +118,8 @@ namespace Can
 	}
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4& tintColor)
 	{
+		CAN_PROFILE_FUNCTION();
+
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x,size.y,1.0f });
 		DrawQuad(transform, texture, tintColor);
 	}
@@ -118,6 +130,8 @@ namespace Can
 	}
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, const glm::vec4& tintColor)
 	{
+		CAN_PROFILE_FUNCTION();
+
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::rotate(glm::mat4(1.0f), glm::radians(rotation), glm::vec3(0, 0, 1)) * glm::scale(glm::mat4(1.0f), { size.x,size.y,1.0f });
 		DrawQuad(transform, texture, tintColor);
 	}

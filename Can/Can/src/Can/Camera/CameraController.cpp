@@ -22,6 +22,8 @@ namespace Can::Camera
 
 	void OrthographicCameraController::OnUpdate(TimeStep ts)
 	{
+		CAN_PROFILE_FUNCTION();
+
 		if (Input::IsKeyPressed(CAN_KEY_A))
 		{
 			m_CameraPosition.x -= cos(glm::radians(m_CameraRotation)) * m_CameraTranslationSpeed * ts;
@@ -62,23 +64,29 @@ namespace Can::Camera
 		m_Camera.SetPosition(m_CameraPosition);
 	}
 
-	void OrthographicCameraController::OnEvent(Event::Event & e)
+	void OrthographicCameraController::OnEvent(Event::Event& e)
 	{
+		CAN_PROFILE_FUNCTION();
+
 		Event::EventDispatcher dispatcher(e);
 		dispatcher.Dispatch< Event::MouseScrolledEvent>(CAN_BIND_EVENT_FN(Camera::OrthographicCameraController::OnMouseScrollEvent));
 		dispatcher.Dispatch< Event::WindowResizeEvent>(CAN_BIND_EVENT_FN(Camera::OrthographicCameraController::OnWindowResized));
 	}
 
-	bool OrthographicCameraController::OnMouseScrollEvent(Event::MouseScrolledEvent & e)
+	bool OrthographicCameraController::OnMouseScrollEvent(Event::MouseScrolledEvent& e)
 	{
+		CAN_PROFILE_FUNCTION();
+
 		m_ZoomLevel -= e.GetYOffset();
 		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 
 		return false;
 	}
 
-	bool OrthographicCameraController::OnWindowResized(Event::WindowResizeEvent & e)
+	bool OrthographicCameraController::OnWindowResized(Event::WindowResizeEvent& e)
 	{
+		CAN_PROFILE_FUNCTION();
+
 		m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
 		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 
@@ -90,9 +98,9 @@ namespace Can::Camera
 namespace Can::Camera::Controller
 {
 	Perspective::Perspective(
-		float fovy, 
-		float aspectRatio, 
-		float n, float f, 
+		float fovy,
+		float aspectRatio,
+		float n, float f,
 		const glm::vec3& pos,
 		const glm::vec3& rot
 	)
@@ -104,12 +112,16 @@ namespace Can::Camera::Controller
 		, m_CameraRotation(rot)
 		, m_Camera(m_Fovy, m_AspectRatio, m_Near, m_Far)
 	{
+		CAN_PROFILE_FUNCTION();
+
 		m_Camera.SetPosition(pos);
 		m_Camera.SetRotation(rot);
 	}
 
 	void Perspective::OnUpdate(Can::TimeStep ts)
 	{
+		CAN_PROFILE_FUNCTION();
+
 		float rotx = glm::radians(m_CameraRotation.x);
 		float roty = glm::radians(m_CameraRotation.y);
 		float tSpeed = m_CameraTranslationSpeed * ts;
@@ -204,14 +216,18 @@ namespace Can::Camera::Controller
 
 	}
 
-	void Perspective::OnEvent(Can::Event::Event & e)
+	void Perspective::OnEvent(Can::Event::Event& e)
 	{
+		CAN_PROFILE_FUNCTION();
+
 		Event::EventDispatcher dispatcher(e);
 		dispatcher.Dispatch< Event::WindowResizeEvent>(CAN_BIND_EVENT_FN(Camera::Controller::Perspective::OnWindowResized));
 	}
 
-	bool Perspective::OnWindowResized(Event::WindowResizeEvent & e)
+	bool Perspective::OnWindowResized(Event::WindowResizeEvent& e)
 	{
+		CAN_PROFILE_FUNCTION();
+
 		if (e.GetWidth() == 0 || e.GetHeight() == 0)
 			return false;
 		m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();

@@ -7,6 +7,7 @@ namespace Can
 {
 	Ref<VertexArray> VertexArray::Create()
 	{
+		CAN_PROFILE_FUNCTION();
 
 		switch (Renderer::GetAPI())
 		{

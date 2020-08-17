@@ -14,6 +14,8 @@ namespace Can
 
 	Application::Application()
 	{
+		CAN_PROFILE_FUNCTION();
+
 		CAN_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 
@@ -29,11 +31,31 @@ namespace Can
 
 	Application::~Application()
 	{
+		CAN_PROFILE_FUNCTION();
+
 		Renderer::Shutdown();
+	}
+
+	void Application::PushLayer(Layer::Layer* layer)
+	{
+		CAN_PROFILE_FUNCTION();
+
+		m_LayerStack.PushLayer(layer);
+		layer->OnAttach();
+	}
+
+	void Application::PushOverlay(Layer::Layer* overlay)
+	{
+		CAN_PROFILE_FUNCTION();
+
+		m_LayerStack.PushOverlay(overlay);
+		overlay->OnAttach();
 	}
 
 	void Application::OnEvent(Event::Event& e)
 	{
+		CAN_PROFILE_FUNCTION();
+
 		Event::EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<Event::WindowCloseEvent>(CAN_BIND_EVENT_FN(Application::OnWindowClose));
 		dispatcher.Dispatch<Event::WindowResizeEvent>(CAN_BIND_EVENT_FN(Application::OnWindowResize));
@@ -48,42 +70,49 @@ namespace Can
 
 	void Application::Run()
 	{
+		CAN_PROFILE_FUNCTION();
+
 		while (m_Running)
 		{
+			CAN_PROFILE_SCOPE("RunLoop");
 			float time = (float)glfwGetTime();
 			TimeStep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 
 			if (!m_Minimized)
-				for (Layer::Layer* layer : m_LayerStack)
-					layer->OnUpdate(timestep);
+			{
+				{
+					CAN_PROFILE_SCOPE("LayerStack OnUpdate");
 
-			m_ImGuiLayer->Begin();
-			for (Layer::Layer* layer : m_LayerStack)
-				layer->OnImGuiRender();
-			m_ImGuiLayer->End();
+					for (Layer::Layer* layer : m_LayerStack)
+						layer->OnUpdate(timestep);
+				}
+
+				m_ImGuiLayer->Begin();
+				{
+					CAN_PROFILE_SCOPE("LayerStack OnImGuiRender");
+
+					for (Layer::Layer* layer : m_LayerStack)
+						layer->OnImGuiRender();
+				}
+				m_ImGuiLayer->End();
+			}
+
 
 			m_Window->OnUpdate();
 		}
 	}
 
-	void Application::PushLayer(Layer::Layer * layer)
-	{
-		m_LayerStack.PushLayer(layer);
-	}
-
-	void Application::PushOverlay(Layer::Layer * overlay)
-	{
-		m_LayerStack.PushOverlay(overlay);
-	}
-
-	bool Application::OnWindowClose(Event::WindowCloseEvent & e)
+	bool Application::OnWindowClose(Event::WindowCloseEvent& e)
 	{
 		m_Running = false;
 		return true;
 	}
-	bool Application::OnWindowResize(Event::WindowResizeEvent & e)
+
+	bool Application::OnWindowResize(Event::WindowResizeEvent& e)
 	{
+		CAN_PROFILE_FUNCTION();
+
 		if (e.GetHeight() == 0 || e.GetWidth() == 0)
 		{
 			m_Minimized = true;
