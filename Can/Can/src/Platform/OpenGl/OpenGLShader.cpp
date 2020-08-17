@@ -65,25 +65,26 @@ namespace Can
 	}
 	std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(const std::string & source)
 	{
-		std::unordered_map<GLenum, std::string> shaderSource;
+		std::unordered_map<GLenum, std::string> shaderSources;
 
 		const char* typeToken = "#type";
 		size_t typeTokenLenght = strlen(typeToken);
-		size_t pos = source.find(typeToken, 0);
+		size_t pos = source.find(typeToken, 0); //Start of shader type declaration line
 		while (pos != std::string::npos)
 		{
-			size_t eol = source.find_first_of("\r\n", pos);
+			size_t eol = source.find_first_of("\r\n", pos); //End of shader type declaration line
 			CAN_CORE_ASSERT(eol != std::string::npos, "Syntax Error");
-			size_t begin = pos + typeTokenLenght + 1;
+			size_t begin = pos + typeTokenLenght + 1; //Start of shader type name (after "#type " keyword)
 			std::string type = source.substr(begin, eol - begin);
 			CAN_CORE_ASSERT(type == "vertex" || type == "fragment" || type == "pixel", "Invalid shader type specified");
 
-			size_t nextlinePos = source.find_first_not_of("\r\n", eol);
-			pos = source.find(typeToken, nextlinePos);
-			shaderSource[ShaderTypeFromString(type)] = source.substr(nextlinePos, pos - (nextlinePos == std::string::npos ? source.size() - 1 : nextlinePos));
+			size_t nextLinePos = source.find_first_not_of("\r\n", eol); //Start of shader code after shader type declaration line
+			CAN_CORE_ASSERT(nextLinePos != std::string::npos, "Syntax error")
+			pos = source.find(typeToken, nextLinePos);//Start of next shader type declaration line
+			shaderSources[ShaderTypeFromString(type)] = (pos == std::string::npos) ? source.substr(nextLinePos) : source.substr(nextLinePos, pos - nextLinePos);
 		}
 
-		return shaderSource;
+		return shaderSources;
 	}
 	void OpenGLShader::Compile(std::unordered_map<GLenum, std::string> sources)
 	{
