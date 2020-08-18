@@ -3,6 +3,7 @@
 
 #include <spdlog/sinks/stdout_color_sinks.h>
 
+
 namespace Can
 {
 	Ref<spdlog::logger> Log::s_CoreLogger;

@@ -3,6 +3,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include "Can/Instrumentor.h"
 
 namespace Can::Camera
 {
