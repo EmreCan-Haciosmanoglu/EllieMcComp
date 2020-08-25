@@ -84,7 +84,7 @@ namespace Can
 
 		s_Data->TextureShader->Bind();
 		s_Data->TextureShader->SetFloat4("u_Color", tintColor);
-		s_Data->TextureShader->SetInt("u_TextureScale", 1);
+		s_Data->TextureShader->SetFloat("u_TilingFactor", 1.0f);
 
 		s_Data->TextureShader->SetMat4("u_Transform", transform);
 
