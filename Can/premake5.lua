@@ -122,7 +122,8 @@ project "Sandbox"
         "Can/vendor/spdlog/include",
         "Can/src",
         "%{IncludeDir.imgui}",
-        "%{IncludeDir.glm}"
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.EnTT}"
     }
     
     links

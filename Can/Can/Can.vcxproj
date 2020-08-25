@@ -182,11 +182,11 @@
     <ClInclude Include="src\Can\Scene\Components\DisabledComponent.h" />
     <ClInclude Include="src\Can\Scene\Components\HiddenComponent.h" />
     <ClInclude Include="src\Can\Scene\Components\OnClickCallbackComponent.h" />
-    <ClInclude Include="src\Can\Scene\Panel.h" />
     <ClInclude Include="src\Can\Scene\Components\ParentComponent.h" />
-    <ClInclude Include="src\Can\Scene\Scene.h" />
     <ClInclude Include="src\Can\Scene\Components\SpriteRendererComponent.h" />
     <ClInclude Include="src\Can\Scene\Components\TransformComponent.h" />
+    <ClInclude Include="src\Can\Scene\Panel.h" />
+    <ClInclude Include="src\Can\Scene\Scene.h" />
     <ClInclude Include="src\Can\Window.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLContext.h" />
@@ -595,11 +595,11 @@
     <ClCompile Include="src\Can\Scene\Components\DisabledComponent.cpp" />
     <ClCompile Include="src\Can\Scene\Components\HiddenComponent.cpp" />
     <ClCompile Include="src\Can\Scene\Components\OnClickCallbackComponent.cpp" />
-    <ClCompile Include="src\Can\Scene\Panel.cpp" />
     <ClCompile Include="src\Can\Scene\Components\ParentComponent.cpp" />
-    <ClCompile Include="src\Can\Scene\Scene.cpp" />
     <ClCompile Include="src\Can\Scene\Components\SpriteRendererComponent.cpp" />
     <ClCompile Include="src\Can\Scene\Components\TransformComponent.cpp" />
+    <ClCompile Include="src\Can\Scene\Panel.cpp" />
+    <ClCompile Include="src\Can\Scene\Scene.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLRendererAPI.cpp" />

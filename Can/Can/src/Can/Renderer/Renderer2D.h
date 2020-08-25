@@ -4,6 +4,15 @@
 
 namespace Can
 {
+	struct DrawQuadParameters
+	{
+		glm::vec3 Position;
+		glm::vec2 Size;
+		float RotationInRadians;
+		glm::vec4 TintColor;
+		Ref<Texture2D> texture;
+	};
+
 	class Renderer2D
 	{
 	public:
@@ -12,6 +21,10 @@ namespace Can
 
 		static void BeginScene(const Camera::OrthographicCamera& camera);
 		static void EndScene();
+
+		static void Flush();
+
+		static void DrawQuad(DrawQuadParameters parameters);
 
 		static void DrawQuad(const glm::mat4& transform, const glm::vec4& color);
 		static void DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, const glm::vec4& tintColor = glm::vec4(1.0f));

@@ -25,6 +25,9 @@
     <Filter Include="src\Can\Scene">
       <UniqueIdentifier>{0BB198BA-7771-14F1-40AC-5D6EAC2B59CD}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Can\Scene\Components">
+      <UniqueIdentifier>{40F9C9A6-2C1E-1927-5569-FEB641ED1745}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Platform">
       <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
     </Filter>
@@ -66,6 +69,9 @@
     <ClInclude Include="src\Can\Application.h">
       <Filter>src\Can</Filter>
     </ClInclude>
+    <ClInclude Include="src\Can\AssetLoader.h">
+      <Filter>src\Can</Filter>
+    </ClInclude>
     <ClInclude Include="src\Can\Camera\Camera.h">
       <Filter>src\Can\Camera</Filter>
     </ClInclude>
@@ -99,6 +105,9 @@
     <ClInclude Include="src\Can\Instrumentor.h">
       <Filter>src\Can</Filter>
     </ClInclude>
+    <ClInclude Include="src\Can\KeyCodes.h">
+      <Filter>src\Can</Filter>
+    </ClInclude>
     <ClInclude Include="src\Can\Layers\ImGuiLayer.h">
       <Filter>src\Can\Layers</Filter>
     </ClInclude>
@@ -111,6 +120,9 @@
     <ClInclude Include="src\Can\Log.h">
       <Filter>src\Can</Filter>
     </ClInclude>
+    <ClInclude Include="src\Can\MouseCodes.h">
+      <Filter>src\Can</Filter>
+    </ClInclude>
     <ClInclude Include="src\Can\Random.h">
       <Filter>src\Can</Filter>
     </ClInclude>
@@ -118,6 +130,12 @@
       <Filter>src\Can\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Can\Renderer\GraphicsContext.h">
+      <Filter>src\Can\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Renderer\Object.h">
+      <Filter>src\Can\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Renderer\Prefab.h">
       <Filter>src\Can\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Can\Renderer\RenderCommand.h">
@@ -146,6 +164,27 @@
     </ClInclude>
     <ClInclude Include="src\Can\Scene\Button.h">
       <Filter>src\Can\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Scene\Components\ChildrenComponent.h">
+      <Filter>src\Can\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Scene\Components\DisabledComponent.h">
+      <Filter>src\Can\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Scene\Components\HiddenComponent.h">
+      <Filter>src\Can\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Scene\Components\OnClickCallbackComponent.h">
+      <Filter>src\Can\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Scene\Components\ParentComponent.h">
+      <Filter>src\Can\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Scene\Components\SpriteRendererComponent.h">
+      <Filter>src\Can\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Scene\Components\TransformComponent.h">
+      <Filter>src\Can\Scene\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Can\Scene\Panel.h">
       <Filter>src\Can\Scene</Filter>
@@ -1290,31 +1329,12 @@
     <ClInclude Include="vendor\stb\stb_image.h">
       <Filter>vendor\stb</Filter>
     </ClInclude>
-    <ClInclude Include="src\Can\Scene\Components\ChildrenComponent.h" />
-    <ClInclude Include="src\Can\Scene\Components\DisabledComponent.h" />
-    <ClInclude Include="src\Can\Scene\Components\HiddenComponent.h" />
-    <ClInclude Include="src\Can\Scene\Components\OnClickCallbackComponent.h" />
-    <ClInclude Include="src\Can\Scene\Components\ParentComponent.h">
-      <Filter>src\Can\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Can\Scene\Components\SpriteRendererComponent.h">
-      <Filter>src\Can\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Can\Scene\Components\TransformComponent.h">
-      <Filter>src\Can\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Can\Renderer\Object.h" />
-    <ClInclude Include="src\Can\AssetLoader.h" />
-    <ClInclude Include="src\Can\Renderer\Prefab.h" />
-    <ClInclude Include="src\Can\MouseCodes.h">
-      <Filter>src\Can</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Can\KeyCodes.h">
-      <Filter>src\Can</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
+      <Filter>src\Can</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\AssetLoader.cpp">
       <Filter>src\Can</Filter>
     </ClCompile>
     <ClCompile Include="src\Can\Camera\Camera.cpp">
@@ -1344,6 +1364,15 @@
     <ClCompile Include="src\Can\Renderer\Buffer.cpp">
       <Filter>src\Can\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Can\Renderer\GraphicsContext.cpp">
+      <Filter>src\Can\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Renderer\Object.cpp">
+      <Filter>src\Can\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Renderer\Prefab.cpp">
+      <Filter>src\Can\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Can\Renderer\RenderCommand.cpp">
       <Filter>src\Can\Renderer</Filter>
     </ClCompile>
@@ -1370,6 +1399,27 @@
     </ClCompile>
     <ClCompile Include="src\Can\Scene\Button.cpp">
       <Filter>src\Can\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Scene\Components\ChildrenComponent.cpp">
+      <Filter>src\Can\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Scene\Components\DisabledComponent.cpp">
+      <Filter>src\Can\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Scene\Components\HiddenComponent.cpp">
+      <Filter>src\Can\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Scene\Components\OnClickCallbackComponent.cpp">
+      <Filter>src\Can\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Scene\Components\ParentComponent.cpp">
+      <Filter>src\Can\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Scene\Components\SpriteRendererComponent.cpp">
+      <Filter>src\Can\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Scene\Components\TransformComponent.cpp">
+      <Filter>src\Can\Scene\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\Can\Scene\Panel.cpp">
       <Filter>src\Can\Scene</Filter>
@@ -1407,22 +1457,5 @@
     <ClCompile Include="vendor\stb\stb_image.cpp">
       <Filter>vendor\stb</Filter>
     </ClCompile>
-    <ClCompile Include="src\Can\Scene\Components\ChildrenComponent.cpp" />
-    <ClCompile Include="src\Can\Scene\Components\DisabledComponent.cpp" />
-    <ClCompile Include="src\Can\Scene\Components\HiddenComponent.cpp" />
-    <ClCompile Include="src\Can\Scene\Components\OnClickCallbackComponent.cpp" />
-    <ClCompile Include="src\Can\Scene\Components\ParentComponent.cpp">
-      <Filter>src\Can\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Can\Scene\Components\SpriteRendererComponent.cpp">
-      <Filter>src\Can\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Can\Scene\Components\TransformComponent.cpp">
-      <Filter>src\Can\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Can\Renderer\Object.cpp" />
-    <ClCompile Include="src\Can\AssetLoader.cpp" />
-    <ClCompile Include="src\Can\Renderer\Prefab.cpp" />
-    <ClCompile Include="src\Can\Renderer\GraphicsContext.cpp" />
   </ItemGroup>
 </Project>

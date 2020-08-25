@@ -1,6 +1,6 @@
 #pragma once
 #include "Can.h"
-
+#include "Can/Renderer/Renderer2D.h"
 #include "imgui.h"
 
 class SandBox2DLayer : public Can::Layer::Layer
