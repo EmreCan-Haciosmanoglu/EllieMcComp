@@ -92,6 +92,6 @@ namespace Can
 	{
 		CAN_PROFILE_FUNCTION();
 
-		glBindTextureUnit(0, m_RendererID);
+		glBindTextureUnit(slot, m_RendererID);
 	}
 }

@@ -14,7 +14,8 @@ namespace Can
 		glm::vec3 Position;
 		glm::vec4 TintColor;
 		glm::vec2 TexCoord;
-		float TextureID;
+		float TextureIndex;
+		float TilingFactor;
 	};
 
 	struct Renderer2DData
@@ -22,6 +23,7 @@ namespace Can
 		const uint32_t MaxQuads = 10000;
 		const uint32_t MaxVertices = 10000 * 4;
 		const uint32_t MaxIndices = 10000 * 6;
+		static const uint32_t MaxTextureSlots = 32;
 
 		Ref<VertexArray> QuadVertexArray;
 		Ref<VertexBuffer> QuadVertexBuffer;
@@ -32,6 +34,9 @@ namespace Can
 
 		QuadVertex* QuadVertexBufferBase = nullptr;
 		QuadVertex* QuadVertexBufferPtr = nullptr;
+
+		std::array<Ref<Texture2D>, MaxTextureSlots> TextureSlots;
+		uint32_t TextureSlotIndex = 1; // 0 => white texture;
 	};
 
 	static Renderer2DData s_Data;
@@ -47,7 +52,8 @@ namespace Can
 			{ShaderDataType::Float3, "a_Position"},
 			{ShaderDataType::Float4, "a_TintColor"},
 			{ShaderDataType::Float2, "a_TexCoord"},
-			{ShaderDataType::Float, "a_TexID"}
+			{ShaderDataType::Float, "a_TexIndex"},
+			{ShaderDataType::Float, "a_TilingFactor"}
 			});
 		s_Data.QuadVertexArray->AddVertexBuffer(s_Data.QuadVertexBuffer);
 
@@ -56,7 +62,7 @@ namespace Can
 		uint32_t* quadIndices = new uint32_t[s_Data.MaxIndices];
 
 		uint32_t offset = 0;
-		for (size_t i = 0; i < s_Data.MaxIndices; i+=6)
+		for (size_t i = 0; i < s_Data.MaxIndices; i += 6)
 		{
 			quadIndices[i + 0] = offset + 0;
 			quadIndices[i + 1] = offset + 1;
@@ -77,8 +83,14 @@ namespace Can
 		uint32_t whiteTextureData = 0xffffffff;
 		s_Data.WhiteTexture->SetData(&whiteTextureData, sizeof(whiteTextureData));
 
+		int32_t samplers[s_Data.MaxTextureSlots];
+		for (uint32_t i = 0; i < s_Data.MaxTextureSlots; i++)
+			samplers[i] = i;
+
 		s_Data.TextureShader->Bind();
-		s_Data.TextureShader->SetInt("u_Texture", 0);
+		s_Data.TextureShader->SetIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
+
+		s_Data.TextureSlots[0] = s_Data.WhiteTexture;
 	}
 	void Renderer2D::Shutdown()
 	{
@@ -93,6 +105,7 @@ namespace Can
 		s_Data.TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 
 		s_Data.QuadIndexCount = 0;
+		s_Data.TextureSlotIndex = 1;
 		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
 	}
 	void Renderer2D::EndScene()
@@ -108,6 +121,9 @@ namespace Can
 	void Renderer2D::Flush()
 	{
 		CAN_PROFILE_FUNCTION();
+
+		for (size_t i = 0; i < s_Data.TextureSlotIndex; i++)
+			s_Data.TextureSlots[i]->Bind(i);
 		RenderCommand::DrawIndexed(s_Data.QuadVertexArray, s_Data.QuadIndexCount);
 	}
 
@@ -115,28 +131,52 @@ namespace Can
 	{
 		CAN_PROFILE_FUNCTION();
 
+		float textureIndex = 0.0f;
+		if (parameters.texture != nullptr)
+		{
+			for (size_t i = 1; i < s_Data.TextureSlotIndex; i++)
+			{
+				if (*s_Data.TextureSlots[i].get() == *parameters.texture.get())
+				{
+					textureIndex = (float)i;
+					break;
+				}
+			}
+			auto it = std::find(s_Data.TextureSlots.begin(), s_Data.TextureSlots.end(), parameters.texture);
+			if (textureIndex == 0.0f)
+			{
+				textureIndex = (float)s_Data.TextureSlotIndex;
+				s_Data.TextureSlots[s_Data.TextureSlotIndex] = parameters.texture;
+				s_Data.TextureSlotIndex++;
+			}
+		}
+
 		s_Data.QuadVertexBufferPtr->Position = parameters.Position;
 		s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
 		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
-		s_Data.QuadVertexBufferPtr->TextureID = 0.0f;
+		s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+		s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
 		s_Data.QuadVertexBufferPtr++;
 
 		s_Data.QuadVertexBufferPtr->Position = parameters.Position + glm::vec3{ parameters.Size.x, 0.0f, 0.0f };
 		s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
 		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 0.0f };
-		s_Data.QuadVertexBufferPtr->TextureID = 0.0f;
+		s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+		s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
 		s_Data.QuadVertexBufferPtr++;
 
 		s_Data.QuadVertexBufferPtr->Position = parameters.Position + glm::vec3{ parameters.Size.x, parameters.Size.y, 0.0f };
 		s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
 		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 1.0f };
-		s_Data.QuadVertexBufferPtr->TextureID = 0.0f;
+		s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+		s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
 		s_Data.QuadVertexBufferPtr++;
 
 		s_Data.QuadVertexBufferPtr->Position = parameters.Position + glm::vec3{ 0.0f, parameters.Size.y, 0.0f };
 		s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
 		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 1.0f };
-		s_Data.QuadVertexBufferPtr->TextureID = 0.0f;
+		s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+		s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
 		s_Data.QuadVertexBufferPtr++;
 
 		s_Data.QuadIndexCount += 6;
@@ -154,7 +194,6 @@ namespace Can
 
 		s_Data.TextureShader->Bind();
 		s_Data.TextureShader->SetFloat4("u_Color", tintColor);
-		s_Data.TextureShader->SetFloat("u_TilingFactor", 1.0f);
 
 		s_Data.TextureShader->SetMat4("u_Transform", transform);
 

@@ -16,12 +16,17 @@ namespace Can
 		virtual uint32_t GeHeight() const override { return m_Height; }
 
 		virtual void Bind(uint32_t slot = 0) const override;
+		virtual bool operator==(const Texture& other) const override
+		{
+			return m_RendererID == ((OpenGLTexture2D&)other).m_RendererID;
+		}
+
 	private:
 		std::string m_Path;
-		
+
 		uint32_t m_Width;
 		uint32_t m_Height;
-		
+
 		uint32_t m_RendererID;
 
 		unsigned int m_InternalFormat;
