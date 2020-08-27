@@ -1,7 +1,7 @@
 #include "canpch.h"
 #include "CameraController.h"
 #include "Can/Input.h"
-//#include "../../../../Game/src/Helper.h"
+#include "../../../../Game/src/Helper.h"
 
 
 namespace Can::Camera
@@ -149,7 +149,7 @@ namespace Can::Camera::Controller
 			m_CameraPosition.z += cos(roty) * tSpeed;
 		}
 
-		/*if (Input::IsKeyPressed(CAN_KEY_Q))
+		if (Input::IsKeyPressed(CAN_KEY_Q))
 		{
 			float angle = glm::radians(rSpeed);
 			glm::vec3 direction = {
@@ -178,7 +178,7 @@ namespace Can::Camera::Controller
 			float rotatedZ = glm::sin(angle) * (m_CameraPosition.x - center.x) + glm::cos(angle) * (m_CameraPosition.z - center.z) + center.z;
 			m_CameraRotation.y += rSpeed;
 			m_CameraPosition = { rotatedX, m_CameraPosition.y, rotatedZ };
-		}*/
+		}
 
 		if (Input::IsKeyPressed(CAN_KEY_SPACE))
 		{

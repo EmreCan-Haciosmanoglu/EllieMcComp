@@ -5,12 +5,21 @@
 #include "VertexArray.h"
 #include "Shader.h"
 #include <glm/glm.hpp>
-#undef max
 #undef min
+#undef max
 #include <limits>
 
 namespace Can
 {
+	struct TexturedObjectVertex
+	{
+		glm::vec3 Position;
+		glm::vec2 UV;
+		glm::vec3 Normal;
+		float TextureIndex;
+	};
+
+	#define MAX_TEXTURE_SLOTS 32
 	class Prefab
 	{
 	public:
@@ -23,19 +32,19 @@ namespace Can
 	public:
 		std::string objectPath;
 		size_t indexCount;
-		size_t vertexCount;
 		float* vertices;
 		Ref<VertexBuffer> vertexBuffer;
 		Ref<IndexBuffer> indexBuffer;
 		Ref<VertexArray> vertexArray;
 
 		std::string texturePath;
-		Ref<Texture2D> texture;
+		std::array<Ref<Texture2D>, MAX_TEXTURE_SLOTS> textures;
+		size_t textureCount = 0;
 
 		std::string shaderPath;
 		Ref<Shader> shader;
 
-		glm::vec3 boundingBoxL{ std::numeric_limits<float>::max() ,std::numeric_limits<float>::max() ,std::numeric_limits<float>::max() };
-		glm::vec3 boundingBoxM{ std::numeric_limits<float>::min() ,std::numeric_limits<float>::min() ,std::numeric_limits<float>::min() };
+		glm::vec3 boundingBoxL{ (std::numeric_limits<float>::max)() ,(std::numeric_limits<float>::max)() ,(std::numeric_limits<float>::max)() };
+		glm::vec3 boundingBoxM{ (std::numeric_limits<float>::min)() ,(std::numeric_limits<float>::min)() ,(std::numeric_limits<float>::min)() };
 	};
 }

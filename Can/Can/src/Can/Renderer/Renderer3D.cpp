@@ -57,18 +57,28 @@ namespace Can
 	void Renderer3D::DrawObjects()
 	{
 		CAN_PROFILE_FUNCTION();
+		
+		int32_t samplers[MAX_TEXTURE_SLOTS];
+		for (uint32_t i = 0; i < MAX_TEXTURE_SLOTS; i++)
+			samplers[i] = i;
 
 		for (Object* obj : s_Objects)
 		{
 			if (!obj->enabled)
 				continue;
-			if (obj->prefab->texture)
-				obj->prefab->texture->Bind();
-			obj->prefab->shader->Bind();
-			obj->prefab->shader->SetMat4("u_Transform", obj->transform);
+			Prefab* prefab = obj->prefab;
+			for (size_t i = 0; i < prefab->textureCount; i++)
+				prefab->textures[i]->Bind(i);
 
-			obj->prefab->vertexArray->Bind();
-			RenderCommand::DrawIndexed(obj->prefab->vertexArray);
+
+			prefab->shader->Bind();
+			prefab->shader->SetMat4("u_Transform", obj->transform);
+			prefab->shader->SetFloat4("u_TintColor", obj->tintColor);
+			prefab->shader->SetIntArray("u_Textures", samplers, MAX_TEXTURE_SLOTS);
+
+
+			prefab->vertexArray->Bind();
+			RenderCommand::DrawIndexed(prefab->vertexArray);
 		}
 	}
 }

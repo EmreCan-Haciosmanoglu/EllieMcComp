@@ -123,13 +123,13 @@ void Play::Draw(glm::vec2 offset)
 			switch ((int)m_State[y + 7][x + 5])
 			{
 			case 1:
-				Can::Renderer2D::DrawQuad({ x + offset.x, y + offset.y , 0.1f }, { 0.9f, 0.9f }, m_Game->m_RedColor);
+				//Can::Renderer2D::DrawQuad({ x + offset.x, y + offset.y , 0.1f }, { 0.9f, 0.9f }, m_Game->m_RedColor);
 				break;
 			case -1:
-				Can::Renderer2D::DrawQuad({ x + offset.x, y + offset.y , 0.1f }, { 0.9f, 0.9f }, m_Game->m_BlackishColor);
+				//Can::Renderer2D::DrawQuad({ x + offset.x, y + offset.y , 0.1f }, { 0.9f, 0.9f }, m_Game->m_BlackishColor);
 				break;
 			default:
-				Can::Renderer2D::DrawQuad({ x + offset.x, y + offset.y , 0.1f }, { 0.9f, 0.9f }, { 1.0f ,1.0f ,1.0f ,1.0f });
+				//Can::Renderer2D::DrawQuad({ x + offset.x, y + offset.y , 0.1f }, { 0.9f, 0.9f }, { 1.0f ,1.0f ,1.0f ,1.0f });
 				break;
 			}
 		}

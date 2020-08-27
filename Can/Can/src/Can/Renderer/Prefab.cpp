@@ -25,35 +25,36 @@ namespace Can
 		{
 			vertexArray = VertexArray::Create();
 			indexCount = vertexList.size();
-			vertexCount = indexCount * (3 + 2 + 3);
 
-			vertices = new float[vertexCount];
+			TexturedObjectVertex* TOVertices = new TexturedObjectVertex[indexCount];
 			for (int i = 0; i < indexCount; i++)
 			{
-				int index = i * 8;
-				vertices[index + 0] = vertexList[i].x / SCALE_DOWN;
-				vertices[index + 1] = (vertexList[i].y / SCALE_DOWN) + 0.1f;
-				vertices[index + 2] = vertexList[i].z / SCALE_DOWN;
-				vertices[index + 3] = uvList[i].x;
-				vertices[index + 4] = uvList[i].y;
-				vertices[index + 5] = normalList[i].x;
-				vertices[index + 6] = normalList[i].y;
-				vertices[index + 7] = normalList[i].z;
+				TOVertices[i].Position.x = vertexList[i].x / SCALE_DOWN;
+				TOVertices[i].Position.y = (vertexList[i].y / SCALE_DOWN) + 0.1f;
+				TOVertices[i].Position.z = vertexList[i].z / SCALE_DOWN;
+				TOVertices[i].UV.x		= uvList[i].x;
+				TOVertices[i].UV.y		= uvList[i].y;
+				TOVertices[i].Normal.x	= normalList[i].x;
+				TOVertices[i].Normal.y	= normalList[i].y;
+				TOVertices[i].Normal.z	= normalList[i].z;
+				TOVertices[i].TextureIndex = 0.0f;
 
-				boundingBoxL.x = std::min(boundingBoxL.x, vertices[index + 0]);
-				boundingBoxL.y = std::min(boundingBoxL.y, vertices[index + 1]);
-				boundingBoxL.z = std::min(boundingBoxL.z, vertices[index + 2]);
+				boundingBoxL.x = std::min(boundingBoxL.x, TOVertices[i].Position.x);
+				boundingBoxL.y = std::min(boundingBoxL.y, TOVertices[i].Position.y);
+				boundingBoxL.z = std::min(boundingBoxL.z, TOVertices[i].Position.z);
 
-				boundingBoxM.x = std::max(boundingBoxM.x, vertices[index + 0]);
-				boundingBoxM.y = std::max(boundingBoxM.y, vertices[index + 1]);
-				boundingBoxM.z = std::max(boundingBoxM.z, vertices[index + 2]);
+				boundingBoxM.x = std::max(boundingBoxM.x, TOVertices[i].Position.x);
+				boundingBoxM.y = std::max(boundingBoxM.y, TOVertices[i].Position.y);
+				boundingBoxM.z = std::max(boundingBoxM.z, TOVertices[i].Position.z);
 			}
+			vertices = (float*)TOVertices;
 
-			vertexBuffer = VertexBuffer::Create(vertices, sizeof(float) * vertexCount, true);
+			vertexBuffer = VertexBuffer::Create(vertices, indexCount * sizeof(TexturedObjectVertex), true);
 			vertexBuffer->SetLayout({
-			   { ShaderDataType::Float3, "a_Position"},
-			   { ShaderDataType::Float2, "a_UV"},
-			   { ShaderDataType::Float3, "a_Normal"}
+				{ ShaderDataType::Float3, "a_Position"},
+				{ ShaderDataType::Float2, "a_UV"},
+				{ ShaderDataType::Float3, "a_Normal"},
+				{ ShaderDataType::Float, "a_TextureIndex"}
 				});
 
 			vertexArray->AddVertexBuffer(vertexBuffer);
@@ -66,7 +67,9 @@ namespace Can
 			indexBuffer = IndexBuffer::Create(indices, indexCount);
 			vertexArray->SetIndexBuffer(indexBuffer);
 
-			texture = Texture2D::Create(texturePath);
+			textures[0] = Texture2D::Create(texturePath);
+			textureCount = 1;
+
 			shader = Shader::Create(shaderPath);
 
 			shader->Bind();
@@ -84,18 +87,18 @@ namespace Can
 		, texturePath(texturePath)
 		, shaderPath(shaderPath)
 		, indexCount(indexCount)
-		, vertexCount(indexCount * (3 + 2 + 3))
 		, vertices(vertices)
 	{
 		CAN_PROFILE_FUNCTION();
 
 		vertexArray = VertexArray::Create();
 
-		vertexBuffer = VertexBuffer::Create(vertices, sizeof(float) * vertexCount, true);
+		vertexBuffer = VertexBuffer::Create(vertices, indexCount * 9 * sizeof(float), true);
 		vertexBuffer->SetLayout({
 		   { ShaderDataType::Float3, "a_Position"},
 		   { ShaderDataType::Float2, "a_UV"},
-		   { ShaderDataType::Float3, "a_Normal"}
+		   { ShaderDataType::Float3, "a_Normal"},
+		   { ShaderDataType::Float, "a_TextureIndex"}
 			});
 
 		vertexArray->AddVertexBuffer(vertexBuffer);
@@ -108,7 +111,8 @@ namespace Can
 		indexBuffer = IndexBuffer::Create(indices, indexCount);
 		vertexArray->SetIndexBuffer(indexBuffer);
 
-		texture = Texture2D::Create(texturePath);
+		textures[0] = Texture2D::Create(texturePath);
+		textureCount = 1;
 		shader = Shader::Create(shaderPath);
 
 		shader->Bind();
@@ -123,7 +127,6 @@ namespace Can
 		, texturePath(texturePath)
 		, shaderPath(shaderPath)
 		, indexCount(indexCount)
-		, vertexCount(vertexCount)
 		, vertices(vertices)
 	{
 		CAN_PROFILE_FUNCTION();
@@ -143,8 +146,11 @@ namespace Can
 		indexBuffer = IndexBuffer::Create(indices, indexCount);
 		vertexArray->SetIndexBuffer(indexBuffer);
 
-		if(texturePath.compare("") != 0)
-			texture = Texture2D::Create(texturePath);
+		if (texturePath.compare("") != 0)
+		{
+			textures[0] = Texture2D::Create(texturePath);
+			textureCount = 1;
+		}
 
 		shader = Shader::Create(shaderPath);
 
@@ -154,7 +160,7 @@ namespace Can
 
 		delete[] indices;
 	}
-	
+
 	Prefab::~Prefab()
 	{
 		delete[] vertices;

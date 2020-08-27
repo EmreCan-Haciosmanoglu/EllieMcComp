@@ -13,7 +13,7 @@ namespace Can
 		Object(Prefab* prefab, Prefab* type, const glm::vec3& position, const glm::vec3& scale, bool enabled = true);
 		Object(Prefab* prefab, Prefab* type, const glm::vec3& position, const glm::vec3& scale, const glm::vec3& rotation, bool enabled = true);
 		Object(Prefab* prefab, Prefab* type, const glm::vec3& position, const glm::vec3& scale, const glm::quat& q, bool enabled = true);
-		
+
 		~Object();
 
 		void SetTransform(const glm::mat4& transform);
@@ -24,6 +24,8 @@ namespace Can
 	public:
 		Prefab* prefab;
 		Prefab* type;
+
+		glm::vec4 tintColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 		glm::vec3 position;
 		glm::vec3 scale;

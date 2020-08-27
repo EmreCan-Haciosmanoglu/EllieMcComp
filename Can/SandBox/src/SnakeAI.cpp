@@ -32,7 +32,7 @@ void SnakeAI::OnUpdate(Can::TimeStep ts)
 
 	Can::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-	Can::Renderer2D::DrawQuad({ -8.5f, +1.5f, -0.2f }, { 12.0f, 12.0f }, { 0.85f, 0.85f, 0.85f, 1.0f });
+	//Can::Renderer2D::DrawQuad({ -8.5f, +1.5f, -0.2f }, { 12.0f, 12.0f }, { 0.85f, 0.85f, 0.85f, 1.0f });
 	m_Game->DrawBestPlay();
 
 	Can::Renderer2D::EndScene();

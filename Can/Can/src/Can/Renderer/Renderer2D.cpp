@@ -134,10 +134,21 @@ namespace Can
 		RenderCommand::DrawIndexed(s_Data.QuadVertexArray, s_Data.QuadIndexCount);
 	}
 
-	void Renderer2D::DrawQuad(DrawQuadParameters parameters)
+
+	void Renderer2D::DrawQuad(const DrawQuadParameters& parameters)
 	{
 		CAN_PROFILE_FUNCTION();
 
+		glm::mat4 transform =
+			glm::translate(glm::mat4(1.0f), parameters.Position)
+			* glm::rotate(glm::mat4(1.0f), parameters.RotationInRadians, { 0.0f, 0.0f, 1.0f })
+			* glm::scale(glm::mat4(1.0f), parameters.Size);
+
+		DrawQuad(transform, parameters);
+	}
+
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const DrawQuadParameters& parameters)
+	{
 		float textureIndex = 0.0f;
 		if (parameters.texture != nullptr)
 		{
@@ -158,10 +169,6 @@ namespace Can
 			}
 		}
 
-		glm::mat4 transform =
-			glm::translate(glm::mat4(1.0f), parameters.Position)
-			* glm::rotate(glm::mat4(1.0f), parameters.RotationInRadians, { 0.0f, 0.0f, 1.0f })
-			* glm::scale(glm::mat4(1.0f), parameters.Size);
 		s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[0];
 		s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
 		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
@@ -191,68 +198,5 @@ namespace Can
 		s_Data.QuadVertexBufferPtr++;
 
 		s_Data.QuadIndexCount += 6;
-	}
-
-	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color)
-	{
-		DrawQuad(transform, s_Data.WhiteTexture, color);
-	}
-	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, const glm::vec4& tintColor)
-	{
-		CAN_PROFILE_FUNCTION();
-
-		texture->Bind();
-
-		s_Data.TextureShader->Bind();
-		s_Data.TextureShader->SetFloat4("u_Color", tintColor);
-
-		s_Data.TextureShader->SetMat4("u_Transform", transform);
-
-		s_Data.QuadVertexArray->Bind();
-		RenderCommand::DrawIndexed(s_Data.QuadVertexArray);
-
-	}
-
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
-	{
-		DrawQuad({ position.x, position.y, 0.0f }, size, color);
-	}
-	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
-	{
-		DrawQuad(position, size, s_Data.WhiteTexture, color);
-	}
-
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color)
-	{
-		DrawQuad({ position.x,position.y,0.0f }, size, rotation, color);
-	}
-	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color)
-	{
-		DrawQuad(position, size, rotation, s_Data.WhiteTexture, color);
-	}
-
-
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4& tintColor)
-	{
-		DrawQuad({ position.x, position.y, 0.0f }, size, texture, tintColor);
-	}
-	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4& tintColor)
-	{
-		CAN_PROFILE_FUNCTION();
-
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x,size.y,1.0f });
-		DrawQuad(transform, texture, tintColor);
-	}
-
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, const glm::vec4& tintColor)
-	{
-		DrawQuad({ position.x, position.y, 0.0f }, size, rotation, texture);
-	}
-	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, const glm::vec4& tintColor)
-	{
-		CAN_PROFILE_FUNCTION();
-
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::rotate(glm::mat4(1.0f), glm::radians(rotation), glm::vec3(0, 0, 1)) * glm::scale(glm::mat4(1.0f), { size.x,size.y,1.0f });
-		DrawQuad(transform, texture, tintColor);
 	}
 }
