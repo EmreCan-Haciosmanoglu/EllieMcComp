@@ -21,17 +21,19 @@ void SandBox2DLayer::OnUpdate(Can::TimeStep ts)
 	CAN_PROFILE_FUNCTION();
 
 	m_CameraController.OnUpdate(ts);
+	static float rotation = 0.5f;
+	rotation += ts * 0.5f;
 
 	Can::RenderCommand::SetClearColor({ 0.15f, 0.15f, 0.15f, 1.0f });
 	Can::RenderCommand::Clear();
 
 	Can::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-	Can::Renderer2D::DrawQuad(Can::DrawQuadParameters{ { 0.0f, -0.2f, 0.0f }, { 1.0f, 1.0f }, 0.0f, { 0.8f, 0.2f, 0.3f, 1.0f }, nullptr });
-	Can::Renderer2D::DrawQuad(Can::DrawQuadParameters{ { -0.5f, 1.5f, 0.0f }, { 1.5f, 0.5f }, 0.0f, { 0.2f, 0.8f, 0.3f, 1.0f }, nullptr });
-	Can::Renderer2D::DrawQuad(Can::DrawQuadParameters{ { 2.3f, -1.0f, 0.0f }, { 0.5f, 5.0f }, 0.0f, { 0.8f, 0.3f, 0.8f, 1.0f }, nullptr });
+	Can::Renderer2D::DrawQuad(Can::DrawQuadParameters{ { 0.0f, -0.2f, 0.0f }, { 1.0f, 1.0f, 1.0f }, 0.0f, { 0.8f, 0.2f, 0.3f, 1.0f }, nullptr });
+	Can::Renderer2D::DrawQuad(Can::DrawQuadParameters{ { -0.5f, 1.5f, 0.0f }, { 1.5f, 0.5f, 1.0f }, 0.0f, { 0.2f, 0.8f, 0.3f, 1.0f }, nullptr });
+	Can::Renderer2D::DrawQuad(Can::DrawQuadParameters{ { 2.3f, -1.0f, 0.0f }, { 3.5f, 5.0f, 1.0f }, rotation, { 0.8f, 0.3f, 0.8f, 1.0f }, nullptr });
 
-	Can::Renderer2D::DrawQuad(Can::DrawQuadParameters{ { 0.0f, 0.0f, -0.1f }, { 5.0f, 5.0f },0.0f,{1.0f, 1.0f, 1.0f, 1.0f}, m_Tex });
+	Can::Renderer2D::DrawQuad(Can::DrawQuadParameters{ { 3.0f, 0.0f, +0.1f }, { 5.0f, 5.0f, 1.0f }, rotation * 2.0f , { 1.0f, 1.0f, 1.0f, 1.0f }, m_Tex });
 
 	Can::Renderer2D::EndScene();
 }

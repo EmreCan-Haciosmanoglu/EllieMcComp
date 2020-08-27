@@ -7,7 +7,7 @@ namespace Can
 	struct DrawQuadParameters
 	{
 		glm::vec3 Position;
-		glm::vec2 Size = { 1.0f, 1.0f };
+		glm::vec3 Size = { 1.0f, 1.0f, 1.0f };
 		float RotationInRadians;
 		glm::vec4 TintColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 		Ref<Texture2D> texture = nullptr;
