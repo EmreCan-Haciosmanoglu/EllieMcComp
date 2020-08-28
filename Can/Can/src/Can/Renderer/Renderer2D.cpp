@@ -110,7 +110,7 @@ namespace Can
 
 		s_Data.TextureShader->Bind();
 		s_Data.TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
-
+		
 		s_Data.QuadIndexCount = 0;
 		s_Data.TextureSlotIndex = 1;
 		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
@@ -128,6 +128,7 @@ namespace Can
 	void Renderer2D::Flush()
 	{
 		CAN_PROFILE_FUNCTION();
+		s_Data.QuadVertexArray->Bind();
 
 		for (size_t i = 0; i < s_Data.TextureSlotIndex; i++)
 			s_Data.TextureSlots[i]->Bind(i);
