@@ -23,7 +23,6 @@ int main(int argc, char** argv)
 	CAN_PROFILE_BEGIN_SESSION("Cleaning", "CanProfile-Cleaning.json");
 	delete app;
 	CAN_PROFILE_END_SESSION();
-	system("PAUSE");
 }
 
 #endif // CAN_PLATFORM_WINDOWS
