@@ -11,6 +11,8 @@ SandBox2DLayer::SandBox2DLayer()
 void SandBox2DLayer::OnAttach()
 {
 	m_Tex = Can::Texture2D::Create("assets/textures/Name.png");
+	m_Man = Can::Texture2D::Create("assets/textures/Man.png");
+	m_Man2 = Can::Texture2D::Create("assets/textures/Man.png");
 }
 void SandBox2DLayer::OnDetach()
 {
@@ -33,7 +35,9 @@ void SandBox2DLayer::OnUpdate(Can::TimeStep ts)
 	Can::Renderer2D::DrawQuad(Can::DrawQuadParameters{ { -0.5f, 1.5f, 0.0f }, { 1.5f, 0.5f, 1.0f }, 0.0f, { 0.2f, 0.8f, 0.3f, 1.0f }, nullptr });
 	Can::Renderer2D::DrawQuad(Can::DrawQuadParameters{ { 2.3f, -1.0f, 0.0f }, { 3.5f, 5.0f, 1.0f }, rotation, { 0.8f, 0.3f, 0.8f, 1.0f }, nullptr });
 
-	Can::Renderer2D::DrawQuad(Can::DrawQuadParameters{ { 3.0f, 0.0f, +0.1f }, { 5.0f, 5.0f, 1.0f }, rotation * 2.0f , { 1.0f, 1.0f, 1.0f, 1.0f }, m_Tex });
+	Can::Renderer2D::DrawQuad(Can::DrawQuadParameters{ { 3.0f, 0.0f, +0.111f }, { 5.0f, 5.0f, 1.0f }, rotation * 2.0f , { 1.0f, 1.0f, 1.0f, 1.0f }, m_Tex });
+	Can::Renderer2D::DrawQuad(Can::DrawQuadParameters{ { 3.0f, -3.0f, +0.11f }, { 5.0f, 5.0f, 1.0f }, rotation * 2.0f , { 1.0f, 1.0f, 1.0f, 1.0f }, m_Man2 });
+	Can::Renderer2D::DrawQuad(Can::DrawQuadParameters{ { 3.0f, 3.0f, +0.1f }, { 5.0f, 5.0f, 1.0f }, rotation * 2.0f , { 1.0f, 1.0f, 1.0f, 1.0f }, m_Man });
 
 	Can::Renderer2D::EndScene();
 }

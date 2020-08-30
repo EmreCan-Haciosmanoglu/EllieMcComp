@@ -26,8 +26,9 @@ namespace Can
 		{
 			if (!o->enabled)
 				continue;
-			o->prefab->shader->Bind();
-			o->prefab->shader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+			Prefab* prefab = o->prefab;
+			prefab->shader->Bind();
+			prefab->shader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 		}
 	}
 	void Renderer3D::EndScene()
@@ -57,27 +58,25 @@ namespace Can
 	void Renderer3D::DrawObjects()
 	{
 		CAN_PROFILE_FUNCTION();
-		
-		int32_t samplers[MAX_TEXTURE_SLOTS];
-		for (uint32_t i = 0; i < MAX_TEXTURE_SLOTS; i++)
-			samplers[i] = i;
 
 		for (Object* obj : s_Objects)
 		{
 			if (!obj->enabled)
 				continue;
 			Prefab* prefab = obj->prefab;
-			for (size_t i = 0; i < prefab->textureCount; i++)
-				prefab->textures[i]->Bind(i);
-
 
 			prefab->shader->Bind();
 			prefab->shader->SetMat4("u_Transform", obj->transform);
 			prefab->shader->SetFloat4("u_TintColor", obj->tintColor);
-			prefab->shader->SetIntArray("u_Textures", samplers, MAX_TEXTURE_SLOTS);
-
 
 			prefab->vertexArray->Bind();
+			for (size_t i = 0; i < prefab->textureCount; i++)
+				prefab->textures[i]->Bind(i);
+			if (prefab->textures[0])
+				for (size_t i = prefab->textureCount; i < MAX_TEXTURE_SLOTS; i++)
+					prefab->textures[0]->Bind(i);
+
+
 			RenderCommand::DrawIndexed(prefab->vertexArray);
 		}
 	}

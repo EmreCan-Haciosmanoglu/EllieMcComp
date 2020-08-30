@@ -32,11 +32,11 @@ namespace Can
 				TOVertices[i].Position.x = vertexList[i].x / SCALE_DOWN;
 				TOVertices[i].Position.y = (vertexList[i].y / SCALE_DOWN) + 0.1f;
 				TOVertices[i].Position.z = vertexList[i].z / SCALE_DOWN;
-				TOVertices[i].UV.x		= uvList[i].x;
-				TOVertices[i].UV.y		= uvList[i].y;
-				TOVertices[i].Normal.x	= normalList[i].x;
-				TOVertices[i].Normal.y	= normalList[i].y;
-				TOVertices[i].Normal.z	= normalList[i].z;
+				TOVertices[i].UV.x = uvList[i].x;
+				TOVertices[i].UV.y = uvList[i].y;
+				TOVertices[i].Normal.x = normalList[i].x;
+				TOVertices[i].Normal.y = normalList[i].y;
+				TOVertices[i].Normal.z = normalList[i].z;
 				TOVertices[i].TextureIndex = 0.0f;
 
 				boundingBoxL.x = std::min(boundingBoxL.x, TOVertices[i].Position.x);
@@ -73,7 +73,10 @@ namespace Can
 			shader = Shader::Create(shaderPath);
 
 			shader->Bind();
-			shader->SetInt("u_Texture", 0);
+			int32_t samplers[MAX_TEXTURE_SLOTS];
+			for (int32_t i = 0; i < MAX_TEXTURE_SLOTS; i++)
+				samplers[i] = i;
+			shader->SetIntArray("u_Textures", samplers, MAX_TEXTURE_SLOTS);
 			shader->SetFloat3("u_LightPos", { 1.0f, 1.0f, -1.0f });
 
 			delete[] indices;
@@ -113,10 +116,57 @@ namespace Can
 
 		textures[0] = Texture2D::Create(texturePath);
 		textureCount = 1;
+
 		shader = Shader::Create(shaderPath);
 
 		shader->Bind();
-		shader->SetInt("u_Texture", 0);
+		int32_t samplers[MAX_TEXTURE_SLOTS];
+		for (int32_t i = 0; i < MAX_TEXTURE_SLOTS; i++)
+			samplers[i] = i;
+		shader->SetIntArray("u_Textures", samplers, MAX_TEXTURE_SLOTS);
+		shader->SetFloat3("u_LightPos", { 1.0f, 1.0f, -1.0f });
+
+		delete[] indices;
+	}
+
+	Prefab::Prefab(const std::string& objectPath, const std::string& shaderPath, const std::array<Ref<Texture2D>, MAX_TEXTURE_SLOTS>& textures, uint8_t textureCount, float* vertices, size_t indexCount, size_t vertexCount)
+		: objectPath(objectPath)
+		, texturePath("")
+		, shaderPath(shaderPath)
+		, textures(textures)
+		, textureCount(textureCount)
+		, indexCount(indexCount)
+		, vertices(vertices)
+	{
+		CAN_PROFILE_FUNCTION();
+
+		vertexArray = VertexArray::Create();
+
+		vertexBuffer = VertexBuffer::Create(vertices, vertexCount * sizeof(float), true);
+		vertexBuffer->SetLayout({
+		   { ShaderDataType::Float3, "a_Position"},
+		   { ShaderDataType::Float2, "a_UV"},
+		   { ShaderDataType::Float3, "a_Normal"},
+		   { ShaderDataType::Float, "a_TextureIndex"}
+			});
+
+		vertexArray->AddVertexBuffer(vertexBuffer);
+
+		uint32_t* indices = new uint32_t[indexCount];
+
+		for (int i = 0; i < indexCount; i++)
+			indices[i] = i;
+
+		indexBuffer = IndexBuffer::Create(indices, indexCount);
+		vertexArray->SetIndexBuffer(indexBuffer);
+
+		shader = Shader::Create(shaderPath);
+
+		shader->Bind();
+		int32_t samplers[MAX_TEXTURE_SLOTS];
+		for (int32_t i = 0; i < MAX_TEXTURE_SLOTS; i++)
+			samplers[i] = i;
+		shader->SetIntArray("u_Textures", samplers, MAX_TEXTURE_SLOTS);
 		shader->SetFloat3("u_LightPos", { 1.0f, 1.0f, -1.0f });
 
 		delete[] indices;
@@ -155,7 +205,10 @@ namespace Can
 		shader = Shader::Create(shaderPath);
 
 		shader->Bind();
-		shader->SetInt("u_Texture", 0);
+		int32_t samplers[MAX_TEXTURE_SLOTS];
+		for (int32_t i = 0; i < MAX_TEXTURE_SLOTS; i++)
+			samplers[i] = i;
+		shader->SetIntArray("u_Textures", samplers, MAX_TEXTURE_SLOTS);
 		shader->SetFloat3("u_LightPos", { 1.0f, 1.0f, -1.0f });
 
 		delete[] indices;

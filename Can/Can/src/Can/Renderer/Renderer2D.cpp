@@ -161,7 +161,6 @@ namespace Can
 					break;
 				}
 			}
-			auto it = std::find(s_Data.TextureSlots.begin(), s_Data.TextureSlots.end(), parameters.texture);
 			if (textureIndex == 0.0f)
 			{
 				textureIndex = (float)s_Data.TextureSlotIndex;

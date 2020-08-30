@@ -22,6 +22,8 @@ private:
 	Can::Ref<Can::VertexArray> m_SquareVA;
 
 	Can::Ref<Can::Texture2D> m_Tex;
+	Can::Ref<Can::Texture2D> m_Man;
+	Can::Ref<Can::Texture2D> m_Man2;
 
 	struct ProfileResult
 	{
