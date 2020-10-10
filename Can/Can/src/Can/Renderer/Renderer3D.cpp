@@ -59,6 +59,9 @@ namespace Can
 	{
 		CAN_PROFILE_FUNCTION();
 
+		static glm::vec3 lightRay{ 1.0f, 0.0f, 0.3f };
+		lightRay = glm::rotate(lightRay, glm::radians(0.05f), glm::vec3{ 0.0f, 0.0f, 1.0f });
+
 		for (Object* obj : s_Objects)
 		{
 			if (!obj->enabled)
@@ -69,13 +72,15 @@ namespace Can
 			prefab->shader->SetMat4("u_Transform", obj->transform);
 			prefab->shader->SetFloat4("u_TintColor", obj->tintColor);
 
+			glm::vec3 rotatedLightRay = glm::rotate(lightRay, -(obj->rotation.y), glm::vec3{ 0.0f, 1.0f , 0.0f });
+			prefab->shader->SetFloat3("u_LightPos", rotatedLightRay);
+
 			prefab->vertexArray->Bind();
 			for (size_t i = 0; i < prefab->textureCount; i++)
-				prefab->textures[i]->Bind(i);
+				prefab->textures[i]->Bind((uint32_t)i);
 			if (prefab->textures[0])
 				for (size_t i = prefab->textureCount; i < MAX_TEXTURE_SLOTS; i++)
-					prefab->textures[0]->Bind(i);
-
+					prefab->textures[0]->Bind((uint32_t)i);
 
 			RenderCommand::DrawIndexed(prefab->vertexArray);
 		}
