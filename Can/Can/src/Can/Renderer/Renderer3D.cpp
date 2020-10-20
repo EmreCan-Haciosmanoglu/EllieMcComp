@@ -56,10 +56,11 @@ namespace Can
 			s_Objects.erase(e);
 		}
 	}
-
-	void Renderer3D::DrawObjects()
+	void Renderer3D::Test()
 	{
-		CAN_PROFILE_FUNCTION();
+		//light
+		static glm::vec3 lightRay{ 1.0f, 0.0f, 0.3f };
+		lightRay = glm::rotate(lightRay, glm::radians(0.05f), glm::vec3{ 0.0f, 0.0f, 1.0f });
 
 		////////////////////////////////////
 
@@ -87,12 +88,8 @@ namespace Can
 		glReadBuffer(GL_NONE);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		//light
-		static glm::vec3 lightRay{ 1.0f, 0.0f, 0.3f };
-		lightRay = glm::rotate(lightRay, glm::radians(0.05f), glm::vec3{ 0.0f, 0.0f, 1.0f });
-		
 		// render depth of the scene to texture (from light's perspective)
-		Ref<Shader> simpleDeptShader = Shader::Create("assets/shaders//");
+		Ref<Shader> simpleDepthShader = Shader::Create("assets/shaders/simpleDepth.glsl");
 		glm::mat4 lightProjection, lightView;
 		glm::mat4 lightSpaceMatrix;
 		float near_plane = 1.0f, far_plane = 7.5f;
@@ -100,14 +97,34 @@ namespace Can
 		lightView = glm::lookAt((lightRay * (-2.0f)), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		lightSpaceMatrix = lightProjection * lightView;
 
-		simpleDeptShader->Bind();
-		simpleDeptShader->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
+		simpleDepthShader->Bind();
+		simpleDepthShader->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
 
 		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-		//glClear(GL_DEPTH_BUFFER_BIT);
+		glClear(GL_DEPTH_BUFFER_BIT);
 
 		//renderScene(simpleDeptShader);
+		const unsigned int SCR_WIDTH = 1280, SCR_HEIGHT = 720;
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+		glClearColor(0.0, 0.0, 0.0, 1.0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		Ref<Shader> debugDepthQuad = Shader::Create("assets/shaders/debug_quad.glsl");
+		debugDepthQuad->Bind();
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
+	}
+
+	void Renderer3D::DrawObjects()
+	{
+		CAN_PROFILE_FUNCTION();
+
+		//light
+		static glm::vec3 lightRay{ 1.0f, 0.0f, 0.3f };
+		lightRay = glm::rotate(lightRay, glm::radians(0.05f), glm::vec3{ 0.0f, 0.0f, 1.0f });
+		
 
 		for (Object* obj : s_Objects)
 		{

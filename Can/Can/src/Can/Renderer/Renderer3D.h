@@ -13,6 +13,8 @@ namespace Can
 		static void BeginScene(const Camera::PerspectiveCamera& camera);
 		static void EndScene();
 
+		static void Test();
+
 		static void AddObject(Object* obj);
 		static void DeleteObject(Object* obj);
 
