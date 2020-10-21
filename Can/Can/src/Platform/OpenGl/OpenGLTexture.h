@@ -8,6 +8,7 @@ namespace Can
 	public:
 		OpenGLTexture2D(uint32_t width, uint32_t height);
 		OpenGLTexture2D(const std::string& path);
+		OpenGLTexture2D(uint32_t id, uint32_t width, uint32_t height, const std::string& path);
 		virtual ~OpenGLTexture2D();
 
 		virtual void SetData(void* data, uint32_t size) override;

@@ -4,7 +4,7 @@
 
 namespace Can
 {
-	class OpenGLFramebuffer : Framebuffer
+	class OpenGLFramebuffer : public Framebuffer
 	{
 	public:
 		OpenGLFramebuffer(const FramebufferSpecification& spec);

@@ -1331,6 +1331,7 @@
     </ClInclude>
     <ClInclude Include="src\Can\Renderer\Framebuffer.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLFramebuffer.h" />
+    <ClInclude Include="src\Can\Renderer\DeleteLaterRenderer2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -1461,5 +1462,6 @@
     </ClCompile>
     <ClCompile Include="src\Can\Renderer\Framebuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLFramebuffer.cpp" />
+    <ClCompile Include="src\Can\Renderer\DeleteLaterRenderer2D.cpp" />
   </ItemGroup>
 </Project>

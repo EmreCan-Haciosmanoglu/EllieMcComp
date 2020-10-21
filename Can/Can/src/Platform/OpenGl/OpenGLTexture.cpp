@@ -69,6 +69,18 @@ namespace Can
 
 		stbi_image_free(data);
 	}
+
+	OpenGLTexture2D::OpenGLTexture2D(uint32_t id, uint32_t width, uint32_t height, const std::string& path)
+		: m_RendererID(id)
+		, m_Width(width)
+		, m_Height(height)
+		, m_Path("")
+	{
+
+		// REDO:
+		m_InternalFormat = GL_RGBA8;
+		m_DataFormat = GL_RGBA;
+	}
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
 		CAN_PROFILE_FUNCTION();
