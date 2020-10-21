@@ -19,5 +19,6 @@ namespace Can
 		static void DeleteObject(Object* obj);
 
 		static void DrawObjects();
+		static void DrawObjectsForShadowMap(const Ref<Shader> shadowShader);
 	};
 }
