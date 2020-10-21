@@ -166,6 +166,7 @@
     <ClInclude Include="src\Can\MouseCodes.h" />
     <ClInclude Include="src\Can\Random.h" />
     <ClInclude Include="src\Can\Renderer\Buffer.h" />
+    <ClInclude Include="src\Can\Renderer\Framebuffer.h" />
     <ClInclude Include="src\Can\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Can\Renderer\Object.h" />
     <ClInclude Include="src\Can\Renderer\Prefab.h" />
@@ -190,6 +191,7 @@
     <ClInclude Include="src\Can\Window.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLContext.h" />
+    <ClInclude Include="src\Platform\OpenGl\OpenGLFramebuffer.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLRendererAPI.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLShader.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLTexture.h" />
@@ -579,6 +581,7 @@
     <ClCompile Include="src\Can\Log.cpp" />
     <ClCompile Include="src\Can\Random.cpp" />
     <ClCompile Include="src\Can\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Can\Renderer\Framebuffer.cpp" />
     <ClCompile Include="src\Can\Renderer\GraphicsContext.cpp" />
     <ClCompile Include="src\Can\Renderer\Object.cpp" />
     <ClCompile Include="src\Can\Renderer\Prefab.cpp" />
@@ -602,6 +605,7 @@
     <ClCompile Include="src\Can\Scene\Scene.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLContext.cpp" />
+    <ClCompile Include="src\Platform\OpenGl\OpenGLFramebuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLRendererAPI.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLShader.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLTexture.cpp" />

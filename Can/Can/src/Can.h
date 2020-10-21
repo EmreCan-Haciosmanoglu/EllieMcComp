@@ -16,6 +16,8 @@
 
 #include "Can/Renderer/Prefab.h"
 #include "Can/Renderer/Object.h"
+#include "Can/Renderer/Buffer.h"
+#include "Can/Renderer/Framebuffer.h"
 #include "Can/Renderer/Shader.h"
 #include "Can/Renderer/Texture.h"
 #include "Can/Renderer/Renderer.h"
