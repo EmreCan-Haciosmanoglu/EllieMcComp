@@ -114,7 +114,7 @@ namespace Can
 		Window& window = Application::Get().GetWindow();
 		RenderCommand::SetViewport(0, 0, window.GetWidth(), window.GetHeight());
 
-		return { lightSpaceMatrix, depthMap };
+		return { lightSpaceMatrix, depthMap, depthMapFBO };
 	}
 
 	void Renderer3D::DrawObjects(const OutputTest& outputTest, const Camera::PerspectiveCamera& camera)
@@ -133,7 +133,7 @@ namespace Can
 			Prefab* prefab = obj->prefab;
 
 			prefab->shader->Bind();
-			glActiveTexture(GL_TEXTURE16);
+			glActiveTexture(GL_TEXTURE15);
 			glBindTexture(GL_TEXTURE_2D, outputTest.depthMap);
 			prefab->shader->SetMat4("u_LightSpace", outputTest.lightSpaceMatrix);
 			prefab->shader->SetMat4("u_Transform", obj->transform);
@@ -151,6 +151,8 @@ namespace Can
 
 			RenderCommand::DrawIndexed(prefab->vertexArray);
 		}
+		glDeleteTextures(1, &outputTest.depthMap);
+		glDeleteFramebuffers(1, &outputTest.depthMapFBO);
 	}
 
 	void Renderer3D::DrawObjectsForShadowMap(const Ref<Shader> shadowShader)

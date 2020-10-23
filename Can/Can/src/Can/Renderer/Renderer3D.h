@@ -8,6 +8,7 @@ namespace Can
 	{
 		glm::mat4 lightSpaceMatrix;
 		unsigned int depthMap;
+		unsigned int depthMapFBO;
 	};
 
 	class Renderer3D
