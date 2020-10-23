@@ -4,6 +4,12 @@
 
 namespace Can
 {
+	struct OutputTest
+	{
+		glm::mat4 lightSpaceMatrix;
+		unsigned int depthMap;
+	};
+
 	class Renderer3D
 	{
 	public:
@@ -13,12 +19,12 @@ namespace Can
 		static void BeginScene(const Camera::PerspectiveCamera& camera);
 		static void EndScene();
 
-		static void Test(const Camera::OrthographicCamera& camera);
+		static OutputTest Test(const Camera::OrthographicCamera& camera);
 
 		static void AddObject(Object* obj);
 		static void DeleteObject(Object* obj);
 
-		static void DrawObjects();
+		static void DrawObjects(const OutputTest& outputTest, const Camera::PerspectiveCamera& camera);
 		static void DrawObjectsForShadowMap(const Ref<Shader> shadowShader);
 	};
 }

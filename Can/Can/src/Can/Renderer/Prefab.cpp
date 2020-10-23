@@ -77,6 +77,7 @@ namespace Can
 			for (int32_t i = 0; i < MAX_TEXTURE_SLOTS; i++)
 				samplers[i] = i;
 			shader->SetIntArray("u_Textures", samplers, MAX_TEXTURE_SLOTS);
+			shader->SetInt("u_ShadowMap", 16);
 			shader->SetFloat3("u_LightPos", { 1.0f, 1.0f, -1.0f });
 
 			delete[] indices;

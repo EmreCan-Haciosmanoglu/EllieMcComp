@@ -57,14 +57,13 @@ namespace Can
 			s_Objects.erase(e);
 		}
 	}
-	void Renderer3D::Test(const Camera::OrthographicCamera& camera)
+	OutputTest Renderer3D::Test(const Camera::OrthographicCamera& camera)
 	{
 		FramebufferSpecification spec;
 		spec.Width = 1024;
 		spec.Height = 1024;
 
-		//Ref<Framebuffer> framebuffer = Framebuffer::Create(spec);
-		
+
 		// configure depth map FBO
 		// ---------------------
 		const unsigned int SHADOW_WIDTH = 1024;
@@ -89,12 +88,6 @@ namespace Can
 		glReadBuffer(GL_NONE);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		//shader configuration
-		static Ref<Shader> debugDepthQuad = Shader::Create("assets/shaders/debug_quad.glsl");
-		debugDepthQuad->Bind();
-		debugDepthQuad->SetInt("depthMap", 0);
-		debugDepthQuad->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
-
 		//lighting info
 		glm::vec3 lightPos{ 3.0f, 5.0f, 5.0f };
 
@@ -106,36 +99,25 @@ namespace Can
 		glm::mat4 lightSpaceMatrix;
 		float near_plane = 1.0f, far_plane = 100.0f;
 		lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-		lightView = glm::lookAt(lightPos, glm::vec3{ 3.0f, 0.0f, -15.0f}, glm::vec3(0.0f, 1.0f, 0.0f));
+		lightView = glm::lookAt(lightPos, glm::vec3{ 3.0f, 0.0f, -15.0f }, glm::vec3(0.0f, 1.0f, 0.0f));
 		lightSpaceMatrix = lightProjection * lightView;
 
 		simpleDepthShader->SetMat4("ligthSpaceMatrix", lightSpaceMatrix);
 
 		RenderCommand::SetViewport(0, 0, spec.Width, spec.Height);
-		//framebuffer->Bind();
 		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 		RenderCommand::Clear();
 		DrawObjectsForShadowMap(simpleDepthShader);
 
-
-		const unsigned int SCR_WIDTH = 1280, SCR_HEIGHT = 720;
-		//framebuffer->Unbind();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		RenderCommand::SetViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
-		RenderCommand::SetClearColor({ 0.0f, 0.0f, 0.0f, 1.0f });
-		RenderCommand::Clear();
 
+		Window& window = Application::Get().GetWindow();
+		RenderCommand::SetViewport(0, 0, window.GetWidth(), window.GetHeight());
 
-		Ref<Texture2D> texture = Texture2D::Create(depthMap, spec.Width, spec.Width);
-		//Ref<Texture2D> texture = Texture2D::Create(framebuffer->GetColorAttachmentRendererID(), spec.Width, spec.Width);
-		debugDepthQuad->Bind();
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, depthMap);
-		DeleteLaterRenderer2D::s_Data->QuadVertexArray->Bind();
-		RenderCommand::DrawIndexed(DeleteLaterRenderer2D::s_Data->QuadVertexArray);
+		return { lightSpaceMatrix, depthMap };
 	}
 
-	void Renderer3D::DrawObjects()
+	void Renderer3D::DrawObjects(const OutputTest& outputTest, const Camera::PerspectiveCamera& camera)
 	{
 		CAN_PROFILE_FUNCTION();
 
@@ -151,12 +133,15 @@ namespace Can
 			Prefab* prefab = obj->prefab;
 
 			prefab->shader->Bind();
+			glActiveTexture(GL_TEXTURE16);
+			glBindTexture(GL_TEXTURE_2D, outputTest.depthMap);
+			prefab->shader->SetMat4("u_LightSpace", outputTest.lightSpaceMatrix);
 			prefab->shader->SetMat4("u_Transform", obj->transform);
 			prefab->shader->SetFloat4("u_TintColor", obj->tintColor);
 
 			glm::vec3 rotatedLightRay = glm::rotate(lightRay, -(obj->rotation.y), glm::vec3{ 0.0f, 1.0f , 0.0f });
 			prefab->shader->SetFloat3("u_LightPos", rotatedLightRay);
-
+			prefab->shader->SetFloat3("u_ViewPos", camera.GetPosition());
 			prefab->vertexArray->Bind();
 			for (size_t i = 0; i < prefab->textureCount; i++)
 				prefab->textures[i]->Bind((uint32_t)i);

@@ -19,7 +19,7 @@ namespace Can
 		float TextureIndex;
 	};
 
-	#define MAX_TEXTURE_SLOTS 32
+	#define MAX_TEXTURE_SLOTS 16
 	class Prefab
 	{
 	public:
