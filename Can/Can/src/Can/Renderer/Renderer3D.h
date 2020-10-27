@@ -20,12 +20,12 @@ namespace Can
 		static void BeginScene(const Camera::PerspectiveCamera& camera);
 		static void EndScene();
 
-		static OutputTest Test(const Camera::OrthographicCamera& camera);
-
 		static void AddObject(Object* obj);
 		static void DeleteObject(Object* obj);
 
-		static void DrawObjects(const OutputTest& outputTest, const Camera::PerspectiveCamera& camera);
+		static OutputTest Test(const Camera::OrthographicCamera& camera, const glm::vec3& lightPos);
+
+		static void DrawObjects(const OutputTest& outputTest, const Camera::PerspectiveCamera& camera, const glm::vec3& lightPos);
 		static void DrawObjectsForShadowMap(const Ref<Shader> shadowShader);
 	};
 }

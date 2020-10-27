@@ -57,17 +57,17 @@ namespace Can
 			s_Objects.erase(e);
 		}
 	}
-	OutputTest Renderer3D::Test(const Camera::OrthographicCamera& camera)
+	OutputTest Renderer3D::Test(const Camera::OrthographicCamera& camera, const glm::vec3& lightPos)
 	{
 		FramebufferSpecification spec;
-		spec.Width = 1024;
-		spec.Height = 1024;
+		spec.Width = 2048;
+		spec.Height = 2048;
 
 
 		// configure depth map FBO
 		// ---------------------
-		const unsigned int SHADOW_WIDTH = 1024;
-		const unsigned int SHADOW_HEIGHT = 1024;
+		const unsigned int SHADOW_WIDTH = 2048;
+		const unsigned int SHADOW_HEIGHT = 2048;
 		unsigned int depthMapFBO;
 		glGenFramebuffers(1, &depthMapFBO);
 
@@ -78,8 +78,10 @@ namespace Can
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+		float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
 		// attach depth texture as FBO's depth buffer
 		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
@@ -89,7 +91,6 @@ namespace Can
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		//lighting info
-		glm::vec3 lightPos{ 3.0f, 5.0f, 5.0f };
 
 
 		// render depth of the scene to texture (from light's perspective)
@@ -117,13 +118,9 @@ namespace Can
 		return { lightSpaceMatrix, depthMap, depthMapFBO };
 	}
 
-	void Renderer3D::DrawObjects(const OutputTest& outputTest, const Camera::PerspectiveCamera& camera)
+	void Renderer3D::DrawObjects(const OutputTest& outputTest, const Camera::PerspectiveCamera& camera, const glm::vec3& lightPos)
 	{
 		CAN_PROFILE_FUNCTION();
-
-		//light
-		static glm::vec3 lightRay{ 1.0f, 0.0f, 0.3f };
-		lightRay = glm::rotate(lightRay, glm::radians(0.05f), glm::vec3{ 0.0f, 0.0f, 1.0f });
 
 
 		for (Object* obj : s_Objects)
@@ -139,7 +136,7 @@ namespace Can
 			prefab->shader->SetMat4("u_Transform", obj->transform);
 			prefab->shader->SetFloat4("u_TintColor", obj->tintColor);
 
-			glm::vec3 rotatedLightRay = glm::rotate(lightRay, -(obj->rotation.y), glm::vec3{ 0.0f, 1.0f , 0.0f });
+			glm::vec3 rotatedLightRay = glm::rotate(lightPos, -(obj->rotation.y), glm::vec3{ 0.0f, 1.0f , 0.0f });
 			prefab->shader->SetFloat3("u_LightPos", rotatedLightRay);
 			prefab->shader->SetFloat3("u_ViewPos", camera.GetPosition());
 			prefab->vertexArray->Bind();

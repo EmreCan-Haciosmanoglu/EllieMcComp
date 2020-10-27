@@ -30,7 +30,7 @@ namespace Can
 			for (int i = 0; i < indexCount; i++)
 			{
 				TOVertices[i].Position.x = vertexList[i].x / SCALE_DOWN;
-				TOVertices[i].Position.y = (vertexList[i].y / SCALE_DOWN) + 0.1f;
+				TOVertices[i].Position.y = (vertexList[i].y / SCALE_DOWN) + 0.01f;
 				TOVertices[i].Position.z = vertexList[i].z / SCALE_DOWN;
 				TOVertices[i].UV.x = uvList[i].x;
 				TOVertices[i].UV.y = uvList[i].y;
@@ -78,7 +78,7 @@ namespace Can
 				samplers[i] = i;
 			shader->SetIntArray("u_Textures", samplers, MAX_TEXTURE_SLOTS);
 			shader->SetInt("u_ShadowMap", 16);
-			shader->SetFloat3("u_LightPos", { 1.0f, 1.0f, -1.0f });
+			//shader->SetFloat3("u_LightPos", { 1.0f, 1.0f, -1.0f });
 
 			delete[] indices;
 		}
@@ -125,7 +125,7 @@ namespace Can
 		for (int32_t i = 0; i < MAX_TEXTURE_SLOTS; i++)
 			samplers[i] = i;
 		shader->SetIntArray("u_Textures", samplers, MAX_TEXTURE_SLOTS);
-		shader->SetFloat3("u_LightPos", { 1.0f, 1.0f, -1.0f });
+		//shader->SetFloat3("u_LightPos", { 1.0f, 1.0f, -1.0f });
 
 		delete[] indices;
 	}
@@ -168,7 +168,7 @@ namespace Can
 		for (int32_t i = 0; i < MAX_TEXTURE_SLOTS; i++)
 			samplers[i] = i;
 		shader->SetIntArray("u_Textures", samplers, MAX_TEXTURE_SLOTS);
-		shader->SetFloat3("u_LightPos", { 1.0f, 1.0f, -1.0f });
+		//shader->SetFloat3("u_LightPos", { 1.0f, 1.0f, -1.0f });
 
 		delete[] indices;
 	}
@@ -210,7 +210,7 @@ namespace Can
 		for (int32_t i = 0; i < MAX_TEXTURE_SLOTS; i++)
 			samplers[i] = i;
 		shader->SetIntArray("u_Textures", samplers, MAX_TEXTURE_SLOTS);
-		shader->SetFloat3("u_LightPos", { 1.0f, 1.0f, -1.0f });
+		//shader->SetFloat3("u_LightPos", { 1.0f, 1.0f, -1.0f });
 
 		delete[] indices;
 	}
