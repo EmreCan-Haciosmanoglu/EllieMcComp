@@ -1,7 +1,6 @@
 #include "canpch.h"
 #include "Renderer.h"
 #include "Renderer2D.h"
-#include "DeleteLaterRenderer2D.h"
 #include "Renderer3D.h"
 
 #include "Platform/OpenGl/OpenGLShader.h"
@@ -16,7 +15,6 @@ namespace Can
 
 		RenderCommand::Init();
 		Renderer2D::Init();
-		DeleteLaterRenderer2D::Init();
 		Renderer3D::Init();
 	}
 

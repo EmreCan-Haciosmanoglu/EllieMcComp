@@ -1,6 +1,5 @@
 #include "canpch.h"
 #include "Renderer3D.h"
-#include "DeleteLaterRenderer2D.h"
 #include "Can.h"
 
 #include <glad/glad.h>

@@ -166,7 +166,6 @@
     <ClInclude Include="src\Can\MouseCodes.h" />
     <ClInclude Include="src\Can\Random.h" />
     <ClInclude Include="src\Can\Renderer\Buffer.h" />
-    <ClInclude Include="src\Can\Renderer\DeleteLaterRenderer2D.h" />
     <ClInclude Include="src\Can\Renderer\Framebuffer.h" />
     <ClInclude Include="src\Can\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Can\Renderer\Object.h" />
@@ -582,7 +581,6 @@
     <ClCompile Include="src\Can\Log.cpp" />
     <ClCompile Include="src\Can\Random.cpp" />
     <ClCompile Include="src\Can\Renderer\Buffer.cpp" />
-    <ClCompile Include="src\Can\Renderer\DeleteLaterRenderer2D.cpp" />
     <ClCompile Include="src\Can\Renderer\Framebuffer.cpp" />
     <ClCompile Include="src\Can\Renderer\GraphicsContext.cpp" />
     <ClCompile Include="src\Can\Renderer\Object.cpp" />
