@@ -164,6 +164,7 @@
     <ClInclude Include="src\Can\Layers\LayerStack.h" />
     <ClInclude Include="src\Can\Log.h" />
     <ClInclude Include="src\Can\MouseCodes.h" />
+    <ClInclude Include="src\Can\Noise\Perlin.h" />
     <ClInclude Include="src\Can\Random.h" />
     <ClInclude Include="src\Can\Renderer\Buffer.h" />
     <ClInclude Include="src\Can\Renderer\Framebuffer.h" />
@@ -579,6 +580,7 @@
     <ClCompile Include="src\Can\Layers\Layer.cpp" />
     <ClCompile Include="src\Can\Layers\LayerStack.cpp" />
     <ClCompile Include="src\Can\Log.cpp" />
+    <ClCompile Include="src\Can\Noise\Perlin.cpp" />
     <ClCompile Include="src\Can\Random.cpp" />
     <ClCompile Include="src\Can\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Can\Renderer\Framebuffer.cpp" />
