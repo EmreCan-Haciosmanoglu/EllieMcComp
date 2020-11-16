@@ -7,17 +7,16 @@
 
 namespace Can
 {
+#define TERRAIN_SCALE_DOWN 10.0f
 	static std::vector<Object*> s_Objects;
 
 	void Renderer3D::Init()
 	{
 		CAN_PROFILE_FUNCTION();
-
 	}
 	void Renderer3D::Shutdown()
 	{
 		CAN_PROFILE_FUNCTION();
-
 	}
 
 	void Renderer3D::BeginScene(const Camera::PerspectiveCamera& camera)
@@ -97,9 +96,10 @@ namespace Can
 		simpleDepthShader->Bind();
 		glm::mat4 lightProjection, lightView;
 		glm::mat4 lightSpaceMatrix;
-		float near_plane = 1.0f, far_plane = 100.0f;
+		float near_plane = 1.0f, far_plane = 50.0f;
 		lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-		lightView = glm::lookAt(lightPos, glm::vec3{ 3.0f, 0.0f, -15.0f }, glm::vec3(0.0f, 1.0f, 0.0f));
+		lightView = glm::lookAt(lightPos, glm::vec3{ 500.0f / (TERRAIN_SCALE_DOWN * 2), 0.0f, -500.0f / (TERRAIN_SCALE_DOWN * 2) + 10.0f }, glm::vec3(0.0f, 1.0f, 0.0f));
+		lightView = glm::lookAt(lightPos, glm::vec3{ 20.0f, 0.0f, -20.0f }, glm::vec3(0.0f, 1.0f, 0.0f));
 		lightSpaceMatrix = lightProjection * lightView;
 
 		simpleDepthShader->SetMat4("ligthSpaceMatrix", lightSpaceMatrix);
@@ -136,7 +136,7 @@ namespace Can
 			prefab->shader->SetFloat4("u_TintColor", obj->tintColor);
 
 			glm::vec3 rotatedLightRay = glm::rotate(lightPos, -(obj->rotation.y), glm::vec3{ 0.0f, 1.0f , 0.0f });
-			prefab->shader->SetFloat3("u_LightPos", rotatedLightRay);
+			prefab->shader->SetFloat3("u_LightPos", lightPos);
 			prefab->shader->SetFloat3("u_ViewPos", camera.GetPosition());
 			prefab->vertexArray->Bind();
 			for (size_t i = 0; i < prefab->textureCount; i++)

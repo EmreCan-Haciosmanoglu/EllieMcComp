@@ -1,5 +1,6 @@
 #include "canpch.h"
 #include "Can/Random.h"
+#include "Can/Noise/Perlin.h"
 
 #include "Application.h"
 #include "Can/Renderer/Renderer.h"
