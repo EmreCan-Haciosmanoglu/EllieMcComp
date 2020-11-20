@@ -70,7 +70,7 @@ namespace Can::Noise
 				{
 					float noise = 0.0f;
 					float scale = 1.0f;
-					float scaleAcc = 0.0f;
+					float scaleAcc = 1.0f;
 					for (size_t o = 0; o < octaves; o++)
 					{
 						int pitch = SeedSize >> o;

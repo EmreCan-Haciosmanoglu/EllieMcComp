@@ -67,7 +67,18 @@ namespace Can::Camera::Controller
 		PerspectiveCamera& GetCamera() { return m_Camera; }
 		const PerspectiveCamera& GetCamera() const { return m_Camera; }
 
+		inline float GetAspectRatio() { return m_AspectRatio; }
+		inline const float GetAspectRatio() const { return m_AspectRatio; }
+
 		inline float GetFOV() { return m_Fovy; }
+		inline const float GetFOV() const { return m_Fovy; }
+
+		inline float GetNear() { return m_Near; }
+		inline const float GetNear() const { return m_Near; }
+
+		inline float GetFar() { return m_Far; }
+		inline const float GetFar() const{ return m_Far; }
+
 	private:
 		bool OnWindowResized(Event::WindowResizeEvent& e);
 	private:

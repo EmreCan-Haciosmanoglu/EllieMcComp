@@ -1332,6 +1332,10 @@
     <ClInclude Include="src\Can\Renderer\Framebuffer.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLFramebuffer.h" />
     <ClInclude Include="src\Can\Noise\Perlin.h" />
+    <ClInclude Include="src\Can\Shadow\ShadowBox.h" />
+    <ClInclude Include="src\Can\Shadow\ShadowFrameBuffer.h" />
+    <ClInclude Include="src\Can\Shadow\ShadowMapEntityRenderer.h" />
+    <ClInclude Include="src\Can\Shadow\ShadowMapMasterRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -1463,5 +1467,9 @@
     <ClCompile Include="src\Can\Renderer\Framebuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLFramebuffer.cpp" />
     <ClCompile Include="src\Can\Noise\Perlin.cpp" />
+    <ClCompile Include="src\Can\Shadow\ShadowBox.cpp" />
+    <ClCompile Include="src\Can\Shadow\ShadowFrameBuffer.cpp" />
+    <ClCompile Include="src\Can\Shadow\ShadowMapEntityRenderer.cpp" />
+    <ClCompile Include="src\Can\Shadow\ShadowMapMasterRenderer.cpp" />
   </ItemGroup>
 </Project>
