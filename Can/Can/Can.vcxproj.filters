@@ -19,6 +19,9 @@
     <Filter Include="src\Can\Layers">
       <UniqueIdentifier>{6D5841FD-5926-3503-42BA-A5292E271168}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Can\Noise">
+      <UniqueIdentifier>{BBDC44BA-279D-C0F0-F0D7-096E5C5705CD}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Can\Renderer">
       <UniqueIdentifier>{D428ABF6-C021-CA48-E953-AFCDD5ABA954}</UniqueIdentifier>
     </Filter>
@@ -27,6 +30,9 @@
     </Filter>
     <Filter Include="src\Can\Scene\Components">
       <UniqueIdentifier>{40F9C9A6-2C1E-1927-5569-FEB641ED1745}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Can\Shadow">
+      <UniqueIdentifier>{A3F2060E-8FC0-FA13-7854-6B3A64C1D678}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Platform">
       <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
@@ -123,10 +129,16 @@
     <ClInclude Include="src\Can\MouseCodes.h">
       <Filter>src\Can</Filter>
     </ClInclude>
+    <ClInclude Include="src\Can\Noise\Perlin.h">
+      <Filter>src\Can\Noise</Filter>
+    </ClInclude>
     <ClInclude Include="src\Can\Random.h">
       <Filter>src\Can</Filter>
     </ClInclude>
     <ClInclude Include="src\Can\Renderer\Buffer.h">
+      <Filter>src\Can\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Renderer\Framebuffer.h">
       <Filter>src\Can\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Can\Renderer\GraphicsContext.h">
@@ -192,6 +204,18 @@
     <ClInclude Include="src\Can\Scene\Scene.h">
       <Filter>src\Can\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\Can\Shadow\ShadowBox.h">
+      <Filter>src\Can\Shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Shadow\ShadowFrameBuffer.h">
+      <Filter>src\Can\Shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Shadow\ShadowMapEntityRenderer.h">
+      <Filter>src\Can\Shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Shadow\ShadowMapMasterRenderer.h">
+      <Filter>src\Can\Shadow</Filter>
+    </ClInclude>
     <ClInclude Include="src\Can\Window.h">
       <Filter>src\Can</Filter>
     </ClInclude>
@@ -199,6 +223,9 @@
       <Filter>src\Platform\OpenGl</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGl\OpenGLContext.h">
+      <Filter>src\Platform\OpenGl</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGl\OpenGLFramebuffer.h">
       <Filter>src\Platform\OpenGl</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGl\OpenGLRendererAPI.h">
@@ -1329,13 +1356,6 @@
     <ClInclude Include="vendor\stb\stb_image.h">
       <Filter>vendor\stb</Filter>
     </ClInclude>
-    <ClInclude Include="src\Can\Renderer\Framebuffer.h" />
-    <ClInclude Include="src\Platform\OpenGl\OpenGLFramebuffer.h" />
-    <ClInclude Include="src\Can\Noise\Perlin.h" />
-    <ClInclude Include="src\Can\Shadow\ShadowBox.h" />
-    <ClInclude Include="src\Can\Shadow\ShadowFrameBuffer.h" />
-    <ClInclude Include="src\Can\Shadow\ShadowMapEntityRenderer.h" />
-    <ClInclude Include="src\Can\Shadow\ShadowMapMasterRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -1365,10 +1385,16 @@
     <ClCompile Include="src\Can\Log.cpp">
       <Filter>src\Can</Filter>
     </ClCompile>
+    <ClCompile Include="src\Can\Noise\Perlin.cpp">
+      <Filter>src\Can\Noise</Filter>
+    </ClCompile>
     <ClCompile Include="src\Can\Random.cpp">
       <Filter>src\Can</Filter>
     </ClCompile>
     <ClCompile Include="src\Can\Renderer\Buffer.cpp">
+      <Filter>src\Can\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Renderer\Framebuffer.cpp">
       <Filter>src\Can\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Can\Renderer\GraphicsContext.cpp">
@@ -1434,10 +1460,25 @@
     <ClCompile Include="src\Can\Scene\Scene.cpp">
       <Filter>src\Can\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\Can\Shadow\ShadowBox.cpp">
+      <Filter>src\Can\Shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Shadow\ShadowFrameBuffer.cpp">
+      <Filter>src\Can\Shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Shadow\ShadowMapEntityRenderer.cpp">
+      <Filter>src\Can\Shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Shadow\ShadowMapMasterRenderer.cpp">
+      <Filter>src\Can\Shadow</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\OpenGl\OpenGLBuffer.cpp">
       <Filter>src\Platform\OpenGl</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGl\OpenGLContext.cpp">
+      <Filter>src\Platform\OpenGl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGl\OpenGLFramebuffer.cpp">
       <Filter>src\Platform\OpenGl</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGl\OpenGLRendererAPI.cpp">
@@ -1464,12 +1505,5 @@
     <ClCompile Include="vendor\stb\stb_image.cpp">
       <Filter>vendor\stb</Filter>
     </ClCompile>
-    <ClCompile Include="src\Can\Renderer\Framebuffer.cpp" />
-    <ClCompile Include="src\Platform\OpenGl\OpenGLFramebuffer.cpp" />
-    <ClCompile Include="src\Can\Noise\Perlin.cpp" />
-    <ClCompile Include="src\Can\Shadow\ShadowBox.cpp" />
-    <ClCompile Include="src\Can\Shadow\ShadowFrameBuffer.cpp" />
-    <ClCompile Include="src\Can\Shadow\ShadowMapEntityRenderer.cpp" />
-    <ClCompile Include="src\Can\Shadow\ShadowMapMasterRenderer.cpp" />
   </ItemGroup>
 </Project>
