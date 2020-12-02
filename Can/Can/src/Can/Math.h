@@ -107,8 +107,14 @@ namespace Can::Math
 	Vector2<T> Lerp(Vector2<T> v1, Vector2<T>v2, T percentage)
 	{
 		return v1 + (v2 - v1) * percentage;
-		v2* t + v1 * (1 - t);
 	}
+
+	template<typename T>
+	T Lerp(T a, T b, T percentage)
+	{
+		return a + (b - a) * percentage;
+	}
+
 	template<typename T>
 	Vector3<T> Lerp(Vector3<T> v1, Vector3<T>v2, T percentage)
 	{
