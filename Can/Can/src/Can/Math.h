@@ -165,7 +165,7 @@ namespace Can::Math
 	{
 		Vector3 p0 = QuadraticCurve(
 			Vector3{ vs[0].x, vs[0].y, vs[0].z },
-			Vector3{ vs[1].x, vs[1].y, vs[2].z },
+			Vector3{ vs[1].x, vs[1].y, vs[1].z },
 			Vector3{ vs[2].x, vs[2].y, vs[2].z },
 			percentage
 		);
@@ -176,6 +176,17 @@ namespace Can::Math
 			percentage
 		);
 		return Lerp(p0, p1, percentage);
+	}
+
+	template<typename T>
+	Vector3<T> QuadraticCurve(const std::array<glm::vec3, 3>& vs, T percentage)
+	{
+		return QuadraticCurve(
+			Vector3{ vs[0].x, vs[0].y, vs[0].z },
+			Vector3{ vs[1].x, vs[1].y, vs[1].z },
+			Vector3{ vs[2].x, vs[2].y, vs[2].z },
+			percentage
+		);
 	}
 
 }
