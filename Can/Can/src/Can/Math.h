@@ -189,4 +189,28 @@ namespace Can::Math
 		);
 	}
 
+	template < typename T, int Size>
+	std::array<Vector3<T>, Size> GetCubicCurveSamples(const std::array<glm::vec3, 4>& vs, size_t quality)
+	{
+		std::array<Vector3<T>, Size> result;
+		return result;
+	}
+
+	bool CheckPointTriangleCollision(const std::array<glm::vec2, 3>& triangleA, const glm::vec2& point);
+
+	bool CheckTriangleTriangleCollision(const std::array<glm::vec2, 3>& triangleA, const std::array<glm::vec2, 3>& triangleB);
+
+	template <int countA, int countB>
+	bool CheckPolygonCollision(const std::array<std::array<glm::vec2, 3>, countA>& polygonA, const std::array<std::array<glm::vec2, 3>, countB>& polygonB)
+	{
+		for (size_t i = 0; i < countA; i++)
+		{
+			for (size_t i = 0; i < countB; i++)
+			{
+				if (CheckTriangleCollision(polygonA[i], polygonB[j]))
+					return true;
+			}
+		}
+		return false;
+	}
 }
