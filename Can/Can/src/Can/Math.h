@@ -204,13 +204,23 @@ namespace Can::Math
 	bool CheckPolygonCollision(const std::array<std::array<glm::vec2, 3>, countA>& polygonA, const std::array<std::array<glm::vec2, 3>, countB>& polygonB)
 	{
 		for (size_t i = 0; i < countA; i++)
-		{
 			for (size_t i = 0; i < countB; i++)
-			{
 				if (CheckTriangleCollision(polygonA[i], polygonB[j]))
 					return true;
-			}
-		}
+		
+		return false;
+	}
+
+	bool CheckLineSegmentLineSegmentCollision(const std::array<glm::vec2, 2>& lineSegmentA, const std::array<glm::vec2, 2>& lineSegmentB, glm::vec2* intersection = nullptr);
+
+	template <int countA, int countB>
+	bool CheckLineSegmentListLineSegmentListCollision(const std::array<std::array<glm::vec2, 2>, countA>& lineSegmentListA, const std::array<std::array<glm::vec2, 2>, countB>& lineSegmentListB)
+	{
+		for (size_t i = 0; i < countA; i++)
+			for (size_t i = 0; i < countB; i++)
+				if (CheckLineSegmentLineSegmentCollision(lineSegmentListA[i], lineSegmentListB[j]))
+					return true;
+
 		return false;
 	}
 }
