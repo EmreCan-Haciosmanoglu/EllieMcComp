@@ -189,10 +189,51 @@ namespace Can::Math
 		);
 	}
 
-	template < typename T, int Size>
-	std::array<Vector3<T>, Size> GetCubicCurveSamples(const std::array<glm::vec3, 4>& vs, size_t quality)
+	template <int Size, int Quality>
+	std::array<float, Size> GetCubicCurveSampleTs(const std::array<glm::vec3, 4>& vs)
 	{
-		std::array<Vector3<T>, Size> result;
+		std::array<float, Size> result;
+		result[0] = 0.0f;
+		result[Size-1] = 1.0f;
+
+		std::array<glm::vec3, Size> points;
+		points[0] = vs[0];
+		points[Size-1] = vs[3];
+
+		for (size_t i = 1; i < Size - 1; i++)
+		{
+			float t = i / (Size - 1.0f);
+			result[i] = t;
+			points[i] = CubicCurve(vs, t);
+		}
+
+		for (size_t k = 0; k < Quality; k++)
+		{
+			float avgLength = 0.0f;
+			for (size_t i = 0; i < Size - 1; i++)
+				avgLength += glm::length(points[i] - points[i + 1]);
+			avgLength /= (Size - 1.0f);
+
+			for (size_t i = 1; i < Size - 1; i++)
+			{
+				float l = glm::length(points[i] - points[i - 1]);
+				float ratio = (l + avgLength) / (l * 2.0f);
+				result[i] = (result[i] - result[i - 1]) * ratio + result[i - 1];
+				points[i] = CubicCurve(vs, result[i]);
+			}
+			float l = glm::length(points[Size - 1] - points[Size - 2]);
+			float ratio = (l + avgLength) / (l * 2.0f);
+			result[Size - 2] = 1.0f - (1.0f - result[Size - 2]) * ratio;
+			points[Size - 2] = CubicCurve(vs, result[Size - 2]);
+		}
+
+		return result;
+	}
+
+	template <int Size, int Quality>
+	std::array<glm::vec2, Size> GetCubicCurveSamples(const std::array<glm::vec2, 4>& vs)
+	{
+		std::array<glm::vec2, Size> result;
 		return result;
 	}
 
@@ -207,7 +248,7 @@ namespace Can::Math
 			for (size_t i = 0; i < countB; i++)
 				if (CheckTriangleCollision(polygonA[i], polygonB[j]))
 					return true;
-		
+
 		return false;
 	}
 
