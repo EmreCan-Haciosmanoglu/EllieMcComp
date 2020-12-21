@@ -54,4 +54,19 @@ namespace Can::Math
 			(*intersection) = lineSegmentA[0] + (t * s10);
 		return true;
     }
+
+    glm::vec2 RotatePoint(const glm::vec2& point, float angle)
+    {
+		return glm::vec2{
+			glm::cos(angle) * point.x - glm::sin(angle) * point,
+			glm::sin(angle) * point.x + glm::cos(angle) * point
+		};
+    }
+	glm::vec2 RotatePointAroundPoint(const glm::vec2& p1, float angle, const glm::vec2& p2)
+	{
+		return glm::vec2{
+			glm::cos(angle) * (p1.x - p2.x) - glm::sin(angle) * (p1.y - p2.y) + p2.x,
+			glm::sin(angle) * (p1.x - p2.x) + glm::cos(angle) * (p1.y - p2.y) + p2.y
+		};
+	}
 }

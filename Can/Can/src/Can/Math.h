@@ -264,4 +264,7 @@ namespace Can::Math
 
 		return false;
 	}
+
+	glm::vec2 RotatePoint(const glm::vec2& point, float angle);
+	glm::vec2 RotatePointAroundPoint(const glm::vec2& p1, float angle, const glm::vec2& p2);
 }
