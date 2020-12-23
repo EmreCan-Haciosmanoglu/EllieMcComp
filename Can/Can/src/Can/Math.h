@@ -296,19 +296,22 @@ namespace Can::Math
 
 		for (size_t i = 1; i < Size - 1; i++)
 		{
+			//put these P1 and p1 outside of the for-loop
 			glm::vec3 P1 = CubicCurve(Points, samples[i]);
 			glm::vec2 p1{ P1.x, P1.z };
+			
 			glm::vec3 P2 = CubicCurve(Points, samples[i + 1]);
 			glm::vec2 p2{ P2.x, P2.z };
 
+			//put this v1 outside of the for-loop
 			glm::vec2 v1 = halfRoadWidth * glm::normalize(p1 - p0);
-			glm::vec2 v2 = halfRoadWidth * glm::normalize(p2 - p1);
-
 			v1 = { -v1.y, v1.x };
+
+			glm::vec2 v2 = halfRoadWidth * glm::normalize(p2 - p1);
 			v2 = { -v2.y, v2.x };
 
-			result[2 * i + 0] = { p0 + v1, p0 - v1, p1 + v2 };
-			result[2 * i + 1] = { p0 - v1, p1 + v2, p1 - v2 };
+			result[2 * (i - 1) + 0] = { p0 + v1, p0 - v1, p1 + v2 };
+			result[2 * (i - 1) + 1] = { p0 - v1, p1 + v2, p1 - v2 };
 
 			p0 = p1;
 		}
