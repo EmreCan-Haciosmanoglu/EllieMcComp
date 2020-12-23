@@ -194,11 +194,11 @@ namespace Can::Math
 	{
 		std::array<float, Size> result;
 		result[0] = 0.0f;
-		result[Size-1] = 1.0f;
+		result[Size - 1] = 1.0f;
 
 		std::array<glm::vec3, Size> points;
 		points[0] = vs[0];
-		points[Size-1] = vs[3];
+		points[Size - 1] = vs[3];
 
 		for (size_t i = 1; i < Size - 1; i++)
 		{
@@ -218,6 +218,8 @@ namespace Can::Math
 			{
 				float l = glm::length(points[i] - points[i - 1]);
 				float ratio = (l + avgLength) / (l * 2.0f);
+				if (ratio <= 0.0f)
+					continue;
 				result[i] = (result[i] - result[i - 1]) * ratio + result[i - 1];
 				points[i] = CubicCurve(vs, result[i]);
 			}
@@ -267,4 +269,61 @@ namespace Can::Math
 
 	glm::vec2 RotatePoint(const glm::vec2& point, float angle);
 	glm::vec2 RotatePointAroundPoint(const glm::vec2& p1, float angle, const glm::vec2& p2);
+
+	template <int N>
+	std::array<glm::vec2, 2> GetMinsAndMaxs(const std::array<glm::vec2, N>& points)
+	{
+		glm::vec2 mins = points[0];
+		glm::vec2 maxs = points[0];
+		for (size_t i = 1; i < N; i++)
+		{
+			mins.x = (std::min)(mins.x, points[i].x);
+			mins.y = (std::min)(mins.y, points[i].y);
+			maxs.x = (std::max)(maxs.x, points[i].x);
+			maxs.y = (std::max)(maxs.y, points[i].y);
+		}
+		return{ mins, maxs };
+	}
+
+	std::array<std::array<glm::vec2, 3>, 2> GetBoundingBoxOfBezierCurve(const std::array<glm::vec3, 4>& Points, float halfRoadWidth);
+
+	template <int Size, int Quality>
+	std::array<std::array<glm::vec2, 3>, (Size - 1) * 2> GetBoundingPolygonOfBezierCurve(const std::array<glm::vec3, 4>& Points, float halfRoadWidth)
+	{
+		std::array<std::array<glm::vec2, 3>, (Size - 1) * 2> result;
+		std::array<float, Size> samples = GetCubicCurveSampleTs<Size, Quality>(Points);
+		glm::vec2 p0{ Points[0].x, Points[0].z };
+
+		for (size_t i = 1; i < Size - 1; i++)
+		{
+			glm::vec3 P1 = CubicCurve(Points, samples[i]);
+			glm::vec2 p1{ P1.x, P1.z };
+			glm::vec3 P2 = CubicCurve(Points, samples[i + 1]);
+			glm::vec2 p2{ P2.x, P2.z };
+
+			glm::vec2 v1 = halfRoadWidth * glm::normalize(p1 - p0);
+			glm::vec2 v2 = halfRoadWidth * glm::normalize(p2 - p1);
+
+			v1 = { -v1.y, v1.x };
+			v2 = { -v2.y, v2.x };
+
+			result[2 * i + 0] = { p0 + v1, p0 - v1, p1 + v2 };
+			result[2 * i + 1] = { p0 - v1, p1 + v2, p1 - v2 };
+
+			p0 = p1;
+		}
+		glm::vec3 P1 = CubicCurve(Points, 1.0f);
+		glm::vec2 p1{ P1.x, P1.z };
+
+		glm::vec2 v1 = halfRoadWidth * glm::normalize(p1 - p0);
+		glm::vec2 v2 = halfRoadWidth * glm::normalize(p1 - glm::vec2{ Points[2].x, Points[2].z });
+
+		v1 = { -v1.y, v1.x };
+		v2 = { -v2.y, v2.x };
+
+		result[2 * (Size - 2) + 0] = { p0 + v1, p0 - v1, p1 + v2 };
+		result[2 * (Size - 2) + 1] = { p0 - v1, p1 + v2, p1 - v2 };
+
+		return result;
+	}
 }
