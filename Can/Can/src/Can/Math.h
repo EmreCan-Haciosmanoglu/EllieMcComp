@@ -179,6 +179,14 @@ namespace Can::Math
 	}
 
 	template<typename T>
+	Vector3<T> CubicCurveTangent(const std::array<glm::vec3, 4>& vs, T percentage)
+	{
+		return (v2 - v1) * 3 +
+			   (v1 - 2 * v2 + v3) * t * 6 +
+			   (v4 - v1 + (v2 - v3) * 3) * t * t * 3;
+	}
+
+	template<typename T>
 	Vector3<T> QuadraticCurve(const std::array<glm::vec3, 3>& vs, T percentage)
 	{
 		return QuadraticCurve(
@@ -255,10 +263,10 @@ namespace Can::Math
 	}
 
 	template <int countA>
-	bool CheckPolygonPointCollision(const std::array<std::array<glm::vec2,3>, countA>& polygon, const glm::vec2& point)
+	bool CheckPolygonPointCollision(const std::array<std::array<glm::vec2, 3>, countA>& polygon, const glm::vec2& point)
 	{
 		for (size_t i = 0; i < countA; i++)
-			if(CheckPointTriangleCollision(polygon[i],point))
+			if (CheckPointTriangleCollision(polygon[i], point))
 				return true;
 		return false;
 	}
@@ -308,7 +316,7 @@ namespace Can::Math
 			//put these P1 and p1 outside of the for-loop
 			glm::vec3 P1 = CubicCurve(Points, samples[i]);
 			glm::vec2 p1{ P1.x, P1.z };
-			
+
 			glm::vec3 P2 = CubicCurve(Points, samples[i + 1]);
 			glm::vec2 p2{ P2.x, P2.z };
 
