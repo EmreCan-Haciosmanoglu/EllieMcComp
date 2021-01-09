@@ -181,9 +181,9 @@ namespace Can::Math
 	template<typename T>
 	Vector3<T> CubicCurveTangent(const std::array<glm::vec3, 4>& vs, T percentage)
 	{
-		return (v2 - v1) * 3 +
-			   (v1 - 2 * v2 + v3) * t * 6 +
-			   (v4 - v1 + (v2 - v3) * 3) * t * t * 3;
+		return (vs[1] - vs[0]) * 3.0f +
+			(vs[0] - vs[1] * 2.0f + vs[2]) * percentage * 6.0f + 
+			(vs[3] - vs[0] + (vs[1] - vs[2]) * 3.0f) * percentage * percentage * 3.0f;
 	}
 
 	template<typename T>
