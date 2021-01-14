@@ -228,7 +228,10 @@ namespace Can::Math
 				float ratio = (l + avgLength) / (l * 2.0f);
 				if (ratio <= 0.0f)
 					continue;
-				result[i] = (result[i] - result[i - 1]) * ratio + result[i - 1];
+				float nextT = (result[i] - result[i - 1]) * ratio + result[i - 1];
+				if (nextT >= result[i + 1])
+					continue;
+				result[i] = nextT;
 				points[i] = CubicCurve(vs, result[i]);
 			}
 			float l = glm::length(points[Size - 1] - points[Size - 2]);
@@ -236,9 +239,10 @@ namespace Can::Math
 			result[Size - 2] = 1.0f - (1.0f - result[Size - 2]) * ratio;
 			points[Size - 2] = CubicCurve(vs, result[Size - 2]);
 		}
-
 		return result;
 	}
+
+	std::vector<float> GetCubicCurveSampleTs(const std::array<glm::vec3, 4>& vs, float preferedLength);
 
 	template <int Size, int Quality>
 	std::array<glm::vec2, Size> GetCubicCurveSamples(const std::array<glm::vec2, 4>& vs)
