@@ -3,6 +3,80 @@
 
 namespace Can::Math
 {
+	std::vector<glm::vec3> GetCubicCurveSamples(const std::array<glm::vec3, 4>& vs, float preferedLength)
+	{
+		std::vector<float> result{ 0.0f };
+		glm::vec3 startP = vs[0];
+
+		while (true)
+		{
+			float l = glm::length(vs[3] - startP[0]);
+
+			float prevT = result[result.size() - 1];
+			float t = 1.0f;
+
+			while (l > preferedLength * 0.8f)
+			{
+				t = (t + prevT) * 0.5f;
+				glm::vec3 p = Math::CubicCurve<float>(vs, t);
+				l = glm::length(p - startP);
+			}
+			t += (t - prevT);
+			while (l > preferedLength * 0.8f)
+			{
+				t -= (t - prevT) * 0.1f;
+				glm::vec3 p = Math::CubicCurve<float>(vs, t);
+				l = glm::length(p - startP);
+			}
+			t += (t - prevT) * 0.1f;
+
+			if (t > 0.99f && l < preferedLength * 0.5f)
+			{
+				result.pop_back();
+				result.push_back(1.0f);
+				break;
+			}
+			else
+			{
+				result.push_back(t);
+				startP = Math::CubicCurve<float>(vs, t);
+			}
+		}
+		size_t Size = result.size();
+		std::vector<glm::vec3> points;
+		points.resize(Size);
+		points[0] = vs[0];
+		for (size_t i = 1; i < Size - 1; i++)
+			points[i] = Math::CubicCurve<float>(vs, result[i]);
+		points[Size - 1] = vs[3];
+
+		constexpr size_t Quality = 2;
+		for (size_t i = 0; i < Quality; i++)
+		{
+			float avgLength = 0.0f;
+			for (size_t i = 0; i < Size - 1; i++)
+				avgLength += glm::length(points[i] - points[i + 1]);
+			avgLength /= (Size - 1.0f);
+
+			for (size_t i = 1; i < Size - 1; i++)
+			{
+				float l = glm::length(points[i] - points[i - 1]);
+				float ratio = (l + avgLength) / (l * 2.0f);
+				if (ratio <= 0.0f)
+					continue;
+				float nextT = (result[i] - result[i - 1]) * ratio + result[i - 1];
+				if (nextT >= result[i + 1])
+					continue;
+				result[i] = nextT;
+				points[i] = CubicCurve(vs, result[i]);
+			}
+			float l = glm::length(points[Size - 1] - points[Size - 2]);
+			float ratio = (l + avgLength) / (l * 2.0f);
+			result[Size - 2] = 1.0f - (1.0f - result[Size - 2]) * ratio;
+			points[Size - 2] = CubicCurve(vs, result[Size - 2]);
+		}
+		return points;
+	}
 	std::vector<float> GetCubicCurveSampleTs(const std::array<glm::vec3, 4>& vs, float preferedLength)
 	{
 		std::vector<float> result{ 0.0f };
@@ -77,6 +151,7 @@ namespace Can::Math
 		}
 		return result;
 	}
+	
 	bool CheckPointTriangleCollision(const std::array<glm::vec2, 3>& triangleA, const glm::vec2& point)
 	{
 		glm::vec2 u = (triangleA[2] - triangleA[1]) - (glm::dot(triangleA[2] - triangleA[0], triangleA[2] - triangleA[1]) / glm::dot(triangleA[2] - triangleA[0], triangleA[2] - triangleA[0])) * (triangleA[2] - triangleA[0]);
@@ -152,6 +227,7 @@ namespace Can::Math
 			glm::sin(angle) * (p1.x - p2.x) + glm::cos(angle) * (p1.y - p2.y) + p2.y
 		};
 	}
+	
 	std::array<std::array<glm::vec2, 3>, 2> GetBoundingBoxOfBezierCurve(const std::array<glm::vec3, 4>& Points, float halfRoadWidth)
 	{
 		glm::vec2 A1{ Points[0].x, Points[0].z };
