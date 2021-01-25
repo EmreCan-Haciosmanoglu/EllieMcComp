@@ -242,7 +242,7 @@ namespace Can::Math
 		return result;
 	}
 
-	std::vector<glm::vec3> GetCubicCurveSamples(const std::array<glm::vec3, 4>& vs, float preferedLength);
+	std::vector<glm::vec3> GetCubicCurveSamples(const std::array<glm::vec3, 4>& vs, float preferedLength, std::vector<float>& ts);
 	std::vector<float> GetCubicCurveSampleTs(const std::array<glm::vec3, 4>& vs, float preferedLength);
 
 	template <int Size, int Quality>

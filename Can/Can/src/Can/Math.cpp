@@ -3,16 +3,15 @@
 
 namespace Can::Math
 {
-	std::vector<glm::vec3> GetCubicCurveSamples(const std::array<glm::vec3, 4>& vs, float preferedLength)
+	std::vector<glm::vec3> GetCubicCurveSamples(const std::array<glm::vec3, 4>& vs, float preferedLength, std::vector<float>& ts)
 	{
-		std::vector<float> result{ 0.0f };
 		glm::vec3 startP = vs[0];
 
 		while (true)
 		{
 			float l = glm::length(vs[3] - startP[0]);
 
-			float prevT = result[result.size() - 1];
+			float prevT = ts[ts.size() - 1];
 			float t = 1.0f;
 
 			while (l > preferedLength * 0.8f)
@@ -32,22 +31,22 @@ namespace Can::Math
 
 			if (t > 0.99f && l < preferedLength * 0.5f)
 			{
-				result.pop_back();
-				result.push_back(1.0f);
+				ts.pop_back();
+				ts.push_back(1.0f);
 				break;
 			}
 			else
 			{
-				result.push_back(t);
+				ts.push_back(t);
 				startP = Math::CubicCurve<float>(vs, t);
 			}
 		}
-		size_t Size = result.size();
+		size_t Size = ts.size();
 		std::vector<glm::vec3> points;
 		points.resize(Size);
 		points[0] = vs[0];
 		for (size_t i = 1; i < Size - 1; i++)
-			points[i] = Math::CubicCurve<float>(vs, result[i]);
+			points[i] = Math::CubicCurve<float>(vs, ts[i]);
 		points[Size - 1] = vs[3];
 
 		constexpr size_t Quality = 2;
@@ -64,16 +63,16 @@ namespace Can::Math
 				float ratio = (l + avgLength) / (l * 2.0f);
 				if (ratio <= 0.0f)
 					continue;
-				float nextT = (result[i] - result[i - 1]) * ratio + result[i - 1];
-				if (nextT >= result[i + 1])
+				float nextT = (ts[i] - ts[i - 1]) * ratio + ts[i - 1];
+				if (nextT >= ts[i + 1])
 					continue;
-				result[i] = nextT;
-				points[i] = CubicCurve(vs, result[i]);
+				ts[i] = nextT;
+				points[i] = CubicCurve(vs, ts[i]);
 			}
 			float l = glm::length(points[Size - 1] - points[Size - 2]);
 			float ratio = (l + avgLength) / (l * 2.0f);
-			result[Size - 2] = 1.0f - (1.0f - result[Size - 2]) * ratio;
-			points[Size - 2] = CubicCurve(vs, result[Size - 2]);
+			ts[Size - 2] = 1.0f - (1.0f - ts[Size - 2]) * ratio;
+			points[Size - 2] = CubicCurve(vs, ts[Size - 2]);
 		}
 		return points;
 	}
