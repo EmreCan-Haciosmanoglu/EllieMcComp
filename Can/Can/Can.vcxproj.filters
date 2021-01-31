@@ -1358,6 +1358,8 @@
     </ClInclude>
     <ClInclude Include="src\Can\Math.h" />
     <ClInclude Include="src\Can\Scene\ScrollBar.h" />
+    <ClInclude Include="src\Can\Scene\Components\IgnoreCollisionComponent.h" />
+    <ClInclude Include="src\Can\Scene\Components\OnDragCallbackComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -1509,5 +1511,7 @@
     </ClCompile>
     <ClCompile Include="src\Can\Math.cpp" />
     <ClCompile Include="src\Can\Scene\ScrollBar.cpp" />
+    <ClCompile Include="src\Can\Scene\Components\IgnoreCollisionComponent.cpp" />
+    <ClCompile Include="src\Can\Scene\Components\OnDragCallbackComponent.cpp" />
   </ItemGroup>
 </Project>

@@ -184,7 +184,9 @@
     <ClInclude Include="src\Can\Scene\Components\ChildrenComponent.h" />
     <ClInclude Include="src\Can\Scene\Components\DisabledComponent.h" />
     <ClInclude Include="src\Can\Scene\Components\HiddenComponent.h" />
+    <ClInclude Include="src\Can\Scene\Components\IgnoreCollisionComponent.h" />
     <ClInclude Include="src\Can\Scene\Components\OnClickCallbackComponent.h" />
+    <ClInclude Include="src\Can\Scene\Components\OnDragCallbackComponent.h" />
     <ClInclude Include="src\Can\Scene\Components\ParentComponent.h" />
     <ClInclude Include="src\Can\Scene\Components\SpriteRendererComponent.h" />
     <ClInclude Include="src\Can\Scene\Components\TransformComponent.h" />
@@ -606,7 +608,9 @@
     <ClCompile Include="src\Can\Scene\Components\ChildrenComponent.cpp" />
     <ClCompile Include="src\Can\Scene\Components\DisabledComponent.cpp" />
     <ClCompile Include="src\Can\Scene\Components\HiddenComponent.cpp" />
+    <ClCompile Include="src\Can\Scene\Components\IgnoreCollisionComponent.cpp" />
     <ClCompile Include="src\Can\Scene\Components\OnClickCallbackComponent.cpp" />
+    <ClCompile Include="src\Can\Scene\Components\OnDragCallbackComponent.cpp" />
     <ClCompile Include="src\Can\Scene\Components\ParentComponent.cpp" />
     <ClCompile Include="src\Can\Scene\Components\SpriteRendererComponent.cpp" />
     <ClCompile Include="src\Can\Scene\Components\TransformComponent.cpp" />

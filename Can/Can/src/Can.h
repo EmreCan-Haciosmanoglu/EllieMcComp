@@ -39,6 +39,7 @@
 #include "Can/Scene/Components/IgnoreCollisionComponent.h"
 #include "Can/Scene/Components/ChildrenComponent.h"
 #include "Can/Scene/Components/OnClickCallbackComponent.h"
+#include "Can/Scene/Components/OnDragCallbackComponent.h"
 
 
 #include "Platform/OpenGl/OpenGLBuffer.h"
