@@ -1357,6 +1357,7 @@
       <Filter>vendor\stb</Filter>
     </ClInclude>
     <ClInclude Include="src\Can\Math.h" />
+    <ClInclude Include="src\Can\Scene\ScrollBar.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -1507,5 +1508,6 @@
       <Filter>vendor\stb</Filter>
     </ClCompile>
     <ClCompile Include="src\Can\Math.cpp" />
+    <ClCompile Include="src\Can\Scene\ScrollBar.cpp" />
   </ItemGroup>
 </Project>

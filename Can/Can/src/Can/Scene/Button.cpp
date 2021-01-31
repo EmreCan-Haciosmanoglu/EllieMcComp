@@ -1,6 +1,5 @@
 #include "canpch.h"
 #include "Button.h"
-#include <glm/gtx/matrix_decompose.hpp>
 
 namespace Can
 {
@@ -16,6 +15,5 @@ namespace Can
 
 		if (parameters.OnClick)
 			sceneRegistry.emplace<OnClickCallbackComponent>(entityID, parameters.OnClick);
-
 	}
 }

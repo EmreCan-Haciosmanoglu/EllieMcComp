@@ -190,6 +190,7 @@
     <ClInclude Include="src\Can\Scene\Components\TransformComponent.h" />
     <ClInclude Include="src\Can\Scene\Panel.h" />
     <ClInclude Include="src\Can\Scene\Scene.h" />
+    <ClInclude Include="src\Can\Scene\ScrollBar.h" />
     <ClInclude Include="src\Can\Shadow\ShadowBox.h" />
     <ClInclude Include="src\Can\Shadow\ShadowFrameBuffer.h" />
     <ClInclude Include="src\Can\Shadow\ShadowMapEntityRenderer.h" />
@@ -611,6 +612,7 @@
     <ClCompile Include="src\Can\Scene\Components\TransformComponent.cpp" />
     <ClCompile Include="src\Can\Scene\Panel.cpp" />
     <ClCompile Include="src\Can\Scene\Scene.cpp" />
+    <ClCompile Include="src\Can\Scene\ScrollBar.cpp" />
     <ClCompile Include="src\Can\Shadow\ShadowBox.cpp" />
     <ClCompile Include="src\Can\Shadow\ShadowFrameBuffer.cpp" />
     <ClCompile Include="src\Can\Shadow\ShadowMapEntityRenderer.cpp" />

@@ -77,7 +77,6 @@ namespace Can::Event
 
 		EVENT_CLASS_TYPE(MouseButtonPressed)
 	};
-
 	class  MouseButtonReleasedEvent : public MouseButtonEvent
 	{
 	public:
