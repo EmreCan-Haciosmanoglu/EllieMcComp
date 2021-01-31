@@ -16,7 +16,7 @@ namespace Can
 	class Button
 	{
 	public:
-		Button(ButtonConstructorParameters parameters);
+		Button(const ButtonConstructorParameters& parameters);
 
 	public:
 		entt::registry& sceneRegistry;

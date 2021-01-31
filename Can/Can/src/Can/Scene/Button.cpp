@@ -4,7 +4,7 @@
 
 namespace Can
 {
-	Button::Button(ButtonConstructorParameters parameters)
+	Button::Button(const ButtonConstructorParameters& parameters)
 		: sceneRegistry(parameters.Registry)
 		, entityID(sceneRegistry.create())
 	{
