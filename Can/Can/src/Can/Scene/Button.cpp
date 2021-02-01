@@ -16,4 +16,8 @@ namespace Can
 		if (parameters.OnClick)
 			sceneRegistry.emplace<OnClickCallbackComponent>(entityID, parameters.OnClick);
 	}
+	Button::~Button()
+	{
+		sceneRegistry.destroy(entityID);
+	}
 }
