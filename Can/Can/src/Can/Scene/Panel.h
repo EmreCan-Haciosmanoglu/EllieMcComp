@@ -4,79 +4,25 @@
 
 namespace Can
 {
+	struct PanelConstructorParameters
+	{
+		entt::registry& Registry;
+		entt::entity Parent = entt::null;
+		const glm::vec3& Position = glm::vec3(0.0f);
+		const glm::vec3& Size = glm::vec3(1.0f);
+		const glm::vec4& Color = glm::vec4(1.0f);
+		const Ref<Texture2D>& Texture = nullptr;
+		std::function<void()> OnClick;
+	};
+
 	class Panel
 	{
 	public:
-		Panel(
-			entt::registry& registry,
-			entt::entity parent
-		);
-		Panel(
-			entt::registry& registry,
-			entt::entity parent,
-			const glm::vec3& position,
-			const glm::vec3& size,
-			const glm::vec4& color
-		);
-		Panel(
-			entt::registry& registry,
-			entt::entity parent,
-			const glm::vec3& position,
-			const glm::vec3& size,
-			const glm::vec4& color,
-			std::function<void()> onClick
-		);
-		Panel(
-			entt::registry& registry,
-			entt::entity parent,
-			const glm::vec3& position,
-			const glm::vec3& size,
-			const Ref<Texture2D>& texture,
-			const glm::vec4& tintColor
-		);
-		Panel(
-			entt::registry& registry,
-			entt::entity parent,
-			const glm::vec3& position,
-			const glm::vec3& size,
-			const Ref<Texture2D>& texture,
-			const glm::vec4& tintColor,
-			std::function<void()> onClick
-		);
-		Panel(
-			entt::registry& registry
-		);
-		Panel(
-			entt::registry& registry,
-			const glm::vec3& position,
-			const glm::vec3& size,
-			const glm::vec4& color
-		);
-		Panel(
-			entt::registry& registry,
-			const glm::vec3& position,
-			const glm::vec3& size,
-			const glm::vec4& color,
-			std::function<void()> onClick
-		);
-		Panel(
-			entt::registry& registry,
-			const glm::vec3& position,
-			const glm::vec3& size,
-			const Ref<Texture2D>& texture,
-			const glm::vec4& tintColor
-		);
-		Panel(
-			entt::registry& registry,
-			const glm::vec3& position,
-			const glm::vec3& size,
-			const Ref<Texture2D>& texture,
-			const glm::vec4& tintColor,
-			std::function<void()> onClick
-		);
+		Panel(const PanelConstructorParameters& parameters);
+		~Panel();
 
-		public:
-		entt::registry* sceneRegistry;
+	public:
+		entt::registry& sceneRegistry;
 		entt::entity entityID;
 	};
 }
