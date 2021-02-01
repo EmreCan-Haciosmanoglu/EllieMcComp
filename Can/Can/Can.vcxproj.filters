@@ -1360,6 +1360,8 @@
     <ClInclude Include="src\Can\Scene\ScrollBar.h" />
     <ClInclude Include="src\Can\Scene\Components\IgnoreCollisionComponent.h" />
     <ClInclude Include="src\Can\Scene\Components\OnDragCallbackComponent.h" />
+    <ClInclude Include="src\Can\Scene\ScrollView.h" />
+    <ClInclude Include="src\Can\Scene\Components\OnChangeCallbackComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -1513,5 +1515,7 @@
     <ClCompile Include="src\Can\Scene\ScrollBar.cpp" />
     <ClCompile Include="src\Can\Scene\Components\IgnoreCollisionComponent.cpp" />
     <ClCompile Include="src\Can\Scene\Components\OnDragCallbackComponent.cpp" />
+    <ClCompile Include="src\Can\Scene\ScrollView.cpp" />
+    <ClCompile Include="src\Can\Scene\Components\OnChangeCallbackComponent.cpp" />
   </ItemGroup>
 </Project>

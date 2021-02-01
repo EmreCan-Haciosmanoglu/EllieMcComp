@@ -19,6 +19,21 @@ namespace Can
 	}
 	Panel::~Panel()
 	{
+		if (sceneRegistry.has<ChildrenComponent>(entityID))
+		{
+			ChildrenComponent& children = sceneRegistry.get<ChildrenComponent>(entityID);
+			for (auto child : children)
+				sceneRegistry.remove<ParentComponent>(child);
+		}
+		if (sceneRegistry.has<ParentComponent>(entityID))
+		{
+			entt::entity parent = sceneRegistry.get<ParentComponent>(entityID);
+			std::vector<entt::entity>& children = sceneRegistry.get<ChildrenComponent>(parent);
+			if (children.size() > 1)
+				children.erase(std::find(children.begin(), children.end(), entityID));
+			else
+				sceneRegistry.remove<ChildrenComponent>(parent);
+		}
 		sceneRegistry.destroy(entityID);
 	}
 }

@@ -31,6 +31,7 @@
 #include "Can/Scene/Scene.h"
 #include "Can/Scene/Button.h"
 #include "Can/Scene/ScrollBar.h"
+#include "Can/Scene/ScrollView.h"
 #include "Can/Scene/Components/ParentComponent.h"
 #include "Can/Scene/Components/TransformComponent.h"
 #include "Can/Scene/Components/SpriteRendererComponent.h"
@@ -40,6 +41,7 @@
 #include "Can/Scene/Components/ChildrenComponent.h"
 #include "Can/Scene/Components/OnClickCallbackComponent.h"
 #include "Can/Scene/Components/OnDragCallbackComponent.h"
+#include "Can/Scene/Components/OnChangeCallbackComponent.h"
 
 
 #include "Platform/OpenGl/OpenGLBuffer.h"

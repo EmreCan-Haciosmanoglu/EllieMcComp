@@ -185,6 +185,7 @@
     <ClInclude Include="src\Can\Scene\Components\DisabledComponent.h" />
     <ClInclude Include="src\Can\Scene\Components\HiddenComponent.h" />
     <ClInclude Include="src\Can\Scene\Components\IgnoreCollisionComponent.h" />
+    <ClInclude Include="src\Can\Scene\Components\OnChangeCallbackComponent.h" />
     <ClInclude Include="src\Can\Scene\Components\OnClickCallbackComponent.h" />
     <ClInclude Include="src\Can\Scene\Components\OnDragCallbackComponent.h" />
     <ClInclude Include="src\Can\Scene\Components\ParentComponent.h" />
@@ -193,6 +194,7 @@
     <ClInclude Include="src\Can\Scene\Panel.h" />
     <ClInclude Include="src\Can\Scene\Scene.h" />
     <ClInclude Include="src\Can\Scene\ScrollBar.h" />
+    <ClInclude Include="src\Can\Scene\ScrollView.h" />
     <ClInclude Include="src\Can\Shadow\ShadowBox.h" />
     <ClInclude Include="src\Can\Shadow\ShadowFrameBuffer.h" />
     <ClInclude Include="src\Can\Shadow\ShadowMapEntityRenderer.h" />
@@ -609,6 +611,7 @@
     <ClCompile Include="src\Can\Scene\Components\DisabledComponent.cpp" />
     <ClCompile Include="src\Can\Scene\Components\HiddenComponent.cpp" />
     <ClCompile Include="src\Can\Scene\Components\IgnoreCollisionComponent.cpp" />
+    <ClCompile Include="src\Can\Scene\Components\OnChangeCallbackComponent.cpp" />
     <ClCompile Include="src\Can\Scene\Components\OnClickCallbackComponent.cpp" />
     <ClCompile Include="src\Can\Scene\Components\OnDragCallbackComponent.cpp" />
     <ClCompile Include="src\Can\Scene\Components\ParentComponent.cpp" />
@@ -617,6 +620,7 @@
     <ClCompile Include="src\Can\Scene\Panel.cpp" />
     <ClCompile Include="src\Can\Scene\Scene.cpp" />
     <ClCompile Include="src\Can\Scene\ScrollBar.cpp" />
+    <ClCompile Include="src\Can\Scene\ScrollView.cpp" />
     <ClCompile Include="src\Can\Shadow\ShadowBox.cpp" />
     <ClCompile Include="src\Can\Shadow\ShadowFrameBuffer.cpp" />
     <ClCompile Include="src\Can\Shadow\ShadowMapEntityRenderer.cpp" />
