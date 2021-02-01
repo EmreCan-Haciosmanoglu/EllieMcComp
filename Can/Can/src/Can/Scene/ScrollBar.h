@@ -23,6 +23,7 @@ namespace Can
 	{
 	public:
 		ScrollBar(const ScrollBarConstructorParameters& parameters);
+		~ScrollBar();
 
 	public:
 		entt::registry& sceneRegistry;

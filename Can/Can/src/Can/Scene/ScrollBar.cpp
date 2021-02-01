@@ -36,4 +36,8 @@ namespace Can
 		if (parameters.OnClick)
 			sceneRegistry.emplace<OnClickCallbackComponent>(entityID, parameters.OnClick);
 	}
+	ScrollBar::~ScrollBar()
+	{
+		sceneRegistry.destroy(entityID);
+	}
 }
