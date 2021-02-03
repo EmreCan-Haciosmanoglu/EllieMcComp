@@ -5,6 +5,6 @@ namespace Can::Utility
 {
 	Random::Random()
 	{
-		std::srand(std::time(nullptr));
+		std::srand((unsigned int)std::time(nullptr));
 	}
 }

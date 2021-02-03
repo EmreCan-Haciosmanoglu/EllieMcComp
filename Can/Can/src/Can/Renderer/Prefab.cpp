@@ -48,8 +48,8 @@ namespace Can
 				boundingBoxM.z = std::max(boundingBoxM.z, TOVertices[i].Position.z);
 			}
 			vertices = (float*)TOVertices;
-
-			vertexBuffer = VertexBuffer::Create(vertices, indexCount * sizeof(TexturedObjectVertex), true);
+			
+			vertexBuffer = VertexBuffer::Create(vertices, (uint32_t)(indexCount * sizeof(TexturedObjectVertex)), true);
 			vertexBuffer->SetLayout({
 				{ ShaderDataType::Float3, "a_Position"},
 				{ ShaderDataType::Float2, "a_UV"},
@@ -64,7 +64,7 @@ namespace Can
 			for (int i = 0; i < indexCount; i++)
 				indices[i] = i;
 
-			indexBuffer = IndexBuffer::Create(indices, indexCount);
+			indexBuffer = IndexBuffer::Create(indices, (uint32_t)indexCount);
 			vertexArray->SetIndexBuffer(indexBuffer);
 
 			textures[0] = Texture2D::Create(texturePath);
@@ -97,7 +97,7 @@ namespace Can
 
 		vertexArray = VertexArray::Create();
 
-		vertexBuffer = VertexBuffer::Create(vertices, indexCount * 9 * sizeof(float), true);
+		vertexBuffer = VertexBuffer::Create(vertices, (uint32_t)(indexCount * 9 * sizeof(float)), true);
 		vertexBuffer->SetLayout({
 		   { ShaderDataType::Float3, "a_Position"},
 		   { ShaderDataType::Float2, "a_UV"},
@@ -112,7 +112,7 @@ namespace Can
 		for (int i = 0; i < indexCount; i++)
 			indices[i] = i;
 
-		indexBuffer = IndexBuffer::Create(indices, indexCount);
+		indexBuffer = IndexBuffer::Create(indices, (uint32_t)indexCount);
 		vertexArray->SetIndexBuffer(indexBuffer);
 
 		textures[0] = Texture2D::Create(texturePath);
@@ -143,7 +143,7 @@ namespace Can
 
 		vertexArray = VertexArray::Create();
 
-		vertexBuffer = VertexBuffer::Create(vertices, vertexCount * sizeof(float), true);
+		vertexBuffer = VertexBuffer::Create(vertices, (uint32_t)(vertexCount * sizeof(float)), true);
 		vertexBuffer->SetLayout({
 		   { ShaderDataType::Float3, "a_Position"},
 		   { ShaderDataType::Float2, "a_UV"},
@@ -158,7 +158,7 @@ namespace Can
 		for (int i = 0; i < indexCount; i++)
 			indices[i] = i;
 
-		indexBuffer = IndexBuffer::Create(indices, indexCount);
+		indexBuffer = IndexBuffer::Create(indices, (uint32_t)indexCount);
 		vertexArray->SetIndexBuffer(indexBuffer);
 
 		shader = Shader::Create(shaderPath);
@@ -184,7 +184,7 @@ namespace Can
 
 		vertexArray = VertexArray::Create();
 
-		vertexBuffer = VertexBuffer::Create(vertices, sizeof(float) * vertexCount, true);
+		vertexBuffer = VertexBuffer::Create(vertices, (uint32_t)(sizeof(float) * vertexCount), true);
 		vertexBuffer->SetLayout(layout);
 
 		vertexArray->AddVertexBuffer(vertexBuffer);
@@ -194,7 +194,7 @@ namespace Can
 		for (int i = 0; i < indexCount; i++)
 			indices[i] = i;
 
-		indexBuffer = IndexBuffer::Create(indices, indexCount);
+		indexBuffer = IndexBuffer::Create(indices, (uint32_t)indexCount);
 		vertexArray->SetIndexBuffer(indexBuffer);
 
 		if (texturePath.compare("") != 0)
