@@ -38,6 +38,7 @@
 #include "Can/Scene/Components/DisabledComponent.h"
 #include "Can/Scene/Components/HiddenComponent.h"
 #include "Can/Scene/Components/IgnoreCollisionComponent.h"
+#include "Can/Scene/Components/IgnoreScrollingComponent.h"
 #include "Can/Scene/Components/ChildrenComponent.h"
 #include "Can/Scene/Components/OnClickCallbackComponent.h"
 #include "Can/Scene/Components/OnDragCallbackComponent.h"
