@@ -2,6 +2,7 @@
 #include "Panel.h"
 #include <glm/gtx/matrix_decompose.hpp>
 
+
 namespace Can
 {
 	Panel::Panel(const PanelConstructorParameters& parameters)
