@@ -15,6 +15,7 @@ namespace Can
 		if (parameters.Parent != entt::null)
 			sceneRegistry.emplace<ParentComponent>(entityID, parameters.Parent);
 
+		sceneRegistry.emplace<IgnoreScrollingComponent>(entityID);
 		sceneRegistry.emplace<TransformComponent>(entityID, parameters.Position);
 		sceneRegistry.emplace<SpriteRendererComponent>(entityID, parameters.Size, nullptr, parameters.BaseColor);
 
@@ -24,13 +25,12 @@ namespace Can
 		sceneRegistry.emplace<IgnoreCollisionComponent>(bar);
 
 		float ratio = fixedSize ? sizeRatio : 1.0f / parameters.oversize;
-		glm::vec3 size{
+		glm::vec2 size{
 			parameters.Size.x * (vertical ? 0.9f : ratio),
-			parameters.Size.y * (vertical ? ratio : 0.9f),
-			parameters.Size.z
+			parameters.Size.y * (vertical ? ratio : 0.9f)
 		};
-		glm::vec3 offset = (parameters.Size - size) * barPosition;
-		sceneRegistry.emplace<TransformComponent>(bar, parameters.Position + offset + glm::vec3{ 0.0f, 0.0f, 0.001f });
+		glm::vec2 offset = (parameters.Size - size) * barPosition;
+		sceneRegistry.emplace<TransformComponent>(bar, parameters.Position + glm::vec3(offset, 0.0f) + glm::vec3{ 0.0f, 0.0f, 0.001f });
 		sceneRegistry.emplace<SpriteRendererComponent>(bar, size, nullptr, parameters.BarColor);
 
 		if (parameters.OnClick)
@@ -54,5 +54,33 @@ namespace Can
 				sceneRegistry.remove<ChildrenComponent>(parent);
 		}
 		sceneRegistry.destroy(entityID);
+	}
+	bool ScrollBar::Update(const glm::vec2& mousePos)
+	{
+		entt::entity barID = sceneRegistry.get<ChildrenComponent>(entityID)[0];
+
+		const TransformComponent& sbTransform = sceneRegistry.get<TransformComponent>(entityID);
+		const SpriteRendererComponent& sbsr = sceneRegistry.get<SpriteRendererComponent>(entityID);
+
+
+		TransformComponent& bTransform = sceneRegistry.get<TransformComponent>(barID);
+		SpriteRendererComponent& bsr = sceneRegistry.get<SpriteRendererComponent>(barID);
+
+		glm::vec2 ts = (mousePos - (glm::vec2{ sbTransform.Position.x, sbTransform.Position.y } + bsr.size * 0.5f)) / (sbsr.size - bsr.size);
+		ts = { std::clamp(ts.x, 0.0f, 1.0f), std::clamp(ts.y, 0.0f, 1.0f) };
+
+		glm::vec2 diffTs = (ts - barPosition) * (sbsr.size - bsr.size);
+		glm::vec3 movement = {
+			vertical ? 0.0f : diffTs.x,
+			vertical ? diffTs.y : 0.0f,
+			0.0f
+		};
+		bTransform.Position += movement;
+		
+		if (barPosition == (vertical ? ts.y : ts.x))
+			return false;
+		
+		barPosition = vertical ? ts.y : ts.x;
+		return true;
 	}
 }
