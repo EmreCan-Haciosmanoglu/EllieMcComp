@@ -38,7 +38,7 @@ namespace Can
 		std::array<Ref<Texture2D>, MaxTextureSlots> TextureSlots;
 		uint32_t TextureSlotIndex = 1; // 0 => white texture;
 
-		glm::vec4 QuadVertexPositions[4];
+		glm::vec4 QuadVertexPositions;
 	};
 
 	static Renderer2DData s_Data;
@@ -94,10 +94,10 @@ namespace Can
 
 		s_Data.TextureSlots[0] = s_Data.WhiteTexture;
 
-		s_Data.QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
-		s_Data.QuadVertexPositions[1] = { +0.5f, -0.5f, 0.0f, 1.0f };
-		s_Data.QuadVertexPositions[2] = { +0.5f, +0.5f, 0.0f, 1.0f };
-		s_Data.QuadVertexPositions[3] = { -0.5f, +0.5f, 0.0f, 1.0f };
+		s_Data.QuadVertexPositions = { -0.5f, -0.5f, 0.0f, 1.0f };
+		//s_Data.QuadVertexPositions[1] = { +0.5f, -0.5f, 0.0f, 1.0f };
+		//s_Data.QuadVertexPositions[2] = { +0.5f, +0.5f, 0.0f, 1.0f };
+		//s_Data.QuadVertexPositions[3] = { -0.5f, +0.5f, 0.0f, 1.0f };
 	}
 	void Renderer2D::Shutdown()
 	{
@@ -135,7 +135,6 @@ namespace Can
 		RenderCommand::DrawIndexed(s_Data.QuadVertexArray, s_Data.QuadIndexCount);
 	}
 
-
 	void Renderer2D::DrawQuad(const DrawQuadParameters& parameters)
 	{
 		CAN_PROFILE_FUNCTION();
@@ -147,7 +146,6 @@ namespace Can
 
 		DrawQuad(transform, parameters);
 	}
-
 	void Renderer2D::DrawQuad(const glm::mat4& transform, const DrawQuadParameters& parameters)
 	{
 		float textureIndex = 0.0f;
@@ -168,31 +166,31 @@ namespace Can
 				s_Data.TextureSlotIndex++;
 			}
 		}
-
-		s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[0];
+		glm::vec4 trim{ 1.0f, 1.0f, 0.0f, 0.0f };
+		s_Data.QuadVertexBufferPtr->Position = transform * (s_Data.QuadVertexPositions + glm::vec4 { parameters.trim[3], 1.0f - parameters.trim[2], 0.0f, 0.0f });
 		s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
+		s_Data.QuadVertexBufferPtr->TexCoord = { parameters.trim[3], 1.0f - parameters.trim[2] };
 		s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
 		s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
 		s_Data.QuadVertexBufferPtr++;
 
-		s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[1];
+		s_Data.QuadVertexBufferPtr->Position = transform * (s_Data.QuadVertexPositions + glm::vec4{ parameters.trim[1], 1.0f - parameters.trim[2], 0.0f, 0.0f });;
 		s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 0.0f };
+		s_Data.QuadVertexBufferPtr->TexCoord = { parameters.trim[1], 1.0f - parameters.trim[2] };
 		s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
 		s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
 		s_Data.QuadVertexBufferPtr++;
 
-		s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[2];
+		s_Data.QuadVertexBufferPtr->Position = transform * (s_Data.QuadVertexPositions + glm::vec4{ parameters.trim[1], 1.0f - parameters.trim[0], 0.0f, 0.0f });
 		s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 1.0f };
+		s_Data.QuadVertexBufferPtr->TexCoord = { parameters.trim[1], 1.0f - parameters.trim[0] };
 		s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
 		s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
 		s_Data.QuadVertexBufferPtr++;
 
-		s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[3];
+		s_Data.QuadVertexBufferPtr->Position = transform * (s_Data.QuadVertexPositions + glm::vec4{ parameters.trim[3], 1.0f - parameters.trim[0], 0.0f, 0.0f });
 		s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 1.0f };
+		s_Data.QuadVertexBufferPtr->TexCoord = { parameters.trim[3], 1.0f - parameters.trim[0] };
 		s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
 		s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
 		s_Data.QuadVertexBufferPtr++;

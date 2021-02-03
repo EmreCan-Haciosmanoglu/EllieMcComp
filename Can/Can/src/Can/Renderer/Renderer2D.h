@@ -11,6 +11,7 @@ namespace Can
 		float RotationInRadians;
 		glm::vec4 TintColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 		Ref<Texture2D> texture = nullptr;
+		const std::array<float, 4>& trim{ 0.0f, 1.0f, 1.0f, 0.0f };
 	};
 
 	class Renderer2D
