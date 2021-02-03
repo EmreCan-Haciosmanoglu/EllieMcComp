@@ -3,11 +3,6 @@
 
 namespace Can
 {
-	SpriteRendererComponent::SpriteRendererComponent()
-		: size({ 1.0f, 1.0f })
-		, color({ 1.0f, 1.0f, 1.0f, 1.0f })
-	{
-	}
 	SpriteRendererComponent::SpriteRendererComponent(const glm::vec2& size, const  glm::vec4& color)
 		: size(size)
 		, color(color)
