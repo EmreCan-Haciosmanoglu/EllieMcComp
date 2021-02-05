@@ -170,6 +170,7 @@ namespace Can
 				// Then snap children to the left
 				glm::vec3 cursor = vtransform.Position;
 				cursor.x += spaceBetween;
+				cursor.y += spaceBetween;
 				cursor.z += 0.01f;
 				for (entt::entity child : children)
 				{
