@@ -107,6 +107,7 @@ namespace Can
 				glm::vec3 cursor = vtransform.Position;
 				cursor.x -= leftExtra;
 				cursor.x += spaceBetween;
+				cursor.y += spaceBetween;
 				cursor.z += 0.01f;
 
 				leftExtra -= spaceBetween;
