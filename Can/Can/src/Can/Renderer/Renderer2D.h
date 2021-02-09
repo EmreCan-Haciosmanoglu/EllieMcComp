@@ -7,7 +7,7 @@ namespace Can
 	struct DrawQuadParameters
 	{
 		glm::vec3 Position;
-		glm::vec3 Size = { 1.0f, 1.0f, 1.0f };
+		glm::vec2 Size { 1.0f, 1.0f};
 		float RotationInRadians;
 		glm::vec4 TintColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 		Ref<Texture2D> texture = nullptr;
@@ -26,8 +26,9 @@ namespace Can
 		static void Flush();
 
 		static void DrawQuad(const DrawQuadParameters& parameters);
-
 		static void DrawQuad(const glm::mat4& transform, const DrawQuadParameters& parameters);
 
+		static void DrawRoundedQuad(const DrawQuadParameters& parameters, float radius, uint8_t quality = 1 /* times 2*/);
+		static void DrawRoundedQuad(const glm::mat4& transform, const DrawQuadParameters& parameters, float radius, uint8_t quality = 1 /* times 2*/);
 	};
 }

@@ -110,7 +110,7 @@ namespace Can
 
 		s_Data.TextureShader->Bind();
 		s_Data.TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
-		
+
 		s_Data.QuadIndexCount = 0;
 		s_Data.TextureSlotIndex = 1;
 		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
@@ -142,12 +142,13 @@ namespace Can
 		glm::mat4 transform =
 			glm::translate(glm::mat4(1.0f), parameters.Position)
 			* glm::rotate(glm::mat4(1.0f), parameters.RotationInRadians, { 0.0f, 0.0f, 1.0f })
-			* glm::scale(glm::mat4(1.0f), parameters.Size);
+			* glm::scale(glm::mat4(1.0f), glm::vec3(parameters.Size, 1.0f));
 
 		DrawQuad(transform, parameters);
 	}
 	void Renderer2D::DrawQuad(const glm::mat4& transform, const DrawQuadParameters& parameters)
 	{
+		CAN_PROFILE_FUNCTION();
 		float textureIndex = 0.0f;
 		if (parameters.texture != nullptr)
 		{
@@ -166,8 +167,7 @@ namespace Can
 				s_Data.TextureSlotIndex++;
 			}
 		}
-		glm::vec4 trim{ 1.0f, 1.0f, 0.0f, 0.0f };
-		s_Data.QuadVertexBufferPtr->Position = transform * (s_Data.QuadVertexPositions + glm::vec4 { parameters.trim[3], 1.0f - parameters.trim[2], 0.0f, 0.0f });
+		s_Data.QuadVertexBufferPtr->Position = transform * (s_Data.QuadVertexPositions + glm::vec4{ parameters.trim[3], 1.0f - parameters.trim[2], 0.0f, 0.0f });
 		s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
 		s_Data.QuadVertexBufferPtr->TexCoord = { parameters.trim[3], 1.0f - parameters.trim[2] };
 		s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
@@ -196,5 +196,239 @@ namespace Can
 		s_Data.QuadVertexBufferPtr++;
 
 		s_Data.QuadIndexCount += 6;
+	}
+	void Renderer2D::DrawRoundedQuad(const DrawQuadParameters& parameters, float radius, uint8_t quality)
+	{
+		CAN_PROFILE_FUNCTION();
+
+		glm::mat4 transform =
+			glm::translate(glm::mat4(1.0f), parameters.Position)
+			* glm::rotate(glm::mat4(1.0f), parameters.RotationInRadians, { 0.0f, 0.0f, 1.0f })
+			* glm::scale(glm::mat4(1.0f), glm::vec3(parameters.Size, 1.0f));
+
+		DrawRoundedQuad(transform, parameters, radius, quality);
+	}
+	void Renderer2D::DrawRoundedQuad(const glm::mat4& transform, const DrawQuadParameters& parameters, float radius, uint8_t quality)
+	{
+		CAN_PROFILE_FUNCTION();
+		// radius / size;
+		float textureIndex = 0.0f;
+		if (parameters.texture != nullptr)
+		{
+			for (size_t i = 1; i < s_Data.TextureSlotIndex; i++)
+			{
+				if (*s_Data.TextureSlots[i].get() == *parameters.texture.get())
+				{
+					textureIndex = (float)i;
+					break;
+				}
+			}
+			if (textureIndex == 0.0f)
+			{
+				textureIndex = (float)s_Data.TextureSlotIndex;
+				s_Data.TextureSlots[s_Data.TextureSlotIndex] = parameters.texture;
+				s_Data.TextureSlotIndex++;
+			}
+		}
+		float radiusX = radius / parameters.Size.x;
+		float radiusY = radius / parameters.Size.y;
+		s_Data.QuadVertexBufferPtr->Position = transform * (s_Data.QuadVertexPositions + glm::vec4{ parameters.trim[3] + radiusX, 1.0f - parameters.trim[2], 0.00001f, 0.0f });
+		s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
+		s_Data.QuadVertexBufferPtr->TexCoord = { parameters.trim[3] + radiusX, 1.0f - parameters.trim[2] };
+		s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+		s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+		s_Data.QuadVertexBufferPtr++;
+
+		s_Data.QuadVertexBufferPtr->Position = transform * (s_Data.QuadVertexPositions + glm::vec4{ parameters.trim[1] - radiusX, 1.0f - parameters.trim[2], 0.00001f, 0.0f });;
+		s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
+		s_Data.QuadVertexBufferPtr->TexCoord = { parameters.trim[1] - radiusX, 1.0f - parameters.trim[2] };
+		s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+		s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+		s_Data.QuadVertexBufferPtr++;
+
+		s_Data.QuadVertexBufferPtr->Position = transform * (s_Data.QuadVertexPositions + glm::vec4{ parameters.trim[1] - radiusX, 1.0f - parameters.trim[0], 0.00001f, 0.0f });
+		s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
+		s_Data.QuadVertexBufferPtr->TexCoord = { parameters.trim[1] - radiusX, 1.0f - parameters.trim[0] };
+		s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+		s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+		s_Data.QuadVertexBufferPtr++;
+
+		s_Data.QuadVertexBufferPtr->Position = transform * (s_Data.QuadVertexPositions + glm::vec4{ parameters.trim[3] + radiusX, 1.0f - parameters.trim[0], 0.00001f, 0.0f });
+		s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
+		s_Data.QuadVertexBufferPtr->TexCoord = { parameters.trim[3] + radiusX, 1.0f - parameters.trim[0] };
+		s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+		s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+		s_Data.QuadVertexBufferPtr++;
+
+
+		s_Data.QuadVertexBufferPtr->Position = transform * (s_Data.QuadVertexPositions + glm::vec4{ parameters.trim[3], 1.0f - parameters.trim[2] + radiusY, 0.0f, 0.0f });
+		s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
+		s_Data.QuadVertexBufferPtr->TexCoord = { parameters.trim[3], 1.0f - parameters.trim[2] + radiusY };
+		s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+		s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+		s_Data.QuadVertexBufferPtr++;
+
+		s_Data.QuadVertexBufferPtr->Position = transform * (s_Data.QuadVertexPositions + glm::vec4{ parameters.trim[1], 1.0f - parameters.trim[2] + radiusY, 0.0f, 0.0f });;
+		s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
+		s_Data.QuadVertexBufferPtr->TexCoord = { parameters.trim[1], 1.0f - parameters.trim[2] + radiusY };
+		s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+		s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+		s_Data.QuadVertexBufferPtr++;
+
+		s_Data.QuadVertexBufferPtr->Position = transform * (s_Data.QuadVertexPositions + glm::vec4{ parameters.trim[1], 1.0f - parameters.trim[0] - radiusY, 0.0f, 0.0f });
+		s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
+		s_Data.QuadVertexBufferPtr->TexCoord = { parameters.trim[1], 1.0f - parameters.trim[0] - radiusY };
+		s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+		s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+		s_Data.QuadVertexBufferPtr++;
+
+		s_Data.QuadVertexBufferPtr->Position = transform * (s_Data.QuadVertexPositions + glm::vec4{ parameters.trim[3], 1.0f - parameters.trim[0] - radiusY, 0.0f, 0.0f });
+		s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
+		s_Data.QuadVertexBufferPtr->TexCoord = { parameters.trim[3], 1.0f - parameters.trim[0] - radiusY };
+		s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+		s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+		s_Data.QuadVertexBufferPtr++;
+
+		s_Data.QuadIndexCount += 6 * 2;
+
+		float angleStep = glm::radians(45.0f / quality);
+
+		glm::vec2 op1{ -radius, +0.0f };
+		glm::vec2 op2{ +0.0f, -radius };
+		glm::vec2 op3{ +radius, +0.0f };
+		glm::vec2 op4{ +0.0f, +radius };
+
+		glm::vec2 tp1{ parameters.trim[3] + radiusX, 1.0f - parameters.trim[2] + radiusY };
+		glm::vec2 tp2{ parameters.trim[1] - radiusX, 1.0f - parameters.trim[2] + radiusY };
+		glm::vec2 tp3{ parameters.trim[1] - radiusX, 1.0f - parameters.trim[0] - radiusY };
+		glm::vec2 tp4{ parameters.trim[3] + radiusX, 1.0f - parameters.trim[0] - radiusY };
+
+		glm::vec3 pp1 = transform * (s_Data.QuadVertexPositions + glm::vec4(tp1, 0.0f, 0.0f));
+		glm::vec3 pp2 = transform * (s_Data.QuadVertexPositions + glm::vec4(tp2, 0.0f, 0.0f));
+		glm::vec3 pp3 = transform * (s_Data.QuadVertexPositions + glm::vec4(tp3, 0.0f, 0.0f));
+		glm::vec3 pp4 = transform * (s_Data.QuadVertexPositions + glm::vec4(tp4, 0.0f, 0.0f));
+
+		glm::vec2 offset(0.0f);
+		for (size_t i = 0; i < quality; i++)
+		{
+			offset = glm::rotate(op1, angleStep * (0.0f + i * 2.0f));
+			s_Data.QuadVertexBufferPtr->Position = pp1 + glm::vec3(offset, 0.0f);
+			s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
+			s_Data.QuadVertexBufferPtr->TexCoord = tp1 + offset / parameters.Size;
+			s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+			s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+			s_Data.QuadVertexBufferPtr++;
+			offset = glm::rotate(op1, angleStep * (1.0f + i * 2.0f));
+			s_Data.QuadVertexBufferPtr->Position = pp1 + glm::vec3(offset, 0.0f);
+			s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
+			s_Data.QuadVertexBufferPtr->TexCoord = tp1 + offset / parameters.Size;
+			s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+			s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+			s_Data.QuadVertexBufferPtr++;
+			offset = glm::rotate(op1, angleStep * (2.0f + i * 2.0f));
+			s_Data.QuadVertexBufferPtr->Position = pp1 + glm::vec3(offset, 0.0f);
+			s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
+			s_Data.QuadVertexBufferPtr->TexCoord = tp1 + offset / parameters.Size;
+			s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+			s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+			s_Data.QuadVertexBufferPtr++;
+
+			s_Data.QuadVertexBufferPtr->Position = pp1;
+			s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
+			s_Data.QuadVertexBufferPtr->TexCoord = tp1;
+			s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+			s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+			s_Data.QuadVertexBufferPtr++;
+
+			offset = glm::rotate(op2, angleStep * (0.0f + i * 2.0f));
+			s_Data.QuadVertexBufferPtr->Position = pp2 + glm::vec3(offset, 0.0f);
+			s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
+			s_Data.QuadVertexBufferPtr->TexCoord = tp2 + offset / parameters.Size;
+			s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+			s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+			s_Data.QuadVertexBufferPtr++;
+			offset = glm::rotate(op2, angleStep * (1.0f + i * 2.0f));
+			s_Data.QuadVertexBufferPtr->Position = pp2 + glm::vec3(offset, 0.0f);
+			s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
+			s_Data.QuadVertexBufferPtr->TexCoord = tp2 + offset / parameters.Size;
+			s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+			s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+			s_Data.QuadVertexBufferPtr++;
+			offset = glm::rotate(op2, angleStep * (2.0f + i * 2.0f));
+			s_Data.QuadVertexBufferPtr->Position = pp2 + glm::vec3(offset, 0.0f);
+			s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
+			s_Data.QuadVertexBufferPtr->TexCoord = tp2 + offset / parameters.Size;
+			s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+			s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+			s_Data.QuadVertexBufferPtr++;
+
+			s_Data.QuadVertexBufferPtr->Position = pp2;
+			s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
+			s_Data.QuadVertexBufferPtr->TexCoord = tp2;
+			s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+			s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+			s_Data.QuadVertexBufferPtr++;
+
+			offset = glm::rotate(op3, angleStep * (0.0f + i * 2.0f));
+			s_Data.QuadVertexBufferPtr->Position = pp3 + glm::vec3(offset, 0.0f);
+			s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
+			s_Data.QuadVertexBufferPtr->TexCoord = tp3 + offset / parameters.Size;
+			s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+			s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+			s_Data.QuadVertexBufferPtr++;
+			offset = glm::rotate(op3, angleStep * (1.0f + i * 2.0f));
+			s_Data.QuadVertexBufferPtr->Position = pp3 + glm::vec3(offset, 0.0f);
+			s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
+			s_Data.QuadVertexBufferPtr->TexCoord = tp3 + offset / parameters.Size;
+			s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+			s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+			s_Data.QuadVertexBufferPtr++;
+			offset = glm::rotate(op3, angleStep * (2.0f + i * 2.0f));
+			s_Data.QuadVertexBufferPtr->Position = pp3 + glm::vec3(offset, 0.0f);
+			s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
+			s_Data.QuadVertexBufferPtr->TexCoord = tp3 + offset / parameters.Size;
+			s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+			s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+			s_Data.QuadVertexBufferPtr++;
+
+			s_Data.QuadVertexBufferPtr->Position = pp3;
+			s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
+			s_Data.QuadVertexBufferPtr->TexCoord = tp3;
+			s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+			s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+			s_Data.QuadVertexBufferPtr++;
+
+			offset = glm::rotate(op4, angleStep * (0.0f + i * 2.0f));
+			s_Data.QuadVertexBufferPtr->Position = pp4 + glm::vec3(offset, 0.0f);
+			s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
+			s_Data.QuadVertexBufferPtr->TexCoord = tp4 + offset / parameters.Size;
+			s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+			s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+			s_Data.QuadVertexBufferPtr++;
+			offset = glm::rotate(op4, angleStep * (1.0f + i * 2.0f));
+			s_Data.QuadVertexBufferPtr->Position = pp4 + glm::vec3(offset, 0.0f);
+			s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
+			s_Data.QuadVertexBufferPtr->TexCoord = tp4 + offset / parameters.Size;
+			s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+			s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+			s_Data.QuadVertexBufferPtr++;
+			offset = glm::rotate(op4, angleStep * (2.0f + i * 2.0f));
+			s_Data.QuadVertexBufferPtr->Position = pp4 + glm::vec3(offset, 0.0f);
+			s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
+			s_Data.QuadVertexBufferPtr->TexCoord = tp4 + offset / parameters.Size;
+			s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+			s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+			s_Data.QuadVertexBufferPtr++;
+
+			s_Data.QuadVertexBufferPtr->Position = pp4;
+			s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
+			s_Data.QuadVertexBufferPtr->TexCoord = tp4;
+			s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+			s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+			s_Data.QuadVertexBufferPtr++;
+
+			s_Data.QuadIndexCount += 6 * 4;
+		}
+
 	}
 }
