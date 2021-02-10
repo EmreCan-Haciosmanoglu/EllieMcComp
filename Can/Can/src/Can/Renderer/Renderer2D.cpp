@@ -197,7 +197,8 @@ namespace Can
 
 		s_Data.QuadIndexCount += 6;
 	}
-	void Renderer2D::DrawRoundedQuad(const DrawQuadParameters& parameters, float radius, uint8_t quality)
+	
+	void Renderer2D::DrawRoundedQuad(const DrawQuadParameters& parameters)
 	{
 		CAN_PROFILE_FUNCTION();
 
@@ -206,9 +207,9 @@ namespace Can
 			* glm::rotate(glm::mat4(1.0f), parameters.RotationInRadians, { 0.0f, 0.0f, 1.0f })
 			* glm::scale(glm::mat4(1.0f), glm::vec3(parameters.Size, 1.0f));
 
-		DrawRoundedQuad(transform, parameters, radius, quality);
+		DrawRoundedQuad(transform, parameters);
 	}
-	void Renderer2D::DrawRoundedQuad(const glm::mat4& transform, const DrawQuadParameters& parameters, float radius, uint8_t quality)
+	void Renderer2D::DrawRoundedQuad(const glm::mat4& transform, const DrawQuadParameters& parameters)
 	{
 		CAN_PROFILE_FUNCTION();
 		// radius / size;
@@ -230,8 +231,8 @@ namespace Can
 				s_Data.TextureSlotIndex++;
 			}
 		}
-		float radiusX = radius / parameters.Size.x;
-		float radiusY = radius / parameters.Size.y;
+		float radiusX = parameters.radius / parameters.Size.x;
+		float radiusY = parameters.radius / parameters.Size.y;
 		s_Data.QuadVertexBufferPtr->Position = transform * (s_Data.QuadVertexPositions + glm::vec4{ parameters.trim[3] + radiusX, 1.0f - parameters.trim[2], 0.00001f, 0.0f });
 		s_Data.QuadVertexBufferPtr->TintColor = parameters.TintColor;
 		s_Data.QuadVertexBufferPtr->TexCoord = { parameters.trim[3] + radiusX, 1.0f - parameters.trim[2] };
@@ -291,12 +292,12 @@ namespace Can
 
 		s_Data.QuadIndexCount += 6 * 2;
 
-		float angleStep = glm::radians(45.0f / quality);
+		float angleStep = glm::radians(45.0f / parameters.radiusQuality);
 
-		glm::vec2 op1{ -radius, +0.0f };
-		glm::vec2 op2{ +0.0f, -radius };
-		glm::vec2 op3{ +radius, +0.0f };
-		glm::vec2 op4{ +0.0f, +radius };
+		glm::vec2 op1{ -parameters.radius, +0.0f };
+		glm::vec2 op2{ +0.0f, -parameters.radius };
+		glm::vec2 op3{ +parameters.radius, +0.0f };
+		glm::vec2 op4{ +0.0f, +parameters.radius };
 
 		glm::vec2 tp1{ parameters.trim[3] + radiusX, 1.0f - parameters.trim[2] + radiusY };
 		glm::vec2 tp2{ parameters.trim[1] - radiusX, 1.0f - parameters.trim[2] + radiusY };
@@ -309,7 +310,7 @@ namespace Can
 		glm::vec3 pp4 = transform * (s_Data.QuadVertexPositions + glm::vec4(tp4, 0.0f, 0.0f));
 
 		glm::vec2 offset(0.0f);
-		for (size_t i = 0; i < quality; i++)
+		for (size_t i = 0; i < parameters.radiusQuality; i++)
 		{
 			offset = glm::rotate(op1, angleStep * (0.0f + i * 2.0f));
 			s_Data.QuadVertexBufferPtr->Position = pp1 + glm::vec3(offset, 0.0f);
