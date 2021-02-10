@@ -11,7 +11,7 @@ namespace Can
 			sceneRegistry.emplace<ParentComponent>(entityID, parameters.Parent);
 
 		sceneRegistry.emplace<TransformComponent>(entityID, parameters.Position);
-		sceneRegistry.emplace<SpriteRendererComponent>(entityID, parameters.Size, parameters.Texture, parameters.Color, parameters.borderRadius);
+		sceneRegistry.emplace<SpriteRendererComponent>(entityID, parameters.Size, parameters.Texture, parameters.Color, parameters.border, parameters.borderRadius);
 
 		if (parameters.OnClick)
 			sceneRegistry.emplace<OnClickCallbackComponent>(entityID, parameters.OnClick);

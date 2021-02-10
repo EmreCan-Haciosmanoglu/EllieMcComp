@@ -20,6 +20,8 @@ namespace Can
 		std::function<void()> OnDrag;
 		float barBorderRadius = 0.0f;
 		float baseBorderRadius = 0.0f;
+		bool baseBorder = false;
+		bool barBorder = false;
 	};
 	class ScrollBar
 	{

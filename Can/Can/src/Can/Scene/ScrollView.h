@@ -22,6 +22,7 @@ namespace Can
 
 		std::function<void()> OnClick;
 		float borderRadius = 0.0f;
+		bool border = false;
 	};
 
 	class ScrollView

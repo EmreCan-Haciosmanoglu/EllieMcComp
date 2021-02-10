@@ -14,6 +14,7 @@ namespace Can
 		const Ref<Texture2D>& Texture = nullptr;
 		std::function<void()> OnClick;
 		float borderRadius = 0.0f;
+		bool border = false;
 	};
 
 	class Panel
