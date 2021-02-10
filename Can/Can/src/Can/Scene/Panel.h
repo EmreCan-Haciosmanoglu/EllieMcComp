@@ -13,6 +13,7 @@ namespace Can
 		const glm::vec4& Color = glm::vec4(1.0f);
 		const Ref<Texture2D>& Texture = nullptr;
 		std::function<void()> OnClick;
+		float borderRadius = 0.0f;
 	};
 
 	class Panel

@@ -17,7 +17,7 @@ namespace Can
 
 		sceneRegistry.emplace<IgnoreScrollingComponent>(entityID);
 		sceneRegistry.emplace<TransformComponent>(entityID, parameters.Position);
-		sceneRegistry.emplace<SpriteRendererComponent>(entityID, parameters.Size, nullptr, parameters.BaseColor);
+		sceneRegistry.emplace<SpriteRendererComponent>(entityID, parameters.Size, nullptr, parameters.BaseColor, parameters.baseBorderRadius);
 
 		auto bar = sceneRegistry.create();
 		sceneRegistry.emplace<ChildrenComponent>(entityID, std::vector<entt::entity>{bar});
@@ -31,7 +31,7 @@ namespace Can
 		};
 		glm::vec2 offset = (parameters.Size - size) * barPosition;
 		sceneRegistry.emplace<TransformComponent>(bar, parameters.Position + glm::vec3(offset, 0.0f) + glm::vec3{ 0.0f, 0.0f, 0.001f });
-		sceneRegistry.emplace<SpriteRendererComponent>(bar, size, nullptr, parameters.BarColor);
+		sceneRegistry.emplace<SpriteRendererComponent>(bar, size, nullptr, parameters.BarColor, parameters.barBorderRadius);
 
 		if (parameters.OnClick)
 			sceneRegistry.emplace<OnClickCallbackComponent>(entityID, parameters.OnClick);
@@ -76,10 +76,10 @@ namespace Can
 			0.0f
 		};
 		bTransform.Position += movement;
-		
+
 		if (barPosition == (vertical ? ts.y : ts.x))
 			return false;
-		
+
 		barPosition = vertical ? ts.y : ts.x;
 		return true;
 	}

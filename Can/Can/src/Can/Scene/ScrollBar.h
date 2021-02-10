@@ -18,6 +18,8 @@ namespace Can
 		float barPosition = 0.0f; // 0.0f <= t <= 1.0f
 		std::function<void()> OnClick; 
 		std::function<void()> OnDrag;
+		float barBorderRadius = 0.0f;
+		float baseBorderRadius = 0.0f;
 	};
 	class ScrollBar
 	{
