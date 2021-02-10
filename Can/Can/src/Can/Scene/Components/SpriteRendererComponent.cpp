@@ -3,15 +3,11 @@
 
 namespace Can
 {
-	SpriteRendererComponent::SpriteRendererComponent(const glm::vec2& size, const  glm::vec4& color)
-		: size(size)
-		, color(color)
-	{
-	}
-	SpriteRendererComponent::SpriteRendererComponent(const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4& tintColor)
+	SpriteRendererComponent::SpriteRendererComponent(const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4& tintColor, float borderRadius)
 		: size(size)
 		, color(tintColor)
 		, texture(texture)
+		, borderRadius(borderRadius)
 	{
 	}
 }
