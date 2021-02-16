@@ -22,6 +22,8 @@ namespace Can
 		float baseBorderRadius = 0.0f;
 		bool baseBorder = false;
 		bool barBorder = false;
+		const glm::vec4& BaseBorderColor{ 0.0f, 0.0f, 0.0f, 1.0f };
+		const glm::vec4& BarBorderColor{ 0.0f, 0.0f, 0.0f, 1.0f };
 	};
 	class ScrollBar
 	{

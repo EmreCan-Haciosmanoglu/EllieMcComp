@@ -15,6 +15,7 @@ namespace Can
 		std::function<void()> OnClick;
 		float borderRadius = 0.0f;
 		bool border = false;
+		const glm::vec4& BorderColor{ 0.0f, 0.0f, 0.0f, 1.0f };
 	};
 
 	class Panel
