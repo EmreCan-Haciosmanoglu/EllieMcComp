@@ -31,7 +31,7 @@ namespace Can
 		};
 		glm::vec2 offset = (parameters.Size - size) * barPosition;
 		sceneRegistry.emplace<TransformComponent>(bar, parameters.Position + glm::vec3(offset, 0.0f) + glm::vec3{ 0.0f, 0.0f, 0.001f });
-		sceneRegistry.emplace<SpriteRendererComponent>(bar, size, nullptr, parameters.BarColor, parameters.barBorder, parameters.barBorderRadius, parameters.borderColor);
+		sceneRegistry.emplace<SpriteRendererComponent>(bar, size, nullptr, parameters.BarColor, parameters.barBorder, parameters.barBorderRadius, parameters.barBorderColor);
 
 		if (parameters.OnClick)
 			sceneRegistry.emplace<OnClickCallbackComponent>(entityID, parameters.OnClick);
