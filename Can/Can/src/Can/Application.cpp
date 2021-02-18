@@ -21,7 +21,7 @@ namespace Can
 		s_Instance = this;
 
 		Utility::Random rand;
-		m_Window = Window::Create();
+		m_Window = Window::Create(WindowProps{ "Sky Is The Limit v0.3-alpha", 1600, 900 });
 		m_Window->SetEventCallback(CAN_BIND_EVENT_FN(Application::OnEvent));
 
 		Renderer::Init();
