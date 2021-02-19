@@ -13,7 +13,7 @@ namespace Can
 
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application()
+	Application::Application(const WindowProps& props)
 	{
 		CAN_PROFILE_FUNCTION();
 
@@ -21,7 +21,7 @@ namespace Can
 		s_Instance = this;
 
 		Utility::Random rand;
-		m_Window = Window::Create(WindowProps{ "Sky Is The Limit v0.3-alpha", 1600, 900 });
+		m_Window = Window::Create(props);
 		m_Window->SetEventCallback(CAN_BIND_EVENT_FN(Application::OnEvent));
 
 		Renderer::Init();

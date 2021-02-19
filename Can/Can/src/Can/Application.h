@@ -20,7 +20,7 @@ namespace Can
 	class  Application
 	{
 	public:
-		Application();
+		Application(const WindowProps& props);
 		virtual ~Application();
 
 		void Run();
@@ -47,6 +47,5 @@ namespace Can
 		static Application* s_Instance;
 	};
 
-	// To be defined in CLIENT
-	Application* CreateApplication();
+	Application* CreateApplication(const Can::WindowProps& props);
 }
