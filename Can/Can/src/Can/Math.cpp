@@ -49,6 +49,8 @@ namespace Can::Math
 			points[i] = Math::CubicCurve<float>(vs, ts[i]);
 		points[Size - 1] = vs[3];
 
+		if (Size < 2) return points;
+		
 		constexpr size_t Quality = 2;
 		for (size_t i = 0; i < Quality; i++)
 		{
@@ -122,6 +124,8 @@ namespace Can::Math
 		for (size_t i = 1; i < Size - 1; i++)
 			points[i] = Math::CubicCurve<float>(vs, result[i]);
 		points[Size - 1] = vs[3];
+
+		if (Size < 2) return points;
 
 		constexpr size_t Quality = 2;
 		for (size_t i = 0; i < Quality; i++)
