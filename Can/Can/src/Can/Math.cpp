@@ -125,7 +125,7 @@ namespace Can::Math
 			points[i] = Math::CubicCurve<float>(vs, result[i]);
 		points[Size - 1] = vs[3];
 
-		if (Size < 2) return points;
+		if (Size < 2) return result;
 
 		constexpr size_t Quality = 2;
 		for (size_t i = 0; i < Quality; i++)
