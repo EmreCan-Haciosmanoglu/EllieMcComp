@@ -49,7 +49,7 @@ namespace Can::Math
 			points[i] = Math::CubicCurve<float>(vs, ts[i]);
 		points[Size - 1] = vs[3];
 
-		if (Size < 2) return points;
+		if (Size < 2) return {vs[0], vs[3]};
 		
 		constexpr size_t Quality = 2;
 		for (size_t i = 0; i < Quality; i++)
