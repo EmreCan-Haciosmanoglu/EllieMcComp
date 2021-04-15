@@ -126,6 +126,9 @@
     <ClInclude Include="src\Can\Log.h">
       <Filter>src\Can</Filter>
     </ClInclude>
+    <ClInclude Include="src\Can\Math.h">
+      <Filter>src\Can</Filter>
+    </ClInclude>
     <ClInclude Include="src\Can\MouseCodes.h">
       <Filter>src\Can</Filter>
     </ClInclude>
@@ -186,7 +189,19 @@
     <ClInclude Include="src\Can\Scene\Components\HiddenComponent.h">
       <Filter>src\Can\Scene\Components</Filter>
     </ClInclude>
+    <ClInclude Include="src\Can\Scene\Components\IgnoreCollisionComponent.h">
+      <Filter>src\Can\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Scene\Components\IgnoreScrollingComponent.h">
+      <Filter>src\Can\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Scene\Components\OnChangeCallbackComponent.h">
+      <Filter>src\Can\Scene\Components</Filter>
+    </ClInclude>
     <ClInclude Include="src\Can\Scene\Components\OnClickCallbackComponent.h">
+      <Filter>src\Can\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Scene\Components\OnDragCallbackComponent.h">
       <Filter>src\Can\Scene\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Can\Scene\Components\ParentComponent.h">
@@ -202,6 +217,12 @@
       <Filter>src\Can\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Can\Scene\Scene.h">
+      <Filter>src\Can\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Scene\ScrollBar.h">
+      <Filter>src\Can\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Scene\ScrollView.h">
       <Filter>src\Can\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Can\Shadow\ShadowBox.h">
@@ -1356,13 +1377,6 @@
     <ClInclude Include="vendor\stb\stb_image.h">
       <Filter>vendor\stb</Filter>
     </ClInclude>
-    <ClInclude Include="src\Can\Math.h" />
-    <ClInclude Include="src\Can\Scene\ScrollBar.h" />
-    <ClInclude Include="src\Can\Scene\Components\IgnoreCollisionComponent.h" />
-    <ClInclude Include="src\Can\Scene\Components\OnDragCallbackComponent.h" />
-    <ClInclude Include="src\Can\Scene\ScrollView.h" />
-    <ClInclude Include="src\Can\Scene\Components\OnChangeCallbackComponent.h" />
-    <ClInclude Include="src\Can\Scene\Components\IgnoreScrollingComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -1390,6 +1404,9 @@
       <Filter>src\Can\Layers</Filter>
     </ClCompile>
     <ClCompile Include="src\Can\Log.cpp">
+      <Filter>src\Can</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Math.cpp">
       <Filter>src\Can</Filter>
     </ClCompile>
     <ClCompile Include="src\Can\Noise\Perlin.cpp">
@@ -1449,7 +1466,19 @@
     <ClCompile Include="src\Can\Scene\Components\HiddenComponent.cpp">
       <Filter>src\Can\Scene\Components</Filter>
     </ClCompile>
+    <ClCompile Include="src\Can\Scene\Components\IgnoreCollisionComponent.cpp">
+      <Filter>src\Can\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Scene\Components\IgnoreScrollingComponent.cpp">
+      <Filter>src\Can\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Scene\Components\OnChangeCallbackComponent.cpp">
+      <Filter>src\Can\Scene\Components</Filter>
+    </ClCompile>
     <ClCompile Include="src\Can\Scene\Components\OnClickCallbackComponent.cpp">
+      <Filter>src\Can\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Scene\Components\OnDragCallbackComponent.cpp">
       <Filter>src\Can\Scene\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\Can\Scene\Components\ParentComponent.cpp">
@@ -1465,6 +1494,12 @@
       <Filter>src\Can\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Can\Scene\Scene.cpp">
+      <Filter>src\Can\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Scene\ScrollBar.cpp">
+      <Filter>src\Can\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Scene\ScrollView.cpp">
       <Filter>src\Can\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Can\Shadow\ShadowBox.cpp">
@@ -1512,12 +1547,5 @@
     <ClCompile Include="vendor\stb\stb_image.cpp">
       <Filter>vendor\stb</Filter>
     </ClCompile>
-    <ClCompile Include="src\Can\Math.cpp" />
-    <ClCompile Include="src\Can\Scene\ScrollBar.cpp" />
-    <ClCompile Include="src\Can\Scene\Components\IgnoreCollisionComponent.cpp" />
-    <ClCompile Include="src\Can\Scene\Components\OnDragCallbackComponent.cpp" />
-    <ClCompile Include="src\Can\Scene\ScrollView.cpp" />
-    <ClCompile Include="src\Can\Scene\Components\OnChangeCallbackComponent.cpp" />
-    <ClCompile Include="src\Can\Scene\Components\IgnoreScrollingComponent.cpp" />
   </ItemGroup>
 </Project>

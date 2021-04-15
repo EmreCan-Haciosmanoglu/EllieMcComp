@@ -32,5 +32,6 @@ namespace Can
 
 		static void DrawRoundedQuad(const DrawQuadParameters& parameters);
 		static void DrawRoundedQuad(const glm::mat4& transform, const DrawQuadParameters& parameters);
+
 	};
 }

@@ -22,6 +22,8 @@ IncludeDir["imgui"] = "Can/vendor/imgui"
 IncludeDir["glm"] = "Can/vendor/glm"
 IncludeDir["stb"] = "Can/vendor/stb"
 IncludeDir["EnTT"] = "Can/vendor/entt/single_include"
+IncludeDir["FreeType"] = "Can/vendor/freetype"
+IncludeDir["FreeTypeGL"] = "Can/vendor/freetype-gl"
 
 startproject "Sandbox"
 
@@ -29,6 +31,8 @@ group "Dependencies"
     include "Can/vendor/glfw"
     include "Can/vendor/glad"
     include "Can/vendor/imgui"
+    include "Can/vendor/freetype"
+    include "Can/vendor/freetype-gl"
 group ""
 
 project "Can"
@@ -57,13 +61,16 @@ project "Can"
     includedirs
     {
         "%{prj.name}/src",
+        "%{prj.name}/vendor",
         "%{prj.name}/vendor/spdlog/include",
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.GLAD}",
         "%{IncludeDir.imgui}",
         "%{IncludeDir.glm}",
         "%{IncludeDir.stb}",
-        "%{IncludeDir.EnTT}"
+        "%{IncludeDir.EnTT}",
+        "%{IncludeDir.FreeType}",
+        "%{IncludeDir.FreeTypeGL}"
     }
     
     links
@@ -71,7 +78,9 @@ project "Can"
         "GLFW",
         "GLAD",
         "imgui",
-        "opengl32.lib"
+        "opengl32.lib",
+        "FreeType",
+        "FreeTypeGL"
     }
     
     filter "system:windows"

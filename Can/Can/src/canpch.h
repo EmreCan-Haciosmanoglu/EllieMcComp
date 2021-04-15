@@ -19,9 +19,11 @@
 #include <filesystem>
 #include <glm/glm.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
-#include <glm/gtx/vector_angle.hpp> 
+#include <glm/gtx/vector_angle.hpp>
 
 #include "../stb/stb_image.h"
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 #include "Can/Log.h"
 #include "Can/KeyCodes.h"
