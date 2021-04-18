@@ -22,6 +22,3 @@
 	path = Can/Can/vendor/entt
 	url = https://github.com/EmreCan-Haciosmanoglu/entt
 	branch = master
-[submodule "Can/Can/vendor/freetype-gl"]
-	path = Can/Can/vendor/freetype-gl
-	url = https://github.com/EmreCan-Haciosmanoglu/freetype-gl

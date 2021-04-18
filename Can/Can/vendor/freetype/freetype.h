@@ -1025,6 +1025,11 @@ FT_BEGIN_HEADER
    *   Especially for TrueType fonts see also the documentation for
    *   @FT_Size_Metrics.
    */
+   
+#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY != WINAPI_FAMILY_DESKTOP_APP)
+#define generic GenericFromFreeTypeLibrary
+#endif
+
   typedef struct  FT_FaceRec_
   {
     FT_Long           num_faces;
@@ -1904,6 +1909,9 @@ FT_BEGIN_HEADER
 
   } FT_GlyphSlotRec;
 
+#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY != WINAPI_FAMILY_DESKTOP_APP)
+#undef generic
+#endif
 
   /*************************************************************************/
   /*************************************************************************/

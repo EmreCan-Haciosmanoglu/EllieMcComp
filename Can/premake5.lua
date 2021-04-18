@@ -23,7 +23,6 @@ IncludeDir["glm"] = "Can/vendor/glm"
 IncludeDir["stb"] = "Can/vendor/stb"
 IncludeDir["EnTT"] = "Can/vendor/entt/single_include"
 IncludeDir["FreeType"] = "Can/vendor/freetype"
-IncludeDir["FreeTypeGL"] = "Can/vendor/freetype-gl"
 
 startproject "Sandbox"
 
@@ -32,7 +31,6 @@ group "Dependencies"
     include "Can/vendor/glad"
     include "Can/vendor/imgui"
     include "Can/vendor/freetype"
-    include "Can/vendor/freetype-gl"
 group ""
 
 project "Can"
@@ -55,7 +53,7 @@ project "Can"
         "%{prj.name}/vendor/glm/glm/**.hpp",
         "%{prj.name}/vendor/glm/glm/**.inl",
         "%{prj.name}/vendor/stb/stb_image.cpp",
-        "%{prj.name}/vendor/stb/stb_image.h"
+        "%{prj.name}/vendor/stb/stb_image.h",
     }
     
     includedirs
@@ -69,8 +67,7 @@ project "Can"
         "%{IncludeDir.glm}",
         "%{IncludeDir.stb}",
         "%{IncludeDir.EnTT}",
-        "%{IncludeDir.FreeType}",
-        "%{IncludeDir.FreeTypeGL}"
+        "%{IncludeDir.FreeType}"
     }
     
     links
@@ -79,8 +76,7 @@ project "Can"
         "GLAD",
         "imgui",
         "opengl32.lib",
-        "FreeType",
-        "FreeTypeGL"
+        "FreeType"
     }
     
     filter "system:windows"
@@ -88,7 +84,6 @@ project "Can"
         
         defines
         {
-            
             "GLFW_INCLUDE_NONE",
 			"_CRT_SECURE_NO_WARNINGS"
         }

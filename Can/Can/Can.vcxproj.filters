@@ -16,6 +16,9 @@
     <Filter Include="src\Can\Events">
       <UniqueIdentifier>{926D5EEE-7E3B-52F4-67CF-C21A533C2E59}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Can\Font">
+      <UniqueIdentifier>{34474BB0-20AA-DA54-C92F-130BB571A6D7}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Can\Layers">
       <UniqueIdentifier>{6D5841FD-5926-3503-42BA-A5292E271168}</UniqueIdentifier>
     </Filter>
@@ -104,6 +107,9 @@
     </ClInclude>
     <ClInclude Include="src\Can\Events\MouseEvent.h">
       <Filter>src\Can\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Font\Font.h">
+      <Filter>src\Can\Font</Filter>
     </ClInclude>
     <ClInclude Include="src\Can\Input.h">
       <Filter>src\Can</Filter>
@@ -1377,6 +1383,7 @@
     <ClInclude Include="vendor\stb\stb_image.h">
       <Filter>vendor\stb</Filter>
     </ClInclude>
+    <ClInclude Include="src\Can\Font\FontAtlas.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -1390,6 +1397,9 @@
     </ClCompile>
     <ClCompile Include="src\Can\Camera\CameraController.cpp">
       <Filter>src\Can\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Font\Font.cpp">
+      <Filter>src\Can\Font</Filter>
     </ClCompile>
     <ClCompile Include="src\Can\Layers\ImGuiBuild.cpp">
       <Filter>src\Can\Layers</Filter>
@@ -1547,5 +1557,6 @@
     <ClCompile Include="vendor\stb\stb_image.cpp">
       <Filter>vendor\stb</Filter>
     </ClCompile>
+    <ClCompile Include="src\Can\Font\FontAtlas.cpp" />
   </ItemGroup>
 </Project>

@@ -75,13 +75,11 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;FT_DEBUG_LEVEL_ERROR;FT_DEBUG_LEVEL_TRACE;FT2_BUILD_LIBRARY;DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -92,7 +90,6 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;FT_DEBUG_LEVEL_ERROR;FT_DEBUG_LEVEL_TRACE;FT2_BUILD_LIBRARY;DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -100,7 +97,6 @@
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -112,12 +108,10 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;FT_DEBUG_LEVEL_ERROR;FT_DEBUG_LEVEL_TRACE;FT2_BUILD_LIBRARY;DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -172,49 +166,6 @@
     <ClInclude Include="fttrigon.h" />
     <ClInclude Include="fttypes.h" />
     <ClInclude Include="ftwinfnt.h" />
-    <ClInclude Include="internal\autohint.h" />
-    <ClInclude Include="internal\cffotypes.h" />
-    <ClInclude Include="internal\cfftypes.h" />
-    <ClInclude Include="internal\compiler-macros.h" />
-    <ClInclude Include="internal\ftcalc.h" />
-    <ClInclude Include="internal\ftdebug.h" />
-    <ClInclude Include="internal\ftdrv.h" />
-    <ClInclude Include="internal\ftgloadr.h" />
-    <ClInclude Include="internal\fthash.h" />
-    <ClInclude Include="internal\ftmemory.h" />
-    <ClInclude Include="internal\ftobjs.h" />
-    <ClInclude Include="internal\ftpsprop.h" />
-    <ClInclude Include="internal\ftrfork.h" />
-    <ClInclude Include="internal\ftserv.h" />
-    <ClInclude Include="internal\ftstream.h" />
-    <ClInclude Include="internal\fttrace.h" />
-    <ClInclude Include="internal\ftvalid.h" />
-    <ClInclude Include="internal\psaux.h" />
-    <ClInclude Include="internal\pshints.h" />
-    <ClInclude Include="internal\services\svbdf.h" />
-    <ClInclude Include="internal\services\svcfftl.h" />
-    <ClInclude Include="internal\services\svcid.h" />
-    <ClInclude Include="internal\services\svfntfmt.h" />
-    <ClInclude Include="internal\services\svgldict.h" />
-    <ClInclude Include="internal\services\svgxval.h" />
-    <ClInclude Include="internal\services\svkern.h" />
-    <ClInclude Include="internal\services\svmetric.h" />
-    <ClInclude Include="internal\services\svmm.h" />
-    <ClInclude Include="internal\services\svotval.h" />
-    <ClInclude Include="internal\services\svpfr.h" />
-    <ClInclude Include="internal\services\svpostnm.h" />
-    <ClInclude Include="internal\services\svprop.h" />
-    <ClInclude Include="internal\services\svpscmap.h" />
-    <ClInclude Include="internal\services\svpsinfo.h" />
-    <ClInclude Include="internal\services\svsfnt.h" />
-    <ClInclude Include="internal\services\svttcmap.h" />
-    <ClInclude Include="internal\services\svtteng.h" />
-    <ClInclude Include="internal\services\svttglyf.h" />
-    <ClInclude Include="internal\services\svwinfnt.h" />
-    <ClInclude Include="internal\sfnt.h" />
-    <ClInclude Include="internal\t1types.h" />
-    <ClInclude Include="internal\tttypes.h" />
-    <ClInclude Include="internal\wofftypes.h" />
     <ClInclude Include="t1tables.h" />
     <ClInclude Include="ttnameid.h" />
     <ClInclude Include="tttables.h" />

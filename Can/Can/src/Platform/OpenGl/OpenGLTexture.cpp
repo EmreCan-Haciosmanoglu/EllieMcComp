@@ -24,6 +24,31 @@ namespace Can
 		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	}
 
+	//Delete me
+	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height, unsigned int type)
+		: m_Width(width)
+		, m_Height(height)
+		, m_InternalFormat(GL_RED)
+		, m_DataFormat(GL_RED)
+	{
+		CAN_PROFILE_FUNCTION();
+
+		// Create texture
+		glGenTextures(1, &m_RendererID);
+		glActiveTexture(GL_TEXTURE0 + m_RendererID);
+		glBindTexture(GL_TEXTURE_2D, m_RendererID);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+		// Set texture parameters 
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
+	}
+
 	OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
 		:m_Path(path)
 	{
@@ -102,7 +127,7 @@ namespace Can
 
 	void OpenGLTexture2D::SetSubData(void* data, uint32_t xoffset, uint32_t yoffset, uint32_t width, uint32_t height)
 	{
-		glTextureSubImage2D(m_RendererID, 0, xoffset, yoffset, width, height, m_DataFormat, GL_UNSIGNED_BYTE, data);
+		glTextureSubImage2D(m_RendererID, 0, xoffset, yoffset, width, height, GL_RED, GL_UNSIGNED_BYTE, data);
 	}
 
 	void OpenGLTexture2D::Bind(uint32_t slot) const

@@ -4,8 +4,12 @@
 #include "VertexArray.h"
 #include "Shader.h"
 #include "RenderCommand.h"
-
+#include "Can/Font/Font.h"
+#include "Can/Font/FontAtlas.h"
 #include <glm/gtc/matrix_transform.hpp>
+
+#include "ft2build.h"
+#include FT_FREETYPE_H
 
 namespace Can
 {
@@ -16,6 +20,19 @@ namespace Can
 		glm::vec2 TexCoord;
 		float TextureIndex;
 		float TilingFactor;
+	};
+
+	enum FontFlags
+	{
+		LeftAligned = 0x1,
+		RightAligned = 0x2,
+		CenterAligned = 0x4,
+		WordWrap = 0x8,
+		Underlined = 0x10,
+		Bold = 0x20,
+		Italic = 0x40,
+		Indented = 0x80,
+		HorizontalLayout = 0x100
 	};
 
 	struct Renderer2DData
@@ -39,6 +56,9 @@ namespace Can
 		uint32_t TextureSlotIndex = 1; // 0 => white texture;
 
 		glm::vec4 QuadVertexPositions;
+
+		Font* font;
+		std::vector<FontAtlas> fontAtlas{};
 	};
 
 	static Renderer2DData s_Data;
@@ -98,6 +118,9 @@ namespace Can
 		//s_Data.QuadVertexPositions[1] = { +0.5f, -0.5f, 0.0f, 1.0f };
 		//s_Data.QuadVertexPositions[2] = { +0.5f, +0.5f, 0.0f, 1.0f };
 		//s_Data.QuadVertexPositions[3] = { -0.5f, +0.5f, 0.0f, 1.0f };
+
+		s_Data.font = new Font("assets/fonts/Poppins/Poppins-Medium.ttf");
+		s_Data.fontAtlas.push_back(FontAtlas(s_Data.font->GetFace(), 32));
 	}
 	void Renderer2D::Shutdown()
 	{
@@ -197,7 +220,7 @@ namespace Can
 
 		s_Data.QuadIndexCount += 6;
 	}
-	
+
 	void Renderer2D::DrawRoundedQuad(const DrawQuadParameters& parameters)
 	{
 		CAN_PROFILE_FUNCTION();
@@ -429,6 +452,107 @@ namespace Can
 			s_Data.QuadVertexBufferPtr++;
 
 			s_Data.QuadIndexCount += 6 * 4;
+		}
+
+	}
+	void Renderer2D::DrawText(const std::string& text, const glm::vec3& position, const glm::vec4& color)
+	{
+		int flags = FontFlags::LeftAligned | FontFlags::WordWrap;
+
+		float _sx = 20.0f *(2.0f / 1600.0f);
+		float _sy = 20.0f *(2.0f / 900.0f);
+
+		float x = position.x;
+		float y = position.y + (s_Data.font->GetFace()->size->metrics.height >> 6);
+
+		FT_GlyphSlot slot = s_Data.font->GetFace()->glyph;
+
+		// Calculate alignment (if applicable)
+		float textWidth = 0;
+
+		Char* chars = s_Data.fontAtlas[0].chars;
+		for (const char* p = text.c_str(); *p; ++p) {
+			textWidth += chars[*p].advanceX;
+		}
+
+		// Normalize window coordinates
+		x = -1 + x * _sx;
+		y = 1 - y * _sy;
+
+
+		int atlasWidth = s_Data.fontAtlas[0].width;
+		int atlasHeight = s_Data.fontAtlas[0].height;
+
+		float textureIndex = 0.0f;
+
+		for (size_t i = 1; i < s_Data.TextureSlotIndex; i++)
+		{
+			s_Data.fontAtlas[0].texture.get();
+			if (*s_Data.TextureSlots[i].get() == *s_Data.fontAtlas[0].texture.get())
+			{
+				textureIndex = (float)i;
+				break;
+			}
+		}
+		if (textureIndex == 0.0f)
+		{
+			textureIndex = (float)s_Data.TextureSlotIndex;
+			s_Data.TextureSlots[s_Data.TextureSlotIndex] = s_Data.fontAtlas[0].texture;
+			s_Data.TextureSlotIndex++;
+		}
+
+		for (const char* p = text.c_str(); *p; ++p) {
+			float x2 = x + chars[*p].bitmapLeft * _sx; // scaled x coord
+			float y2 = -y - chars[*p].bitmapTop * _sy; // scaled y coord
+			float w = chars[*p].bitmapWidth * _sx;     // scaled width of character
+			float h = chars[*p].bitmapHeight * _sy;    // scaled height of character
+
+			// Calculate kerning value
+			FT_Vector kerning;
+			FT_Get_Kerning(s_Data.font->GetFace(),              // font face handle
+				*p,                 // left glyph
+				*(p + 1),           // right glyph
+				FT_KERNING_DEFAULT, // kerning mode
+				&kerning);          // variable to store kerning value
+
+ // Advance cursor to start of next character
+			x += (chars[*p].advanceX + (kerning.x >> 6)) * _sx;
+			y += chars[*p].advanceY * _sy;
+
+			// Skip glyphs with no pixels (e.g. spaces)
+			if (!w || !h)
+				continue;
+
+
+			s_Data.QuadVertexBufferPtr->Position = { x2 + w, -y2, 1.0f };
+			s_Data.QuadVertexBufferPtr->TintColor = color;
+			s_Data.QuadVertexBufferPtr->TexCoord = { chars[*p].xOffset + chars[*p].bitmapWidth / atlasWidth, 0.0f };
+			s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+			s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+			s_Data.QuadVertexBufferPtr++;
+
+			s_Data.QuadVertexBufferPtr->Position = { x2,-y2, 1.0f };
+			s_Data.QuadVertexBufferPtr->TintColor = color;
+			s_Data.QuadVertexBufferPtr->TexCoord = { chars[*p].xOffset, 0.0f };
+			s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+			s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+			s_Data.QuadVertexBufferPtr++;
+
+			s_Data.QuadVertexBufferPtr->Position = { x2, -y2 - h, 1.0f };
+			s_Data.QuadVertexBufferPtr->TintColor = color;
+			s_Data.QuadVertexBufferPtr->TexCoord = { chars[*p].xOffset, chars[*p].bitmapHeight / atlasHeight };
+			s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+			s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+			s_Data.QuadVertexBufferPtr++;
+
+			s_Data.QuadVertexBufferPtr->Position = { x2 + w, -y2 - h, 1.0f };
+			s_Data.QuadVertexBufferPtr->TintColor = color;
+			s_Data.QuadVertexBufferPtr->TexCoord = { chars[*p].xOffset + chars[*p].bitmapWidth / atlasWidth, chars[*p].bitmapHeight / atlasHeight };
+			s_Data.QuadVertexBufferPtr->TextureIndex = textureIndex;
+			s_Data.QuadVertexBufferPtr->TilingFactor = 1.0f;
+			s_Data.QuadVertexBufferPtr++;
+
+			s_Data.QuadIndexCount += 6;
 		}
 
 	}
