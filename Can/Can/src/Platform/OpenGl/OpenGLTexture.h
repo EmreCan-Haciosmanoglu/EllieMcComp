@@ -12,6 +12,7 @@ namespace Can
 		virtual ~OpenGLTexture2D();
 
 		virtual void SetData(void* data, uint32_t size) override;
+		virtual void SetSubData(void* data, uint32_t xoffset, uint32_t yoffset, uint32_t width, uint32_t height) override;
 
 		virtual uint32_t GetWidth() const override { return m_Width; }
 		virtual uint32_t GeHeight() const override { return m_Height; }

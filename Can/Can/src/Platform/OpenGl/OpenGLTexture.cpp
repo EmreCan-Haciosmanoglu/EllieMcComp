@@ -100,6 +100,11 @@ namespace Can
 		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);
 	}
 
+	void OpenGLTexture2D::SetSubData(void* data, uint32_t xoffset, uint32_t yoffset, uint32_t width, uint32_t height)
+	{
+		glTextureSubImage2D(m_RendererID, 0, xoffset, yoffset, width, height, m_DataFormat, GL_UNSIGNED_BYTE, data);
+	}
+
 	void OpenGLTexture2D::Bind(uint32_t slot) const
 	{
 		CAN_PROFILE_FUNCTION();
