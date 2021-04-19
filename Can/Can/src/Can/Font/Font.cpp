@@ -5,7 +5,9 @@ namespace Can
 {
 	Font::Font(const std::string& path)
 	{
-		CAN_CORE_ASSERT(!FT_Init_FreeType(&m_Library), "Failed to initialize FreeType");
+		/*CAN_CORE_ASSERT(!FT_Init_FreeType(&m_Library), "Failed to initialize FreeType"); Im the most stupid person in the history*/
+		FT_Error error = FT_Init_FreeType(&m_Library);
+		CAN_CORE_ASSERT(!error, "Failed to initialize FreeType");
 		SetFont(path);
 	}
 	void Font::SetFont(const std::string& path)
