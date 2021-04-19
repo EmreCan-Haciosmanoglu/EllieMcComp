@@ -25,21 +25,27 @@ namespace Can
 			width += slot->bitmap.width + 2;
 			height = (std::max)(height, (uint32_t)slot->bitmap.rows);
 		}
-		texture = Texture2D::Create(width, height, (unsigned int)GL_RED);
+		texture = Texture2D::Create(width, height);
 
 		int texPos = 0;
-		std::vector<GLubyte> emptyData(1 * slot->bitmap.rows, 0);
 		for (int i = 32; i < 128; ++i) {
 			if (FT_Load_Char(face, i, FT_LOAD_RENDER))
 				continue;
-			texture->SetSubData(emptyData.data(), texPos, 0, 1, slot->bitmap.rows);
-			//texPos += 1;
-			texture->SetSubData(slot->bitmap.buffer, texPos, 0, slot->bitmap.width, slot->bitmap.rows);
-			//texPos += slot->bitmap.width;
-			texture->SetSubData(emptyData.data(), texPos, 0, 1, slot->bitmap.rows);
-			//texPos += 1;
 
-			// Store glyph info in our char array for this pixel size
+			size_t size = slot->bitmap.width * slot->bitmap.rows;
+			std::vector<GLubyte> Data(size * 4, 0);
+			for (size_t i = 0; i < size; i++)
+			{
+				unsigned char c = slot->bitmap.buffer[i];
+				size_t index = i * 4;
+				Data[index + 0] = c;
+				Data[index + 1] = c;
+				Data[index + 2] = c;
+				Data[index + 3] = c;
+			}
+			texture->SetSubData(Data.data(), texPos, 0, slot->bitmap.width, slot->bitmap.rows);
+
+
 			chars[i].advanceX = slot->advance.x >> 6;
 			chars[i].advanceY = slot->advance.y >> 6;
 

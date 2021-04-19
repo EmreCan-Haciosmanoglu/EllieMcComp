@@ -120,7 +120,7 @@ namespace Can
 		//s_Data.QuadVertexPositions[3] = { -0.5f, +0.5f, 0.0f, 1.0f };
 
 		s_Data.font = new Font("assets/fonts/Poppins/Poppins-Medium.ttf");
-		s_Data.fontAtlas.push_back(FontAtlas(s_Data.font->GetFace(), 32));
+		s_Data.fontAtlas.push_back(FontAtlas(s_Data.font->GetFace(), 36));
 	}
 	void Renderer2D::Shutdown()
 	{
@@ -455,12 +455,13 @@ namespace Can
 		}
 
 	}
-	void Renderer2D::DrawText(const std::string& text, const glm::vec3& position, const glm::vec4& color)
+	void Renderer2D::DrawText(const std::string& text, const glm::vec3& position, const glm::vec4& color, float zoomLevel)
 	{
 		int flags = FontFlags::LeftAligned | FontFlags::WordWrap;
 
-		float _sx = 20.0f *(2.0f / 1600.0f);
-		float _sy = 20.0f *(2.0f / 900.0f);
+		float _sx = zoomLevel *(2.0f / 1600.0f);
+		float _sy = zoomLevel *(2.0f / 900.0f);
+
 
 		float x = position.x;
 		float y = position.y + (s_Data.font->GetFace()->size->metrics.height >> 6);

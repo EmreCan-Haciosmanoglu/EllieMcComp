@@ -23,7 +23,6 @@ namespace Can
 	{
 	public:
 		static Ref<Texture2D> Create(uint32_t width, uint32_t height);
-		static Ref<Texture2D> Create(uint32_t width, uint32_t height, unsigned int type);
 		static Ref<Texture2D> Create(const std::string& path);
 		static Ref<Texture2D> Create(uint32_t id, uint32_t width, uint32_t height, const std::string& path);
 	};
