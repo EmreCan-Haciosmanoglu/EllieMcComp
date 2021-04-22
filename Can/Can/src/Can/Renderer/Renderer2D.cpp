@@ -120,7 +120,7 @@ namespace Can
 		//s_Data.QuadVertexPositions[3] = { -0.5f, +0.5f, 0.0f, 1.0f };
 
 		s_Data.font = new Font("assets/fonts/Poppins/Poppins-Medium.ttf");
-		s_Data.fontAtlas.push_back(FontAtlas(s_Data.font->GetFace(), 36));
+		s_Data.fontAtlas.push_back(FontAtlas(s_Data.font->GetFace(), 24));
 	}
 	void Renderer2D::Shutdown()
 	{

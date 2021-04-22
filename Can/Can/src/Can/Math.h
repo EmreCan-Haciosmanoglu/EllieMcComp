@@ -249,6 +249,7 @@ namespace Can::Math
 	std::array<glm::vec2, Size> GetCubicCurveSamples(const std::array<glm::vec2, 4>& vs)
 	{
 		std::array<glm::vec2, Size> result;
+		CAN_ASSERT(false, "Incomplete!");
 		return result;
 	}
 

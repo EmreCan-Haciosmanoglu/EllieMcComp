@@ -7,35 +7,31 @@ namespace Can
 	class Object
 	{
 	public:
-		Object(Prefab* prefab, Prefab* type, bool enabled = true);
-		Object(Prefab* prefab, Prefab* type, const glm::mat4& transform, bool enabled = true);
-		Object(Prefab* prefab, Prefab* type, const glm::vec3& position, bool enabled = true);
-		Object(Prefab* prefab, Prefab* type, const glm::vec3& position, const glm::vec3& scale, bool enabled = true);
-		Object(Prefab* prefab, Prefab* type, const glm::vec3& position, const glm::vec3& scale, const glm::vec3& rotation, bool enabled = true);
-		Object(Prefab* prefab, Prefab* type, const glm::vec3& position, const glm::vec3& scale, const glm::quat& q, bool enabled = true);
+		Object(Prefab* prefab);
+		Object(Prefab* prefab, const glm::mat4& transform );
+		Object(Prefab* prefab, const glm::vec3& position, const glm::vec3& rotation = glm::vec3(0.0f), const glm::vec3& scale = glm::vec3(1.0f));
+		Object(Prefab* prefab, const glm::vec3& position, const glm::quat& q, const glm::vec3& scale = glm::vec3(1.0f) );
 
 		~Object();
 
 		void SetTransform(const glm::mat4& transform);
-		void SetTransform(const glm::vec3& position);
-		void SetTransform(const glm::vec3& position, const glm::vec3& scale);
-		void SetTransform(const glm::vec3& position, const glm::vec3& scale, const glm::vec3& rotation);
+		void SetTransform(const glm::vec3& position, const glm::vec3& rotation = glm::vec3(0.0f), const glm::vec3& scale = glm::vec3(1.0f));
 
 	public:
 		Prefab* prefab;
-		Prefab* type;
+		glm::vec3 position = glm::vec3(0.0f);
+		glm::vec3 rotation = glm::vec3(0.0f);
+		glm::vec3 scale = glm::vec3(1.0f);
 
 		glm::vec4 tintColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-		glm::vec3 position;
-		glm::vec3 scale;
-		glm::vec3 rotation;
 		glm::quat q;
-		glm::vec3 skew;
-		glm::vec4 perspective;
+		glm::vec3 skew = glm::vec3(0.0f);
+		glm::vec4 perspective = glm::vec4(0.0f);
 
 		glm::mat4 transform;
 
-		bool enabled;
+		bool enabled = true;
+		bool owns_prefab = false;
 	};
 }

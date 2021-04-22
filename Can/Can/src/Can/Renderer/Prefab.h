@@ -26,8 +26,8 @@ namespace Can
 		Prefab() = default;
 		Prefab(const std::string& objectPath, const std::string& shaderPath, const std::string& texturePath);
 		Prefab(const std::string& objectPath, const std::string& shaderPath, const std::string& texturePath, float* vertices, size_t indexCount);
-		Prefab(const std::string& objectPath, const std::string& shaderPath, const std::array<Ref<Texture2D>, MAX_TEXTURE_SLOTS>& textures, uint8_t textureCount, float* vertices, size_t indexCount, size_t vertexCount);
 		Prefab(const std::string& objectPath, const std::string& shaderPath, const std::string& texturePath, float* vertices, size_t indexCount, size_t vertexCount, const BufferLayout& layout);
+		Prefab(const std::string& objectPath, const std::string& shaderPath, const std::array<Ref<Texture2D>, MAX_TEXTURE_SLOTS>& textures, uint8_t textureCount, float* vertices, size_t indexCount, size_t vertexCount);
 		~Prefab();
 
 	public:
