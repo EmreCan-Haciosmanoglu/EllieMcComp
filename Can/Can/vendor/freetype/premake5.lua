@@ -3,7 +3,7 @@ project "FreeType"
     language "C"
     staticruntime "on"
     
-    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+    targetdir ("lib/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
     
     files
