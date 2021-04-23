@@ -352,4 +352,6 @@ namespace Can::Math
 
 		return result;
 	}
+
+	glm::vec3 RayPlaneIntersection(const glm::vec3& X, const glm::vec3& v, const glm::vec3& C, const glm::vec3& n);
 }
