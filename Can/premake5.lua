@@ -24,7 +24,6 @@ IncludeDir["stb"] = "Can/vendor/stb"
 IncludeDir["EnTT"] = "Can/vendor/entt/single_include"
 IncludeDir["FreeType"] = "Can/vendor/freetype"
 
-startproject "Sandbox"
 
 group "Dependencies"
     include "Can/vendor/glfw"
@@ -32,6 +31,9 @@ group "Dependencies"
     include "Can/vendor/imgui"
     include "Can/vendor/freetype"
 group ""
+
+include "../../"
+startproject "Game"
 
 project "Can"
     location "Can"
@@ -303,5 +305,3 @@ project "Tetris"
         defines "CAN_DIST"
         runtime "Release"
         optimize "on"
-
-include "../../"
