@@ -24,6 +24,7 @@ IncludeDir["stb"] = "Can/vendor/stb"
 IncludeDir["EnTT"] = "Can/vendor/entt/single_include"
 IncludeDir["FreeType"] = "Can/vendor/freetype"
 
+startproject "Game"
 
 group "Dependencies"
     include "Can/vendor/glfw"
@@ -33,7 +34,6 @@ group "Dependencies"
 group ""
 
 include "../../"
-startproject "Game"
 
 project "Can"
     location "Can"
