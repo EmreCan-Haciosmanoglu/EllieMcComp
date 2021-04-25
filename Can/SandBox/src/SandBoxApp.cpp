@@ -8,8 +8,6 @@
 
 #include "SandBox2DLayer.h"
 #include "SandBox3D.h"
-#include "SnakeAI.h"
-#include "SnakeTake2.h"
 
 class ExampleLayer : public Can::Layer::Layer
 {
@@ -271,8 +269,6 @@ public:
 		//PushLayer(new ExampleLayer());
 		PushLayer(new SandBox2DLayer());
 		//PushLayer(new SandBox3D());
-		//PushLayer(new SnakeAI());
-		//PushLayer(new SnakeAI2());
 	}
 
 	~Sandbox()
