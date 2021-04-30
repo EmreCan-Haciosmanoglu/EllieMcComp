@@ -11,7 +11,7 @@ namespace Can
 		Object(Prefab* prefab, const glm::mat4& transform );
 		Object(Prefab* prefab, const glm::vec3& position, const glm::vec3& rotation = glm::vec3(0.0f), const glm::vec3& scale = glm::vec3(1.0f));
 		Object(Prefab* prefab, const glm::vec3& position, const glm::quat& q, const glm::vec3& scale = glm::vec3(1.0f) );
-
+		Object(Object&& other);
 		~Object();
 
 		void SetTransform(const glm::mat4& transform);
@@ -20,7 +20,7 @@ namespace Can
 		void SetTransform(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale);
 
 	public:
-		Prefab* prefab;
+		Prefab* prefab = nullptr;
 		glm::vec3 position = glm::vec3(0.0f);
 		glm::vec3 rotation = glm::vec3(0.0f);
 		glm::vec3 scale = glm::vec3(1.0f);

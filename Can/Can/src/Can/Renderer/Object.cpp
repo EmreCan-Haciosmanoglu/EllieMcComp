@@ -39,6 +39,22 @@ namespace Can
 	{
 		Renderer3D::AddObject(this);
 	}
+	Object::Object(Object&& other)
+	{
+		prefab = other.prefab;
+		position = other.position;
+		rotation = other.rotation;
+		scale = other.scale;
+		tintColor = other.tintColor;
+		q = other.q;
+		skew = other.skew;
+		perspective = other.perspective;
+		transform = other.transform;
+		enabled = other.enabled;
+		owns_prefab = other.owns_prefab;
+
+		other.prefab = nullptr;
+	}
 	Object::~Object()
 	{
 		if (owns_prefab) delete prefab;
