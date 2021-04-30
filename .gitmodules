@@ -1,7 +1,3 @@
-[submodule "Can/Can/vendor/spdlog"]
-	path = Can/Can/vendor/spdlog
-	url = https://github.com/gabime/spdlog
-	branch = v1.x
 [submodule "Can/Can/vendor/glfw"]
 	path = Can/Can/vendor/glfw
 	url = https://github.com/EmreCan-Haciosmanoglu/glfw
@@ -10,10 +6,6 @@
 	path = Can/Can/vendor/imgui
 	url = https://github.com/EmreCan-Haciosmanoglu/imgui
 	branch = docking
-[submodule "Can/Can/vendor/glm"]
-	path = Can/Can/vendor/glm
-	url = https://github.com/g-truc/glm
-	branch = master
 [submodule "Can/Can/vendor/stb"]
 	path = Can/Can/vendor/stb
 	url = https://github.com/EmreCan-Haciosmanoglu/stb
@@ -21,4 +13,12 @@
 [submodule "Can/Can/vendor/entt"]
 	path = Can/Can/vendor/entt
 	url = https://github.com/EmreCan-Haciosmanoglu/entt
+	branch = master
+[submodule "Can/Can/vendor/glm"]
+	path = Can/Can/vendor/glm
+	url = https://github.com/EmreCan-Haciosmanoglu/glm
+	branch = master
+[submodule "Can/Can/vendor/spdlog"]
+	path = Can/Can/vendor/spdlog
+	url = https://github.com/EmreCan-Haciosmanoglu/spdlog
 	branch = master
