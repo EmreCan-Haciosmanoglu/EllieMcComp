@@ -28,7 +28,10 @@ namespace Can
 		void OnEvent(Can::Event::Event& e);
 
 		void PushLayer(Layer::Layer* layer);
-		void PushOverlay(Layer::Layer* layer);
+		void PushOverlay(Layer::Layer* overlay);
+
+		void PopLayer(Layer::Layer* layer);
+		void PopOverlay(Layer::Layer* overlay);
 
 		inline static Application& Get() { return *s_Instance; }
 		inline Window& GetWindow() { return *m_Window; }

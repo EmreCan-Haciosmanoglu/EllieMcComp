@@ -53,6 +53,20 @@ namespace Can
 		overlay->OnAttach();
 	}
 
+	void Application::PopLayer(Layer::Layer* layer)
+	{
+		CAN_PROFILE_FUNCTION();
+
+		m_LayerStack.PopLayer(layer);
+	}
+
+	void Application::PopOverlay(Layer::Layer* overlay)
+	{
+		CAN_PROFILE_FUNCTION();
+
+		m_LayerStack.PopOverlay(overlay);
+	}
+
 	void Application::OnEvent(Event::Event& e)
 	{
 		CAN_PROFILE_FUNCTION();
