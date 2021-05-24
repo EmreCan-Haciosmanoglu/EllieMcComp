@@ -8,10 +8,10 @@ namespace Can
 	{
 		entt::registry& Registry;
 		entt::entity Parent = entt::null;
-		const glm::vec3& Position = glm::vec3(0.0f);
-		const glm::vec2& Size = glm::vec3(1.0f);
-		const glm::vec4& Color = glm::vec4(1.0f);
-		const Ref<Texture2D>& Texture = nullptr;
+		glm::vec3& Position = glm::vec3(0.0f);
+		glm::vec2& Size = glm::vec2(1.0f);
+		glm::vec4& Color = glm::vec4(1.0f);
+		Ref<Texture2D> Texture = nullptr;
 		std::function<void()> OnClick;
 		float borderRadius = 0.0f;
 		bool border = false;
