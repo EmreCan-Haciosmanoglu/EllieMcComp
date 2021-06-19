@@ -26,12 +26,12 @@ namespace Can
 		else if (parameters.scrollPosition == 1)
 		{
 			_ScrollBarConstructorParameters.Size.y = parameters.Size.y;
-			_ScrollBarConstructorParameters.Position.x += parameters.Size.x - _ScrollBarConstructorParameters.Size.x * 0.5f;
+			_ScrollBarConstructorParameters.Position.x += parameters.Size.x - _ScrollBarConstructorParameters.Size.x;
 		}
 		else if (parameters.scrollPosition == 2)
 		{
 			_ScrollBarConstructorParameters.Size.x = parameters.Size.x;
-			_ScrollBarConstructorParameters.Position.y += parameters.Size.y - _ScrollBarConstructorParameters.Size.y * 0.5f;
+			_ScrollBarConstructorParameters.Position.y += parameters.Size.y - _ScrollBarConstructorParameters.Size.y;
 		}
 		else
 		{
