@@ -49,6 +49,7 @@ namespace Can
 		glFrontFace(GL_CCW);
 
 		glEnable(GL_DEPTH_TEST);
+		//glEnable(GL_MULTISAMPLE);
 	}
 
 	void OpenGLRendererAPI::SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)

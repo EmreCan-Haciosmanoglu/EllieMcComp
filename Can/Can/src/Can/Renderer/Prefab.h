@@ -13,9 +13,9 @@ namespace Can
 {
 	struct TexturedObjectVertex
 	{
-		glm::vec3 Position;
-		glm::vec2 UV;
-		glm::vec3 Normal;
+		v3 Position;
+		v2 UV;
+		v3 Normal;
 		float TextureIndex;
 	};
 
@@ -45,7 +45,7 @@ namespace Can
 
 		Ref<Shader> shader;
 
-		glm::vec3 boundingBoxL{ (std::numeric_limits<float>::max)() ,(std::numeric_limits<float>::max)(), (std::numeric_limits<float>::max)() };
-		glm::vec3 boundingBoxM{ (std::numeric_limits<float>::min)() ,(std::numeric_limits<float>::min)(), (std::numeric_limits<float>::min)() };
+		v3 boundingBoxL{ (std::numeric_limits<float>::max)() ,(std::numeric_limits<float>::max)(), (std::numeric_limits<float>::max)() };
+		v3 boundingBoxM{ (std::numeric_limits<float>::min)() ,(std::numeric_limits<float>::min)(), (std::numeric_limits<float>::min)() };
 	};
 }

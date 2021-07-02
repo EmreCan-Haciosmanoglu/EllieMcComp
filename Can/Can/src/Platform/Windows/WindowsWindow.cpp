@@ -53,6 +53,7 @@ namespace Can::Platform::Windows
 			CAN_PROFILE_SCOPE("glfwCreateWindow Init");
 			CAN_CORE_INFO("Initializing GLFW");
 			int success = glfwInit();
+			//glfwWindowHint(GLFW_SAMPLES, 4);
 			CAN_CORE_ASSERT(success, "Could not initialize GLFW!");
 			glfwSetErrorCallback(GLFWErrorCallback);
 		}
