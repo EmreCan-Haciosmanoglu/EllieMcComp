@@ -9,7 +9,7 @@ namespace Can::Math
 	{
 	public:
 		Vector2(T x, T y) : x(x), y(y) {}
-		Vector2(const glm::vec2& other) :x(other.x), y(other.y) {}
+		Vector2(const v2& other) :x(other.x), y(other.y) {}
 
 		Vector2<T> operator+ (const Vector2<T>& right) const
 		{
@@ -45,9 +45,9 @@ namespace Can::Math
 			return Vector2(this->.x / right, this->.y / right);
 		}
 
-		operator glm::vec2() const
+		operator v2() const
 		{
-			return glm::vec2{ x, y };
+			return v2{ x, y };
 		}
 	public:
 		T x, y;
@@ -58,7 +58,7 @@ namespace Can::Math
 	{
 	public:
 		Vector3(T x, T y, T z) : x(x), y(y), z(z) {}
-		Vector3(const glm::vec3& other) :x(other.x), y(other.y), z(other.z) {}
+		Vector3(const v3& other) :x(other.x), y(other.y), z(other.z) {}
 
 		Vector3<T> operator+ (const Vector3<T>& right) const
 		{
@@ -94,9 +94,9 @@ namespace Can::Math
 			return Vector3(this->x / right, this->y / right, this->z / right);
 		}
 
-		operator glm::vec3() const
+		operator v3() const
 		{
-			return glm::vec3{ x, y, z };
+			return v3{ x, y, z };
 		}
 
 	public:
@@ -161,7 +161,7 @@ namespace Can::Math
 	}
 
 	template<typename T>
-	Vector3<T> CubicCurve(const std::array<glm::vec3, 4>& vs, T percentage)
+	Vector3<T> CubicCurve(const std::array<v3, 4>& vs, T percentage)
 	{
 		Vector3 p0 = QuadraticCurve(
 			Vector3{ vs[0].x, vs[0].y, vs[0].z },
@@ -179,7 +179,7 @@ namespace Can::Math
 	}
 
 	template<typename T>
-	Vector3<T> CubicCurveTangent(const std::array<glm::vec3, 4>& vs, T percentage)
+	Vector3<T> CubicCurveTangent(const std::array<v3, 4>& vs, T percentage)
 	{
 		return (vs[1] - vs[0]) * 3.0f +
 			(vs[0] - vs[1] * 2.0f + vs[2]) * percentage * 6.0f + 
@@ -187,7 +187,7 @@ namespace Can::Math
 	}
 
 	template<typename T>
-	Vector3<T> QuadraticCurve(const std::array<glm::vec3, 3>& vs, T percentage)
+	Vector3<T> QuadraticCurve(const std::array<v3, 3>& vs, T percentage)
 	{
 		return QuadraticCurve(
 			Vector3{ vs[0].x, vs[0].y, vs[0].z },
@@ -198,13 +198,13 @@ namespace Can::Math
 	}
 
 	template <int Size, int Quality>
-	std::array<float, Size> GetCubicCurveSampleTs(const std::array<glm::vec3, 4>& vs)
+	std::array<float, Size> GetCubicCurveSampleTs(const std::array<v3, 4>& vs)
 	{
 		std::array<float, Size> result;
 		result[0] = 0.0f;
 		result[Size - 1] = 1.0f;
 
-		std::array<glm::vec3, Size> points;
+		std::array<v3, Size> points;
 		points[0] = vs[0];
 		points[Size - 1] = vs[3];
 
@@ -242,23 +242,23 @@ namespace Can::Math
 		return result;
 	}
 
-	std::vector<glm::vec3> GetCubicCurveSamples(const std::array<glm::vec3, 4>& vs, float preferedLength, std::vector<float>& ts);
-	std::vector<float> GetCubicCurveSampleTs(const std::array<glm::vec3, 4>& vs, float preferedLength);
+	std::vector<v3> GetCubicCurveSamples(const std::array<v3, 4>& vs, float preferedLength, std::vector<float>& ts);
+	std::vector<float> GetCubicCurveSampleTs(const std::array<v3, 4>& vs, float preferedLength);
 
 	template <int Size, int Quality>
-	std::array<glm::vec2, Size> GetCubicCurveSamples(const std::array<glm::vec2, 4>& vs)
+	std::array<v2, Size> GetCubicCurveSamples(const std::array<v2, 4>& vs)
 	{
-		std::array<glm::vec2, Size> result;
+		std::array<v2, Size> result;
 		CAN_ASSERT(false, "Incomplete!");
 		return result;
 	}
 
-	bool CheckPointTriangleCollision(const std::array<glm::vec2, 3>& triangleA, const glm::vec2& point);
+	bool CheckPointTriangleCollision(const std::array<v2, 3>& triangleA, const v2& point);
 
-	bool CheckTriangleTriangleCollision(const std::array<glm::vec2, 3>& triangleA, const std::array<glm::vec2, 3>& triangleB);
+	bool CheckTriangleTriangleCollision(const std::array<v2, 3>& triangleA, const std::array<v2, 3>& triangleB);
 
 	template <int countA, int countB>
-	bool CheckPolygonCollision(const std::array<std::array<glm::vec2, 3>, countA>& polygonA, const std::array<std::array<glm::vec2, 3>, countB>& polygonB)
+	bool CheckPolygonCollision(const std::array<std::array<v2, 3>, countA>& polygonA, const std::array<std::array<v2, 3>, countB>& polygonB)
 	{
 		for (size_t i = 0; i < countA; i++)
 			for (size_t j = 0; j < countB; j++)
@@ -269,7 +269,7 @@ namespace Can::Math
 	}
 
 	template <int countA>
-	bool CheckPolygonPointCollision(const std::array<std::array<glm::vec2, 3>, countA>& polygon, const glm::vec2& point)
+	bool CheckPolygonPointCollision(const std::array<std::array<v2, 3>, countA>& polygon, const v2& point)
 	{
 		for (size_t i = 0; i < countA; i++)
 			if (CheckPointTriangleCollision(polygon[i], point))
@@ -277,10 +277,10 @@ namespace Can::Math
 		return false;
 	}
 
-	bool CheckLineSegmentLineSegmentCollision(const std::array<glm::vec2, 2>& lineSegmentA, const std::array<glm::vec2, 2>& lineSegmentB, glm::vec2* intersection = nullptr);
+	bool CheckLineSegmentLineSegmentCollision(const std::array<v2, 2>& lineSegmentA, const std::array<v2, 2>& lineSegmentB, v2* intersection = nullptr);
 
 	template <int countA, int countB>
-	bool CheckLineSegmentListLineSegmentListCollision(const std::array<std::array<glm::vec2, 2>, countA>& lineSegmentListA, const std::array<std::array<glm::vec2, 2>, countB>& lineSegmentListB)
+	bool CheckLineSegmentListLineSegmentListCollision(const std::array<std::array<v2, 2>, countA>& lineSegmentListA, const std::array<std::array<v2, 2>, countB>& lineSegmentListB)
 	{
 		for (size_t i = 0; i < countA; i++)
 			for (size_t j = 0; j < countB; j++)
@@ -290,14 +290,14 @@ namespace Can::Math
 		return false;
 	}
 
-	glm::vec2 RotatePoint(const glm::vec2& point, float angle);
-	glm::vec2 RotatePointAroundPoint(const glm::vec2& p1, float angle, const glm::vec2& p2);
+	v2 RotatePoint(const v2& point, float angle);
+	v2 RotatePointAroundPoint(const v2& p1, float angle, const v2& p2);
 
 	template <int N>
-	std::array<glm::vec2, 2> GetMinsAndMaxs(const std::array<glm::vec2, N>& points)
+	std::array<v2, 2> GetMinsAndMaxs(const std::array<v2, N>& points)
 	{
-		glm::vec2 mins = points[0];
-		glm::vec2 maxs = points[0];
+		v2 mins = points[0];
+		v2 maxs = points[0];
 		for (size_t i = 1; i < N; i++)
 		{
 			mins.x = (std::min)(mins.x, points[i].x);
@@ -308,29 +308,29 @@ namespace Can::Math
 		return{ mins, maxs };
 	}
 
-	std::array<std::array<glm::vec2, 3>, 2> GetBoundingBoxOfBezierCurve(const std::array<glm::vec3, 4>& Points, float halfRoadWidth);
+	std::array<std::array<v2, 3>, 2> GetBoundingBoxOfBezierCurve(const std::array<v3, 4>& Points, float halfRoadWidth);
 
 	template <int Size, int Quality>
-	std::array<std::array<glm::vec2, 3>, (Size - 1) * 2> GetBoundingPolygonOfBezierCurve(const std::array<glm::vec3, 4>& Points, float halfRoadWidth)
+	std::array<std::array<v2, 3>, (Size - 1) * 2> GetBoundingPolygonOfBezierCurve(const std::array<v3, 4>& Points, float halfRoadWidth)
 	{
-		std::array<std::array<glm::vec2, 3>, (Size - 1) * 2> result;
+		std::array<std::array<v2, 3>, (Size - 1) * 2> result;
 		std::array<float, Size> samples = GetCubicCurveSampleTs<Size, Quality>(Points);
-		glm::vec2 p0{ Points[0].x, Points[0].z };
+		v2 p0{ Points[0].x, Points[0].z };
 
 		for (size_t i = 1; i < Size - 1; i++)
 		{
 			//put these P1 and p1 outside of the for-loop
-			glm::vec3 P1 = CubicCurve(Points, samples[i]);
-			glm::vec2 p1{ P1.x, P1.z };
+			v3 P1 = CubicCurve(Points, samples[i]);
+			v2 p1{ P1.x, P1.z };
 
-			glm::vec3 P2 = CubicCurve(Points, samples[i + 1]);
-			glm::vec2 p2{ P2.x, P2.z };
+			v3 P2 = CubicCurve(Points, samples[i + 1]);
+			v2 p2{ P2.x, P2.z };
 
 			//put this v1 outside of the for-loop
-			glm::vec2 v1 = halfRoadWidth * glm::normalize(p1 - p0);
+			v2 v1 = halfRoadWidth * glm::normalize(p1 - p0);
 			v1 = { -v1.y, v1.x };
 
-			glm::vec2 v2 = halfRoadWidth * glm::normalize(p2 - p1);
+			v2 v2 = halfRoadWidth * glm::normalize(p2 - p1);
 			v2 = { -v2.y, v2.x };
 
 			result[2 * (i - 1) + 0] = { p0 + v1, p0 - v1, p1 + v2 };
@@ -338,11 +338,11 @@ namespace Can::Math
 
 			p0 = p1;
 		}
-		glm::vec3 P1 = CubicCurve(Points, 1.0f);
-		glm::vec2 p1{ P1.x, P1.z };
+		v3 P1 = CubicCurve(Points, 1.0f);
+		v2 p1{ P1.x, P1.z };
 
-		glm::vec2 v1 = halfRoadWidth * glm::normalize(p1 - p0);
-		glm::vec2 v2 = halfRoadWidth * glm::normalize(p1 - glm::vec2{ Points[2].x, Points[2].z });
+		v2 v1 = halfRoadWidth * glm::normalize(p1 - p0);
+		v2 v2 = halfRoadWidth * glm::normalize(p1 - v2{ Points[2].x, Points[2].z });
 
 		v1 = { -v1.y, v1.x };
 		v2 = { -v2.y, v2.x };
@@ -353,5 +353,5 @@ namespace Can::Math
 		return result;
 	}
 
-	glm::vec3 RayPlaneIntersection(const glm::vec3& X, const glm::vec3& v, const glm::vec3& C, const glm::vec3& n);
+	v3 RayPlaneIntersection(const v3& X, const v3& v, const v3& C, const v3& n);
 }
