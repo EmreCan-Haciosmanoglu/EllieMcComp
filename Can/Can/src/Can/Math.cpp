@@ -186,6 +186,14 @@ namespace Can::Math
 
 		return false;
 	}
+	bool CheckPolygonPointCollision(const std::vector<std::array<v2, 3>>& polygon, const v2& point)
+	{
+		f32 count = polygon.size();
+		for (size_t i = 0; i < count; i++)
+			if (CheckPointTriangleCollision(polygon[i], point))
+				return true;
+		return false;
+	}
 	bool CheckLineSegmentLineSegmentCollision(const std::array<v2, 2>& lineSegmentA, const std::array<v2, 2>& lineSegmentB, v2* intersection)
 	{
 		float s_numer, t_numer, denom, t;

@@ -276,6 +276,7 @@ namespace Can::Math
 				return true;
 		return false;
 	}
+	bool CheckPolygonPointCollision(const std::vector<std::array<v2, 3>>& polygon, const v2& point);
 
 	bool CheckLineSegmentLineSegmentCollision(const std::array<v2, 2>& lineSegmentA, const std::array<v2, 2>& lineSegmentB, v2* intersection = nullptr);
 
