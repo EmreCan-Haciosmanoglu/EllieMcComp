@@ -328,28 +328,28 @@ namespace Can::Math
 			v2 p2{ P2.x, P2.z };
 
 			//put this v1 outside of the for-loop
-			v2 v1 = halfRoadWidth * glm::normalize(p1 - p0);
-			v1 = { -v1.y, v1.x };
+			v2 d1 = halfRoadWidth * glm::normalize(p1 - p0);
+			d1 = { -d1.y, d1.x };
 
-			v2 v2 = halfRoadWidth * glm::normalize(p2 - p1);
-			v2 = { -v2.y, v2.x };
+			v2 d2 = halfRoadWidth * glm::normalize(p2 - p1);
+			d2 = { -d2.y, d2.x };
 
-			result[2 * (i - 1) + 0] = { p0 + v1, p0 - v1, p1 + v2 };
-			result[2 * (i - 1) + 1] = { p0 - v1, p1 + v2, p1 - v2 };
+			result[2 * (i - 1) + 0] = { p0 + d1, p0 - d1, p1 + d2 };
+			result[2 * (i - 1) + 1] = { p0 - d1, p1 + d2, p1 - d2 };
 
 			p0 = p1;
 		}
 		v3 P1 = CubicCurve(Points, 1.0f);
 		v2 p1{ P1.x, P1.z };
 
-		v2 v1 = halfRoadWidth * glm::normalize(p1 - p0);
-		v2 v2 = halfRoadWidth * glm::normalize(p1 - v2{ Points[2].x, Points[2].z });
+		v2 d1 = halfRoadWidth * glm::normalize(p1 - p0);
+		v2 d2 = halfRoadWidth * glm::normalize(p1 - v2{ Points[2].x, Points[2].z });
 
-		v1 = { -v1.y, v1.x };
-		v2 = { -v2.y, v2.x };
+		d1 = { -d1.y, d1.x };
+		d2 = { -d2.y, d2.x };
 
-		result[2 * (Size - 2) + 0] = { p0 + v1, p0 - v1, p1 + v2 };
-		result[2 * (Size - 2) + 1] = { p0 - v1, p1 + v2, p1 - v2 };
+		result[2 * (Size - 2) + 0] = { p0 + d1, p0 - d1, p1 + d2 };
+		result[2 * (Size - 2) + 1] = { p0 - d1, p1 + d2, p1 - d2 };
 
 		return result;
 	}

@@ -188,7 +188,7 @@ namespace Can::Math
 	}
 	bool CheckPolygonPointCollision(const std::vector<std::array<v2, 3>>& polygon, const v2& point)
 	{
-		f32 count = polygon.size();
+		u64 count = polygon.size();
 		for (size_t i = 0; i < count; i++)
 			if (CheckPointTriangleCollision(polygon[i], point))
 				return true;

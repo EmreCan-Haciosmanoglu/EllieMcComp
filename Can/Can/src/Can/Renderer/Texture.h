@@ -10,7 +10,7 @@ namespace Can
 	public:
 		virtual ~Texture() = default;
 		virtual uint32_t GetWidth() const = 0;
-		virtual uint32_t GeHeight() const = 0;
+		virtual uint32_t GetHeight() const = 0;
 
 		virtual void SetData(void* data, uint32_t size) = 0;
 		virtual void SetSubData(void* data, uint32_t xoffset, uint32_t yoffset, uint32_t width, uint32_t height) = 0;
