@@ -198,9 +198,9 @@ namespace Can::Math
 	}
 
 	template <int Size, int Quality>
-	std::array<float, Size> GetCubicCurveSampleTs(const std::array<v3, 4>& vs)
+	std::array<f32, Size> GetCubicCurveSampleTs(const std::array<v3, 4>& vs)
 	{
-		std::array<float, Size> result;
+		std::array<f32, Size> result;
 		result[0] = 0.0f;
 		result[Size - 1] = 1.0f;
 
@@ -210,40 +210,40 @@ namespace Can::Math
 
 		for (size_t i = 1; i < Size - 1; i++)
 		{
-			float t = i / (Size - 1.0f);
+			f32 t = i / (Size - 1.0f);
 			result[i] = t;
 			points[i] = CubicCurve(vs, t);
 		}
 
 		for (size_t k = 0; k < Quality; k++)
 		{
-			float avgLength = 0.0f;
+			f32 avgLength = 0.0f;
 			for (size_t i = 0; i < Size - 1; i++)
 				avgLength += glm::length(points[i] - points[i + 1]);
 			avgLength /= (Size - 1.0f);
 
 			for (size_t i = 1; i < Size - 1; i++)
 			{
-				float l = glm::length(points[i] - points[i - 1]);
-				float ratio = (l + avgLength) / (l * 2.0f);
+				f32 l = glm::length(points[i] - points[i - 1]);
+				f32 ratio = (l + avgLength) / (l * 2.0f);
 				if (ratio <= 0.0f)
 					continue;
-				float nextT = (result[i] - result[i - 1]) * ratio + result[i - 1];
+				f32 nextT = (result[i] - result[i - 1]) * ratio + result[i - 1];
 				if (nextT >= result[i + 1])
 					continue;
 				result[i] = nextT;
 				points[i] = CubicCurve(vs, result[i]);
 			}
-			float l = glm::length(points[Size - 1] - points[Size - 2]);
-			float ratio = (l + avgLength) / (l * 2.0f);
+			f32 l = glm::length(points[Size - 1] - points[Size - 2]);
+			f32 ratio = (l + avgLength) / (l * 2.0f);
 			result[Size - 2] = 1.0f - (1.0f - result[Size - 2]) * ratio;
 			points[Size - 2] = CubicCurve(vs, result[Size - 2]);
 		}
 		return result;
 	}
 
-	std::vector<v3> GetCubicCurveSamples(const std::array<v3, 4>& vs, float preferedLength, std::vector<float>& ts);
-	std::vector<float> GetCubicCurveSampleTs(const std::array<v3, 4>& vs, float preferedLength);
+	std::vector<v3> GetCubicCurveSamples(const std::array<v3, 4>& vs, f32 preferedLength, std::vector<f32>& ts);
+	std::vector<f32> GetCubicCurveSampleTs(const std::array<v3, 4>& vs, f32 preferedLength);
 
 	template <int Size, int Quality>
 	std::array<v2, Size> GetCubicCurveSamples(const std::array<v2, 4>& vs)
@@ -291,8 +291,8 @@ namespace Can::Math
 		return false;
 	}
 
-	v2 RotatePoint(const v2& point, float angle);
-	v2 RotatePointAroundPoint(const v2& p1, float angle, const v2& p2);
+	v2 RotatePoint(const v2& point, f32 angle);
+	v2 RotatePointAroundPoint(const v2& p1, f32 angle, const v2& p2);
 
 	template <int N>
 	std::array<v2, 2> GetMinsAndMaxs(const std::array<v2, N>& points)
@@ -309,13 +309,13 @@ namespace Can::Math
 		return{ mins, maxs };
 	}
 
-	std::array<std::array<v2, 3>, 2> GetBoundingBoxOfBezierCurve(const std::array<v3, 4>& Points, float halfRoadWidth);
+	std::array<std::array<v2, 3>, 2> GetBoundingBoxOfBezierCurve(const std::array<v3, 4>& Points, f32 halfRoadWidth);
 
 	template <int Size, int Quality>
-	std::array<std::array<v2, 3>, (Size - 1) * 2> GetBoundingPolygonOfBezierCurve(const std::array<v3, 4>& Points, float halfRoadWidth)
+	std::array<std::array<v2, 3>, (Size - 1) * 2> GetBoundingPolygonOfBezierCurve(const std::array<v3, 4>& Points, f32 halfRoadWidth)
 	{
 		std::array<std::array<v2, 3>, (Size - 1) * 2> result;
-		std::array<float, Size> samples = GetCubicCurveSampleTs<Size, Quality>(Points);
+		std::array<f32, Size> samples = GetCubicCurveSampleTs<Size, Quality>(Points);
 		v2 p0{ Points[0].x, Points[0].z };
 
 		for (size_t i = 1; i < Size - 1; i++)
