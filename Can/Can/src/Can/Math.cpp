@@ -241,10 +241,10 @@ namespace Can::Math
 	
 	std::array<std::array<v2, 3>, 2> GetBoundingBoxOfBezierCurve(const std::array<v3, 4>& Points, f32 halfRoadWidth)
 	{
-		v2 A1{ Points[0].x, Points[0].z };
-		v2 B1{ Points[1].x, Points[1].z };
-		v2 C1{ Points[2].x, Points[2].z };
-		v2 D1{ Points[3].x, Points[3].z };
+		v2 A1{ Points[0].x, Points[0].y };
+		v2 B1{ Points[1].x, Points[1].y };
+		v2 C1{ Points[2].x, Points[2].y };
+		v2 D1{ Points[3].x, Points[3].y };
 
 		v2 AB1 = halfRoadWidth * glm::normalize(B1 - A1);
 		v2 DC1 = halfRoadWidth * glm::normalize(C1 - D1);

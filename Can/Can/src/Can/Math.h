@@ -316,23 +316,23 @@ namespace Can::Math
 	{
 		std::array<std::array<v2, 3>, (Size - 1) * 2> result;
 		std::array<f32, Size> samples = GetCubicCurveSampleTs<Size, Quality>(Points);
-		v2 p0{ Points[0].x, Points[0].z };
+		v2 p0 = (v2)Points[0];
 
 		for (size_t i = 1; i < Size - 1; i++)
 		{
 			//put these P1 and p1 outside of the for-loop
 			v3 P1 = CubicCurve(Points, samples[i]);
-			v2 p1{ P1.x, P1.z };
+			v2 p1 = (v2)P1;
 
 			v3 P2 = CubicCurve(Points, samples[i + 1]);
-			v2 p2{ P2.x, P2.z };
+			v2 p2 = (v2)P2;
 
 			//put this v1 outside of the for-loop
 			v2 d1 = halfRoadWidth * glm::normalize(p1 - p0);
-			d1 = { -d1.y, d1.x };
+			d1 = v2{ -d1.y, d1.x };
 
 			v2 d2 = halfRoadWidth * glm::normalize(p2 - p1);
-			d2 = { -d2.y, d2.x };
+			d2 = v2{ -d2.y, d2.x };
 
 			result[2 * (i - 1) + 0] = { p0 + d1, p0 - d1, p1 + d2 };
 			result[2 * (i - 1) + 1] = { p0 - d1, p1 + d2, p1 - d2 };
@@ -340,13 +340,13 @@ namespace Can::Math
 			p0 = p1;
 		}
 		v3 P1 = CubicCurve(Points, 1.0f);
-		v2 p1{ P1.x, P1.z };
+		v2 p1 = (v2)P1;
 
 		v2 d1 = halfRoadWidth * glm::normalize(p1 - p0);
-		v2 d2 = halfRoadWidth * glm::normalize(p1 - v2{ Points[2].x, Points[2].z });
+		v2 d2 = halfRoadWidth * glm::normalize(p1 - (v2)Points[2]);
 
-		d1 = { -d1.y, d1.x };
-		d2 = { -d2.y, d2.x };
+		d1 = v2{ -d1.y, d1.x };
+		d2 = v2{ -d2.y, d2.x };
 
 		result[2 * (Size - 2) + 0] = { p0 + d1, p0 - d1, p1 + d2 };
 		result[2 * (Size - 2) + 1] = { p0 - d1, p1 + d2, p1 - d2 };

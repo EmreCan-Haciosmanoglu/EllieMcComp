@@ -131,23 +131,23 @@ namespace Can::Camera::Controller
 		if (Input::IsKeyPressed(CAN_KEY_D))
 		{
 			m_CameraPosition.x += cos(roty) * tSpeed;
-			m_CameraPosition.z -= sin(roty) * tSpeed;
+			m_CameraPosition.y += sin(roty) * tSpeed;
 		}
 		else if (Input::IsKeyPressed(CAN_KEY_A))
 		{
 			m_CameraPosition.x -= cos(roty) * tSpeed;
-			m_CameraPosition.z += sin(roty) * tSpeed;
+			m_CameraPosition.y -= sin(roty) * tSpeed;
 		}
 
 		if (Input::IsKeyPressed(CAN_KEY_W))
 		{
 			m_CameraPosition.x -= sin(roty) * tSpeed;
-			m_CameraPosition.z -= cos(roty) * tSpeed;
+			m_CameraPosition.y += cos(roty) * tSpeed;
 		}
 		else if (Input::IsKeyPressed(CAN_KEY_S))
 		{
 			m_CameraPosition.x += sin(roty) * tSpeed;
-			m_CameraPosition.z += cos(roty) * tSpeed;
+			m_CameraPosition.y -= cos(roty) * tSpeed;
 		}
 
 		if (Input::IsKeyPressed(CAN_KEY_Q))

@@ -30,8 +30,8 @@ namespace Can
 			for (int i = 0; i < indexCount; i++)
 			{
 				TOVertices[i].Position.x = vertexList[i].x / SCALE_DOWN;
-				TOVertices[i].Position.y = (vertexList[i].y / SCALE_DOWN) + 0.01f;
-				TOVertices[i].Position.z = vertexList[i].z / SCALE_DOWN;
+				TOVertices[i].Position.y = vertexList[i].y / SCALE_DOWN;
+				TOVertices[i].Position.z = (vertexList[i].z / SCALE_DOWN) + 0.01f;
 				TOVertices[i].UV.x = uvList[i].x;
 				TOVertices[i].UV.y = uvList[i].y;
 				TOVertices[i].Normal.x = normalList[i].x;
