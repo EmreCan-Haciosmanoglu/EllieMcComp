@@ -1,6 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
-#include "Can/Camera/CameraController.h"
+#include "Can/Camera/Perspective_Camera_Controller.h"
 namespace Can
 {
 #define OFFSET 10.0f
@@ -11,7 +11,7 @@ namespace Can
 	class ShadowBox
 	{
 	public:
-		ShadowBox(const glm::mat4& mat, const Camera::Controller::Perspective* cameraController);
+		ShadowBox(const glm::mat4& mat, const Perspective_Camera_Controller* cameraController);
 
 		void Update();
 
@@ -58,6 +58,6 @@ namespace Can
 		glm::vec2 farSize = glm::vec2(1.0f);
 		glm::vec2 nearSize = glm::vec2(1.0f);
 
-		const Camera::Controller::Perspective* cameraController;
+		const Perspective_Camera_Controller* cameraController;
 	};
 }

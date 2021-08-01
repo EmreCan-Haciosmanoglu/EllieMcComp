@@ -7,11 +7,11 @@ namespace Can
 	Object::Object(Prefab* prefab)
 		: prefab(prefab)
 		, q(glm::quat(rotation))
-		, transform(glm::mat4(1.0f))
+		, transform(m4(1.0f))
 	{
 		Renderer3D::AddObject(this);
 	}
-	Object::Object(Prefab* prefab, const glm::mat4& transform)
+	Object::Object(Prefab* prefab, const m4& transform)
 		: prefab(prefab)
 		, transform(transform)
 	{
@@ -19,23 +19,23 @@ namespace Can
 		rotation = glm::eulerAngles(q);
 		Renderer3D::AddObject(this);
 	}
-	Object::Object(Prefab* prefab, const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale)
+	Object::Object(Prefab* prefab, const v3& position, const v3& rotation, const v3& scale)
 		: prefab(prefab)
 		, position(position)
 		, rotation(rotation)
 		, scale(scale)
 		, q(glm::quat(rotation))
-		, transform(glm::translate(glm::mat4(1.0f), position)* glm::mat4_cast(q)* glm::scale(glm::mat4(1.0f), scale))
+		, transform(glm::translate(m4(1.0f), position)* glm::mat4_cast(q)* glm::scale(m4(1.0f), scale))
 	{
 		Renderer3D::AddObject(this);
 	}
-	Object::Object(Prefab* prefab, const glm::vec3& position, const glm::quat& q, const glm::vec3& scale)
+	Object::Object(Prefab* prefab, const v3& position, const glm::quat& q, const v3& scale)
 		: prefab(prefab)
 		, position(position)
 		, scale(scale)
 		, rotation(glm::eulerAngles(q))
 		, q(q)
-		, transform(glm::translate(glm::mat4(1.0f), position)* glm::mat4_cast(q)* glm::scale(glm::mat4(1.0f), scale))
+		, transform(glm::translate(m4(1.0f), position)* glm::mat4_cast(q)* glm::scale(m4(1.0f), scale))
 	{
 		Renderer3D::AddObject(this);
 	}
@@ -61,22 +61,22 @@ namespace Can
 		Renderer3D::DeleteObject(this);
 	}
 
-	void Object::SetTransform(const glm::mat4& transform)
+	void Object::SetTransform(const m4& transform)
 	{
 		CAN_PROFILE_FUNCTION();
 
 		this->transform = transform;
 		glm::decompose(transform, scale, q, position, skew, perspective);
 	}
-	void Object::SetTransform(const glm::vec3& position)
+	void Object::SetTransform(const v3& position)
 	{
 		SetTransform(position, this->rotation, this->scale);
 	}
-	void Object::SetTransform(const glm::vec3& position, const glm::vec3& rotation)
+	void Object::SetTransform(const v3& position, const v3& rotation)
 	{
 		SetTransform(position, rotation, this->scale);
 	}
-	void Object::SetTransform(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale)
+	void Object::SetTransform(const v3& position, const v3& rotation, const v3& scale)
 	{
 		CAN_PROFILE_FUNCTION();
 
@@ -86,10 +86,10 @@ namespace Can
 		this->q = glm::quat(this->rotation);
 
 		this->transform =
-			glm::translate(glm::mat4(1.0f), position) *
-			glm::rotate(glm::mat4(1.0f), rotation.z, glm::vec3{ 0.0f, 0.0f, 1.0f }) *
-			glm::rotate(glm::mat4(1.0f), rotation.y, glm::vec3{ 0.0f, 1.0f, 0.0f }) *
-			glm::rotate(glm::mat4(1.0f), rotation.x, glm::vec3{ 1.0f, 0.0f, 0.0f }) *
-			glm::scale(glm::mat4(1.0f), scale);
+			glm::translate(m4(1.0f), position) *
+			glm::rotate(m4(1.0f), rotation.z, v3{ 0.0f, 0.0f, 1.0f }) *
+			glm::rotate(m4(1.0f), rotation.y, v3{ 0.0f, 1.0f, 0.0f }) *
+			glm::rotate(m4(1.0f), rotation.x, v3{ 1.0f, 0.0f, 0.0f }) *
+			glm::scale(m4(1.0f), scale);
 	}
 }

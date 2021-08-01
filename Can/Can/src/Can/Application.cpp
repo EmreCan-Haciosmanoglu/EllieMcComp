@@ -128,14 +128,14 @@ namespace Can
 	{
 		CAN_PROFILE_FUNCTION();
 
-		if (e.GetHeight() == 0 || e.GetWidth() == 0)
+		if (e.height == 0 || e.width == 0)
 		{
 			m_Minimized = true;
 			return false;
 		}
 		m_Minimized = false;
 
-		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+		Renderer::OnWindowResize(e.width, e.height);
 
 		return false;
 	}

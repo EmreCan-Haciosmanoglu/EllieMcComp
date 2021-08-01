@@ -9,7 +9,7 @@ namespace Can
 	class ShadowMapMasterRenderer
 	{
 	public:
-		ShadowMapMasterRenderer(Camera::Controller::Perspective* cameraController);
+		ShadowMapMasterRenderer(Perspective_Camera_Controller* cameraController);
 		~ShadowMapMasterRenderer();
 
 		void Render(const glm::vec3& lightDirection);
@@ -25,7 +25,7 @@ namespace Can
 
 	private:
 
-		Camera::Controller::Perspective* cameraController;
+		Perspective_Camera_Controller* cameraController;
 
 		ShadowMapEntityRenderer* entityRenderer;
 		ShadowFrameBuffer* frameBuffer;

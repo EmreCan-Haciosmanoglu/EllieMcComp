@@ -149,6 +149,8 @@
     <ClInclude Include="src\Can\AssetLoader.h" />
     <ClInclude Include="src\Can\Camera\Camera.h" />
     <ClInclude Include="src\Can\Camera\CameraController.h" />
+    <ClInclude Include="src\Can\Camera\Perspective_Camera.h" />
+    <ClInclude Include="src\Can\Camera\Perspective_Camera_Controller.h" />
     <ClInclude Include="src\Can\Core.h" />
     <ClInclude Include="src\Can\Core\TimeStep.h" />
     <ClInclude Include="src\Can\EntryPoint.h" />
@@ -588,6 +590,8 @@
     <ClCompile Include="src\Can\AssetLoader.cpp" />
     <ClCompile Include="src\Can\Camera\Camera.cpp" />
     <ClCompile Include="src\Can\Camera\CameraController.cpp" />
+    <ClCompile Include="src\Can\Camera\Perspective_Camera.cpp" />
+    <ClCompile Include="src\Can\Camera\Perspective_Camera_Controller.cpp" />
     <ClCompile Include="src\Can\Font\Font.cpp" />
     <ClCompile Include="src\Can\Font\FontAtlas.cpp" />
     <ClCompile Include="src\Can\Layers\ImGuiBuild.cpp" />

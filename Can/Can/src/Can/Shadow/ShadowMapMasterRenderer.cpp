@@ -4,7 +4,7 @@
 
 namespace Can
 {
-	ShadowMapMasterRenderer::ShadowMapMasterRenderer(Camera::Controller::Perspective* cameraController)
+	ShadowMapMasterRenderer::ShadowMapMasterRenderer(Perspective_Camera_Controller* cameraController)
 		: cameraController(cameraController)
 	{
 		shader = Shader::Create("assets/shaders/simpleDepth.glsl");

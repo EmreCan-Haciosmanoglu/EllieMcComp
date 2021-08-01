@@ -278,6 +278,13 @@ namespace Can::Math
 	{
 		v3 w = C - X;
 		f32 k = glm::dot(w, n) / glm::dot(v, n);
-		return X + k * v;
+		v3 result = X + k * v;
+		if (isnan(result.x))
+			result.x = (int)(&result.x);
+		if (isnan(result.y))
+			result.y = (int)(&result.y);
+		if (isnan(result.z))
+			result.z = (int)(&result.z);
+		return result;
 	}
 }

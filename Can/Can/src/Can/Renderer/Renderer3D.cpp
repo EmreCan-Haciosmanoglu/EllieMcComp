@@ -19,7 +19,7 @@ namespace Can
 		CAN_PROFILE_FUNCTION();
 	}
 
-	void Renderer3D::BeginScene(const Camera::PerspectiveCamera& camera)
+	void Renderer3D::BeginScene(const Perspective_Camera& camera)
 	{
 		CAN_PROFILE_FUNCTION();
 
@@ -29,7 +29,7 @@ namespace Can
 				continue;
 			Prefab* prefab = o->prefab;
 			prefab->shader->Bind();
-			prefab->shader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+			prefab->shader->SetMat4("u_ViewProjection", camera.view_projection);
 		}
 	}
 	void Renderer3D::EndScene()
@@ -57,7 +57,7 @@ namespace Can
 	}
 
 
-	void Renderer3D::DrawObjects(const glm::mat4& lightspace, unsigned int shadowMapTexture, const Camera::PerspectiveCamera& camera, const glm::vec3& lightPos)
+	void Renderer3D::DrawObjects(const glm::mat4& lightspace, unsigned int shadowMapTexture, const Perspective_Camera& camera, const glm::vec3& lightPos)
 	{
 		CAN_PROFILE_FUNCTION();
 
@@ -77,7 +77,7 @@ namespace Can
 
 			glm::vec3 rotatedLightRay = glm::rotate(lightPos, -(obj->rotation.y), glm::vec3{ 0.0f, 1.0f , 0.0f });
 			prefab->shader->SetFloat3("u_LightPos", lightPos);
-			prefab->shader->SetFloat3("u_ViewPos", camera.GetPosition());
+			prefab->shader->SetFloat3("u_ViewPos", camera.position);
 			prefab->vertexArray->Bind();
 			for (size_t i = 0; i < prefab->textureCount; i++)
 				prefab->textures[i]->Bind((uint32_t)i);

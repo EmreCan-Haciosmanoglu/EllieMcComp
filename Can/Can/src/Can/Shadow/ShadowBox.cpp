@@ -3,7 +3,7 @@
 
 namespace Can
 {
-	ShadowBox::ShadowBox(const glm::mat4& mat, const Camera::Controller::Perspective* cameraController)
+	ShadowBox::ShadowBox(const glm::mat4& mat, const Perspective_Camera_Controller* cameraController)
 		: lightViewMatrix(mat)
 		, cameraController(cameraController)
 	{
@@ -13,7 +13,7 @@ namespace Can
 	void ShadowBox::Update()
 	{
 
-		glm::vec3 camRot = cameraController->GetCamera().GetRotation();
+		glm::vec3 camRot = cameraController->camera.rotation;
 		glm::vec3 forward = {
 			-glm::sin(glm::radians(camRot.y)) * glm::cos(glm::radians(camRot.x)),
 			glm::sin(glm::radians(camRot.x)),
@@ -21,10 +21,10 @@ namespace Can
 		};
 
 		glm::vec3 toFar = glm::normalize(forward) * SHADOW_DISTANCE;
-		glm::vec3 toNear = glm::normalize(forward) * cameraController->GetNear();
+		glm::vec3 toNear = glm::normalize(forward) * cameraController->camera.near_clip_plane;
 
-		glm::vec3 centerFar = toFar + cameraController->GetCamera().GetPosition();
-		glm::vec3 centerNear = toNear + cameraController->GetCamera().GetPosition();
+		glm::vec3 centerFar = toFar + cameraController->camera.position;
+		glm::vec3 centerNear = toNear + cameraController->camera.rotation;
 
 		glm::vec4 points[8] = {};
 		CalculateFrastumVertices(forward, centerNear, centerFar, points);
@@ -47,11 +47,11 @@ namespace Can
 
 	void ShadowBox::CalculateWidthsAndHeights()
 	{
-		farSize.x = SHADOW_DISTANCE * glm::tan(glm::radians(cameraController->GetFOV()));
-		nearSize.x = cameraController->GetNear() * glm::tan(glm::radians(cameraController->GetFOV()));
+		farSize.x = SHADOW_DISTANCE * glm::tan(glm::radians(cameraController->camera.field_of_view_angle));
+		nearSize.x = cameraController->camera.near_clip_plane * glm::tan(glm::radians(cameraController->camera.field_of_view_angle));
 
-		farSize.y = farSize.x / cameraController->GetAspectRatio();
-		nearSize.y = nearSize.x / cameraController->GetAspectRatio();
+		farSize.y = farSize.x / cameraController->camera.aspect_ratio;
+		nearSize.y = nearSize.x / cameraController->camera.aspect_ratio;
 	}
 
 	void ShadowBox::CalculateFrastumVertices(const glm::vec3& forward, const glm::vec3& centerNear, const glm::vec3& centerFar, glm::vec4* output)
@@ -78,7 +78,7 @@ namespace Can
 
 	glm::mat4 ShadowBox::CalculateCameraRotation()
 	{
-		const glm::vec3& camRotation = cameraController->GetCamera().GetRotation();
+		const glm::vec3& camRotation = cameraController->camera.rotation;
 		glm::mat4 rotation = glm::mat4(1.0f);
 		rotation = glm::rotate(rotation, glm::radians(camRotation.y), glm::vec3{ 0.0f, 1.0f, 0.0f });
 		rotation = glm::rotate(rotation, glm::radians(camRotation.x), glm::vec3{ 1.0f, 0.0f, 0.0f });

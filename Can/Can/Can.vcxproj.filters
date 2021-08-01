@@ -1386,6 +1386,8 @@
     <ClInclude Include="vendor\stb\stb_image.h">
       <Filter>vendor\stb</Filter>
     </ClInclude>
+    <ClInclude Include="src\Can\Camera\Perspective_Camera_Controller.h" />
+    <ClInclude Include="src\Can\Camera\Perspective_Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -1562,5 +1564,7 @@
     <ClCompile Include="vendor\stb\stb_image.cpp">
       <Filter>vendor\stb</Filter>
     </ClCompile>
+    <ClCompile Include="src\Can\Camera\Perspective_Camera_Controller.cpp" />
+    <ClCompile Include="src\Can\Camera\Perspective_Camera.cpp" />
   </ItemGroup>
 </Project>
