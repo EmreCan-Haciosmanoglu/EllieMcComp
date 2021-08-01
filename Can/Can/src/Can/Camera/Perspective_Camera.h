@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #undef far
 #undef near
@@ -25,8 +26,6 @@ namespace Can
 
 		void recalculate_direction_vectors();
 
-		void recalculate_transform_matrix();
-
 		void recalculate_projection_matrix();
 		void recalculate_view_matrix();
 		void recalculate_projection_view_matrix();
@@ -40,13 +39,25 @@ namespace Can
 
 		v3 position{ 0.0f, 0.0f, 0.0f };
 		v3 rotation{ 0.0f, 0.0f, 0.0f };
-		m4 transform = m4(1.0f);
-		m4 view = glm::mat4(1.0f);
-		m4 projection = glm::mat4(1.0f);
-		m4 view_projection = glm::mat4(1.0f);
 
-		v3 forward{ 1.0f, 0.0f, 0.0f };
-		v3 up{ 0.0f, 0.0f, 1.0f };
-		v3 right{ 0.0f, -1.0f, 0.0f };
+		v3 forward = {
+				glm::cos(glm::radians(rotation.y)) * glm::cos(glm::radians(rotation.z)),
+				glm::sin(glm::radians(rotation.z)),
+				glm::sin(glm::radians(rotation.y))
+		};
+		v3 up = {
+			glm::sin(glm::radians(rotation.y)) * glm::cos(glm::radians(rotation.z + 180.0f)),
+			glm::sin(glm::radians(rotation.y)) * glm::sin(glm::radians(rotation.z + 180.0f)),
+			glm::cos(glm::radians(rotation.y))
+		};
+		v3 right = glm::cross(forward, up);
+
+		m4 view = glm::lookAt(
+			-forward + position,
+			position,
+			glm::vec3(0.0f, 0.0f, 1.0f));
+		m4 projection = glm::perspective(field_of_view_angle, aspect_ratio, near_clip_plane, far_clip_plane);
+		m4 view_projection = projection * view;
+
 	};
 }

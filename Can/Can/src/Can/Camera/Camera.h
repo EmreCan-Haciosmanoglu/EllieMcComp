@@ -2,9 +2,6 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#undef far
-#undef near
-
 namespace Can::Camera
 {
 	class Camera
