@@ -50,7 +50,7 @@ namespace Can
 
 		forward = {
 			glm::cos(rotation_in_radians.y) * glm::cos(rotation_in_radians.z),
-			glm::sin(rotation_in_radians.z),
+			glm::cos(rotation_in_radians.y) * glm::sin(rotation_in_radians.z),
 			glm::sin(rotation_in_radians.y)
 		};
 		up = {
@@ -70,9 +70,10 @@ namespace Can
 	void Perspective_Camera::recalculate_view_matrix()
 	{
 		view = glm::lookAt(
-			-forward + position,
 			position,
-			glm::vec3(0.0f, 0.0f, 1.0f));
+			position + forward,
+			up);
+			//glm::vec3(0.0f, 0.0f, 1.0f));
 		//view = glm::inverse(transform);
 		recalculate_projection_view_matrix();
 	}
