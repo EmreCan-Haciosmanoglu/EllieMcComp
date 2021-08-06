@@ -1,9 +1,6 @@
 #pragma once
-
-
 namespace Can::Math
 {
-
 	template <typename T>
 	class Vector2
 	{
@@ -182,7 +179,7 @@ namespace Can::Math
 	Vector3<T> CubicCurveTangent(const std::array<v3, 4>& vs, T percentage)
 	{
 		return (vs[1] - vs[0]) * 3.0f +
-			(vs[0] - vs[1] * 2.0f + vs[2]) * percentage * 6.0f + 
+			(vs[0] - vs[1] * 2.0f + vs[2]) * percentage * 6.0f +
 			(vs[3] - vs[0] + (vs[1] - vs[2]) * 3.0f) * percentage * percentage * 3.0f;
 	}
 
@@ -309,6 +306,24 @@ namespace Can::Math
 		return{ mins, maxs };
 	}
 
+	template <int N>
+	std::array<v3, 2> GetMinsAndMaxs(const std::array<v3, N>& points)
+	{
+		v3 mins = points[0];
+		v3 maxs = points[0];
+		for (size_t i = 1; i < N; i++)
+		{
+			mins.x = (std::min)(mins.x, points[i].x);
+			mins.y = (std::min)(mins.y, points[i].y);
+			mins.z = (std::min)(mins.z, points[i].z);
+
+			maxs.x = (std::max)(maxs.x, points[i].x);
+			maxs.y = (std::max)(maxs.y, points[i].y);
+			maxs.z = (std::max)(maxs.z, points[i].z);
+		}
+		return{ mins, maxs };
+	}
+
 	std::array<std::array<v2, 3>, 2> GetBoundingBoxOfBezierCurve(const std::array<v3, 4>& Points, f32 halfRoadWidth);
 
 	template <int Size, int Quality>
@@ -355,4 +370,38 @@ namespace Can::Math
 	}
 
 	v3 RayPlaneIntersection(const v3& X, const v3& v, const v3& C, const v3& n);
+
+	std::vector<v3> get_samples_from_cubic_bezier_curve(const std::array<v3, 4>& control_points, f32 preferred_length);
+	std::array<v3, 2> get_bounding_box_from_straight_bezier_curve(const std::array<v3, 4>& control_points, f32 half_width, f32 height);
+	std::array<v3, 2> get_bounding_box_from_cubic_bezier_curve(const std::array<v3, 4>& control_points, f32 half_width, f32 height);
+	std::vector<std::array<v3, 3>> get_bounding_polygon_from_bezier_curve(const std::array<v3, 4>& control_points, f32 half_width, f32 preferred_length);
+	std::vector<std::array<v3, 3>> get_bounding_polygon_from_bezier_curve(const std::vector<v3>& samples, f32 half_width);
+
+	bool check_bounding_box_bounding_box_collision(
+		std::array<v3, 2> bounding_box_1,
+		std::array<v3, 2> bounding_box_2);
+	bool check_bounding_polygon_bounding_polygon_collision_with_z(
+		std::vector<std::array<v3, 3>> polygon_1,
+		f32 polygon_1_height,
+		std::vector<std::array<v3, 3>> polygon_2,
+		f32 polygon_2_height);
+	bool check_triangle_triangle_collision_with_z(
+		const std::array<v3, 3>& triangle_1,
+		f32 triangle_1_height,
+		const std::array<v3, 3>& triangle_2,
+		f32 triangle_2_height);
+	bool check_triangle_point_collision(
+		const std::array<v3, 3>& triangle_1,
+		v3 point);
+	bool check_line_segment_line_segment_collision(
+		const std::array<v3, 2>& line_segment_1,
+		const std::array<v3, 2>& line_segment_2);
+
+	v3 lerp(const v3& a, const v3& b, f32 t);
+	f32 lerp(f32 a, f32 b, f32 t);
+
+	v3 ray_plane_intersection(const v3& X, const v3& v, const v3& C, const v3& n);
+
+	std::array<v3, 3> get_axis_of_a_triangle(const std::array<v3, 3>& triangle);
+	bool check_triangle_triangle_collision_with_SAT(const std::array<v3, 3>& triangle_1, const std::array<v3, 3>& triangle_2);
 }

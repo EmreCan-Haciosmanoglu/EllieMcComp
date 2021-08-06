@@ -65,7 +65,7 @@ namespace Can
 			pitch(frame_independent_rotation_speed, true);
 		camera.rotation = {
 			0.0f,
-			glm::clamp(camera.rotation.y, -90.0f, +90.0f),
+			glm::clamp(camera.rotation.y, -90.0f, -10.0f),
 			std::fmod(camera.rotation.z + 360.0f, 360.0f)
 		};
 		camera.recalculate_direction_vectors();
