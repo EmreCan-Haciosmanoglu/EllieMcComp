@@ -29,6 +29,10 @@ namespace Can
 		{
 			s_RendererAPI->DrawIndexed(vertexArray, indexCount);
 		}
+		inline static void enable_depth_testing(bool enable)
+		{
+			s_RendererAPI->enable_depth_testing(enable);
+		}
 	private:
 		static Scope<RendererAPI> s_RendererAPI;
 	};

@@ -16,13 +16,13 @@ namespace Can
 	{
 		switch (severity)
 		{
-		case GL_DEBUG_SEVERITY_HIGH:        
+		case GL_DEBUG_SEVERITY_HIGH:
 			CAN_CORE_CRITICAL(message); return;
-		case GL_DEBUG_SEVERITY_MEDIUM:       
+		case GL_DEBUG_SEVERITY_MEDIUM:
 			CAN_CORE_ERROR(message); return;
-		case GL_DEBUG_SEVERITY_LOW:          
+		case GL_DEBUG_SEVERITY_LOW:
 			CAN_CORE_WARN(message); return;
-		case GL_DEBUG_SEVERITY_NOTIFICATION: 
+		case GL_DEBUG_SEVERITY_NOTIFICATION:
 			CAN_CORE_TRACE(message); return;
 		}
 
@@ -84,5 +84,12 @@ namespace Can
 
 		glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
 		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+	void OpenGLRendererAPI::enable_depth_testing(bool enable)
+	{
+		if (enable)
+			glEnable(GL_DEPTH_TEST);
+		else
+			glDisable(GL_DEPTH_TEST);
 	}
 }

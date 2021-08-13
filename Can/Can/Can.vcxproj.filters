@@ -84,17 +84,11 @@
     <ClInclude Include="src\Can\Camera\Camera.h">
       <Filter>src\Can\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="src\Can\Camera\CameraController.h">
-      <Filter>src\Can\Camera</Filter>
-    </ClInclude>
     <ClInclude Include="src\Can\Core.h">
       <Filter>src\Can</Filter>
     </ClInclude>
     <ClInclude Include="src\Can\Core\TimeStep.h">
       <Filter>src\Can\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Can\EntryPoint.h">
-      <Filter>src\Can</Filter>
     </ClInclude>
     <ClInclude Include="src\Can\Events\ApplicationEvent.h">
       <Filter>src\Can\Events</Filter>
@@ -1388,6 +1382,9 @@
     </ClInclude>
     <ClInclude Include="src\Can\Camera\Perspective_Camera_Controller.h" />
     <ClInclude Include="src\Can\Camera\Perspective_Camera.h" />
+    <ClInclude Include="src\Can\Camera\Orthographic_Camera_Controller.h" />
+    <ClInclude Include="src\Can\Immediate_Renderer\Immediate_Renderer.h" />
+    <ClInclude Include="src\Can\EntryPoint.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -1397,9 +1394,6 @@
       <Filter>src\Can</Filter>
     </ClCompile>
     <ClCompile Include="src\Can\Camera\Camera.cpp">
-      <Filter>src\Can\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Can\Camera\CameraController.cpp">
       <Filter>src\Can\Camera</Filter>
     </ClCompile>
     <ClCompile Include="src\Can\Font\Font.cpp">
@@ -1566,5 +1560,8 @@
     </ClCompile>
     <ClCompile Include="src\Can\Camera\Perspective_Camera_Controller.cpp" />
     <ClCompile Include="src\Can\Camera\Perspective_Camera.cpp" />
+    <ClCompile Include="src\Can\Camera\Orthographic_Camera_Controller.cpp" />
+    <ClCompile Include="src\Can\Immediate_Renderer\Immediate_Renderer.cpp" />
+    <ClCompile Include="src\Can\EntryPoint.cpp" />
   </ItemGroup>
 </Project>

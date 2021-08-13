@@ -15,5 +15,6 @@ namespace Can
 		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray) override;
 		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount ) override;
 
+		virtual void enable_depth_testing(bool enable) override;
 	};
 }

@@ -21,6 +21,8 @@ namespace Can
 		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray) = 0;
 		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount) = 0;
 
+		virtual void enable_depth_testing(bool enable) = 0;
+
 		inline static API GetAPI() { return s_API; }
 		static Scope<RendererAPI> Create();
 	private:

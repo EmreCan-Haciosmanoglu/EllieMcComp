@@ -148,7 +148,7 @@
     <ClInclude Include="src\Can\Application.h" />
     <ClInclude Include="src\Can\AssetLoader.h" />
     <ClInclude Include="src\Can\Camera\Camera.h" />
-    <ClInclude Include="src\Can\Camera\CameraController.h" />
+    <ClInclude Include="src\Can\Camera\Orthographic_Camera_Controller.h" />
     <ClInclude Include="src\Can\Camera\Perspective_Camera.h" />
     <ClInclude Include="src\Can\Camera\Perspective_Camera_Controller.h" />
     <ClInclude Include="src\Can\Core.h" />
@@ -160,6 +160,7 @@
     <ClInclude Include="src\Can\Events\MouseEvent.h" />
     <ClInclude Include="src\Can\Font\Font.h" />
     <ClInclude Include="src\Can\Font\FontAtlas.h" />
+    <ClInclude Include="src\Can\Immediate_Renderer\Immediate_Renderer.h" />
     <ClInclude Include="src\Can\Input.h" />
     <ClInclude Include="src\Can\Instrumentor.h" />
     <ClInclude Include="src\Can\KeyCodes.h" />
@@ -589,11 +590,13 @@
     <ClCompile Include="src\Can\Application.cpp" />
     <ClCompile Include="src\Can\AssetLoader.cpp" />
     <ClCompile Include="src\Can\Camera\Camera.cpp" />
-    <ClCompile Include="src\Can\Camera\CameraController.cpp" />
+    <ClCompile Include="src\Can\Camera\Orthographic_Camera_Controller.cpp" />
     <ClCompile Include="src\Can\Camera\Perspective_Camera.cpp" />
     <ClCompile Include="src\Can\Camera\Perspective_Camera_Controller.cpp" />
+    <ClCompile Include="src\Can\EntryPoint.cpp" />
     <ClCompile Include="src\Can\Font\Font.cpp" />
     <ClCompile Include="src\Can\Font\FontAtlas.cpp" />
+    <ClCompile Include="src\Can\Immediate_Renderer\Immediate_Renderer.cpp" />
     <ClCompile Include="src\Can\Layers\ImGuiBuild.cpp" />
     <ClCompile Include="src\Can\Layers\ImGuiLayer.cpp" />
     <ClCompile Include="src\Can\Layers\Layer.cpp" />

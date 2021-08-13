@@ -25,7 +25,7 @@
 #include "Can/Renderer/Renderer3D.h"
 
 #include "Can/Camera/Camera.h"
-#include "Can/Camera/CameraController.h"
+#include "Can/Camera/Orthographic_Camera_Controller.h"
 
 #include "Can/Scene/Panel.h"
 #include "Can/Scene/Scene.h"

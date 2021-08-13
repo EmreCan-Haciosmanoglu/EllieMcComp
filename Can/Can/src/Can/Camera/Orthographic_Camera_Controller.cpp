@@ -1,27 +1,19 @@
 #include "canpch.h"
-#include "CameraController.h"
+#include "Orthographic_Camera_Controller.h"
 #include "Can/Input.h"
 
 #include "Can/Math.h"
 
 
-namespace Can::Camera
+namespace Can
 {
-	OrthographicCameraController::OrthographicCameraController(f32 aspectRatio, bool rotation)
-		: m_AspectRatio(aspectRatio)
-		, m_Rotation(rotation)
-		, m_Camera(-aspectRatio * m_ZoomLevel, aspectRatio* m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel)
+	Orthographic_Camera_Controller::Orthographic_Camera_Controller()
+		:m_Camera(-10.0f, 10.0f, -10.0f, 10.0f) // @DeleteMe
 	{
-	}
-	OrthographicCameraController::OrthographicCameraController(f32 aspectRatio, f32 zoomLevel, bool rotation)
-		: m_AspectRatio(aspectRatio)
-		, m_ZoomLevel(zoomLevel)
-		, m_Rotation(rotation)
-		, m_Camera(-aspectRatio * m_ZoomLevel, aspectRatio* m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel)
-	{
+
 	}
 
-	void OrthographicCameraController::OnUpdate(TimeStep ts)
+	void Orthographic_Camera_Controller::on_update(TimeStep ts)
 	{
 		CAN_PROFILE_FUNCTION();
 
@@ -65,16 +57,16 @@ namespace Can::Camera
 		m_Camera.SetPosition(m_CameraPosition);
 	}
 
-	void OrthographicCameraController::OnEvent(Event::Event& e)
+	void Orthographic_Camera_Controller::on_event(Event::Event& e)
 	{
 		CAN_PROFILE_FUNCTION();
 
 		Event::EventDispatcher dispatcher(e);
-		dispatcher.Dispatch< Event::MouseScrolledEvent>(CAN_BIND_EVENT_FN(Camera::OrthographicCameraController::OnMouseScrollEvent));
-		dispatcher.Dispatch< Event::WindowResizeEvent>(CAN_BIND_EVENT_FN(Camera::OrthographicCameraController::OnWindowResized));
+		dispatcher.Dispatch< Event::MouseScrolledEvent>(CAN_BIND_EVENT_FN(Orthographic_Camera_Controller::on_mouse_scroll_event));
+		dispatcher.Dispatch< Event::WindowResizeEvent>(CAN_BIND_EVENT_FN(Orthographic_Camera_Controller::on_window_resized));
 	}
 
-	bool OrthographicCameraController::OnMouseScrollEvent(Event::MouseScrolledEvent& e)
+	bool Orthographic_Camera_Controller::on_mouse_scroll_event(Event::MouseScrolledEvent& e)
 	{
 		CAN_PROFILE_FUNCTION();
 
@@ -84,7 +76,7 @@ namespace Can::Camera
 		return false;
 	}
 
-	bool OrthographicCameraController::OnWindowResized(Event::WindowResizeEvent& e)
+	bool Orthographic_Camera_Controller::on_window_resized(Event::WindowResizeEvent& e)
 	{
 		CAN_PROFILE_FUNCTION();
 		if (e.width == 0 || e.height == 0)
@@ -93,6 +85,14 @@ namespace Can::Camera
 		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 
 		return false;
+	}
+
+	void init_orthographic_camera_controller(Orthographic_Camera_Controller& camera_controller, f32 aspect_ratio, f32 zoom_level, bool rotation)
+	{
+		camera_controller.m_AspectRatio = aspect_ratio;
+		camera_controller.m_ZoomLevel = zoom_level;
+		camera_controller.m_Rotation = rotation;
+		camera_controller.m_Camera = Camera::OrthographicCamera(-aspect_ratio * zoom_level, aspect_ratio * zoom_level, -zoom_level, zoom_level);
 	}
 
 }

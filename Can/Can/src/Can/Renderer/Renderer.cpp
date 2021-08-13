@@ -3,7 +3,10 @@
 #include "Renderer2D.h"
 #include "Renderer3D.h"
 
+#include "Can/Immediate_Renderer/Immediate_Renderer.h"
+
 #include "Platform/OpenGl/OpenGLShader.h"
+
 
 namespace Can
 {
@@ -16,6 +19,8 @@ namespace Can
 		RenderCommand::Init();
 		Renderer2D::Init();
 		Renderer3D::Init();
+
+		init_immediate_renderer();
 	}
 
 	void Renderer::Shutdown()
