@@ -7,21 +7,21 @@ namespace Can
 {
 	struct Char
 	{
-        float advanceX;
-        float advanceY;
+        f32 advanceX;
+        f32 advanceY;
 
-        float bitmapWidth;
-        float bitmapHeight;
+        f32 bitmapWidth;
+        f32 bitmapHeight;
 
-        float bitmapLeft;
-        float bitmapTop;
+        f32 bitmapLeft;
+        f32 bitmapTop;
 
-        float xOffset;
+        f32 xOffset;
 	};
 	class FontAtlas
 	{
     public:
-        FontAtlas(FT_Face face, int pixelSize);
+        FontAtlas(FT_Face ft_face, u16 pixelSize);
 
         FT_Face face;
         FT_GlyphSlot slot;

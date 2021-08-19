@@ -89,4 +89,11 @@ namespace Can
 	typedef glm::vec4 v4;
 	typedef glm::mat3 m3;
 	typedef glm::mat4 m4;
+
+	/*Move this*/
+	struct v2i
+	{
+		s32 x = 0;
+		s32 y = 0;
+	};
 }

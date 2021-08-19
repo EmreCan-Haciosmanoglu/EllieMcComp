@@ -160,7 +160,12 @@
     <ClInclude Include="src\Can\Events\MouseEvent.h" />
     <ClInclude Include="src\Can\Font\Font.h" />
     <ClInclude Include="src\Can\Font\FontAtlas.h" />
+    <ClInclude Include="src\Can\Font\FontFlags.h" />
+    <ClInclude Include="src\Can\Hash_Table.h" />
     <ClInclude Include="src\Can\Immediate_Renderer\Immediate_Renderer.h" />
+    <ClInclude Include="src\Can\Immediate_Renderer\States.h" />
+    <ClInclude Include="src\Can\Immediate_Renderer\Themes.h" />
+    <ClInclude Include="src\Can\Immediate_Renderer\Widgets.h" />
     <ClInclude Include="src\Can\Input.h" />
     <ClInclude Include="src\Can\Instrumentor.h" />
     <ClInclude Include="src\Can\KeyCodes.h" />

@@ -26,17 +26,24 @@ namespace Can::Platform::Windows
 
 		return state == GLFW_PRESS;
 	}
-	float WindowsInput::GetMouseXImp()
+	f32 WindowsInput::GetMouseXImp()
 	{
-		auto[x, y] = GetMousePosImp();
+		auto[x, y] = get_mouse_position_imp_float();
 		return x;
 	}
-	float WindowsInput::GetMouseYImp()
+	f32 WindowsInput::GetMouseYImp()
 	{
-		auto[x, y] = GetMousePosImp();
+		auto[x, y] = get_mouse_position_imp_float();
 		return y;
 	}
-	std::pair<float, float> WindowsInput::GetMousePosImp()
+	std::pair<u32, u32> WindowsInput::get_mouse_position_imp()
+	{
+		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
+		double x, y;
+		glfwGetCursorPos(window, &x, &y);
+		return { (u32)x, (u32)y };
+	}
+	std::pair<f32, f32> WindowsInput::get_mouse_position_imp_float()
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		double x, y;

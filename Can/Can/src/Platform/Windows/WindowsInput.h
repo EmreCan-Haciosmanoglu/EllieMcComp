@@ -13,8 +13,9 @@ namespace Can::Platform::Windows
 	protected:
 		virtual bool IsKeyPressedImp(KeyCode keycode) override;
 		virtual bool IsMouseButtonPressedImp(MouseCode button) override;
-		virtual float GetMouseXImp() override;
-		virtual float GetMouseYImp() override;
-		virtual std::pair<float, float> GetMousePosImp() override;
+		virtual f32 GetMouseXImp() override;
+		virtual f32 GetMouseYImp() override;
+		virtual std::pair<u32, u32> get_mouse_position_imp() override;
+		virtual std::pair<f32, f32> get_mouse_position_imp_float() override;
 	};
 }

@@ -5,8 +5,8 @@
 
 namespace Can
 {
-	FontAtlas::FontAtlas(FT_Face face, int pixelSize)
-		: face(face)
+	FontAtlas::FontAtlas(FT_Face ft_face, u16 pixelSize)
+		: face(ft_face)
 		, slot(face->glyph)
 	{
 		FT_Set_Pixel_Sizes(face, 0, pixelSize);

@@ -11,6 +11,8 @@
 #include "ft2build.h"
 #include FT_FREETYPE_H
 
+#include "Can/Font/FontFlags.h"
+
 namespace Can
 {
 	struct QuadVertex
@@ -20,19 +22,6 @@ namespace Can
 		glm::vec2 TexCoord;
 		float TextureIndex;
 		float TilingFactor;
-	};
-
-	enum FontFlags
-	{
-		LeftAligned = 0x1,
-		RightAligned = 0x2,
-		CenterAligned = 0x4,
-		WordWrap = 0x8,
-		Underlined = 0x10,
-		Bold = 0x20,
-		Italic = 0x40,
-		Indented = 0x80,
-		HorizontalLayout = 0x100
 	};
 
 	struct Renderer2DData
