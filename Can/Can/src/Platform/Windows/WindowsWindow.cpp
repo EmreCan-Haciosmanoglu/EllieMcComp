@@ -193,4 +193,9 @@ namespace Can::Platform::Windows
 		return m_Data.VSync;
 	}
 
+	void WindowsWindow::set_resolution(u32 width, u32 height)
+	{
+		glfwSetWindowSize(m_Window, width, height);
+	}
+
 }

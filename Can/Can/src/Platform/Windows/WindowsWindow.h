@@ -23,6 +23,8 @@ namespace Can::Platform::Windows
 		bool IsVSync() const override;
 		inline virtual void* GetNativeWindow() const { return m_Window; }
 
+		void set_resolution(u32 width, u32 height) override;
+
 	private:
 		virtual void Init(const WindowProps& props);
 		virtual void ShutDown();
