@@ -79,7 +79,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>CAN_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Can\vendor\spdlog\include;..\Can\src;..\Can\vendor\imgui;..\Can\vendor\glm;..\Can\vendor\entt\single_include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Can\vendor\spdlog\include;..\Can\src;..\Can\vendor\imgui;..\Can\vendor\glm;..\Can\vendor\entt\single_include;..\Can\vendor\freetype;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -97,7 +97,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>CAN_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Can\vendor\spdlog\include;..\Can\src;..\Can\vendor\imgui;..\Can\vendor\glm;..\Can\vendor\entt\single_include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Can\vendor\spdlog\include;..\Can\src;..\Can\vendor\imgui;..\Can\vendor\glm;..\Can\vendor\entt\single_include;..\Can\vendor\freetype;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -118,7 +118,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>CAN_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Can\vendor\spdlog\include;..\Can\src;..\Can\vendor\imgui;..\Can\vendor\glm;..\Can\vendor\entt\single_include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Can\vendor\spdlog\include;..\Can\src;..\Can\vendor\imgui;..\Can\vendor\glm;..\Can\vendor\entt\single_include;..\Can\vendor\freetype;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -149,6 +149,9 @@
     </ProjectReference>
     <ProjectReference Include="..\Can\Can.vcxproj">
       <Project>{D7DC870B-43E6-877C-CC61-9E7C386A937C}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Can\vendor\freetype\FreeType.vcxproj">
+      <Project>{49610F50-352E-6A5B-5E47-58034A739FE9}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

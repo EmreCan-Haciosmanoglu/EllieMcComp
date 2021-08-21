@@ -38,8 +38,10 @@ namespace Can
 
 	void immediate_text(std::string& text, Rect& r, Label_Theme& theme);
 
-	u8 immediate_button(Rect& r, std::string& text, Button_Theme& theme, u64 hash);
+	u16 immediate_button(Rect& r, std::string& text, Button_Theme& theme, u64 hash);
 
 	void immediate_flush();
+
+	void* load_font(const std::string& path);
 
 }

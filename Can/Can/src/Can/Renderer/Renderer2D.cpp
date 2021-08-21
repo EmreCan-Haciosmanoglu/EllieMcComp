@@ -109,7 +109,7 @@ namespace Can
 		//s_Data.QuadVertexPositions[3] = { -0.5f, +0.5f, 0.0f, 1.0f };
 
 		s_Data.font = new Font("assets/fonts/Poppins/Poppins-Medium.ttf");
-		s_Data.fontAtlas.push_back(FontAtlas(s_Data.font->GetFace(), 24));
+		s_Data.fontAtlas.push_back(FontAtlas(s_Data.font->face, 24));
 	}
 	void Renderer2D::Shutdown()
 	{
@@ -453,9 +453,9 @@ namespace Can
 
 
 		float x = position.x;
-		float y = position.y + (s_Data.font->GetFace()->size->metrics.height >> 6);
+		float y = position.y + (s_Data.font->face->size->metrics.height >> 6);
 
-		FT_GlyphSlot slot = s_Data.font->GetFace()->glyph;
+		FT_GlyphSlot slot = s_Data.font->face->glyph;
 
 		// Calculate alignment (if applicable)
 		float textWidth = 0;
@@ -499,7 +499,7 @@ namespace Can
 
 			// Calculate kerning value
 			FT_Vector kerning;
-			FT_Get_Kerning(s_Data.font->GetFace(),              // font face handle
+			FT_Get_Kerning(s_Data.font->face,              // font face handle
 				*p,                 // left glyph
 				*(p + 1),           // right glyph
 				FT_KERNING_DEFAULT, // kerning mode

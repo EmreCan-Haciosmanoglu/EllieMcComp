@@ -39,11 +39,12 @@ namespace Can
 		bool OnWindowClose(Event::WindowCloseEvent& e);
 		bool OnWindowResize(Event::WindowResizeEvent& e);
 
+	public:
+		bool m_Running = true;
 	private:
 		float m_LastFrameTime = 0.0f;
 		Scope<Window> m_Window;
 		Layer::ImGuiLayer* m_ImGuiLayer;
-		bool m_Running = true;
 		bool m_Minimized = false;
 		Layer::LayerStack m_LayerStack;
 

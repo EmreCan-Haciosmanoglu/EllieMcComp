@@ -68,7 +68,7 @@ namespace Can
 		key.font = buffer_data.default_font;
 		Buffer_Data_Font_Atlas_Key_Value_Pair key_value_pair{
 			key,
-			new FontAtlas(buffer_data.default_font->GetFace(), key.font_size_in_pixel)
+			new FontAtlas(buffer_data.default_font->face, key.font_size_in_pixel)
 		};
 		buffer_data.font_atlas.push_back(key_value_pair);
 		delete[] indices;
@@ -227,7 +227,7 @@ namespace Can
 		}
 		Buffer_Data_Font_Atlas_Key_Value_Pair pair {
 			key,
-			new FontAtlas(key.font->GetFace(), key.font_size_in_pixel)
+			new FontAtlas(key.font->face, key.font_size_in_pixel)
 		};
 		atlases.push_back(pair);
 		return pair.font_atlas;
@@ -242,6 +242,7 @@ namespace Can
 			font_size_in_pixel = buffer_data.default_font_size_in_pixel;
 		}
 		FontAtlas* atlas = find_or_init_value({ font, font_size_in_pixel });
+		FT_Set_Pixel_Sizes(font->face, 0, font_size_in_pixel);
 
 		// Calculate alignment (if applicable)
 		s32 text_width = 0;
@@ -273,7 +274,7 @@ namespace Can
 			pos.y = r.y;
 		}
 
-		pos.y += font->GetFace()->size->metrics.height >> 6;
+		pos.y += font->face->size->metrics.height >> 6;
 		pos.y -= atlas_height;
 
 
@@ -315,7 +316,7 @@ namespace Can
 			// Calculate kerning value
 			FT_Vector kerning;
 			FT_Get_Kerning(
-				font->GetFace(),	// font face handle
+				font->face,	// font face handle
 				*p,								// left glyph
 				*(p + 1),						// right glyph
 				FT_KERNING_DEFAULT,				// kerning mode
@@ -335,7 +336,7 @@ namespace Can
 	bool global_pressed = false;
 	u64 pressed_hash = 0;
 	bool inside(Rect& r, u32 x, u32 y) { return x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h; }
-	u8 immediate_button(Rect& r, std::string& text, Button_Theme& theme, u64 hash)
+	u16 immediate_button(Rect& r, std::string& text, Button_Theme& theme, u64 hash)
 	{
 		Button_State* state = get_or_init(button_states, hash);
 
@@ -430,5 +431,9 @@ namespace Can
 		buffer_data.texture_slots_cursor = 1;
 		buffer_data.quad_count = 0;
 		buffer_data.buffer_cursor = 0;
+	}
+	void* load_font(const std::string& path)
+	{
+		return new Font(path);
 	}
 }

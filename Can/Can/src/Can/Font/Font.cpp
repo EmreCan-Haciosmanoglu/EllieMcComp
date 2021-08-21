@@ -13,7 +13,7 @@ namespace Can
 	void Font::SetFont(const std::string& path)
 	{
 		// Create a new font
-		FT_Error error = FT_New_Face(m_Library, path.c_str(), 0, &m_Face);
+		FT_Error error = FT_New_Face(m_Library, path.c_str(), 0, &face);
 
 		CAN_CORE_ASSERT(error != FT_Err_Unknown_File_Format, "Font is not supported!");
 		CAN_CORE_ASSERT(!error, "Failed to open font");

@@ -19,6 +19,9 @@
     <Filter Include="src\Can\Font">
       <UniqueIdentifier>{34474BB0-20AA-DA54-C92F-130BB571A6D7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Can\Immediate_Renderer">
+      <UniqueIdentifier>{4282FD6B-2E92-A93C-974B-0E5B837A98D5}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Can\Layers">
       <UniqueIdentifier>{6D5841FD-5926-3503-42BA-A5292E271168}</UniqueIdentifier>
     </Filter>
@@ -84,11 +87,23 @@
     <ClInclude Include="src\Can\Camera\Camera.h">
       <Filter>src\Can\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="src\Can\Camera\Orthographic_Camera_Controller.h">
+      <Filter>src\Can\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Camera\Perspective_Camera.h">
+      <Filter>src\Can\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Camera\Perspective_Camera_Controller.h">
+      <Filter>src\Can\Camera</Filter>
+    </ClInclude>
     <ClInclude Include="src\Can\Core.h">
       <Filter>src\Can</Filter>
     </ClInclude>
     <ClInclude Include="src\Can\Core\TimeStep.h">
       <Filter>src\Can\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\EntryPoint.h">
+      <Filter>src\Can</Filter>
     </ClInclude>
     <ClInclude Include="src\Can\Events\ApplicationEvent.h">
       <Filter>src\Can\Events</Filter>
@@ -107,6 +122,24 @@
     </ClInclude>
     <ClInclude Include="src\Can\Font\FontAtlas.h">
       <Filter>src\Can\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Font\FontFlags.h">
+      <Filter>src\Can\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Hash_Table.h">
+      <Filter>src\Can</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Immediate_Renderer\Immediate_Renderer.h">
+      <Filter>src\Can\Immediate_Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Immediate_Renderer\States.h">
+      <Filter>src\Can\Immediate_Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Immediate_Renderer\Themes.h">
+      <Filter>src\Can\Immediate_Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Can\Immediate_Renderer\Widgets.h">
+      <Filter>src\Can\Immediate_Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Can\Input.h">
       <Filter>src\Can</Filter>
@@ -1380,16 +1413,6 @@
     <ClInclude Include="vendor\stb\stb_image.h">
       <Filter>vendor\stb</Filter>
     </ClInclude>
-    <ClInclude Include="src\Can\Camera\Perspective_Camera_Controller.h" />
-    <ClInclude Include="src\Can\Camera\Perspective_Camera.h" />
-    <ClInclude Include="src\Can\Camera\Orthographic_Camera_Controller.h" />
-    <ClInclude Include="src\Can\Immediate_Renderer\Immediate_Renderer.h" />
-    <ClInclude Include="src\Can\EntryPoint.h" />
-    <ClInclude Include="src\Can\Immediate_Renderer\Widgets.h" />
-    <ClInclude Include="src\Can\Immediate_Renderer\Themes.h" />
-    <ClInclude Include="src\Can\Hash_Table.h" />
-    <ClInclude Include="src\Can\Immediate_Renderer\States.h" />
-    <ClInclude Include="src\Can\Font\FontFlags.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -1401,11 +1424,26 @@
     <ClCompile Include="src\Can\Camera\Camera.cpp">
       <Filter>src\Can\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="src\Can\Camera\Orthographic_Camera_Controller.cpp">
+      <Filter>src\Can\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Camera\Perspective_Camera.cpp">
+      <Filter>src\Can\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Camera\Perspective_Camera_Controller.cpp">
+      <Filter>src\Can\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\EntryPoint.cpp">
+      <Filter>src\Can</Filter>
+    </ClCompile>
     <ClCompile Include="src\Can\Font\Font.cpp">
       <Filter>src\Can\Font</Filter>
     </ClCompile>
     <ClCompile Include="src\Can\Font\FontAtlas.cpp">
       <Filter>src\Can\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Can\Immediate_Renderer\Immediate_Renderer.cpp">
+      <Filter>src\Can\Immediate_Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Can\Layers\ImGuiBuild.cpp">
       <Filter>src\Can\Layers</Filter>
@@ -1563,10 +1601,5 @@
     <ClCompile Include="vendor\stb\stb_image.cpp">
       <Filter>vendor\stb</Filter>
     </ClCompile>
-    <ClCompile Include="src\Can\Camera\Perspective_Camera_Controller.cpp" />
-    <ClCompile Include="src\Can\Camera\Perspective_Camera.cpp" />
-    <ClCompile Include="src\Can\Camera\Orthographic_Camera_Controller.cpp" />
-    <ClCompile Include="src\Can\Immediate_Renderer\Immediate_Renderer.cpp" />
-    <ClCompile Include="src\Can\EntryPoint.cpp" />
   </ItemGroup>
 </Project>

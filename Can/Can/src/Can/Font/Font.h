@@ -1,5 +1,5 @@
 #pragma once
-#include "ft2build.h"
+#include <ft2build.h>
 #include FT_FREETYPE_H
 #include <string>
 
@@ -12,9 +12,8 @@ namespace Can
 
 		void SetFont(const std::string& path);
 
-		FT_Face GetFace() { return m_Face; }
-	private:
+
 		FT_Library m_Library;
-		FT_Face m_Face;
+		FT_Face face;
 	};
 }
