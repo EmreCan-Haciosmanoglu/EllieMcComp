@@ -17,6 +17,7 @@ namespace Can
 {
 	Buffer_Data buffer_data;
 	Hash_Table<Button_State, 0xffff> button_states;
+	Hash_Table<Drop_Down_List_State, 0xffff> drop_down_list_states;
 
 	void init_immediate_renderer()
 	{
@@ -225,7 +226,7 @@ namespace Can
 			if (key.font_size_in_pixel == pair.key.font_size_in_pixel && key.font == pair.key.font)
 				return pair.font_atlas;
 		}
-		Buffer_Data_Font_Atlas_Key_Value_Pair pair {
+		Buffer_Data_Font_Atlas_Key_Value_Pair pair{
 			key,
 			new FontAtlas(key.font->face, key.font_size_in_pixel)
 		};
@@ -251,7 +252,7 @@ namespace Can
 			text_width += chars[*p].advanceX;
 		}
 
-		s32 atlas_width =  atlas->width;
+		s32 atlas_width = atlas->width;
 		s32 atlas_height = atlas->height;
 
 		v2i pos{ r.x + r.w / 2 - text_width / 2, r.y + r.h / 2 - atlas_height / 2 };
@@ -414,8 +415,129 @@ namespace Can
 				}
 			}
 			immediate_quad(p0i, p1i, p2i, p3i, color);
+			immediate_text(text, r, *theme.label_theme);
 		}
-		immediate_text(text, r, *theme.label_theme);
+		return state->flags;
+	}
+
+	u16 immediate_drop_down_list(Rect& r, std::vector<std::string>& list, u64& selected_item, Drop_Down_List_Theme& theme, u64 hash)
+	{
+		bool first_time = false;
+		Drop_Down_List_State* state = get_or_init(drop_down_list_states, hash, first_time);
+		if (first_time) state->active_item = selected_item;
+
+		state->flags &= (0xffff ^ DROP_DOWN_LIST_STATE_FLAGS_ITEM_CHANGED);
+
+		bool mouse_pressed = Input::IsMouseButtonPressed(MouseCode::Button0);
+		auto window_heigth = main_application->GetWindow().GetHeight();
+		auto [mouse_x, mouse_y] = Input::get_mouse_pos();
+		mouse_y = window_heigth - mouse_y;
+		bool over_children = false;
+		{
+			if (state->flags & DROP_DOWN_LIST_STATE_FLAGS_OPEN)
+			{
+				Rect lr = r;
+				u64 count = list.size();
+				for (u64 i = 0; i < count; i++)
+				{
+					lr.y -= lr.h;
+					Button_Theme* button_theme = theme.button_theme;
+					bool selected = (i == state->active_item);
+					if (selected)
+						button_theme = theme.button_theme_selected;
+
+					u64 button_hash = ((i+1) << 32) + hash;
+					u16 button_flags = immediate_button(lr, list[i], *button_theme, button_hash);
+					if (button_flags & BUTTON_STATE_FLAGS_OVER)
+						over_children = true;
+					if (!selected && (button_flags & BUTTON_STATE_FLAGS_RELEASED))
+					{
+						state->active_item = i;
+						state->flags |= DROP_DOWN_LIST_STATE_FLAGS_ITEM_CHANGED;
+						state->flags &= (0xffff ^ DROP_DOWN_LIST_STATE_FLAGS_OPEN);
+
+						selected_item = i;
+					}
+				}
+			}
+		}
+		{
+			v2i p0i{ r.x,       r.y };
+			v2i p1i{ r.x + r.w, r.y };
+			v2i p2i{ r.x + r.w, r.y + r.h };
+			v2i p3i{ r.x,       r.y + r.h };
+			v4 color = theme.button_theme->background_color;
+			if (!global_pressed || (global_pressed && pressed_hash == hash))
+			{
+				bool mouse_over = inside(r, mouse_x, mouse_y);
+				if (mouse_over)
+				{
+					state->flags |= DROP_DOWN_LIST_STATE_FLAGS_OVER;
+					color = theme.button_theme->background_color_over;
+
+					if (mouse_pressed)
+					{
+						global_pressed = true;
+						pressed_hash = hash;
+
+						if (state->flags & DROP_DOWN_LIST_STATE_FLAGS_PRESSED)
+						{
+							state->flags &= (0xffff ^ DROP_DOWN_LIST_STATE_FLAGS_PRESSED);
+							state->flags |= DROP_DOWN_LIST_STATE_FLAGS_HOLD;
+						}
+						else
+						{
+							if (!(state->flags & DROP_DOWN_LIST_STATE_FLAGS_HOLD))
+							{
+								state->flags |= DROP_DOWN_LIST_STATE_FLAGS_PRESSED;
+							}
+						}
+						color = theme.button_theme->background_color_pressed;
+					}
+					else
+					{
+						global_pressed = false;
+						if (state->flags & DROP_DOWN_LIST_STATE_FLAGS_PRESSED || state->flags & DROP_DOWN_LIST_STATE_FLAGS_HOLD)
+						{
+							state->flags &= (0xffff ^ DROP_DOWN_LIST_STATE_FLAGS_PRESSED);
+							state->flags &= (0xffff ^ DROP_DOWN_LIST_STATE_FLAGS_HOLD);
+							state->flags |= DROP_DOWN_LIST_STATE_FLAGS_RELEASED;
+							state->flags ^= DROP_DOWN_LIST_STATE_FLAGS_OPEN;
+						}
+						else
+						{
+							state->flags &= (0xffff ^ DROP_DOWN_LIST_STATE_FLAGS_RELEASED);
+						}
+					}
+				}
+				else
+				{
+					state->flags &= (0xffff ^ DROP_DOWN_LIST_STATE_FLAGS_OVER);
+
+					if (mouse_pressed)
+					{
+						state->flags &= (0xffff ^ DROP_DOWN_LIST_STATE_FLAGS_OPEN);
+					}
+					else
+					{
+						if (state->flags & DROP_DOWN_LIST_STATE_FLAGS_PRESSED || state->flags & DROP_DOWN_LIST_STATE_FLAGS_HOLD)
+						{
+							state->flags &= (0xffff ^ DROP_DOWN_LIST_STATE_FLAGS_PRESSED);
+							state->flags &= (0xffff ^ DROP_DOWN_LIST_STATE_FLAGS_HOLD);
+							state->flags |= DROP_DOWN_LIST_STATE_FLAGS_RELEASED;
+						}
+						else
+						{
+							state->flags &= (0xffff ^ DROP_DOWN_LIST_STATE_FLAGS_RELEASED);
+						}
+						global_pressed = false;
+					}
+				}
+			}
+			immediate_quad(p0i, p1i, p2i, p3i, color);
+			immediate_text(list[state->active_item], r, *theme.button_theme->label_theme);
+		}
+
 		return state->flags;
 	}
 

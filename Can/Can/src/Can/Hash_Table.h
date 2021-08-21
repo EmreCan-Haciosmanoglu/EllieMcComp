@@ -8,8 +8,8 @@ namespace Can
 	template<typename Value>
 	struct Linked_List_Item
 	{
-		u64 key;
-		Value* item;
+		u64 key = 0;
+		Value* item = nullptr;
 		Linked_List_Item<Value>* next_item = nullptr;
 	};
 
@@ -76,6 +76,35 @@ namespace Can
 	}
 
 	template< typename Value, u64 N>
+	Value* get_or_init(Hash_Table<Value, N>& hash_table, u64 key, bool& first_time)
+	{
+		u64 index = key % N;
+		Linked_List_Item<Value>* prev_item = nullptr;
+		Linked_List_Item<Value>* item = hash_table.table[index];
+		while (item)
+		{
+			if (item->key == key)
+			{
+				first_time = false;
+				return item->item;
+			}
+
+			prev_item = item;
+			item = item->next_item;
+		}
+		Value* value = new Value();
+
+		Linked_List_Item<Value>* new_item = new Linked_List_Item<Value>();
+		new_item->key = key;
+		new_item->item = value;
+		if (prev_item)
+			prev_item->next_item = new_item;
+		else
+			hash_table.table[index] = new_item;
+		first_time = true;
+		return value;
+	}
+	template< typename Value, u64 N>
 	Value* get_or_init(Hash_Table<Value, N>& hash_table, u64 key)
 	{
 		u64 index = key % N;
@@ -98,7 +127,6 @@ namespace Can
 			prev_item->next_item = new_item;
 		else
 			hash_table.table[index] = new_item;
-
 		return value;
 	}
 }

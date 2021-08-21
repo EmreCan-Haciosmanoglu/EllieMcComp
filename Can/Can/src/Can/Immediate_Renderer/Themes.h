@@ -20,4 +20,12 @@ namespace Can
 		v4 background_color_pressed = v4(1.0f);
 	};
 
+	struct Drop_Down_List_Theme
+	{
+		Button_Theme* button_theme = nullptr;
+		Button_Theme* button_theme_selected = nullptr;
+
+		v4 background_color = v4(1.0f);
+	};
+
 }
