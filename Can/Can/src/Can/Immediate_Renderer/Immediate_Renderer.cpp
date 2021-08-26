@@ -12,12 +12,17 @@
 #include FT_FREETYPE_H
 
 #include "Can/Font/FontFlags.h"
+#include "Can/Math.h"
+
+#undef max
+#undef min
 
 namespace Can
 {
 	Buffer_Data buffer_data;
 	Hash_Table<Button_State, 0xffff> button_states;
 	Hash_Table<Drop_Down_List_State, 0xffff> drop_down_list_states;
+	Hash_Table<Slider_State, 0xffff> slider_states;
 
 	void init_immediate_renderer()
 	{
@@ -397,6 +402,7 @@ namespace Can
 				else
 				{
 					state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_OVER);
+					color = theme.background_color_pressed;
 
 					if (!mouse_pressed)
 					{
@@ -411,6 +417,7 @@ namespace Can
 							state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_RELEASED);
 						}
 						global_pressed = false;
+						color = theme.background_color;
 					}
 				}
 			}
@@ -446,7 +453,7 @@ namespace Can
 					if (selected)
 						button_theme = theme.button_theme_selected;
 
-					u64 button_hash = ((i+1) << 32) + hash;
+					u64 button_hash = ((i + 1) << 32) + hash;
 					u16 button_flags = immediate_button(lr, list[i], *button_theme, button_hash);
 					if (button_flags & BUTTON_STATE_FLAGS_OVER)
 						over_children = true;
@@ -462,82 +469,151 @@ namespace Can
 			}
 		}
 		{
-			v2i p0i{ r.x,       r.y };
-			v2i p1i{ r.x + r.w, r.y };
-			v2i p2i{ r.x + r.w, r.y + r.h };
-			v2i p3i{ r.x,       r.y + r.h };
-			v4 color = theme.button_theme->background_color;
+			u16 flags = immediate_button(r, list[state->active_item], *theme.button_theme, hash);
+			if (flags & BUTTON_STATE_FLAGS_RELEASED)
+				state->flags ^= DROP_DOWN_LIST_STATE_FLAGS_OPEN;
+			state->flags &= 0xfff0;
+			state->flags |= flags;
+		}
+		return state->flags;
+	}
+
+	u16 immediate_slider_float(Rect& tract_rect, Rect thumb_rect, std::string& text, f32 min_value, f32& current_value, f32 max_value, Slider_Theme& theme, u64 hash)
+	{
+		Slider_State* state = get_or_init(slider_states, hash);
+		//assert(max - min >= 0.0f); // start using these
+		bool mouse_pressed = Input::IsMouseButtonPressed(MouseCode::Button0);
+		auto window_heigth = main_application->GetWindow().GetHeight();
+		auto [mouse_x, mouse_y] = Input::get_mouse_pos();
+		mouse_y = window_heigth - mouse_y;
+		{
+			Button_Theme& track_theme = *theme.track_theme;
+			v2i p0i{ tract_rect.x,                tract_rect.y };
+			v2i p1i{ tract_rect.x + tract_rect.w, tract_rect.y };
+			v2i p2i{ tract_rect.x + tract_rect.w, tract_rect.y + tract_rect.h };
+			v2i p3i{ tract_rect.x,                tract_rect.y + tract_rect.h };
+			v4 color = track_theme.background_color;
+			immediate_quad(p0i, p1i, p2i, p3i, color);
+		}
+		{
+			Button_Theme& thumb_theme = *theme.thumb_theme;
+
+			f32 denom = max_value - min_value;
+			if (!denom) denom = 1.0f;
+			f32 ratio = (current_value - min_value) / denom;
+			thumb_rect.x = tract_rect.x + Math::lerp(0.0f, tract_rect.w, ratio) - thumb_rect.w / 2.0f;
+
+			thumb_rect.y = tract_rect.y;
+			if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_TOP)
+				thumb_rect.y += tract_rect.h + theme.y_offset_in_pixels;
+			else if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_BOTTOM)
+				thumb_rect.y -= thumb_rect.h + theme.y_offset_in_pixels;
+			else
+				thumb_rect.y += tract_rect.h / 2.0f - thumb_rect.h / 2.0f;
+
+			v4 color = thumb_theme.background_color;
 			if (!global_pressed || (global_pressed && pressed_hash == hash))
 			{
-				bool mouse_over = inside(r, mouse_x, mouse_y);
-				if (mouse_over)
+				bool mouse_over_track = inside(tract_rect, mouse_x, mouse_y);
+				bool mouse_over_thumb = inside(thumb_rect, mouse_x, mouse_y);
+
+				if (mouse_over_track || mouse_over_thumb)
 				{
-					state->flags |= DROP_DOWN_LIST_STATE_FLAGS_OVER;
-					color = theme.button_theme->background_color_over;
+					state->flags |= SLIDER_STATE_FLAGS_OVER;
+					color = thumb_theme.background_color_over;
 
 					if (mouse_pressed)
 					{
 						global_pressed = true;
 						pressed_hash = hash;
 
-						if (state->flags & DROP_DOWN_LIST_STATE_FLAGS_PRESSED)
+						if (state->flags & SLIDER_STATE_FLAGS_THUMB_PRESSED)
 						{
-							state->flags &= (0xffff ^ DROP_DOWN_LIST_STATE_FLAGS_PRESSED);
-							state->flags |= DROP_DOWN_LIST_STATE_FLAGS_HOLD;
+							state->flags &= (0xffff ^ SLIDER_STATE_FLAGS_THUMB_PRESSED);
+							state->flags |= SLIDER_STATE_FLAGS_THUMB_HOLD;
 						}
 						else
 						{
-							if (!(state->flags & DROP_DOWN_LIST_STATE_FLAGS_HOLD))
+							if (!(state->flags & SLIDER_STATE_FLAGS_THUMB_HOLD))
 							{
-								state->flags |= DROP_DOWN_LIST_STATE_FLAGS_PRESSED;
+								state->flags |= SLIDER_STATE_FLAGS_THUMB_PRESSED;
 							}
 						}
-						color = theme.button_theme->background_color_pressed;
+						color = thumb_theme.background_color_pressed;
 					}
 					else
 					{
 						global_pressed = false;
-						if (state->flags & DROP_DOWN_LIST_STATE_FLAGS_PRESSED || state->flags & DROP_DOWN_LIST_STATE_FLAGS_HOLD)
+						if (state->flags & SLIDER_STATE_FLAGS_THUMB_PRESSED || state->flags & SLIDER_STATE_FLAGS_THUMB_HOLD)
 						{
-							state->flags &= (0xffff ^ DROP_DOWN_LIST_STATE_FLAGS_PRESSED);
-							state->flags &= (0xffff ^ DROP_DOWN_LIST_STATE_FLAGS_HOLD);
-							state->flags |= DROP_DOWN_LIST_STATE_FLAGS_RELEASED;
-							state->flags ^= DROP_DOWN_LIST_STATE_FLAGS_OPEN;
+							state->flags &= (0xffff ^ SLIDER_STATE_FLAGS_THUMB_PRESSED);
+							state->flags &= (0xffff ^ SLIDER_STATE_FLAGS_THUMB_HOLD);
+							state->flags |= SLIDER_STATE_FLAGS_THUMB_RELEASED;
 						}
 						else
 						{
-							state->flags &= (0xffff ^ DROP_DOWN_LIST_STATE_FLAGS_RELEASED);
+							state->flags &= (0xffff ^ SLIDER_STATE_FLAGS_THUMB_RELEASED);
 						}
 					}
 				}
 				else
 				{
-					state->flags &= (0xffff ^ DROP_DOWN_LIST_STATE_FLAGS_OVER);
+					state->flags &= (0xffff ^ SLIDER_STATE_FLAGS_OVER);
+					color = thumb_theme.background_color_pressed;
 
-					if (mouse_pressed)
+					if (!mouse_pressed)
 					{
-						state->flags &= (0xffff ^ DROP_DOWN_LIST_STATE_FLAGS_OPEN);
-					}
-					else
-					{
-						if (state->flags & DROP_DOWN_LIST_STATE_FLAGS_PRESSED || state->flags & DROP_DOWN_LIST_STATE_FLAGS_HOLD)
+						if (state->flags & SLIDER_STATE_FLAGS_THUMB_PRESSED || state->flags & SLIDER_STATE_FLAGS_THUMB_HOLD)
 						{
-							state->flags &= (0xffff ^ DROP_DOWN_LIST_STATE_FLAGS_PRESSED);
-							state->flags &= (0xffff ^ DROP_DOWN_LIST_STATE_FLAGS_HOLD);
-							state->flags |= DROP_DOWN_LIST_STATE_FLAGS_RELEASED;
+							state->flags &= (0xffff ^ SLIDER_STATE_FLAGS_THUMB_PRESSED);
+							state->flags &= (0xffff ^ SLIDER_STATE_FLAGS_THUMB_HOLD);
+							state->flags |= SLIDER_STATE_FLAGS_THUMB_RELEASED;
 						}
 						else
 						{
-							state->flags &= (0xffff ^ DROP_DOWN_LIST_STATE_FLAGS_RELEASED);
+							state->flags &= (0xffff ^ SLIDER_STATE_FLAGS_THUMB_RELEASED);
 						}
 						global_pressed = false;
+						color = thumb_theme.background_color;
 					}
 				}
 			}
-			immediate_quad(p0i, p1i, p2i, p3i, color);
-			immediate_text(list[state->active_item], r, *theme.button_theme->label_theme);
-		}
 
+			if ((state->flags & SLIDER_STATE_FLAGS_THUMB_HOLD) || (state->flags & SLIDER_STATE_FLAGS_THUMB_PRESSED))
+			{
+				f32 denom = tract_rect.w;
+				if (!denom) denom = 1.0f;
+				f32 ratio = ((s32)mouse_x - tract_rect.x) / denom;
+				current_value = min_value + ratio * (max_value - min_value);
+			}
+
+			if (theme.flags & SLIDER_THEME_FLAGS_CLAMP_VALUE)
+			{
+				current_value = std::max(min_value, current_value);
+				current_value = std::min(max_value, current_value);
+			}
+
+			v2i p0i{ thumb_rect.x,                thumb_rect.y };
+			v2i p1i{ thumb_rect.x + thumb_rect.w, thumb_rect.y };
+			v2i p2i{ thumb_rect.x + thumb_rect.w, thumb_rect.y + thumb_rect.h };
+			v2i p3i{ thumb_rect.x,                thumb_rect.y + thumb_rect.h };
+			immediate_quad(p0i, p1i, p2i, p3i, color);
+
+			if (theme.flags & SLIDER_THEME_FLAGS_VALUE_SHOWN)
+			{
+				Rect text_rect = thumb_rect;
+				s32 thumb_margin = 5;
+
+				if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_TOP)
+					text_rect.y += thumb_rect.h + thumb_margin;
+				else if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_BOTTOM)
+					text_rect.y -= theme.label_theme->font_size_in_pixel + thumb_margin;
+				else
+					text_rect.y = tract_rect.y + std::max(tract_rect.h, thumb_rect.h) + thumb_margin;
+
+				immediate_text(text, text_rect, *theme.label_theme);
+			}
+		}
 		return state->flags;
 	}
 

@@ -40,6 +40,7 @@ namespace Can
 
 	u16 immediate_button(Rect& r, std::string& text, Button_Theme& theme, u64 hash);
 	u16 immediate_drop_down_list(Rect& r, std::vector<std::string>& list, u64& selected_item, Drop_Down_List_Theme& theme, u64 hash);
+	u16 immediate_slider_float(Rect& tract_rect, Rect thumb_rect, std::string& text, f32 min_value, f32& current_value, f32 max_value, Slider_Theme& theme, u64 hash);
 
 	void immediate_flush();
 
