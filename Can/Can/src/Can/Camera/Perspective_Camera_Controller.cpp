@@ -18,17 +18,17 @@ namespace Can
 		f32 frame_independent_rotation_speed = rotation_speed * ts; // different speeds for pitching and yawing?
 		f32 frame_independent_rotation_speed_in_radians = glm::radians(frame_independent_rotation_speed);
 
-		if (Input::IsKeyPressed(CAN_KEY_D))
+		if (Input::IsKeyPressed(left_key))
 			translate_relative(v3{ 0.0f, -1.0f, 0.0f }, frame_independent_translation_speed);
-		else if (Input::IsKeyPressed(CAN_KEY_A))
+		else if (Input::IsKeyPressed(right_key))
 			translate_relative(v3{ 0.0f, +1.0f, 0.0f }, frame_independent_translation_speed);
 
-		if (Input::IsKeyPressed(CAN_KEY_W))
+		if (Input::IsKeyPressed(forward_key))
 			translate_relative(v3{ +1.0f, 0.0f, 0.0f }, frame_independent_translation_speed);
-		else if (Input::IsKeyPressed(CAN_KEY_S))
+		else if (Input::IsKeyPressed(backward_key))
 			translate_relative(v3{ -1.0f, 0.0f, 0.0f }, frame_independent_translation_speed);
 
-		if (Input::IsKeyPressed(CAN_KEY_Q))
+		if (Input::IsKeyPressed(rotate_cw_key))
 		{
 			v3 forward = camera.forward;
 			v3 center = Math::RayPlaneIntersection(
@@ -40,7 +40,7 @@ namespace Can
 			center = glm::clamp(center, camera.position - v3{ 10.0f, 10.0f, 10.0f }, camera.position + v3{ 10.0f, 10.0f, 10.0f });
 			orbit_around_point(frame_independent_rotation_speed_in_radians, center, false);
 		}
-		else if (Input::IsKeyPressed(CAN_KEY_E))
+		else if (Input::IsKeyPressed(rotate_ccw_key))
 		{
 			v3 forward = camera.forward;
 			v3 center = Math::RayPlaneIntersection(
@@ -53,15 +53,15 @@ namespace Can
 			orbit_around_point(frame_independent_rotation_speed_in_radians, center, true);
 		}
 
-		if (Input::IsKeyPressed(CAN_KEY_SPACE))
+		if (Input::IsKeyPressed(lower_key))
 			translate_relative(v3{ 0.0f, 0.0f, -1.0f }, frame_independent_translation_speed);
-		else if (Input::IsKeyPressed(CAN_KEY_LEFT_SHIFT))
+		else if (Input::IsKeyPressed(raise_key))
 			translate_relative(v3{ 0.0f, 0.0f, +1.0f }, frame_independent_translation_speed);
 
 
-		if (Input::IsKeyPressed(CAN_KEY_Y))
+		if (Input::IsKeyPressed(pitch_down_key))
 			pitch(frame_independent_rotation_speed, false);
-		else if (Input::IsKeyPressed(CAN_KEY_H))
+		else if (Input::IsKeyPressed(pitch_up_key))
 			pitch(frame_independent_rotation_speed, true);
 		camera.rotation = {
 			0.0f,
@@ -71,9 +71,9 @@ namespace Can
 		camera.recalculate_direction_vectors();
 		camera.recalculate_view_matrix();
 
-		if (Input::IsKeyPressed(CAN_KEY_KP_ADD))
+		if (Input::IsKeyPressed(increase_fov_key))
 			camera.field_of_view_angle += 2.0f * ts;
-		else if (Input::IsKeyPressed(CAN_KEY_KP_ENTER))
+		else if (Input::IsKeyPressed(decrease_fov_key))
 			camera.field_of_view_angle -= 2.0f * ts;
 		camera.recalculate_projection_matrix();
 	}
