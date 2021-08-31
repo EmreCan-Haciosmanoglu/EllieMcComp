@@ -23,6 +23,7 @@ namespace Can
 	Hash_Table<Button_State, 0xffff> button_states;
 	Hash_Table<Drop_Down_List_State, 0xffff> drop_down_list_states;
 	Hash_Table<Slider_State, 0xffff> slider_states;
+#define SOME_DENOM 100.0f
 
 	void init_immediate_renderer()
 	{
@@ -93,6 +94,10 @@ namespace Can
 	}
 	void immediate_quad(v2i& p0i, v2i& p1i, v2i& p2i, v2i& p3i, v2& uv0, v2& uv1, v2& uv2, v2& uv3, v4& color, f32 texture_index)
 	{
+		immediate_quad(v3i(p0i, 0), v3i(p1i, 0), v3i(p2i, 0), v3i(p3i, 0), uv0, uv1, uv2, uv3, color, texture_index);
+	}
+	void immediate_quad(v3i& p0i, v3i& p1i, v3i& p2i, v3i& p3i, v2& uv0, v2& uv1, v2& uv2, v2& uv3, v4& color, f32 texture_index)
+	{
 		auto& window = main_application->GetWindow();
 
 		u64 width_in_pixels = window.GetWidth();
@@ -104,28 +109,36 @@ namespace Can
 		f32 width_float = 2.0f * aspect_ratio * zoom_level;
 		f32 height_float = 2.0f * zoom_level;
 
-		v2 p0 = {
+		v3 p0 = {
 			(((p0i.x * 1.0f) / width_in_pixels) - 0.5f) * width_float,
-			(((p0i.y * 1.0f) / height_in_pixels) - 0.5f) * height_float
+			(((p0i.y * 1.0f) / height_in_pixels) - 0.5f) * height_float,
+			p0i.z / SOME_DENOM
 		};
-		v2 p1 = {
+		v3 p1 = {
 			(((p1i.x * 1.0f) / width_in_pixels) - 0.5f) * width_float,
-			(((p1i.y * 1.0f) / height_in_pixels) - 0.5f) * height_float
+			(((p1i.y * 1.0f) / height_in_pixels) - 0.5f) * height_float,
+			p1i.z / SOME_DENOM
 		};
-		v2 p2 = {
+		v3 p2 = {
 			(((p2i.x * 1.0f) / width_in_pixels) - 0.5f) * width_float,
-			(((p2i.y * 1.0f) / height_in_pixels) - 0.5f) * height_float
+			(((p2i.y * 1.0f) / height_in_pixels) - 0.5f) * height_float,
+			p2i.z / SOME_DENOM
 		};
-		v2 p3 = {
+		v3 p3 = {
 			(((p3i.x * 1.0f) / width_in_pixels) - 0.5f) * width_float,
-			(((p3i.y * 1.0f) / height_in_pixels) - 0.5f) * height_float
+			(((p3i.y * 1.0f) / height_in_pixels) - 0.5f) * height_float,
+			p3i.z / SOME_DENOM
 		};
 		immediate_quad(p0, p1, p2, p3, uv0, uv1, uv2, uv3, color, texture_index);
 	}
 	void immediate_quad(v2& p0, v2& p1, v2& p2, v2& p3, v2& uv0, v2& uv1, v2& uv2, v2& uv3, v4& color, f32 texture_index)
 	{
+		immediate_quad(v3(p0, 0.0f), v3(p1, 0.0f), v3(p2, 0.0f), v3(p3, 0.0f), uv0, uv1, uv2, uv3, color, texture_index);
+	}
+	void immediate_quad(v3& p0, v3& p1, v3& p2, v3& p3, v2& uv0, v2& uv1, v2& uv2, v2& uv3, v4& color, f32 texture_index)
+	{
 		Vertex vertex;
-		vertex.position = v3(p0, 0.0f);
+		vertex.position = p0;
 		vertex.uv = uv0;
 		vertex.tint_color = color;
 		vertex.texture_index = texture_index;
@@ -134,17 +147,17 @@ namespace Can
 		buffer_data.buffer_base[buffer_data.buffer_cursor] = vertex;
 		buffer_data.buffer_cursor++;
 
-		vertex.position = v3(p1, 0.0f);
+		vertex.position = p1;
 		vertex.uv = uv1;
 		buffer_data.buffer_base[buffer_data.buffer_cursor] = vertex;
 		buffer_data.buffer_cursor++;
 
-		vertex.position = v3(p2, 0.0f);
+		vertex.position = p2;
 		vertex.uv = uv2;
 		buffer_data.buffer_base[buffer_data.buffer_cursor] = vertex;
 		buffer_data.buffer_cursor++;
 
-		vertex.position = v3(p3, 0.0f);
+		vertex.position = p3;
 		vertex.uv = uv3;
 		buffer_data.buffer_base[buffer_data.buffer_cursor] = vertex;
 		buffer_data.buffer_cursor++;
@@ -154,8 +167,12 @@ namespace Can
 	}
 	void immediate_quad(v2& p0, v2& p1, v2& p2, v2& p3, v4& color)
 	{
+		immediate_quad(v3(p0, 0.0f), v3(p1, 0.0f), v3(p2, 0.0f), v3(p3, 0.0f), color);
+	}
+	void immediate_quad(v3& p0, v3& p1, v3& p2, v3& p3, v4& color)
+	{
 		Vertex vertex;
-		vertex.position = v3(p0, 0.0f);
+		vertex.position = p0;
 		vertex.uv = { 0.0f, 0.0f };
 		vertex.tint_color = color;
 		vertex.texture_index = 0.0f;
@@ -164,17 +181,17 @@ namespace Can
 		buffer_data.buffer_base[buffer_data.buffer_cursor] = vertex;
 		buffer_data.buffer_cursor++;
 
-		vertex.position = v3(p1, 0.0f);
+		vertex.position = p1;
 		vertex.uv = { 1.0f, 0.0f };
 		buffer_data.buffer_base[buffer_data.buffer_cursor] = vertex;
 		buffer_data.buffer_cursor++;
 
-		vertex.position = v3(p2, 0.0f);
+		vertex.position = p2;
 		vertex.uv = { 1.0f, 1.0f };
 		buffer_data.buffer_base[buffer_data.buffer_cursor] = vertex;
 		buffer_data.buffer_cursor++;
 
-		vertex.position = v3(p3, 0.0f);
+		vertex.position = p3;
 		vertex.uv = { 0.0f, 1.0f };
 		buffer_data.buffer_base[buffer_data.buffer_cursor] = vertex;
 		buffer_data.buffer_cursor++;
@@ -183,6 +200,10 @@ namespace Can
 		buffer_data.quad_count += 6;
 	}
 	void immediate_quad(v2i& p0i, v2i& p1i, v2i& p2i, v2i& p3i, v4& color)
+	{
+		immediate_quad(v3i(p0i, 0), v3i(p1i, 0), v3i(p2i, 0), v3i(p3i, 0), color);
+	}
+	void immediate_quad(v3i& p0i, v3i& p1i, v3i& p2i, v3i& p3i, v4& color)
 	{
 		auto& window = main_application->GetWindow();
 
@@ -195,30 +216,34 @@ namespace Can
 		f32 width_float = 2.0f * aspect_ratio * zoom_level;
 		f32 height_float = 2.0f * zoom_level;
 
-		v2 p0 = {
+		v3 p0 = {
 			(((p0i.x * 1.0f) / width_in_pixels) - 0.5f) * width_float,
-			(((p0i.y * 1.0f) / height_in_pixels) - 0.5f) * height_float
+			(((p0i.y * 1.0f) / height_in_pixels) - 0.5f) * height_float,
+			p0i.z / SOME_DENOM
 		};
-		v2 p1 = {
+		v3 p1 = {
 			(((p1i.x * 1.0f) / width_in_pixels) - 0.5f) * width_float,
-			(((p1i.y * 1.0f) / height_in_pixels) - 0.5f) * height_float
+			(((p1i.y * 1.0f) / height_in_pixels) - 0.5f) * height_float,
+			p1i.z / SOME_DENOM
 		};
-		v2 p2 = {
+		v3 p2 = {
 			(((p2i.x * 1.0f) / width_in_pixels) - 0.5f) * width_float,
-			(((p2i.y * 1.0f) / height_in_pixels) - 0.5f) * height_float
+			(((p2i.y * 1.0f) / height_in_pixels) - 0.5f) * height_float,
+			p2i.z / SOME_DENOM
 		};
-		v2 p3 = {
+		v3 p3 = {
 			(((p3i.x * 1.0f) / width_in_pixels) - 0.5f) * width_float,
-			(((p3i.y * 1.0f) / height_in_pixels) - 0.5f) * height_float
+			(((p3i.y * 1.0f) / height_in_pixels) - 0.5f) * height_float,
+			p3i.z / SOME_DENOM
 		};
 		immediate_quad(p0, p1, p2, p3, color);
 	}
 	void immediate_quad(Rect& r, v4& color)
 	{
-		v2i p0i{ r.x,       r.y };
-		v2i p1i{ r.x + r.w, r.y };
-		v2i p2i{ r.x + r.w, r.y + r.h };
-		v2i p3i{ r.x,       r.y + r.h };
+		v3i p0i{ r.x,       r.y,       r.z };
+		v3i p1i{ r.x + r.w, r.y,       r.z };
+		v3i p2i{ r.x + r.w, r.y + r.h, r.z };
+		v3i p3i{ r.x,       r.y + r.h, r.z };
 		immediate_quad(p0i, p1i, p2i, p3i, color);
 	}
 
@@ -238,7 +263,7 @@ namespace Can
 		atlases.push_back(pair);
 		return pair.font_atlas;
 	}
-	void immediate_text(std::string& text, Rect& r, Label_Theme& theme)
+	void immediate_text(const std::string& text, Rect& r, Label_Theme& theme)
 	{
 		Font* font = theme.font;
 		u16 font_size_in_pixel = theme.font_size_in_pixel;
@@ -253,14 +278,14 @@ namespace Can
 		// Calculate alignment (if applicable)
 		s32 text_width = 0;
 		Char* chars = atlas->chars;
-		for (const s8* p = text.c_str(); *p; ++p) {
+		for (const s8* p = text.c_str(); *p; ++p)
 			text_width += chars[*p].advanceX;
-		}
+
 
 		s32 atlas_width = atlas->width;
 		s32 atlas_height = atlas->height;
 
-		v2i pos{ r.x + r.w / 2 - text_width / 2, r.y + r.h / 2 - atlas_height / 2 };
+		v3i pos{ r.x + r.w / 2 - text_width / 2, r.y + r.h / 2 - atlas_height / 2, r.z };
 
 		if (theme.flags & FontFlags::LeftAligned)
 		{
@@ -306,13 +331,14 @@ namespace Can
 		{
 			s32 x = pos.x + chars[*p].bitmapLeft;
 			s32 y = pos.y + chars[*p].bitmapTop;
+			s32 z = pos.z;
 			s32 w = chars[*p].bitmapWidth;
 			s32 h = chars[*p].bitmapHeight;
 
-			v2i p0i{ x,     y - h };
-			v2i p1i{ x + w, y - h };
-			v2i p2i{ x + w, y };
-			v2i p3i{ x,     y };
+			v3i p0i{ x,     y - h, z };
+			v3i p1i{ x + w, y - h, z };
+			v3i p2i{ x + w, y,     z };
+			v3i p3i{ x,     y,     z };
 
 			v2 uv0{ chars[*p].xOffset, chars[*p].bitmapHeight / atlas_height };
 			v2 uv1{ chars[*p].xOffset + chars[*p].bitmapWidth / atlas_width, chars[*p].bitmapHeight / atlas_height };
@@ -330,6 +356,7 @@ namespace Can
 
 			pos.x += chars[*p].advanceX + (kerning.x >> 6);
 			pos.y += chars[*p].advanceY;
+			pos.z++;
 
 			if (w == 0 || h == 0)
 				continue;
@@ -342,7 +369,7 @@ namespace Can
 	bool global_pressed = false;
 	u64 pressed_hash = 0;
 	bool inside(Rect& r, u32 x, u32 y) { return x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h; }
-	u16 immediate_button(Rect& r, std::string& text, Button_Theme& theme, u64 hash)
+	u16 immediate_button(Rect r, const std::string& text, Button_Theme& theme, u64 hash)
 	{
 		Button_State* state = get_or_init(button_states, hash);
 
@@ -352,10 +379,10 @@ namespace Can
 		mouse_y = window_heigth - mouse_y;
 
 		{
-			v2i p0i{ r.x,       r.y };
-			v2i p1i{ r.x + r.w, r.y };
-			v2i p2i{ r.x + r.w, r.y + r.h };
-			v2i p3i{ r.x,       r.y + r.h };
+			v3i p0i{ r.x,       r.y,       r.z};
+			v3i p1i{ r.x + r.w, r.y,       r.z};
+			v3i p2i{ r.x + r.w, r.y + r.h, r.z};
+			v3i p3i{ r.x,       r.y + r.h, r.z};
 			v4 color = theme.background_color;
 			if (!global_pressed || (global_pressed && pressed_hash == hash))
 			{
@@ -402,7 +429,6 @@ namespace Can
 				else
 				{
 					state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_OVER);
-					color = theme.background_color_pressed;
 
 					if (!mouse_pressed)
 					{
@@ -419,9 +445,15 @@ namespace Can
 						global_pressed = false;
 						color = theme.background_color;
 					}
+					else
+					{
+						if (state->flags & BUTTON_STATE_FLAGS_PRESSED || state->flags & BUTTON_STATE_FLAGS_HOLD)
+							color == theme.background_color_pressed;
+					}
 				}
 			}
 			immediate_quad(p0i, p1i, p2i, p3i, color);
+			r.z++;
 			immediate_text(text, r, *theme.label_theme);
 		}
 		return state->flags;
@@ -478,7 +510,7 @@ namespace Can
 		return state->flags;
 	}
 
-	u16 immediate_slider_float(Rect& tract_rect, Rect thumb_rect, std::string& text, f32 min_value, f32& current_value, f32 max_value, Slider_Theme& theme, u64 hash)
+	u16 immediate_slider_float(Rect& track_rect, Rect thumb_rect, std::string& text, f32 min_value, f32& current_value, f32 max_value, Slider_Theme& theme, u64 hash)
 	{
 		Slider_State* state = get_or_init(slider_states, hash);
 		//assert(max - min >= 0.0f); // start using these
@@ -488,33 +520,34 @@ namespace Can
 		mouse_y = window_heigth - mouse_y;
 		{
 			Button_Theme& track_theme = *theme.track_theme;
-			v2i p0i{ tract_rect.x,                tract_rect.y };
-			v2i p1i{ tract_rect.x + tract_rect.w, tract_rect.y };
-			v2i p2i{ tract_rect.x + tract_rect.w, tract_rect.y + tract_rect.h };
-			v2i p3i{ tract_rect.x,                tract_rect.y + tract_rect.h };
+			v3i p0i{ track_rect.x,                track_rect.y,                track_rect.z };
+			v3i p1i{ track_rect.x + track_rect.w, track_rect.y,                track_rect.z };
+			v3i p2i{ track_rect.x + track_rect.w, track_rect.y + track_rect.h, track_rect.z };
+			v3i p3i{ track_rect.x,                track_rect.y + track_rect.h, track_rect.z };
 			v4 color = track_theme.background_color;
 			immediate_quad(p0i, p1i, p2i, p3i, color);
 		}
 		{
 			Button_Theme& thumb_theme = *theme.thumb_theme;
+			thumb_rect.z = track_rect.z + 1;
 
 			f32 denom = max_value - min_value;
 			if (!denom) denom = 1.0f;
 			f32 ratio = (current_value - min_value) / denom;
-			thumb_rect.x = tract_rect.x + Math::lerp(0.0f, tract_rect.w, ratio) - thumb_rect.w / 2.0f;
+			thumb_rect.x = track_rect.x + Math::lerp(0.0f, track_rect.w, ratio) - thumb_rect.w / 2.0f;
 
-			thumb_rect.y = tract_rect.y;
+			thumb_rect.y = track_rect.y;
 			if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_TOP)
-				thumb_rect.y += tract_rect.h + theme.y_offset_in_pixels;
+				thumb_rect.y += track_rect.h + theme.y_offset_in_pixels;
 			else if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_BOTTOM)
 				thumb_rect.y -= thumb_rect.h + theme.y_offset_in_pixels;
 			else
-				thumb_rect.y += tract_rect.h / 2.0f - thumb_rect.h / 2.0f;
+				thumb_rect.y += track_rect.h / 2.0f - thumb_rect.h / 2.0f;
 
 			v4 color = thumb_theme.background_color;
 			if (!global_pressed || (global_pressed && pressed_hash == hash))
 			{
-				bool mouse_over_track = inside(tract_rect, mouse_x, mouse_y);
+				bool mouse_over_track = inside(track_rect, mouse_x, mouse_y);
 				bool mouse_over_thumb = inside(thumb_rect, mouse_x, mouse_y);
 
 				if (mouse_over_track || mouse_over_thumb)
@@ -559,7 +592,6 @@ namespace Can
 				else
 				{
 					state->flags &= (0xffff ^ SLIDER_STATE_FLAGS_OVER);
-					color = thumb_theme.background_color_pressed;
 
 					if (!mouse_pressed)
 					{
@@ -576,14 +608,19 @@ namespace Can
 						global_pressed = false;
 						color = thumb_theme.background_color;
 					}
+					else
+					{
+						if (state->flags & BUTTON_STATE_FLAGS_PRESSED || state->flags & BUTTON_STATE_FLAGS_HOLD)
+							color == thumb_theme.background_color_pressed;
+					}
 				}
 			}
 
 			if ((state->flags & SLIDER_STATE_FLAGS_THUMB_HOLD) || (state->flags & SLIDER_STATE_FLAGS_THUMB_PRESSED))
 			{
-				f32 denom = tract_rect.w;
+				f32 denom = track_rect.w;
 				if (!denom) denom = 1.0f;
-				f32 ratio = ((s32)mouse_x - tract_rect.x) / denom;
+				f32 ratio = ((s32)mouse_x - track_rect.x) / denom;
 				current_value = min_value + ratio * (max_value - min_value);
 			}
 
@@ -593,10 +630,10 @@ namespace Can
 				current_value = std::min(max_value, current_value);
 			}
 
-			v2i p0i{ thumb_rect.x,                thumb_rect.y };
-			v2i p1i{ thumb_rect.x + thumb_rect.w, thumb_rect.y };
-			v2i p2i{ thumb_rect.x + thumb_rect.w, thumb_rect.y + thumb_rect.h };
-			v2i p3i{ thumb_rect.x,                thumb_rect.y + thumb_rect.h };
+			v3i p0i{ thumb_rect.x,                thumb_rect.y,                thumb_rect.z };
+			v3i p1i{ thumb_rect.x + thumb_rect.w, thumb_rect.y,                thumb_rect.z };
+			v3i p2i{ thumb_rect.x + thumb_rect.w, thumb_rect.y + thumb_rect.h, thumb_rect.z };
+			v3i p3i{ thumb_rect.x,                thumb_rect.y + thumb_rect.h, thumb_rect.z };
 			immediate_quad(p0i, p1i, p2i, p3i, color);
 
 			if (theme.flags & SLIDER_THEME_FLAGS_VALUE_SHOWN)
@@ -609,7 +646,7 @@ namespace Can
 				else if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_BOTTOM)
 					text_rect.y -= theme.label_theme->font_size_in_pixel + thumb_margin;
 				else
-					text_rect.y = tract_rect.y + std::max(tract_rect.h, thumb_rect.h) + thumb_margin;
+					text_rect.y = track_rect.y + std::max(track_rect.h, thumb_rect.h) + thumb_margin;
 
 				immediate_text(text, text_rect, *theme.label_theme);
 			}

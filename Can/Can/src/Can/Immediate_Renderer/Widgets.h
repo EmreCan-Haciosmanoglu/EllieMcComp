@@ -59,6 +59,7 @@ namespace Can
 	{
 		s32 x = 0;
 		s32 y = 0;
+		s32 z = 0;
 		s32 w = 1;
 		s32 h = 1;
 	};
