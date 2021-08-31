@@ -368,7 +368,7 @@ namespace Can
 
 	bool global_pressed = false;
 	u64 pressed_hash = 0;
-	bool inside(Rect& r, u32 x, u32 y) { return x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h; }
+	bool inside(Rect& r, s32 x, s32 y) { return x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h; }
 	u16 immediate_button(Rect r, const std::string& text, Button_Theme& theme, u64 hash)
 	{
 		Button_State* state = get_or_init(button_states, hash);
