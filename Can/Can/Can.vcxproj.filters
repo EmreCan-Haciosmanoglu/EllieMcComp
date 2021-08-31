@@ -1601,5 +1601,6 @@
     <ClCompile Include="vendor\stb\stb_image.cpp">
       <Filter>vendor\stb</Filter>
     </ClCompile>
+    <ClCompile Include="src\Can\KeyCodes.cpp" />
   </ItemGroup>
 </Project>

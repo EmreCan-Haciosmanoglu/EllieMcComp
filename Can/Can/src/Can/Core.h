@@ -90,10 +90,18 @@ namespace Can
 	typedef glm::mat3 m3;
 	typedef glm::mat4 m4;
 
-	/*Move this*/
+	/*Move these*/
 	struct v2i
 	{
 		s32 x = 0;
 		s32 y = 0;
+	};
+	struct v3i
+	{
+		v3i(v2i vector, s32 z): x(vector.x), y(vector.y), z(z){}
+		v3i(s32 x, s32 y, s32 z): x(x), y(y), z(z){}
+		s32 x = 0;
+		s32 y = 0;
+		s32 z = 0;
 	};
 }
