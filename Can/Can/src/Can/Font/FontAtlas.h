@@ -5,6 +5,7 @@
 #include "Can/Renderer/Texture.h"
 namespace Can
 {
+#define MAX_UNICODE_CHAR_COUNT 0x100
 	struct Char
 	{
         f32 advanceX;
@@ -27,7 +28,7 @@ namespace Can
         FT_GlyphSlot slot;
         Ref<Texture2D> texture;
 
-        Char chars[128];
+        Char chars[MAX_UNICODE_CHAR_COUNT];
 
         uint32_t width  = 0;
         uint32_t height = 0;
