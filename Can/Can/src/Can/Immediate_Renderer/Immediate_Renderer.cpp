@@ -19,11 +19,90 @@
 
 namespace Can
 {
+
 	Buffer_Data buffer_data;
+
 	Hash_Table<Button_State, 0xffff> button_states;
 	Hash_Table<Drop_Down_List_State, 0xffff> drop_down_list_states;
 	Hash_Table<Slider_State, 0xffff> slider_states;
+	Hash_Table<Sub_Region_State, 0xffff> sub_region_states;
+	Hash_Table<Check_Box_State, 0xffff> check_box_states;
+
 #define SOME_DENOM 100.0f
+	void update_used_region(Rect& rect)
+	{
+		std::vector<Buffer_Data::Sub_Region>& regions = buffer_data.sub_regions;
+		u64 region_count = buffer_data.sub_region_count;
+		if (region_count)
+		{
+			Rect& used_region = regions[region_count - 1].used_region;
+			Rect& region = regions[region_count - 1].region;
+
+			s32 rx = region.x + rect.x;
+			s32 ry = region.y + rect.y;
+
+			s32 ux2 = used_region.x + used_region.w;
+			s32 uy2 = used_region.y + used_region.h;
+			ux2 = std::max(ux2, rx + rect.w);
+			uy2 = std::max(uy2, ry + rect.h);
+
+			used_region.x = std::min(used_region.x, rx);
+			used_region.y = std::min(used_region.y, ry);
+			used_region.w = ux2 - used_region.x;
+			used_region.h = uy2 - used_region.y;
+		}
+	}
+	Rect clip_with_regions(Rect& rect)
+	{
+		Rect new_rect = rect;
+		std::vector<Buffer_Data::Sub_Region>& regions = buffer_data.sub_regions;
+		u64 index = buffer_data.sub_region_count;
+		while (true)
+		{
+			if (index == 0)	break;
+			index--;
+
+			Buffer_Data::Sub_Region& sub_region = regions[index];
+			Sub_Region_State* state = get_or_init(sub_region_states, sub_region.hash);
+
+			s32 rx1 = sub_region.region.x;
+			s32 rx2 = sub_region.region.x + sub_region.region.w;
+			s32 ry1 = sub_region.region.y;
+			s32 ry2 = sub_region.region.y + sub_region.region.h;
+
+			s32 ux1 = sub_region.prev_frame_used_region.x;
+			s32 ux2 = sub_region.prev_frame_used_region.x + sub_region.prev_frame_used_region.w;
+			s32 uy1 = sub_region.prev_frame_used_region.y;
+			s32 uy2 = sub_region.prev_frame_used_region.y + sub_region.prev_frame_used_region.h;
+
+			s32 scrolled_x_diff = Math::lerp(rx1 - ux1, rx2 - ux2, state->horizontal_scroll_percentage);
+			s32 scrolled_y_diff = Math::lerp(ry1 - uy1, ry2 - uy2, 1.0f - state->vertical_scroll_percentage);
+
+			if (sub_region.theme->flags & SUB_REGION_THEME_FLAGS_HORIZONTALLY_SCROLLABLE)
+				new_rect.x += scrolled_x_diff;
+			if (sub_region.theme->flags & SUB_REGION_THEME_FLAGS_VERTICALLY_SCROLLABLE)
+				new_rect.y += scrolled_y_diff;
+
+			s32 nrx2 = new_rect.x + new_rect.w;
+			s32 nry2 = new_rect.y + new_rect.h;
+
+			new_rect.x = std::max(0, new_rect.x);
+			new_rect.y = std::max(0, new_rect.y);
+
+			nrx2 = std::min(nrx2, sub_region.region.w);
+			nry2 = std::min(nry2, sub_region.region.h);
+
+			new_rect.w = nrx2 - new_rect.x;
+			new_rect.h = nry2 - new_rect.y;
+
+			if (new_rect.w <= 0 || new_rect.h <= 0) return new_rect;
+
+			new_rect.x += sub_region.region.x;
+			new_rect.y += sub_region.region.y;
+
+		}
+		return new_rect;
+	}
 
 	void init_immediate_renderer()
 	{
@@ -238,8 +317,15 @@ namespace Can
 		};
 		immediate_quad(p0, p1, p2, p3, color);
 	}
-	void immediate_quad(Rect& r, v4& color)
+	void immediate_quad(Rect& rect, v4& color, bool relative)
 	{
+		Rect r = rect;
+		if (relative)
+		{
+			update_used_region(rect);
+			r = clip_with_regions(rect);
+			if (r.w <= 0 || r.h <= 0) return;
+		}
 		v3i p0i{ r.x,       r.y,       r.z };
 		v3i p1i{ r.x + r.w, r.y,       r.z };
 		v3i p2i{ r.x + r.w, r.y + r.h, r.z };
@@ -263,7 +349,7 @@ namespace Can
 		atlases.push_back(pair);
 		return pair.font_atlas;
 	}
-	void immediate_text(const std::string& text, Rect& r, Label_Theme& theme)
+	void immediate_text(const std::string& text, Rect& rect, Label_Theme& theme, bool relative)
 	{
 		Font* font = theme.font;
 		u16 font_size_in_pixel = theme.font_size_in_pixel;
@@ -278,31 +364,41 @@ namespace Can
 		// Calculate alignment (if applicable)
 		s32 text_width = 0;
 		Char* chars = atlas->chars;
-		for (const s8* p = text.c_str(); *p; ++p)
-			text_width += chars[*p].advanceX;
-
+		for (const s8* c = text.c_str(); *c; ++c)
+		{
+			u8 p = (u8)*c;
+			text_width += chars[p].advanceX;
+		}
 
 		s32 atlas_width = atlas->width;
 		s32 atlas_height = atlas->height;
 
-		v3i pos{ r.x + r.w / 2 - text_width / 2, r.y + r.h / 2 - atlas_height / 2, r.z };
+		Rect region = rect;
+		if (relative)
+		{
+			update_used_region(rect);
+			region = clip_with_regions(rect);
+			if (region.w <= 0 || region.h <= 0) return;
+		}
+
+		v3i pos{ region.x + region.w / 2 - text_width / 2, region.y + region.h / 2 - atlas_height / 2, region.z };
 
 		if (theme.flags & FontFlags::LeftAligned)
 		{
-			pos.x = r.x;
+			pos.x = region.x;
 		}
 		else if (theme.flags & FontFlags::RightAligned)
 		{
-			pos.x = r.x + r.w - text_width;
+			pos.x = region.x + region.w - text_width;
 		}
 
 		if (theme.flags & FontFlags::TopAligned)
 		{
-			pos.y = r.y + r.h - atlas_height;
+			pos.y = region.y + region.h - atlas_height;
 		}
 		else if (theme.flags & FontFlags::BottomAligned)
 		{
-			pos.y = r.y;
+			pos.y = region.y;
 		}
 
 		pos.y += font->face->size->metrics.height >> 6;
@@ -327,35 +423,36 @@ namespace Can
 			buffer_data.texture_slots_cursor++;
 		}
 
-		for (const char* p = text.c_str(); *p; ++p)
+		for (const char* c = text.c_str(); *c; ++c)
 		{
-			s32 x = pos.x + chars[*p].bitmapLeft;
-			s32 y = pos.y + chars[*p].bitmapTop;
+			u8 p = *c;
+			s32 x = pos.x + chars[p].bitmapLeft;
+			s32 y = pos.y + chars[p].bitmapTop;
 			s32 z = pos.z;
-			s32 w = chars[*p].bitmapWidth;
-			s32 h = chars[*p].bitmapHeight;
+			s32 w = chars[p].bitmapWidth;
+			s32 h = chars[p].bitmapHeight;
 
 			v3i p0i{ x,     y - h, z };
 			v3i p1i{ x + w, y - h, z };
 			v3i p2i{ x + w, y,     z };
 			v3i p3i{ x,     y,     z };
 
-			v2 uv0{ chars[*p].xOffset, chars[*p].bitmapHeight / atlas_height };
-			v2 uv1{ chars[*p].xOffset + chars[*p].bitmapWidth / atlas_width, chars[*p].bitmapHeight / atlas_height };
-			v2 uv2{ chars[*p].xOffset + chars[*p].bitmapWidth / atlas_width, 0.0f };
-			v2 uv3{ chars[*p].xOffset, 0.0f };
+			v2 uv0{ chars[p].xOffset, chars[p].bitmapHeight / atlas_height };
+			v2 uv1{ chars[p].xOffset + chars[p].bitmapWidth / atlas_width, chars[p].bitmapHeight / atlas_height };
+			v2 uv2{ chars[p].xOffset + chars[p].bitmapWidth / atlas_width, 0.0f };
+			v2 uv3{ chars[p].xOffset, 0.0f };
 
 			// Calculate kerning value
 			FT_Vector kerning;
 			FT_Get_Kerning(
 				font->face,	// font face handle
-				*p,								// left glyph
-				*(p + 1),						// right glyph
+				p,								// left glyph
+				p + 1,						// right glyph
 				FT_KERNING_DEFAULT,				// kerning mode
 				&kerning);						// variable to store kerning value
 
-			pos.x += chars[*p].advanceX + (kerning.x >> 6);
-			pos.y += chars[*p].advanceY;
+			pos.x += chars[p].advanceX + (kerning.x >> 6);
+			pos.y += chars[p].advanceY;
 			pos.z++;
 
 			if (w == 0 || h == 0)
@@ -369,7 +466,7 @@ namespace Can
 	bool global_pressed = false;
 	u64 pressed_hash = 0;
 	bool inside(Rect& r, s32 x, s32 y) { return x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h; }
-	u16 immediate_button(Rect r, const std::string& text, Button_Theme& theme, u64 hash)
+	u16 immediate_button(Rect& rect, const std::string& text, Button_Theme& theme, u64 hash, bool relative)
 	{
 		Button_State* state = get_or_init(button_states, hash);
 
@@ -377,16 +474,21 @@ namespace Can
 		auto window_heigth = main_application->GetWindow().GetHeight();
 		auto [mouse_x, mouse_y] = Input::get_mouse_pos();
 		mouse_y = window_heigth - mouse_y;
-
+		Rect region = rect;
+		if (relative)
 		{
-			v3i p0i{ r.x,       r.y,       r.z};
-			v3i p1i{ r.x + r.w, r.y,       r.z};
-			v3i p2i{ r.x + r.w, r.y + r.h, r.z};
-			v3i p3i{ r.x,       r.y + r.h, r.z};
+			update_used_region(rect);
+			region = clip_with_regions(rect);
+		}
+		{
+			v3i p0i{ region.x,            region.y,            region.z };
+			v3i p1i{ region.x + region.w, region.y,            region.z };
+			v3i p2i{ region.x + region.w, region.y + region.h, region.z };
+			v3i p3i{ region.x,            region.y + region.h, region.z };
 			v4 color = theme.background_color;
 			if (!global_pressed || (global_pressed && pressed_hash == hash))
 			{
-				bool mouse_over = inside(r, mouse_x, mouse_y);
+				bool mouse_over = inside(region, mouse_x, mouse_y);
 				if (mouse_over)
 				{
 					state->flags |= BUTTON_STATE_FLAGS_OVER;
@@ -453,18 +555,52 @@ namespace Can
 				}
 			}
 			immediate_quad(p0i, p1i, p2i, p3i, color);
-			r.z++;
-			immediate_text(text, r, *theme.label_theme);
+			Rect text_rect = rect;
+			text_rect.z++;
+			immediate_text(text, text_rect, *theme.label_theme);
 		}
 		return state->flags;
 	}
-
-	u16 immediate_drop_down_list(Rect& r, std::vector<std::string>& list, u64& selected_item, Drop_Down_List_Theme& theme, u64 hash)
+	u16 immediate_drop_down_list(Rect& rect, std::vector<std::string>& list, u64& selected_item, Drop_Down_List_Theme& theme, u64 hash)
 	{
 		bool first_time = false;
 		Drop_Down_List_State* state = get_or_init(drop_down_list_states, hash, first_time);
 		if (first_time) state->active_item = selected_item;
 
+		/*
+		std::vector<Buffer_Data::Sub_Region>& regions = buffer_data.sub_regions;
+		u64 region_count = regions.size();
+		if (region_count)
+		{
+			Rect& used_region = regions[region_count - 1].used_region;
+			used_region.x = std::min(used_region.x, rect.x);
+			used_region.y = std::min(used_region.y, rect.y);
+			used_region.w = std::max(used_region.x + used_region.w, rect.x + rect.w) - used_region.x;
+			used_region.h = std::max(used_region.y + used_region.h, rect.y + rect.h) - used_region.y;
+		}
+
+		Rect region = rect;
+		for (u64 i = 0; i < region_count; i++)
+		{
+			Rect& reg = regions[i].region;
+
+			region.x += reg.x;
+			region.y += reg.y;
+			region.z += reg.z;
+			s32 xlim = std::min(reg.x + reg.w, region.x + region.w);
+			s32 ylim = std::min(reg.y + reg.h, region.y + region.h);
+			s32 w = xlim - region.x;
+			s32 h = ylim - region.y;
+			if (w <= 0 || h <= 0)
+			{
+				state->flags |= BUTTON_STATE_FLAGS_FULLY_HIDDEN;
+				break;
+			}
+			region.w = w;
+			region.h = h;
+
+		}
+		*/
 		state->flags &= (0xffff ^ DROP_DOWN_LIST_STATE_FLAGS_ITEM_CHANGED);
 
 		bool mouse_pressed = Input::IsMouseButtonPressed(MouseCode::Button0);
@@ -475,7 +611,7 @@ namespace Can
 		{
 			if (state->flags & DROP_DOWN_LIST_STATE_FLAGS_OPEN)
 			{
-				Rect lr = r;
+				Rect lr = rect;
 				u64 count = list.size();
 				for (u64 i = 0; i < count; i++)
 				{
@@ -501,7 +637,7 @@ namespace Can
 			}
 		}
 		{
-			u16 flags = immediate_button(r, list[state->active_item], *theme.button_theme, hash);
+			u16 flags = immediate_button(rect, list[state->active_item], *theme.button_theme, hash);
 			if (flags & BUTTON_STATE_FLAGS_RELEASED)
 				state->flags ^= DROP_DOWN_LIST_STATE_FLAGS_OPEN;
 			state->flags &= 0xfff0;
@@ -509,8 +645,7 @@ namespace Can
 		}
 		return state->flags;
 	}
-
-	u16 immediate_slider_float(Rect& track_rect, Rect thumb_rect, std::string& text, f32 min_value, f32& current_value, f32 max_value, Slider_Theme& theme, u64 hash)
+	u16 immediate_slider(Rect& track_rect, Rect& thumb_rect, std::string& text, s16 min_value, s16& current_value, s16 max_value, Slider_Theme& theme, u64 hash)
 	{
 		Slider_State* state = get_or_init(slider_states, hash);
 		//assert(max - min >= 0.0f); // start using these
@@ -518,37 +653,75 @@ namespace Can
 		auto window_heigth = main_application->GetWindow().GetHeight();
 		auto [mouse_x, mouse_y] = Input::get_mouse_pos();
 		mouse_y = window_heigth - mouse_y;
+
+		Rect regioned_track_rect = track_rect;
+		Rect regioned_thumb_rect = thumb_rect;
+
 		{
 			Button_Theme& track_theme = *theme.track_theme;
-			v3i p0i{ track_rect.x,                track_rect.y,                track_rect.z };
-			v3i p1i{ track_rect.x + track_rect.w, track_rect.y,                track_rect.z };
-			v3i p2i{ track_rect.x + track_rect.w, track_rect.y + track_rect.h, track_rect.z };
-			v3i p3i{ track_rect.x,                track_rect.y + track_rect.h, track_rect.z };
+			v3i p0i{ regioned_track_rect.x,                         regioned_track_rect.y,                         regioned_track_rect.z };
+			v3i p1i{ regioned_track_rect.x + regioned_track_rect.w, regioned_track_rect.y,                         regioned_track_rect.z };
+			v3i p2i{ regioned_track_rect.x + regioned_track_rect.w, regioned_track_rect.y + regioned_track_rect.h, regioned_track_rect.z };
+			v3i p3i{ regioned_track_rect.x,                         regioned_track_rect.y + regioned_track_rect.h, regioned_track_rect.z };
 			v4 color = track_theme.background_color;
 			immediate_quad(p0i, p1i, p2i, p3i, color);
 		}
 		{
 			Button_Theme& thumb_theme = *theme.thumb_theme;
-			thumb_rect.z = track_rect.z + 1;
+			regioned_thumb_rect.z = regioned_track_rect.z + 1;
 
 			f32 denom = max_value - min_value;
-			if (!denom) denom = 1.0f;
+			if (denom <= 0.0f) denom = 1.0f;
 			f32 ratio = (current_value - min_value) / denom;
-			thumb_rect.x = track_rect.x + Math::lerp(0.0f, track_rect.w, ratio) - thumb_rect.w / 2.0f;
-
-			thumb_rect.y = track_rect.y;
-			if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_TOP)
-				thumb_rect.y += track_rect.h + theme.y_offset_in_pixels;
-			else if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_BOTTOM)
-				thumb_rect.y -= thumb_rect.h + theme.y_offset_in_pixels;
+			if (theme.flags & SLIDER_THEME_FLAGS_IS_HORIZONTAL)
+			{
+				s32 min_x = regioned_track_rect.x - regioned_thumb_rect.w / 2;
+				s32 max_x = regioned_track_rect.x + regioned_track_rect.w - regioned_thumb_rect.w / 2;
+				if (theme.flags & SLIDER_THEME_FLAGS_THUMB_IS_INSIDE)
+				{
+					min_x += regioned_thumb_rect.w / 2;
+					max_x -= regioned_thumb_rect.w / 2;
+				}
+				regioned_thumb_rect.x = Math::lerp(min_x, max_x, ratio);
+			}
 			else
-				thumb_rect.y += track_rect.h / 2.0f - thumb_rect.h / 2.0f;
+			{
+				s32 min_y = regioned_track_rect.y + regioned_track_rect.h - regioned_thumb_rect.h / 2;
+				s32 max_y = regioned_track_rect.y - regioned_thumb_rect.h / 2;
+				if (theme.flags & SLIDER_THEME_FLAGS_THUMB_IS_INSIDE)
+				{
+					min_y -= regioned_thumb_rect.h / 2;
+					max_y += regioned_thumb_rect.h / 2;
+				}
+				regioned_thumb_rect.y = Math::lerp(min_y, max_y, ratio);
+			}
+
+			if (theme.flags & SLIDER_THEME_FLAGS_IS_HORIZONTAL)
+			{
+				regioned_thumb_rect.y = regioned_track_rect.y;
+				if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_TOP_OR_RIGHT)
+					regioned_thumb_rect.y += regioned_track_rect.h + theme.x_or_y_offset_in_pixels;
+				else if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_BOTTOM_OR_LEFT)
+					regioned_thumb_rect.y -= regioned_thumb_rect.h + theme.x_or_y_offset_in_pixels;
+				else
+					regioned_thumb_rect.y += regioned_track_rect.h / 2 - regioned_thumb_rect.h / 2;
+			}
+			else
+			{
+				regioned_thumb_rect.x = regioned_track_rect.x;
+				if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_TOP_OR_RIGHT)
+					regioned_thumb_rect.x += regioned_track_rect.w + theme.x_or_y_offset_in_pixels;
+				else if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_BOTTOM_OR_LEFT)
+					regioned_thumb_rect.x -= regioned_thumb_rect.w + theme.x_or_y_offset_in_pixels;
+				else
+					regioned_thumb_rect.x += regioned_track_rect.w / 2 - regioned_thumb_rect.w / 2;
+			}
 
 			v4 color = thumb_theme.background_color;
 			if (!global_pressed || (global_pressed && pressed_hash == hash))
 			{
-				bool mouse_over_track = inside(track_rect, mouse_x, mouse_y);
-				bool mouse_over_thumb = inside(thumb_rect, mouse_x, mouse_y);
+				bool mouse_over_track = inside(regioned_track_rect, mouse_x, mouse_y);
+				bool mouse_over_thumb = inside(regioned_thumb_rect, mouse_x, mouse_y);
 
 				if (mouse_over_track || mouse_over_thumb)
 				{
@@ -618,10 +791,20 @@ namespace Can
 
 			if ((state->flags & SLIDER_STATE_FLAGS_THUMB_HOLD) || (state->flags & SLIDER_STATE_FLAGS_THUMB_PRESSED))
 			{
-				f32 denom = track_rect.w;
-				if (!denom) denom = 1.0f;
-				f32 ratio = ((s32)mouse_x - track_rect.x) / denom;
-				current_value = min_value + ratio * (max_value - min_value);
+				if (theme.flags & SLIDER_THEME_FLAGS_IS_HORIZONTAL)
+				{
+					f32 denom = regioned_track_rect.w;
+					if (denom <= 0.0f) denom = 1.0f;
+					f32 ratio = ((s32)mouse_x - regioned_track_rect.x) / denom;
+					current_value = min_value + ratio * (max_value - min_value);
+				}
+				else
+				{
+					f32 denom = regioned_track_rect.h;
+					if (denom <= 0.0f) denom = 1.0f;
+					f32 ratio = ((regioned_track_rect.y + regioned_track_rect.h) - (s32)mouse_y) / denom;
+					current_value = min_value + ratio * (max_value - min_value);
+				}
 			}
 
 			if (theme.flags & SLIDER_THEME_FLAGS_CLAMP_VALUE)
@@ -630,27 +813,481 @@ namespace Can
 				current_value = std::min(max_value, current_value);
 			}
 
-			v3i p0i{ thumb_rect.x,                thumb_rect.y,                thumb_rect.z };
-			v3i p1i{ thumb_rect.x + thumb_rect.w, thumb_rect.y,                thumb_rect.z };
-			v3i p2i{ thumb_rect.x + thumb_rect.w, thumb_rect.y + thumb_rect.h, thumb_rect.z };
-			v3i p3i{ thumb_rect.x,                thumb_rect.y + thumb_rect.h, thumb_rect.z };
+			v3i p0i{ regioned_thumb_rect.x,                         regioned_thumb_rect.y,                         regioned_thumb_rect.z };
+			v3i p1i{ regioned_thumb_rect.x + regioned_thumb_rect.w, regioned_thumb_rect.y,                         regioned_thumb_rect.z };
+			v3i p2i{ regioned_thumb_rect.x + regioned_thumb_rect.w, regioned_thumb_rect.y + regioned_thumb_rect.h, regioned_thumb_rect.z };
+			v3i p3i{ regioned_thumb_rect.x,                         regioned_thumb_rect.y + regioned_thumb_rect.h, regioned_thumb_rect.z };
 			immediate_quad(p0i, p1i, p2i, p3i, color);
 
 			if (theme.flags & SLIDER_THEME_FLAGS_VALUE_SHOWN)
 			{
-				Rect text_rect = thumb_rect;
+				Rect text_rect = regioned_thumb_rect;
 				s32 thumb_margin = 5;
 
-				if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_TOP)
-					text_rect.y += thumb_rect.h + thumb_margin;
-				else if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_BOTTOM)
-					text_rect.y -= theme.label_theme->font_size_in_pixel + thumb_margin;
+				if (theme.flags & SLIDER_THEME_FLAGS_IS_HORIZONTAL)
+				{
+					if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_TOP_OR_RIGHT)
+						text_rect.y += regioned_thumb_rect.h + thumb_margin;
+					else if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_BOTTOM_OR_LEFT)
+						text_rect.y -= theme.label_theme->font_size_in_pixel + thumb_margin;
+					else
+						text_rect.y = regioned_track_rect.y + std::max(regioned_track_rect.h, regioned_thumb_rect.h) + thumb_margin;
+				}
 				else
-					text_rect.y = track_rect.y + std::max(track_rect.h, thumb_rect.h) + thumb_margin;
-
+				{
+					if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_TOP_OR_RIGHT)
+						text_rect.x += regioned_thumb_rect.w + thumb_margin;
+					else if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_BOTTOM_OR_LEFT)
+						text_rect.x -= theme.label_theme->font_size_in_pixel + thumb_margin;
+					else
+						text_rect.x = regioned_track_rect.x + std::max(regioned_track_rect.w, regioned_thumb_rect.w) + thumb_margin;
+				}
 				immediate_text(text, text_rect, *theme.label_theme);
 			}
 		}
+		return state->flags;
+	}
+	u16 immediate_slider_float(Rect& track_rect, Rect& thumb_rect, std::string& text, f32 min_value, f32& current_value, f32 max_value, Slider_Theme& theme, u64 hash)
+	{
+		Slider_State* state = get_or_init(slider_states, hash);
+		//assert(max - min >= 0.0f); // start using these
+		bool mouse_pressed = Input::IsMouseButtonPressed(MouseCode::Button0);
+		auto window_heigth = main_application->GetWindow().GetHeight();
+		auto [mouse_x, mouse_y] = Input::get_mouse_pos();
+		mouse_y = window_heigth - mouse_y;
+
+		Rect regioned_track_rect = track_rect;
+		Rect regioned_thumb_rect = thumb_rect;
+
+		{
+			Button_Theme& track_theme = *theme.track_theme;
+			v3i p0i{ regioned_track_rect.x,                         regioned_track_rect.y,                         regioned_track_rect.z };
+			v3i p1i{ regioned_track_rect.x + regioned_track_rect.w, regioned_track_rect.y,                         regioned_track_rect.z };
+			v3i p2i{ regioned_track_rect.x + regioned_track_rect.w, regioned_track_rect.y + regioned_track_rect.h, regioned_track_rect.z };
+			v3i p3i{ regioned_track_rect.x,                         regioned_track_rect.y + regioned_track_rect.h, regioned_track_rect.z };
+			v4 color = track_theme.background_color;
+			immediate_quad(p0i, p1i, p2i, p3i, color);
+		}
+		{
+			Button_Theme& thumb_theme = *theme.thumb_theme;
+			regioned_thumb_rect.z = regioned_track_rect.z + 1;
+
+			f32 denom = max_value - min_value;
+			if (denom <= 0.0f) denom = 1.0f;
+			f32 ratio = (current_value - min_value) / denom;
+			if (theme.flags & SLIDER_THEME_FLAGS_IS_HORIZONTAL)
+			{
+				s32 min_x = regioned_track_rect.x - regioned_thumb_rect.w / 2.0f;
+				s32 max_x = regioned_track_rect.x + regioned_track_rect.w - regioned_thumb_rect.w / 2.0f;
+				if (theme.flags & SLIDER_THEME_FLAGS_THUMB_IS_INSIDE)
+				{
+					min_x += regioned_thumb_rect.w / 2.0f;
+					max_x -= regioned_thumb_rect.w / 2.0f;
+				}
+				regioned_thumb_rect.x = Math::lerp(min_x, max_x, ratio);
+			}
+			else
+			{
+				s32 min_y = regioned_track_rect.y + regioned_track_rect.h - regioned_thumb_rect.h / 2.0f;
+				s32 max_y = regioned_track_rect.y - regioned_thumb_rect.h / 2.0f;
+				if (theme.flags & SLIDER_THEME_FLAGS_THUMB_IS_INSIDE)
+				{
+					min_y -= regioned_thumb_rect.h / 2.0f;
+					max_y += regioned_thumb_rect.h / 2.0f;
+				}
+				regioned_thumb_rect.y = Math::lerp(min_y, max_y, ratio);
+			}
+
+			if (theme.flags & SLIDER_THEME_FLAGS_IS_HORIZONTAL)
+			{
+				regioned_thumb_rect.y = regioned_track_rect.y;
+				if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_TOP_OR_RIGHT)
+					regioned_thumb_rect.y += regioned_track_rect.h + theme.x_or_y_offset_in_pixels;
+				else if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_BOTTOM_OR_LEFT)
+					regioned_thumb_rect.y -= regioned_thumb_rect.h + theme.x_or_y_offset_in_pixels;
+				else
+					regioned_thumb_rect.y += regioned_track_rect.h / 2.0f - regioned_thumb_rect.h / 2.0f;
+			}
+			else
+			{
+				regioned_thumb_rect.x = regioned_track_rect.x;
+				if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_TOP_OR_RIGHT)
+					regioned_thumb_rect.x += regioned_track_rect.w + theme.x_or_y_offset_in_pixels;
+				else if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_BOTTOM_OR_LEFT)
+					regioned_thumb_rect.x -= regioned_thumb_rect.w + theme.x_or_y_offset_in_pixels;
+				else
+					regioned_thumb_rect.x += regioned_track_rect.w / 2.0f - regioned_thumb_rect.w / 2.0f;
+			}
+
+			v4 color = thumb_theme.background_color;
+			if (!global_pressed || (global_pressed && pressed_hash == hash))
+			{
+				bool mouse_over_track = inside(regioned_track_rect, mouse_x, mouse_y);
+				bool mouse_over_thumb = inside(regioned_thumb_rect, mouse_x, mouse_y);
+
+				if (mouse_over_track || mouse_over_thumb)
+				{
+					state->flags |= SLIDER_STATE_FLAGS_OVER;
+					color = thumb_theme.background_color_over;
+
+					if (mouse_pressed)
+					{
+						global_pressed = true;
+						pressed_hash = hash;
+
+						if (state->flags & SLIDER_STATE_FLAGS_THUMB_PRESSED)
+						{
+							state->flags &= (0xffff ^ SLIDER_STATE_FLAGS_THUMB_PRESSED);
+							state->flags |= SLIDER_STATE_FLAGS_THUMB_HOLD;
+						}
+						else
+						{
+							if (!(state->flags & SLIDER_STATE_FLAGS_THUMB_HOLD))
+							{
+								state->flags |= SLIDER_STATE_FLAGS_THUMB_PRESSED;
+							}
+						}
+						color = thumb_theme.background_color_pressed;
+					}
+					else
+					{
+						global_pressed = false;
+						if (state->flags & SLIDER_STATE_FLAGS_THUMB_PRESSED || state->flags & SLIDER_STATE_FLAGS_THUMB_HOLD)
+						{
+							state->flags &= (0xffff ^ SLIDER_STATE_FLAGS_THUMB_PRESSED);
+							state->flags &= (0xffff ^ SLIDER_STATE_FLAGS_THUMB_HOLD);
+							state->flags |= SLIDER_STATE_FLAGS_THUMB_RELEASED;
+						}
+						else
+						{
+							state->flags &= (0xffff ^ SLIDER_STATE_FLAGS_THUMB_RELEASED);
+						}
+					}
+				}
+				else
+				{
+					state->flags &= (0xffff ^ SLIDER_STATE_FLAGS_OVER);
+
+					if (!mouse_pressed)
+					{
+						if (state->flags & SLIDER_STATE_FLAGS_THUMB_PRESSED || state->flags & SLIDER_STATE_FLAGS_THUMB_HOLD)
+						{
+							state->flags &= (0xffff ^ SLIDER_STATE_FLAGS_THUMB_PRESSED);
+							state->flags &= (0xffff ^ SLIDER_STATE_FLAGS_THUMB_HOLD);
+							state->flags |= SLIDER_STATE_FLAGS_THUMB_RELEASED;
+						}
+						else
+						{
+							state->flags &= (0xffff ^ SLIDER_STATE_FLAGS_THUMB_RELEASED);
+						}
+						global_pressed = false;
+						color = thumb_theme.background_color;
+					}
+					else
+					{
+						if (state->flags & BUTTON_STATE_FLAGS_PRESSED || state->flags & BUTTON_STATE_FLAGS_HOLD)
+							color == thumb_theme.background_color_pressed;
+					}
+				}
+			}
+
+			if ((state->flags & SLIDER_STATE_FLAGS_THUMB_HOLD) || (state->flags & SLIDER_STATE_FLAGS_THUMB_PRESSED))
+			{
+				if (theme.flags & SLIDER_THEME_FLAGS_IS_HORIZONTAL)
+				{
+					f32 denom = regioned_track_rect.w;
+					if (denom <= 0.0f) denom = 1.0f;
+					f32 ratio = ((s32)mouse_x - regioned_track_rect.x) / denom;
+					current_value = min_value + ratio * (max_value - min_value);
+				}
+				else
+				{
+					f32 denom = regioned_track_rect.h;
+					if (denom <= 0.0f) denom = 1.0f;
+					f32 ratio = ((regioned_track_rect.y + regioned_track_rect.h) - (s32)mouse_y) / denom;
+					current_value = min_value + ratio * (max_value - min_value);
+				}
+			}
+
+			if (theme.flags & SLIDER_THEME_FLAGS_CLAMP_VALUE)
+			{
+				current_value = std::max(min_value, current_value);
+				current_value = std::min(max_value, current_value);
+			}
+
+			v3i p0i{ regioned_thumb_rect.x,                         regioned_thumb_rect.y,                         regioned_thumb_rect.z };
+			v3i p1i{ regioned_thumb_rect.x + regioned_thumb_rect.w, regioned_thumb_rect.y,                         regioned_thumb_rect.z };
+			v3i p2i{ regioned_thumb_rect.x + regioned_thumb_rect.w, regioned_thumb_rect.y + regioned_thumb_rect.h, regioned_thumb_rect.z };
+			v3i p3i{ regioned_thumb_rect.x,                         regioned_thumb_rect.y + regioned_thumb_rect.h, regioned_thumb_rect.z };
+			immediate_quad(p0i, p1i, p2i, p3i, color);
+
+			if (theme.flags & SLIDER_THEME_FLAGS_VALUE_SHOWN)
+			{
+				Rect text_rect = regioned_thumb_rect;
+				s32 thumb_margin = 5;
+
+				if (theme.flags & SLIDER_THEME_FLAGS_IS_HORIZONTAL)
+				{
+					if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_TOP_OR_RIGHT)
+						text_rect.y += regioned_thumb_rect.h + thumb_margin;
+					else if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_BOTTOM_OR_LEFT)
+						text_rect.y -= theme.label_theme->font_size_in_pixel + thumb_margin;
+					else
+						text_rect.y = regioned_track_rect.y + std::max(regioned_track_rect.h, regioned_thumb_rect.h) + thumb_margin;
+				}
+				else
+				{
+					if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_TOP_OR_RIGHT)
+						text_rect.x += regioned_thumb_rect.w + thumb_margin;
+					else if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_BOTTOM_OR_LEFT)
+						text_rect.x -= theme.label_theme->font_size_in_pixel + thumb_margin;
+					else
+						text_rect.x = regioned_track_rect.x + std::max(regioned_track_rect.w, regioned_thumb_rect.w) + thumb_margin;
+				}
+				immediate_text(text, text_rect, *theme.label_theme);
+			}
+		}
+		return state->flags;
+	}
+
+	u16 immediate_check_box(Rect& rect, bool& checked, Check_Box_Theme& theme, u64 hash, bool relative)
+	{
+		Check_Box_State* state = get_or_init(check_box_states, hash);
+
+		bool mouse_pressed = Input::IsMouseButtonPressed(MouseCode::Button0);
+		auto window_heigth = main_application->GetWindow().GetHeight();
+		auto [mouse_x, mouse_y] = Input::get_mouse_pos();
+		mouse_y = window_heigth - mouse_y;
+		Rect region = rect;
+		if (relative)
+		{
+			update_used_region(rect);
+			region = clip_with_regions(rect);
+		}
+		{
+			v3i p0i{ region.x,            region.y,            region.z };
+			v3i p1i{ region.x + region.w, region.y,            region.z };
+			v3i p2i{ region.x + region.w, region.y + region.h, region.z };
+			v3i p3i{ region.x,            region.y + region.h, region.z };
+			v4 color = theme.background_color;
+
+			state->flags &= (0xffff ^ CHECK_BOX_STATE_FLAGS_VALUE_CHANGED);
+			if (!global_pressed || (global_pressed && pressed_hash == hash))
+			{
+				bool mouse_over = inside(region, mouse_x, mouse_y);
+				if (mouse_over)
+				{
+					state->flags |= CHECK_BOX_STATE_FLAGS_OVER;
+					color = theme.background_color_over;
+
+					if (mouse_pressed)
+					{
+						global_pressed = true;
+						pressed_hash = hash;
+
+						if (state->flags & CHECK_BOX_STATE_FLAGS_PRESSED)
+						{
+							state->flags &= (0xffff ^ CHECK_BOX_STATE_FLAGS_PRESSED);
+							state->flags |= CHECK_BOX_STATE_FLAGS_HOLD;
+						}
+						else
+						{
+							if (!(state->flags & CHECK_BOX_STATE_FLAGS_HOLD))
+							{
+								state->flags |= CHECK_BOX_STATE_FLAGS_PRESSED;
+							}
+						}
+						color = theme.background_color_pressed;
+					}
+					else
+					{
+						global_pressed = false;
+						if (state->flags & CHECK_BOX_STATE_FLAGS_PRESSED || state->flags & CHECK_BOX_STATE_FLAGS_HOLD)
+						{
+							state->flags &= (0xffff ^ CHECK_BOX_STATE_FLAGS_PRESSED);
+							state->flags &= (0xffff ^ CHECK_BOX_STATE_FLAGS_HOLD);
+							state->flags |= CHECK_BOX_STATE_FLAGS_RELEASED;
+							state->flags |= CHECK_BOX_STATE_FLAGS_VALUE_CHANGED;
+							checked = !checked;
+						}
+						else
+						{
+							state->flags &= (0xffff ^ CHECK_BOX_STATE_FLAGS_RELEASED);
+						}
+					}
+				}
+				else
+				{
+					state->flags &= (0xffff ^ CHECK_BOX_STATE_FLAGS_OVER);
+
+					if (!mouse_pressed)
+					{
+						if (state->flags & CHECK_BOX_STATE_FLAGS_PRESSED || state->flags & CHECK_BOX_STATE_FLAGS_HOLD)
+						{
+							state->flags &= (0xffff ^ CHECK_BOX_STATE_FLAGS_PRESSED);
+							state->flags &= (0xffff ^ CHECK_BOX_STATE_FLAGS_HOLD);
+							state->flags |= CHECK_BOX_STATE_FLAGS_RELEASED;
+						}
+						else
+						{
+							state->flags &= (0xffff ^ CHECK_BOX_STATE_FLAGS_RELEASED);
+						}
+						global_pressed = false;
+						color = theme.background_color;
+					}
+					else
+					{
+						if (state->flags & CHECK_BOX_STATE_FLAGS_PRESSED || state->flags & CHECK_BOX_STATE_FLAGS_HOLD)
+							color == theme.background_color_pressed;
+					}
+				}
+			}
+			immediate_quad(p0i, p1i, p2i, p3i, color);
+
+			Rect inside_region = rect;
+			inside_region.x += theme.padding;
+			inside_region.y += theme.padding;
+			inside_region.z += 1;
+			inside_region.w -= 2 * theme.padding;
+			inside_region.h -= 2 * theme.padding;
+			if (relative)
+			{
+				update_used_region(inside_region);
+				inside_region = clip_with_regions(inside_region);
+			}
+			if (checked)
+				immediate_quad(inside_region, theme.background_color_checked);
+			else
+				immediate_quad(inside_region, theme.background_color_unchecked);
+		}
+		return state->flags;
+	}
+
+	u16 immediate_begin_sub_region(Rect& rect, Sub_Region_Theme& theme, u64 hash)
+	{
+		Sub_Region_State* state = get_or_init(sub_region_states, hash);
+
+		std::vector<Buffer_Data::Sub_Region>& regions = buffer_data.sub_regions;
+		u64 region_count = regions.size();
+		buffer_data.sub_region_count++;
+		if (buffer_data.sub_region_count > region_count)
+		{
+			regions.push_back({ rect, rect, rect, &theme, hash });
+			region_count++;
+		}
+		else
+		{
+			if (hash == regions[region_count - 1].hash)
+				regions[region_count - 1].used_region = rect;
+			else
+				regions[region_count - 1] = { rect, rect, rect, &theme, hash };
+		}
+
+		Rect region = regions[0].region;
+		for (u64 i = 1; i < region_count; i++)
+		{
+			Rect& reg = regions[i].region;
+
+			region.x += reg.x;
+			region.y += reg.y;
+			region.z += reg.z;
+			s32 xlim = std::min(reg.x + reg.w, region.x + region.w);
+			s32 ylim = std::min(reg.y + reg.h, region.y + region.h);
+			s32 w = xlim - region.x;
+			s32 h = ylim - region.y;
+			if (w <= 0 || h <= 0)
+			{
+				state->flags |= SUB_REGION_STATE_FLAGS_FULLY_HIDDEN;
+				return state->flags;
+			}
+			region.w = w;
+			region.h = h;
+
+		}
+		//bool mouse_pressed = Input::IsMouseButtonPressed(MouseCode::Button0);
+		auto window_heigth = main_application->GetWindow().GetHeight();
+		auto [mouse_x, mouse_y] = Input::get_mouse_pos();
+		mouse_y = window_heigth - mouse_y;
+		{
+			v3i p0i{ region.x,            region.y,            region.z };
+			v3i p1i{ region.x + region.w, region.y,            region.z };
+			v3i p2i{ region.x + region.w, region.y + region.h, region.z };
+			v3i p3i{ region.x,            region.y + region.h, region.z };
+			v4 color = theme.background_color;
+			immediate_quad(p0i, p1i, p2i, p3i, color);
+		}
+		if (!global_pressed || (global_pressed && pressed_hash == hash))
+		{
+			bool mouse_over = inside(region, mouse_x, mouse_y);
+
+			if (mouse_over) state->flags |= BUTTON_STATE_FLAGS_OVER;
+			else            state->flags &= (0xffff ^ SUB_REGION_STATE_FLAGS_OVER);
+		}
+
+
+		return state->flags;
+	}
+	u16 immediate_end_sub_region(s32 track_width)
+	{
+		assert(buffer_data.sub_region_count > 0);
+
+		std::vector<Buffer_Data::Sub_Region>& regions = buffer_data.sub_regions;
+		auto& the_most_inner_region = regions[buffer_data.sub_region_count - 1];
+		buffer_data.sub_region_count--;
+
+		Sub_Region_State* state = get_or_init(sub_region_states, the_most_inner_region.hash);
+
+		{
+			Rect& region = the_most_inner_region.region;
+			Rect& used_region = the_most_inner_region.used_region;
+			the_most_inner_region.prev_frame_used_region = used_region;
+			Sub_Region_Theme& theme = *the_most_inner_region.theme;
+
+			std::string text = "";
+
+			bool left_most = region.x > used_region.x;
+			bool right_most = region.x + region.w < used_region.x + used_region.w;
+			if (theme.flags & SUB_REGION_THEME_FLAGS_HORIZONTALLY_SCROLLABLE && (left_most || right_most))
+			{
+				Rect track_rect;
+				track_rect.x = region.x;
+				track_rect.y = region.y - track_width;
+				track_rect.z = region.z + 1;
+				track_rect.w = region.w;
+				track_rect.h = track_width;
+
+				Rect thumb_rect;
+				thumb_rect.w = track_width - 2;
+				thumb_rect.h = track_width - 2;
+
+				u64 horizontal_scroll_bar_hash = ((u64)1 << 32) + the_most_inner_region.hash;
+				immediate_slider_float(track_rect, thumb_rect, text, 0, state->horizontal_scroll_percentage, 1.0f, *theme.horizontal_slider_theme, horizontal_scroll_bar_hash);
+			}
+
+			bool bottom_most = region.y > used_region.y;
+			bool top_most = region.y + region.h < used_region.y + used_region.h;
+			if (theme.flags & SUB_REGION_THEME_FLAGS_VERTICALLY_SCROLLABLE && (bottom_most || top_most))
+			{
+				Rect track_rect;
+				track_rect.x = region.x + region.w;
+				track_rect.y = region.y;
+				track_rect.z = region.z + 1;
+				track_rect.w = track_width;
+				track_rect.h = region.h;
+
+				Rect thumb_rect;
+				thumb_rect.w = track_width - 2;
+
+				assert(the_most_inner_region.region.h > 0);
+				assert(the_most_inner_region.used_region.h > 0);
+
+				thumb_rect.h = (track_rect.h) / 2 * ((f32)the_most_inner_region.region.h / the_most_inner_region.used_region.h);
+
+				u64 vertical_scroll_bar_hash = ((u64)2 << 32) + the_most_inner_region.hash;
+				immediate_slider_float(track_rect, thumb_rect, text, 0, state->vertical_scroll_percentage, 1.0f, *theme.vertical_slider_theme, vertical_scroll_bar_hash);
+			}
+		}
+
 		return state->flags;
 	}
 

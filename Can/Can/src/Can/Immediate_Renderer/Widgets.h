@@ -13,6 +13,7 @@ namespace Can
 {
 	class Font;
 	class FontAtlas;
+	class Sub_Region_Theme;
 
 	struct Vertex
 	{
@@ -34,6 +35,15 @@ namespace Can
 		FontAtlas* font_atlas;	// value
 	};
 
+	struct Rect
+	{
+		s32 x = 0;
+		s32 y = 0;
+		s32 z = 0;
+		s32 w = 1;
+		s32 h = 1;
+	};
+
 	struct Buffer_Data
 	{
 		Ref<VertexArray> vertex_array;
@@ -53,14 +63,19 @@ namespace Can
 		Font* default_font;
 		std::vector<Buffer_Data_Font_Atlas_Key_Value_Pair> font_atlas{};
 		Orthographic_Camera_Controller* camera_controller = nullptr;
+
+		struct Sub_Region
+		{
+			Rect region;
+			Rect prev_frame_used_region;
+			Rect used_region;
+			Sub_Region_Theme* theme = nullptr;
+			u64 hash;
+		};
+		// In the first frame, the most inner region will allocate memory!!!
+		std::vector<Sub_Region> sub_regions{};
+		u64 sub_region_count = 0;
+
 	};
 
-	struct Rect
-	{
-		s32 x = 0;
-		s32 y = 0;
-		s32 z = 0;
-		s32 w = 1;
-		s32 h = 1;
-	};
 }
