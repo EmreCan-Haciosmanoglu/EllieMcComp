@@ -14,7 +14,7 @@ namespace Can::Layer
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpdate(TimeStep ts) {}
+		virtual bool OnUpdate(TimeStep ts) { return false; }
 		virtual void OnImGuiRender() {}
 		virtual void OnEvent(Event::Event& event) {}
 

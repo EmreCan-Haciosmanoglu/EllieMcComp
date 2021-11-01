@@ -100,7 +100,10 @@ namespace Can
 					CAN_PROFILE_SCOPE("LayerStack OnUpdate");
 
 					for (Layer::Layer* layer : m_LayerStack)
-						layer->OnUpdate(timestep);
+					{
+						bool force_update = layer->OnUpdate(timestep);
+						if (force_update) goto end;
+					}
 				}
 
 				m_ImGuiLayer->Begin();
@@ -115,6 +118,8 @@ namespace Can
 
 
 			m_Window->OnUpdate();
+		end:
+			int a = 1;
 		}
 	}
 
