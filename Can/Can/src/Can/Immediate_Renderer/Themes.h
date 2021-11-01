@@ -9,6 +9,8 @@ namespace Can
 		Font* font = nullptr;
 		u16 font_size_in_pixel = 1;
 		v4 color = v4(1.0f);
+		// v4 color_over = v4(1.0f);
+		// v4 color_selected = v4(1.0f);
 		u16 flags = 0;
 	};
 
@@ -67,5 +69,15 @@ namespace Can
 		v4 background_color_unchecked = v4(1.0f);
 
 		s32 padding = 5;
+	};
+
+	struct Text_Box_Theme
+	{
+		Label_Theme* label_theme = nullptr;
+
+		v4 border_color = v4(1.0f); // currently not being used
+		v4 background_color = v4(1.0f);
+		v4 background_color_active = v4(1.0f);
+		//v4 background_color_over = v4(1.0f);
 	};
 }

@@ -27,6 +27,7 @@ namespace Can
 	Hash_Table<Slider_State, 0xffff> slider_states;
 	Hash_Table<Sub_Region_State, 0xffff> sub_region_states;
 	Hash_Table<Check_Box_State, 0xffff> check_box_states;
+	Hash_Table<Text_Box_State, 0xffff> text_box_states;
 
 #define SOME_DENOM 100.0f
 	void update_used_region(Rect& rect)
@@ -1047,6 +1048,148 @@ namespace Can
 				immediate_text(text, text_rect, *theme.label_theme);
 			}
 		}
+		return state->flags;
+	}
+
+	u16 immediate_text_box(Rect& rect, std::string& text_buffer, u16& cursor, u16& char_count, u16& capacity, bool& global_active, u64& global_active_hash, Text_Box_Theme& theme, u64 hash, bool relative)
+	{
+		Text_Box_State* state = get_or_init(text_box_states, hash);
+		if (state->capacity == 0) state->capacity = capacity;
+		if (state->flags & TEXT_BOX_STATE_FLAGS_ACTIVE)
+		{
+			state->capacity = capacity;
+			state->cursor = cursor;
+			state->char_count = char_count;
+			state->text = text_buffer.substr(0, char_count);
+		}
+
+		bool mouse_pressed = Input::IsMouseButtonPressed(MouseCode::Button0);
+		auto window_heigth = main_application->GetWindow().GetHeight();
+		auto [mouse_x, mouse_y] = Input::get_mouse_pos();
+		mouse_y = window_heigth - mouse_y;
+
+		Rect region = rect;
+		if (relative)
+		{
+			update_used_region(rect);
+			region = clip_with_regions(rect);
+		}
+		{
+			v3i p0i{ region.x,            region.y,            region.z };
+			v3i p1i{ region.x + region.w, region.y,            region.z };
+			v3i p2i{ region.x + region.w, region.y + region.h, region.z };
+			v3i p3i{ region.x,            region.y + region.h, region.z };
+			v4 color = theme.background_color;
+			if (state->flags & TEXT_BOX_STATE_FLAGS_ACTIVE)
+				color = theme.background_color_active;
+
+			//Delete me later
+			{
+				bool mouse_over = inside(region, mouse_x, mouse_y);
+				if (!mouse_over)
+				{
+					if (mouse_pressed)
+					{
+						if (!(state->flags & TEXT_BOX_STATE_FLAGS_PRESSED))
+						{
+							state->flags &= (0xffff ^ TEXT_BOX_STATE_FLAGS_ACTIVE);
+							if (global_active_hash == hash)
+								global_active = false;
+						}
+					}
+				}
+			}
+
+			if (!global_pressed || (global_pressed && pressed_hash == hash))
+			{
+				bool mouse_over = inside(region, mouse_x, mouse_y);
+
+				if (mouse_over)
+				{
+					state->flags |= TEXT_BOX_STATE_FLAGS_OVER;
+
+					if (mouse_pressed)
+					{
+						global_pressed = true;
+						pressed_hash = hash;
+
+						state->flags |= TEXT_BOX_STATE_FLAGS_PRESSED;
+					}
+					else
+					{
+						global_pressed = false;
+						if (state->flags & TEXT_BOX_STATE_FLAGS_PRESSED)
+						{
+							state->flags &= (0xffff ^ TEXT_BOX_STATE_FLAGS_PRESSED);
+							state->flags |= TEXT_BOX_STATE_FLAGS_RELEASED;
+							state->flags |= TEXT_BOX_STATE_FLAGS_ACTIVE;
+							{
+								global_active = true;
+								global_active_hash = hash;
+								capacity = state->capacity;
+								cursor = state->cursor;
+								char_count = state->char_count;
+								text_buffer.resize(capacity);
+								for (u16 i = 0; i < char_count; i++)
+									text_buffer[i] = state->text[i];
+							}
+						}
+						else
+						{
+							state->flags &= (0xffff ^ TEXT_BOX_STATE_FLAGS_RELEASED);
+						}
+					}
+				}
+				else
+				{
+					state->flags &= (0xffff ^ TEXT_BOX_STATE_FLAGS_OVER);
+
+					if (!mouse_pressed)
+					{
+						if (state->flags & TEXT_BOX_STATE_FLAGS_PRESSED)
+						{
+							state->flags &= (0xffff ^ TEXT_BOX_STATE_FLAGS_PRESSED);
+							state->flags |= TEXT_BOX_STATE_FLAGS_RELEASED;
+						}
+						else
+						{
+							state->flags &= (0xffff ^ TEXT_BOX_STATE_FLAGS_RELEASED);
+						}
+						global_pressed = false;
+					}
+					else
+					{
+						if (!(state->flags & TEXT_BOX_STATE_FLAGS_PRESSED))
+						{
+							state->flags &= (0xffff ^ TEXT_BOX_STATE_FLAGS_ACTIVE);
+							if (global_active_hash == hash)
+								global_active = false;
+						}
+					}
+				}
+			}
+			immediate_quad(p0i, p1i, p2i, p3i, color);
+			Rect text_rect = rect;
+			text_rect.z++;
+
+			std::string text = "";
+			if (state->flags & TEXT_BOX_STATE_FLAGS_ACTIVE)
+			{
+				text.append(state->text, 0, state->cursor);
+				text.append("|");
+				text.append(state->text, state->cursor, state->char_count - state->cursor);
+			}
+			else
+			{
+				if (state->char_count == 0)
+					text.append("Game Name");
+				else
+					text.append(state->text, 0, state->char_count);
+			}
+
+			immediate_text(text, text_rect, *theme.label_theme);
+		}
+
 		return state->flags;
 	}
 

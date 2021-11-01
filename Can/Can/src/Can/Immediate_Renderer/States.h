@@ -54,4 +54,17 @@ namespace Can
 	{
 		u16 flags = 0;
 	};
+
+#define TEXT_BOX_STATE_FLAGS_OVER     0x1
+#define TEXT_BOX_STATE_FLAGS_PRESSED  0x2
+#define TEXT_BOX_STATE_FLAGS_RELEASED 0x4
+#define TEXT_BOX_STATE_FLAGS_ACTIVE   0x8
+	struct Text_Box_State
+	{
+		u16 flags = 0;
+		u16 cursor = 0;
+		u16 char_count = 0;
+		u16 capacity = 0;
+		std::string text = "";
+	};
 }

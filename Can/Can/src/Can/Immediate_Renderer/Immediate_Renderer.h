@@ -36,6 +36,7 @@ namespace Can
 	u16 immediate_drop_down_list(Rect& rect, std::vector<std::string>& list, u64& selected_item, Drop_Down_List_Theme& theme, u64 hash);
 	u16 immediate_slider(Rect& track_rect, Rect& thumb_rect, std::string& text, s16 min_value, s16& current_value, s16 max_value, Slider_Theme& theme, u64 hash);
 	u16 immediate_slider_float(Rect& track_rect, Rect& thumb_rect, std::string& text, f32 min_value, f32& current_value, f32 max_value, Slider_Theme& theme, u64 hash);
+	u16 immediate_text_box(Rect& rect, std::string& text_buffer, u16& cursor, u16& char_count, u16& capacity, bool& global_active, u64& global_active_hash, Text_Box_Theme& theme, u64 hash, bool relative = true);
 	u16 immediate_check_box(Rect& rect, bool& checked, Check_Box_Theme& theme, u64 hash, bool relative = true);
 	u16 immediate_begin_sub_region(Rect& rect, Sub_Region_Theme& theme, u64 hash);
 	u16 immediate_end_sub_region(s32 track_width);
