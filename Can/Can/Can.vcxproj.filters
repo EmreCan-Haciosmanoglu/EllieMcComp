@@ -1445,6 +1445,9 @@
     <ClCompile Include="src\Can\Immediate_Renderer\Immediate_Renderer.cpp">
       <Filter>src\Can\Immediate_Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Can\KeyCodes.cpp">
+      <Filter>src\Can</Filter>
+    </ClCompile>
     <ClCompile Include="src\Can\Layers\ImGuiBuild.cpp">
       <Filter>src\Can\Layers</Filter>
     </ClCompile>
@@ -1601,6 +1604,5 @@
     <ClCompile Include="vendor\stb\stb_image.cpp">
       <Filter>vendor\stb</Filter>
     </ClCompile>
-    <ClCompile Include="src\Can\KeyCodes.cpp" />
   </ItemGroup>
 </Project>
