@@ -11,38 +11,10 @@
   <ItemGroup>
     <ClInclude Include="src\SandBox2DLayer.h" />
     <ClInclude Include="src\SandBox3D.h" />
-    <ClInclude Include="src\SnakeAI.h" />
-    <ClInclude Include="src\SnakeGame\Game.h">
-      <Filter>SnakeGame</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SnakeGame\Play.h">
-      <Filter>SnakeGame</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SnakeGame2\Game2.h">
-      <Filter>SnakeGame2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SnakeGame2\Play2.h">
-      <Filter>SnakeGame2</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SnakeTake2.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\SandBox2DLayer.cpp" />
     <ClCompile Include="src\SandBox3D.cpp" />
     <ClCompile Include="src\SandBoxApp.cpp" />
-    <ClCompile Include="src\SnakeAI.cpp" />
-    <ClCompile Include="src\SnakeGame\Game.cpp">
-      <Filter>SnakeGame</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SnakeGame\Play.cpp">
-      <Filter>SnakeGame</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SnakeGame2\Game2.cpp">
-      <Filter>SnakeGame2</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SnakeGame2\Play2.cpp">
-      <Filter>SnakeGame2</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SnakeTake2.cpp" />
   </ItemGroup>
 </Project>
