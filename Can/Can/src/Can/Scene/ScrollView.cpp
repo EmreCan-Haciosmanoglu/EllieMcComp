@@ -138,7 +138,7 @@ namespace Can
 					cursor.x += sr.size.x; //horizontal
 					cursor.x += spaceBetween;
 				}
-				for (int i = children.size() - 1; i >= 0; i--)
+				for (int i = (int)(children.size()) - 1; i >= 0; i--)
 				{
 					entt::entity child = children[i];
 					if (sceneRegistry.has< IgnoreScrollingComponent>(child))

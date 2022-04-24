@@ -8,6 +8,7 @@
 #include "Can/MouseCodes.h"
 #include "Can/Random.h"
 #include "Can/AssetLoader.h"
+#include "Can/Unordered_Array.h"
 
 #include "Can/Core/TimeStep.h"
 
