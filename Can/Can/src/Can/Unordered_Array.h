@@ -67,6 +67,32 @@ namespace Can
 	}
 
 	template<typename T>
+	u64 array_add_empty(
+		Unordered_Array<T>* unordered_array
+	)
+	{
+		if (unordered_array->size < unordered_array->capacity)
+		{
+			u64 empty_index = 0;
+			for (; empty_index < unordered_array->size; empty_index++)
+				if (!unordered_array->values[empty_index].valid)
+					break;
+			unordered_array->values[empty_index].valid = true;
+			unordered_array->size++;
+			return empty_index;
+		}
+		else
+		{
+			array_resize(unordered_array, (u64)((f32)unordered_array->capacity * 1.5f));
+
+			unordered_array->values[unordered_array->size].valid = true;
+			T::reset_to_default(&unordered_array->values[unordered_array->size].value);
+			unordered_array->size++;
+			return unordered_array->size - 1;
+		}
+	}
+
+	template<typename T>
 	void array_remove(
 		Unordered_Array<T>* unordered_array,
 		u64 index
@@ -98,6 +124,11 @@ namespace Can
 		{
 			new_values[i].valid = true;
 			T::move(&new_values[i].value, &unordered_array->values[i].value);
+		}
+		for (u64 i = unordered_array->size; i < unordered_array->capacity; i++)
+		{
+			new_values[i].valid = false;
+			T::reset_to_default(&new_values[i].value);
 		}
 		delete[] unordered_array->values;
 		unordered_array->values = new_values;
