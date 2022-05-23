@@ -400,6 +400,7 @@ namespace Can::Math
 	v3 lerp(const v3& a, const v3& b, f32 t);
 	f32 lerp(f32 a, f32 b, f32 t);
 
+	v3 safe_ray_plane_intersection(v3 X, v3 v, v3 C, v3 n);
 	v3 ray_plane_intersection(const v3& X, const v3& v, const v3& C, const v3& n);
 
 	std::array<v3, 3> get_axis_of_a_triangle(const std::array<v3, 3>& triangle);

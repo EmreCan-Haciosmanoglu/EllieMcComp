@@ -570,6 +570,19 @@ namespace Can::Math
 		return a + (b - a) * t;
 	}
 
+	v3 safe_ray_plane_intersection(v3 X, v3 v, v3 C, v3 n)
+	{
+		f32 dot_product = glm::dot(v, n);
+		f32 len_product = glm::length(v) * glm::length(n);
+		f32 cos_value = dot_product / len_product;
+		f32 minned_maxxed = std::max(-1.0f, std::min(cos_value, 1.0f));
+		f32 angleDiff = glm::acos(minned_maxxed);
+		if (angleDiff < glm::radians(2.5f) || angleDiff > glm::radians(177.5f))
+			v = glm::rotateZ(v, glm::radians(2.5f));
+
+		return RayPlaneIntersection(X, v, C, n);
+	}
+
 	v3 ray_plane_intersection(const v3& X, const v3& v, const v3& C, const v3& n)
 	{
 		return RayPlaneIntersection(X, v, C, n);

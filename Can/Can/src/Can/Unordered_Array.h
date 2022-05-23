@@ -39,7 +39,7 @@ namespace Can
 	}
 
 	template<typename T>
-	u64 array_add(
+	std::pair<T*, u64> array_add(
 		Unordered_Array<T>* unordered_array,
 		T* value
 	)
@@ -53,7 +53,7 @@ namespace Can
 			unordered_array->values[empty_index].valid = true;
 			T::move(&unordered_array->values[empty_index].value, value);
 			unordered_array->size++;
-			return empty_index;
+			return std::make_pair(&unordered_array->values[empty_index].value, empty_index);
 		}
 		else
 		{
@@ -62,12 +62,12 @@ namespace Can
 			unordered_array->values[unordered_array->size].valid = true;
 			T::move(&unordered_array->values[unordered_array->size].value, value);
 			unordered_array->size++;
-			return unordered_array->size - 1;
+			return std::make_pair(&unordered_array->values[unordered_array->size - 1].value, unordered_array->size - 1);
 		}
 	}
 
 	template<typename T>
-	u64 array_add_empty(
+	std::pair<T*, u64> array_add_empty(
 		Unordered_Array<T>* unordered_array
 	)
 	{
@@ -79,7 +79,7 @@ namespace Can
 					break;
 			unordered_array->values[empty_index].valid = true;
 			unordered_array->size++;
-			return empty_index;
+			return std::make_pair(&unordered_array->values[empty_index].value, empty_index);
 		}
 		else
 		{
@@ -88,7 +88,7 @@ namespace Can
 			unordered_array->values[unordered_array->size].valid = true;
 			T::reset_to_default(&unordered_array->values[unordered_array->size].value);
 			unordered_array->size++;
-			return unordered_array->size - 1;
+			return std::make_pair(&unordered_array->values[unordered_array->size - 1].value, unordered_array->size - 1);
 		}
 	}
 
