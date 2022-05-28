@@ -99,7 +99,7 @@ namespace Can
 	)
 	{
 		assert(index >= 0);
-		assert(index < unordered_array->size);
+		assert(index < unordered_array->capacity);
 		assert(unordered_array->values[index].valid);
 
 		unordered_array->values[index].valid = false;
