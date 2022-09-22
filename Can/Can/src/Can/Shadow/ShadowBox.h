@@ -17,7 +17,6 @@ namespace Can
 
 		void CalculateWidthsAndHeights();
 		void CalculateFrastumVertices(
-			const glm::vec3& forward,
 			const glm::vec3& centerNear,
 			const glm::vec3& centerFar,
 			glm::vec4* output
@@ -28,11 +27,9 @@ namespace Can
 			float length)
 		{
 			glm::vec4 newPos = glm::vec4((point + direction * length), 1.0f);
-			newPos.y = (std::max)(newPos.y, -1.0f);
+			//newPos.z = (std::max)(newPos.z, 0.0f);
 			return lightViewMatrix * newPos;
 		}
-
-		glm::mat4 CalculateCameraRotation();
 
 		inline glm::vec3 GetCenter()
 		{

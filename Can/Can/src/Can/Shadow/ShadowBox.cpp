@@ -12,25 +12,20 @@ namespace Can
 
 	void ShadowBox::Update()
 	{
+		auto& camera = cameraController->camera;
+		glm::vec3 forward = glm::normalize(camera.forward);
 
-		glm::vec3 camRot = cameraController->camera.rotation;
-		glm::vec3 forward = {
-			-glm::sin(glm::radians(camRot.y)) * glm::cos(glm::radians(camRot.x)),
-			glm::sin(glm::radians(camRot.x)),
-			-glm::cos(glm::radians(camRot.x)) * glm::cos(glm::radians(camRot.y))
-		};
+		glm::vec3 toFar =forward * SHADOW_DISTANCE;
+		glm::vec3 toNear = forward * camera.near_clip_plane;
 
-		glm::vec3 toFar = glm::normalize(forward) * SHADOW_DISTANCE;
-		glm::vec3 toNear = glm::normalize(forward) * cameraController->camera.near_clip_plane;
-
-		glm::vec3 centerFar = toFar + cameraController->camera.position;
-		glm::vec3 centerNear = toNear + cameraController->camera.rotation;
+		glm::vec3 centerFar = toFar + camera.position;
+		glm::vec3 centerNear = toNear + camera.position;
 
 		glm::vec4 points[8] = {};
-		CalculateFrastumVertices(forward, centerNear, centerFar, points);
+		CalculateFrastumVertices(centerNear, centerFar, points);
 
-		minVal = glm::vec3{ points[0].x,points[0].y,points[0].z };
-		maxVal = glm::vec3{ points[0].x,points[0].y,points[0].z };
+		minVal = glm::vec3{ points[0].x, points[0].y, points[0].z };
+		maxVal = glm::vec3{ points[0].x, points[0].y, points[0].z };
 
 		for (size_t i = 1; i < 8; i++)
 		{
@@ -54,11 +49,10 @@ namespace Can
 		nearSize.y = nearSize.x / cameraController->camera.aspect_ratio;
 	}
 
-	void ShadowBox::CalculateFrastumVertices(const glm::vec3& forward, const glm::vec3& centerNear, const glm::vec3& centerFar, glm::vec4* output)
+	void ShadowBox::CalculateFrastumVertices(const glm::vec3& centerNear, const glm::vec3& centerFar, glm::vec4* output)
 	{
-		glm::mat4 rot = CalculateCameraRotation();
-		glm::vec3 up = rot * glm::vec4(UP,1.0f);
-		glm::vec3 right = glm::cross(forward, up);
+		glm::vec3 up = cameraController->camera.up;
+		glm::vec3 right = cameraController->camera.right;
 
 
 		glm::vec3 farTop = centerFar + up * farSize.y;
@@ -74,14 +68,5 @@ namespace Can
 		output[5] = CalculateLightSpaceFrustumCorner(nearTop, -right, nearSize.x);
 		output[6] = CalculateLightSpaceFrustumCorner(nearBottom, right, nearSize.x);
 		output[7] = CalculateLightSpaceFrustumCorner(nearBottom, -right, nearSize.x);
-	}
-
-	glm::mat4 ShadowBox::CalculateCameraRotation()
-	{
-		const glm::vec3& camRotation = cameraController->camera.rotation;
-		glm::mat4 rotation = glm::mat4(1.0f);
-		rotation = glm::rotate(rotation, glm::radians(camRotation.y), glm::vec3{ 0.0f, 1.0f, 0.0f });
-		rotation = glm::rotate(rotation, glm::radians(camRotation.x), glm::vec3{ 1.0f, 0.0f, 0.0f });
-		return rotation;
 	}
 }
