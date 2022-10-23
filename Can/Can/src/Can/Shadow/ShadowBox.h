@@ -1,6 +1,8 @@
 #pragma once
 #include <glm/glm.hpp>
 #include "Can/Camera/Perspective_Camera_Controller.h"
+#include "Can/Math.h"
+
 namespace Can
 {
 #define OFFSET 10.0f
@@ -11,7 +13,7 @@ namespace Can
 	class ShadowBox
 	{
 	public:
-		ShadowBox(const glm::mat4& mat, const Perspective_Camera_Controller* cameraController);
+		ShadowBox(const Perspective_Camera_Controller* cameraController);
 
 		void Update();
 
@@ -21,14 +23,19 @@ namespace Can
 			const glm::vec3& centerFar,
 			glm::vec4* output
 		);
-		glm::vec4 CalculateLightSpaceFrustumCorner(
-			const glm::vec3& point,
-			const glm::vec3& direction,
-			float length)
+
+		glm::vec4 CalculateLightSpaceFrustumCorner(const v3& start_point, const v3& end_point)
 		{
-			glm::vec4 newPos = glm::vec4((point + direction * length), 1.0f);
-			//newPos.z = (std::max)(newPos.z, 0.0f);
-			return lightViewMatrix * newPos;
+			v3 intersection_point = Math::ray_plane_intersection(
+				start_point,
+				glm::normalize(end_point - start_point),
+				v3{ 0.0f, 0.0f, -0.01f },
+				v3{ 0.0f, 0.0f, 1.f }
+			);
+			if (glm::length2(intersection_point - start_point) > glm::length2(end_point - start_point))
+				return lightViewMatrix * v4(end_point, 1.0f);
+			else
+				return lightViewMatrix * v4(intersection_point, 1.0f);
 		}
 
 		inline glm::vec3 GetCenter()
@@ -46,11 +53,12 @@ namespace Can
 		inline const glm::vec3& GetMins() const { return minVal; }
 		inline const glm::vec3& GetMaxs() const { return maxVal; }
 
+		glm::mat4 lightViewMatrix = glm::mat4(1.0f);
+
 	private:
 		glm::vec3 minVal = glm::vec3(0.0f);
 		glm::vec3 maxVal = glm::vec3(0.0f);
 
-		glm::mat4 lightViewMatrix = glm::mat4(1.0f);
 
 		glm::vec2 farSize = glm::vec2(1.0f);
 		glm::vec2 nearSize = glm::vec2(1.0f);

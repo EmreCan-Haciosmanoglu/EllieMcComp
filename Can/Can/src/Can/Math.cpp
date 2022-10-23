@@ -583,9 +583,9 @@ namespace Can::Math
 		return RayPlaneIntersection(X, v, C, n);
 	}
 
-	v3 ray_plane_intersection(const v3& X, const v3& v, const v3& C, const v3& n)
+	v3 ray_plane_intersection(const v3& ray_start_point, const v3& ray_direction, const v3& point_on_the_plane, const v3& plane_normal)
 	{
-		return RayPlaneIntersection(X, v, C, n);
+		return RayPlaneIntersection(ray_start_point, ray_direction, point_on_the_plane, plane_normal);
 	}
 
 	std::array<v3, 3> get_axis_of_a_triangle(const std::array<v3, 3>& triangle)

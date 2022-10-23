@@ -8,7 +8,7 @@ namespace Can
 		: cameraController(cameraController)
 	{
 		shader = Shader::Create("assets/shaders/simpleDepth.glsl");
-		shadowBox = new ShadowBox(lightView, cameraController);
+		shadowBox = new ShadowBox(cameraController);
 		frameBuffer = new ShadowFrameBuffer(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
 		entityRenderer = new ShadowMapEntityRenderer(shader, projectionView);
 
@@ -31,6 +31,7 @@ namespace Can
 	{
 		UpdateOrthoProjection();
 		UpdateLightView(lightDirection);
+
 
 		frameBuffer->Bind();
 		glEnable(GL_DEPTH_TEST);
@@ -63,6 +64,8 @@ namespace Can
 	}
 	void ShadowMapMasterRenderer::UpdateLightView(const glm::vec3& lightDirection)
 	{
+		// TODO: why here?
 		lightView = glm::lookAt(shadowBox->GetCenter(), shadowBox->GetCenter() + lightDirection, glm::vec3(0.0f, 1.0f, 0.0f));
+		shadowBox->lightViewMatrix = lightView;
 	}
 }

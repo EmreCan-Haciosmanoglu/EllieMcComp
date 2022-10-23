@@ -48,17 +48,17 @@ namespace Can
 			glm::radians(rotation.z)
 		};
 
-		forward = {
+		forward = glm::normalize(v3{
 			glm::cos(rotation_in_radians.y) * glm::cos(rotation_in_radians.z),
 			glm::cos(rotation_in_radians.y) * glm::sin(rotation_in_radians.z),
 			glm::sin(rotation_in_radians.y)
-		};
-		up = {
+			});
+		up = glm::normalize(v3{
 			glm::sin(rotation_in_radians.y) * glm::cos(rotation_in_radians.z + glm::radians(180.0f)),
 			glm::sin(rotation_in_radians.y) * glm::sin(rotation_in_radians.z + glm::radians(180.0f)),
 			glm::cos(rotation_in_radians.y)
-		};
-		right = glm::cross(forward, up);
+			});
+		right = glm::normalize(glm::cross(forward, v3{ 0.0f, 0.0f, 1.0f }));
 	}
 
 
@@ -73,8 +73,8 @@ namespace Can
 			position,
 			position + forward,
 			up);
-			//glm::vec3(0.0f, 0.0f, 1.0f));
-		//view = glm::inverse(transform);
+		//glm::vec3(0.0f, 0.0f, 1.0f));
+	//view = glm::inverse(transform);
 		recalculate_projection_view_matrix();
 	}
 	void Perspective_Camera::recalculate_projection_view_matrix()

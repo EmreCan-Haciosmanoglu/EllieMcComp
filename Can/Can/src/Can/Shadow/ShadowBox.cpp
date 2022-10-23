@@ -3,9 +3,8 @@
 
 namespace Can
 {
-	ShadowBox::ShadowBox(const glm::mat4& mat, const Perspective_Camera_Controller* cameraController)
-		: lightViewMatrix(mat)
-		, cameraController(cameraController)
+	ShadowBox::ShadowBox( const Perspective_Camera_Controller* cameraController)
+		: cameraController(cameraController)
 	{
 		CalculateWidthsAndHeights();
 	}
@@ -15,7 +14,7 @@ namespace Can
 		auto& camera = cameraController->camera;
 		glm::vec3 forward = glm::normalize(camera.forward);
 
-		glm::vec3 toFar =forward * SHADOW_DISTANCE;
+		glm::vec3 toFar = forward * SHADOW_DISTANCE;
 		glm::vec3 toNear = forward * camera.near_clip_plane;
 
 		glm::vec3 centerFar = toFar + camera.position;
@@ -37,7 +36,6 @@ namespace Can
 			maxVal.y = (std::max)(maxVal.y, points[i].y);
 			maxVal.z = (std::max)(maxVal.z, points[i].z);
 		}
-		maxVal.z += OFFSET;
 	}
 
 	void ShadowBox::CalculateWidthsAndHeights()
@@ -60,13 +58,22 @@ namespace Can
 		glm::vec3 nearTop = centerNear + up * nearSize.y;
 		glm::vec3 nearBottom = centerNear - up * nearSize.y;
 
-		output[0] = CalculateLightSpaceFrustumCorner(farTop, right, farSize.x);
-		output[1] = CalculateLightSpaceFrustumCorner(farTop, -right, farSize.x);
-		output[2] = CalculateLightSpaceFrustumCorner(farBottom, right, farSize.x);
-		output[3] = CalculateLightSpaceFrustumCorner(farBottom, -right, farSize.x);
-		output[4] = CalculateLightSpaceFrustumCorner(nearTop, right, nearSize.x);
-		output[5] = CalculateLightSpaceFrustumCorner(nearTop, -right, nearSize.x);
-		output[6] = CalculateLightSpaceFrustumCorner(nearBottom, right, nearSize.x);
-		output[7] = CalculateLightSpaceFrustumCorner(nearBottom, -right, nearSize.x);
+		output[0] = v4(farTop + right * farSize.x, 1.0f);
+		output[1] = v4(farTop - right * farSize.x, 1.0f);
+		output[2] = v4(farBottom + right * farSize.x, 1.0f);
+		output[3] = v4(farBottom - right * farSize.x, 1.0f);
+		output[4] = v4(nearTop + right * nearSize.x, 1.0f);
+		output[5] = v4(nearTop - right * nearSize.x, 1.0f);
+		output[6] = v4(nearBottom + right * nearSize.x, 1.0f);
+		output[7] = v4(nearBottom - right * nearSize.x, 1.0f);
+
+		output[0] = CalculateLightSpaceFrustumCorner(output[4], output[0]);
+		output[1] = CalculateLightSpaceFrustumCorner(output[5], output[1]);
+		output[2] = CalculateLightSpaceFrustumCorner(output[6], output[2]);
+		output[3] = CalculateLightSpaceFrustumCorner(output[7], output[3]);
+		output[4] = lightViewMatrix * output[4];
+		output[5] = lightViewMatrix * output[5];
+		output[6] = lightViewMatrix * output[6];
+		output[7] = lightViewMatrix * output[7];
 	}
 }
