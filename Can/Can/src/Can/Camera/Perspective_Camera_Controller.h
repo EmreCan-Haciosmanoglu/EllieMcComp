@@ -24,8 +24,14 @@ namespace Can
 
 	private:
 		bool on_window_resized(Event::WindowResizeEvent& event);
-		bool on_mouse_pressed(Event::MouseButtonPressedEvent& event);
+
+		bool on_mouse_moved(Event::MouseMovedEvent& event);
+
 		bool on_mouse_scrolled(Event::MouseScrolledEvent& event);
+
+		bool on_mouse_pressed(Event::MouseButtonPressedEvent& event);
+		bool on_mouse_released(Event::MouseButtonReleasedEvent& event);
+
 		void update_camera_position();
 
 	public:
@@ -45,15 +51,23 @@ namespace Can
 		MouseCode zoom_out_key = MouseCode::Button4;
 
 		v3 center{ 0.0f, 0.0f, 0.0f };
+		v3 center_rot{ 0.0f, 0.0f, 0.0f };
 		f32 min_pos_z = 0.5f;
 		f32 max_pos_z = 55.0f;
-		f32 min_rot_y = 30.0f;
-		f32 max_rot_y = 90.0f;
+		f32 min_rot_y = -90.0f;
+		f32 max_rot_y = -30.0f;
 		f32 zoom_t = 0.6f;
 
-	private:
 		f32 translation_speed = 5.0f;
 		f32 rotation_speed = 60.0f;
+		f32 rotation_with_mouse_speed_multiplier_z = 0.5f;
+		f32 rotation_with_mouse_speed_multiplier_y = 0.25f;
+		bool is_y_inverted = false;
 		f32 zoom_speed = 0.005f;
+
+		v2 mouse_drag_start_pos{};
+		bool is_mouse_dragging = false;
+		f32 temp_additional_rotation_z = 0.0f;
+		f32 temp_additional_rotation_y = 0.0f;
 	};
 }
