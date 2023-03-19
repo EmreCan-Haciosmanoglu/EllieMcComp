@@ -97,7 +97,7 @@ namespace Can
 	void Perspective_Camera_Controller::translate(v3 direction, f32 length)
 	{
 		v3 sized = direction * length;
-		center += sized;
+		center_pos += sized;
 		update_camera_position();
 	}
 	void Perspective_Camera_Controller::translate_relative(v3 direction, f32 length)
@@ -105,7 +105,7 @@ namespace Can
 		f32 angle_in_radians = glm::radians(center_rot.z + temp_additional_rotation_z);
 		v3 sized = direction * length;
 		v3 aligned_and_sized = glm::rotateZ(sized, angle_in_radians);
-		center += aligned_and_sized;
+		center_pos += aligned_and_sized;
 		update_camera_position();
 	}
 
@@ -119,7 +119,7 @@ namespace Can
 		offset = glm::rotateY(offset, y_angle_in_radians);
 		offset = glm::rotateZ(offset, z_angle_in_radians + glm::radians(180.0f));
 
-		camera.set_position(center + offset);
+		camera.set_position(center_pos + offset);
 	}
 
 	void Perspective_Camera_Controller::pitch(f32 amount_in_radians, bool clockwise)

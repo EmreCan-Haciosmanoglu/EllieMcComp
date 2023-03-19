@@ -273,6 +273,9 @@
     <ClInclude Include="src\Can\Shadow\ShadowMapMasterRenderer.h">
       <Filter>src\Can\Shadow</Filter>
     </ClInclude>
+    <ClInclude Include="src\Can\Unordered_Array.h">
+      <Filter>src\Can</Filter>
+    </ClInclude>
     <ClInclude Include="src\Can\Window.h">
       <Filter>src\Can</Filter>
     </ClInclude>
@@ -1413,7 +1416,8 @@
     <ClInclude Include="vendor\stb\stb_image.h">
       <Filter>vendor\stb</Filter>
     </ClInclude>
-    <ClInclude Include="src\Can\Unordered_Array.h" />
+    <ClInclude Include="vendor\imgui\backends\imgui_impl_glfw.h" />
+    <ClInclude Include="vendor\imgui\backends\imgui_impl_opengl3.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -1572,6 +1576,9 @@
     <ClCompile Include="src\Can\Shadow\ShadowMapMasterRenderer.cpp">
       <Filter>src\Can\Shadow</Filter>
     </ClCompile>
+    <ClCompile Include="src\Can\Unordered_Array.cpp">
+      <Filter>src\Can</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\OpenGl\OpenGLBuffer.cpp">
       <Filter>src\Platform\OpenGl</Filter>
     </ClCompile>
@@ -1605,6 +1612,7 @@
     <ClCompile Include="vendor\stb\stb_image.cpp">
       <Filter>vendor\stb</Filter>
     </ClCompile>
-    <ClCompile Include="src\Can\Unordered_Array.cpp" />
+    <ClCompile Include="vendor\imgui\backends\imgui_impl_glfw.cpp" />
+    <ClCompile Include="vendor\imgui\backends\imgui_impl_opengl3.cpp" />
   </ItemGroup>
 </Project>

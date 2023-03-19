@@ -47,11 +47,10 @@ namespace Can
 		KeyCode pitch_up_key = KeyCode::H;
 		KeyCode increase_fov_key = KeyCode::KPAdd;
 		KeyCode decrease_fov_key = KeyCode::KPEnter;
-		MouseCode zoom_in_key = MouseCode::Button3;
-		MouseCode zoom_out_key = MouseCode::Button4;
 
-		v3 center{ 0.0f, 0.0f, 0.0f };
+		v3 center_pos{ 0.0f, 0.0f, 0.0f };
 		v3 center_rot{ 0.0f, 0.0f, 0.0f };
+		
 		f32 min_pos_z = 0.5f;
 		f32 max_pos_z = 55.0f;
 		f32 min_rot_y = -90.0f;
