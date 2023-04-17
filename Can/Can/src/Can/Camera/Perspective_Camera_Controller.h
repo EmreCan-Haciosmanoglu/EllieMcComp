@@ -8,6 +8,7 @@
 
 namespace Can
 {
+	class Object;
 	class Perspective_Camera_Controller
 	{
 	public:
@@ -26,21 +27,29 @@ namespace Can
 		bool on_window_resized(Event::WindowResizeEvent& event);
 
 		bool on_mouse_moved(Event::MouseMovedEvent& event);
-
 		bool on_mouse_scrolled(Event::MouseScrolledEvent& event);
-
 		bool on_mouse_pressed(Event::MouseButtonPressedEvent& event);
 		bool on_mouse_released(Event::MouseButtonReleasedEvent& event);
 
 		void update_camera_position();
 
 	public:
+
+		enum class Mode : u8 {
+			FreeMoving,
+			GamePlay,
+			FollowFirstPerson,
+			FollowThirdPerson
+		};
+
 		Perspective_Camera camera;
 
 		KeyCode forward_key = KeyCode::W;
 		KeyCode backward_key = KeyCode::S;
 		KeyCode left_key = KeyCode::A;
 		KeyCode right_key = KeyCode::D;
+		KeyCode lower_key = KeyCode::LeftShift;
+		KeyCode raise_key = KeyCode::Space;
 		KeyCode rotate_cw_key = KeyCode::Q;
 		KeyCode rotate_ccw_key = KeyCode::E;
 		KeyCode pitch_down_key = KeyCode::Y;
@@ -63,6 +72,10 @@ namespace Can
 		f32 rotation_with_mouse_speed_multiplier_y = 0.25f;
 		bool is_y_inverted = false;
 		f32 zoom_speed = 0.005f;
+
+		Mode mode = Mode::FreeMoving;
+		Object* follow_object = nullptr;
+
 
 		v2 mouse_drag_start_pos{};
 		bool is_mouse_dragging = false;
