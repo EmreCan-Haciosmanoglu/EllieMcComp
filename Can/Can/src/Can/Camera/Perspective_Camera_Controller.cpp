@@ -351,7 +351,25 @@ namespace Can
 			if (mode == Mode::GamePlay)
 				mode = Mode::FreeMoving;
 			else
+			{
 				mode = Mode::GamePlay;
+				center_rot = {
+					0.0f,
+					glm::clamp(camera.rotation.y, min_rot_y, max_rot_y),
+					std::fmod(camera.rotation.z + 360.0f, 360.0f)
+				};
+				camera.set_rotation(center_rot);
+
+				center_pos = Math::ray_plane_intersection(camera.position, camera.forward, v3(0.0f), v3{ 0.0f, 0.0f, 1.0f });
+				v3 ab = camera.position - center_pos;
+				f32 l = glm::length(ab);
+				ab = glm::normalize(ab);
+				l = glm::clamp(l, min_pos_z, max_pos_z);
+				ab = ab * l;
+				zoom_t = glm::sqrt(l / (max_pos_z - min_pos_z));
+
+				update_camera_position();
+			}
 		}
 		return false;
 	}
