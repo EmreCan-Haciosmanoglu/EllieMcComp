@@ -149,6 +149,7 @@ namespace Can
 		dispatcher.Dispatch<Event::MouseScrolledEvent>(CAN_BIND_EVENT_FN(Perspective_Camera_Controller::on_mouse_scrolled));
 		dispatcher.Dispatch<Event::MouseButtonPressedEvent>(CAN_BIND_EVENT_FN(Perspective_Camera_Controller::on_mouse_pressed));
 		dispatcher.Dispatch<Event::MouseButtonReleasedEvent>(CAN_BIND_EVENT_FN(Perspective_Camera_Controller::on_mouse_released));
+		dispatcher.Dispatch<Event::KeyReleasedEvent>(CAN_BIND_EVENT_FN(Perspective_Camera_Controller::on_key_released));
 	}
 
 	void Perspective_Camera_Controller::translate(v3 direction, f32 length)
@@ -337,6 +338,20 @@ namespace Can
 			break;
 		default:
 			break;
+		}
+		return false;
+	}
+
+	bool Perspective_Camera_Controller::on_key_released(Event::KeyReleasedEvent& event)
+	{
+		KeyCode key_code = event.GetKeyCode();
+
+		if (key_code == mode_cycle_key)
+		{
+			if (mode == Mode::GamePlay)
+				mode = Mode::FreeMoving;
+			else
+				mode = Mode::GamePlay;
 		}
 		return false;
 	}

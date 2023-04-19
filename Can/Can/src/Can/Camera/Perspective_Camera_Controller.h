@@ -31,6 +31,8 @@ namespace Can
 		bool on_mouse_pressed(Event::MouseButtonPressedEvent& event);
 		bool on_mouse_released(Event::MouseButtonReleasedEvent& event);
 
+		bool on_key_released(Event::KeyReleasedEvent& event);
+
 		void update_camera_position();
 
 	public:
@@ -56,6 +58,7 @@ namespace Can
 		KeyCode pitch_up_key = KeyCode::H;
 		KeyCode increase_fov_key = KeyCode::KPAdd;
 		KeyCode decrease_fov_key = KeyCode::KPEnter;
+		KeyCode mode_cycle_key = KeyCode::KP0;
 
 		v3 center_pos{ 0.0f, 0.0f, 0.0f };
 		v3 center_rot{ 0.0f, 0.0f, 0.0f };
@@ -73,7 +76,7 @@ namespace Can
 		bool is_y_inverted = false;
 		f32 zoom_speed = 0.005f;
 
-		Mode mode = Mode::FreeMoving;
+		Mode mode = Mode::GamePlay;
 		Object* follow_object = nullptr;
 
 
