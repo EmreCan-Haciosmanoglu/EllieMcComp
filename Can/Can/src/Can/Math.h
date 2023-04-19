@@ -369,8 +369,6 @@ namespace Can::Math
 		return result;
 	}
 
-	v3 RayPlaneIntersection(const v3& X, const v3& v, const v3& C, const v3& n);
-
 	std::vector<v3> get_samples_from_cubic_bezier_curve(const std::array<v3, 4>& control_points, f32 preferred_length);
 	std::array<v3, 2> get_bounding_box_from_straight_bezier_curve(const std::array<v3, 4>& control_points, f32 half_width, f32 height);
 	std::array<v3, 2> get_bounding_box_from_cubic_bezier_curve(const std::array<v3, 4>& control_points, f32 half_width, f32 height);

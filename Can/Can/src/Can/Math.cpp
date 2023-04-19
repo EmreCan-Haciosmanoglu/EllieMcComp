@@ -580,12 +580,15 @@ namespace Can::Math
 		if (angleDiff < glm::radians(2.5f) || angleDiff > glm::radians(177.5f))
 			v = glm::rotateZ(v, glm::radians(2.5f));
 
-		return RayPlaneIntersection(X, v, C, n);
+		return ray_plane_intersection(X, v, C, n);
 	}
 
 	v3 ray_plane_intersection(const v3& ray_start_point, const v3& ray_direction, const v3& point_on_the_plane, const v3& plane_normal)
 	{
-		return RayPlaneIntersection(ray_start_point, ray_direction, point_on_the_plane, plane_normal);
+		v3 w = point_on_the_plane - ray_start_point;
+		f32 k = glm::dot(w, plane_normal) / glm::dot(ray_direction, plane_normal);
+		v3 result = ray_start_point + k * ray_direction;
+		return result;
 	}
 
 	std::array<v3, 3> get_axis_of_a_triangle(const std::array<v3, 3>& triangle)
@@ -688,13 +691,5 @@ namespace Can::Math
 			std::array<v2, 3>{P1, P2, P3},
 				std::array<v2, 3>{P1, P3, P4}
 		};
-	}
-
-	v3 RayPlaneIntersection(const v3& X, const v3& v, const v3& C, const v3& n)
-	{
-		v3 w = C - X;
-		f32 k = glm::dot(w, n) / glm::dot(v, n);
-		v3 result = X + k * v;
-		return result;
 	}
 }

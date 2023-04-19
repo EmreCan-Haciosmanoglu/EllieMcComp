@@ -51,7 +51,7 @@ namespace Can
 			if (Input::IsKeyPressed(rotate_cw_key))
 			{
 				v3 forward = camera.forward;
-				v3 c = Math::RayPlaneIntersection(
+				v3 c = Math::ray_plane_intersection(
 					camera.position,
 					forward,
 					v3{ 0.0f, 0.0f, 0.0f },
@@ -63,7 +63,7 @@ namespace Can
 			else if (Input::IsKeyPressed(rotate_ccw_key))
 			{
 				v3 forward = camera.forward;
-				v3 c = Math::RayPlaneIntersection(
+				v3 c = Math::ray_plane_intersection(
 					camera.position,
 					forward,
 					v3{ 0.0f, 0.0f, 0.0f },
