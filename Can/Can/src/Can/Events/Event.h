@@ -62,6 +62,17 @@ namespace Can::Event
 			}
 			return false;
 		}
+
+		template<typename T, typename F>
+		bool dispatch(void* p, const F& func)
+		{
+			if (m_Event.GetEventType() == T::GetStaticType())
+			{
+				m_Event.m_Handled = func(static_cast<T&>(p, m_Event));
+				return true;
+			}
+			return false;
+		}
 	private:
 		Event& m_Event;
 	};
