@@ -69,12 +69,9 @@ namespace Can
 	}
 	void Perspective_Camera::recalculate_view_matrix()
 	{
-		view = glm::lookAt(
-			position,
-			position + forward,
-			up);
+		view = glm::lookAt(position, position + forward, up);
 		//glm::vec3(0.0f, 0.0f, 1.0f));
-	//view = glm::inverse(transform);
+		//view = glm::inverse(transform);
 		recalculate_projection_view_matrix();
 	}
 	void Perspective_Camera::recalculate_projection_view_matrix()

@@ -60,7 +60,7 @@ namespace Can
 		u64 texture_slots_cursor = 1; // 0 => white texture;
 
 		u16 default_font_size_in_pixel = 24;
-		Font* default_font;
+		Font* default_font = nullptr;
 		std::vector<Buffer_Data_Font_Atlas_Key_Value_Pair> font_atlas{};
 		Orthographic_Camera_Controller* camera_controller = nullptr;
 
@@ -75,7 +75,5 @@ namespace Can
 		// In the first frame, the most inner region will allocate memory!!!
 		std::vector<Sub_Region> sub_regions{};
 		u64 sub_region_count = 0;
-
 	};
-
 }

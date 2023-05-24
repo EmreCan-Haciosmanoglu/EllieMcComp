@@ -52,10 +52,7 @@ namespace Can
 		};
 		v3 right = glm::cross(forward, up);
 
-		m4 view = glm::lookAt(
-			-forward + position,
-			position,
-			glm::vec3(0.0f, 0.0f, 1.0f));
+		m4 view = glm::lookAt(position, position + forward, up);
 		m4 projection = glm::perspective(field_of_view_angle, aspect_ratio, near_clip_plane, far_clip_plane);
 		m4 view_projection = projection * view;
 
