@@ -1,6 +1,8 @@
 #include "canpch.h"
 #include "Perspective_Camera_Controller.h"
 
+#include "Can/Renderer/Object.h"
+
 #include "Can/Math.h"
 
 namespace Can
@@ -88,7 +90,6 @@ namespace Can
 				center_rot.y + temp_additional_rotation_y,
 				center_rot.z + temp_additional_rotation_z
 				});
-
 		}
 		else if (mode == Mode::FreeMoving)
 		{
@@ -131,7 +132,52 @@ namespace Can
 
 			camera.set_rotation(camera.rotation);
 		}
+		else if (mode == Mode::FollowThirdPerson)
+		{
+			center_pos = follow_object->position;
+			update_camera_position();
 
+			if (Input::IsKeyPressed(rotate_cw_key))
+			{
+				v3 forward = camera.forward;
+				v3 c = Math::ray_plane_intersection(
+					camera.position,
+					forward,
+					v3{ 0.0f, 0.0f, 0.0f },
+					v3{ 0.0f, 0.0f, 1.0f }
+				);
+				c = glm::clamp(c, camera.position - v3{ 10.0f, 10.0f, 10.0f }, camera.position + v3{ 10.0f, 10.0f, 10.0f });
+				orbit_around_point(frame_independent_rotation_speed, c, false);
+			}
+			else if (Input::IsKeyPressed(rotate_ccw_key))
+			{
+				v3 forward = camera.forward;
+				v3 c = Math::ray_plane_intersection(
+					camera.position,
+					forward,
+					v3{ 0.0f, 0.0f, 0.0f },
+					v3{ 0.0f, 0.0f, 1.0f }
+				);
+				c = glm::clamp(c, camera.position - v3{ 10.0f, 10.0f, 10.0f }, camera.position + v3{ 10.0f, 10.0f, 10.0f });
+				orbit_around_point(frame_independent_rotation_speed, c, true);
+			}
+
+			if (Input::IsKeyPressed(pitch_down_key))
+				pitch(frame_independent_rotation_speed, false);
+			else if (Input::IsKeyPressed(pitch_up_key))
+				pitch(frame_independent_rotation_speed, true);
+
+			center_rot = {
+				0.0f,
+				glm::clamp(center_rot.y, min_rot_y, max_rot_y),
+				std::fmod(center_rot.z + 360.0f, 360.0f)
+			};
+			camera.set_rotation({
+				center_rot.x,
+				center_rot.y + temp_additional_rotation_y,
+				center_rot.z + temp_additional_rotation_z
+				});
+		}
 
 		if (Input::IsKeyPressed(increase_fov_key))
 			camera.field_of_view_angle += 2.0f * ts;
@@ -350,7 +396,7 @@ namespace Can
 		{
 			if (mode == Mode::GamePlay)
 				mode = Mode::FreeMoving;
-			else
+			else if (mode == Mode::FreeMoving)
 			{
 				mode = Mode::GamePlay;
 				center_rot = {
@@ -370,6 +416,14 @@ namespace Can
 
 				update_camera_position();
 			}
+			else if (mode == Mode::FollowFirstPerson)
+				mode = Mode::FollowThirdPerson;
+			else if (mode == Mode::FollowThirdPerson)
+				mode = Mode::FollowFirstPerson;
+		}
+		else if (key_code == KeyCode::Escape)
+		{
+			follow_object = nullptr;
 		}
 		return false;
 	}

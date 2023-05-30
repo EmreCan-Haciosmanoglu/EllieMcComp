@@ -8,6 +8,14 @@
 
 namespace Can
 {
+
+	enum class Mode : u8 {
+		FreeMoving,
+		GamePlay,
+		FollowFirstPerson,
+		FollowThirdPerson
+	};
+
 	class Object;
 	class Perspective_Camera_Controller
 	{
@@ -37,12 +45,6 @@ namespace Can
 
 	public:
 
-		enum class Mode : u8 {
-			FreeMoving,
-			GamePlay,
-			FollowFirstPerson,
-			FollowThirdPerson
-		};
 
 		Perspective_Camera camera;
 
