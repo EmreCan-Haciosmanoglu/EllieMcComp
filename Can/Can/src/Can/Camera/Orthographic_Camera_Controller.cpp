@@ -15,8 +15,6 @@ namespace Can
 
 	void Orthographic_Camera_Controller::on_update(TimeStep ts)
 	{
-		CAN_PROFILE_FUNCTION();
-
 		if (Input::IsKeyPressed(KeyCode::A))
 		{
 			m_CameraPosition.x -= cos(glm::radians(m_CameraRotation)) * m_CameraTranslationSpeed * ts;
@@ -59,8 +57,6 @@ namespace Can
 
 	void Orthographic_Camera_Controller::on_event(Event::Event& e)
 	{
-		CAN_PROFILE_FUNCTION();
-
 		Event::EventDispatcher dispatcher(e);
 		dispatcher.Dispatch< Event::MouseScrolledEvent>(CAN_BIND_EVENT_FN(Orthographic_Camera_Controller::on_mouse_scroll_event));
 		dispatcher.Dispatch< Event::WindowResizeEvent>(CAN_BIND_EVENT_FN(Orthographic_Camera_Controller::on_window_resized));
@@ -68,8 +64,6 @@ namespace Can
 
 	bool Orthographic_Camera_Controller::on_mouse_scroll_event(Event::MouseScrolledEvent& e)
 	{
-		CAN_PROFILE_FUNCTION();
-
 		m_ZoomLevel -= e.GetYOffset();
 		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 
@@ -78,7 +72,6 @@ namespace Can
 
 	bool Orthographic_Camera_Controller::on_window_resized(Event::WindowResizeEvent& e)
 	{
-		CAN_PROFILE_FUNCTION();
 		if (e.width == 0 || e.height == 0)
 			return false;
 		m_AspectRatio = (f32)e.width / (f32)e.width;

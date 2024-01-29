@@ -63,8 +63,6 @@ namespace Can
 
 	void Object::SetTransform(const m4& transform)
 	{
-		CAN_PROFILE_FUNCTION();
-
 		this->transform = transform;
 		glm::decompose(transform, scale, q, position, skew, perspective);
 	}
@@ -78,8 +76,6 @@ namespace Can
 	}
 	void Object::SetTransform(const v3& position, const v3& rotation, const v3& scale)
 	{
-		CAN_PROFILE_FUNCTION();
-
 		this->position = position;
 		this->rotation = rotation;
 		this->scale = scale;

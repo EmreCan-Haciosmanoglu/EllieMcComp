@@ -14,7 +14,6 @@ namespace Can
 
 	void Perspective_Camera_Controller::on_update(Can::TimeStep ts)
 	{
-		CAN_PROFILE_FUNCTION();
 		if (mode == Mode::FollowFirstPerson || mode == Mode::FollowThirdPerson)
 			if (follow_object == nullptr)
 				mode = Mode::GamePlay;
@@ -187,8 +186,6 @@ namespace Can
 	}
 	void Perspective_Camera_Controller::on_event(Event::Event& e)
 	{
-		CAN_PROFILE_FUNCTION();
-
 		Event::EventDispatcher dispatcher(e);
 		dispatcher.Dispatch< Event::WindowResizeEvent>(CAN_BIND_EVENT_FN(Perspective_Camera_Controller::on_window_resized));
 		dispatcher.Dispatch<Event::MouseMovedEvent>(CAN_BIND_EVENT_FN(Perspective_Camera_Controller::on_mouse_moved));
@@ -248,8 +245,6 @@ namespace Can
 
 	bool Perspective_Camera_Controller::on_window_resized(Event::WindowResizeEvent& event)
 	{
-		CAN_PROFILE_FUNCTION();
-
 		if (event.width == 0 || event.height == 0)
 			return false;
 		camera.aspect_ratio = (f32)event.width / (f32)event.height;

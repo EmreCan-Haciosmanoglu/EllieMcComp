@@ -14,8 +14,6 @@ namespace Can
 
 	void Perspective_Camera::set_projection_matrix(f32 fov, f32 aspect, f32 n, f32 f)
 	{
-		CAN_PROFILE_FUNCTION();
-
 		field_of_view_angle = fov;
 		aspect_ratio = aspect;
 		near_clip_plane = n;
@@ -26,14 +24,12 @@ namespace Can
 
 	void Perspective_Camera::set_position(const v3& pos)
 	{
-		CAN_PROFILE_FUNCTION();
 		position = pos;
 		recalculate_view_matrix();
 	}
 
 	void Perspective_Camera::set_rotation(const v3& rot)
 	{
-		CAN_PROFILE_FUNCTION();
 		rotation = rot;
 		recalculate_direction_vectors();
 		recalculate_view_matrix();
@@ -41,7 +37,6 @@ namespace Can
 
 	void Perspective_Camera::recalculate_direction_vectors()
 	{
-		CAN_PROFILE_FUNCTION();
 		v3 rotation_in_radians{
 			glm::radians(rotation.x),
 			glm::radians(rotation.y),
@@ -76,7 +71,6 @@ namespace Can
 	}
 	void Perspective_Camera::recalculate_projection_view_matrix()
 	{
-		CAN_PROFILE_FUNCTION();
 		view_projection = projection * view;
 	}
 }

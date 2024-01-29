@@ -14,8 +14,6 @@ namespace Can
 
 	void Renderer::Init()
 	{
-		CAN_PROFILE_FUNCTION();
-
 		RenderCommand::Init();
 		Renderer2D::Init();
 		Renderer3D::Init();

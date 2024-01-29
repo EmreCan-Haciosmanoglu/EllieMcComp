@@ -50,7 +50,6 @@ namespace Can::Platform::Windows
 
 		if (s_GLFWWindowCount == 0)
 		{
-			CAN_PROFILE_SCOPE("glfwCreateWindow Init");
 			CAN_CORE_INFO("Initializing GLFW");
 			int success = glfwInit();
 			//glfwWindowHint(GLFW_SAMPLES, 4);
@@ -59,8 +58,6 @@ namespace Can::Platform::Windows
 		}
 
 		{
-			CAN_PROFILE_SCOPE("glfwCreateWindow Create");
-
 #if defined(CAN_DEBUG)
 			if (Renderer::GetAPI() == RendererAPI::API::OpenGL)
 				glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);

@@ -58,23 +58,17 @@ namespace Can
 	OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count)
 		:m_Count(count)
 	{
-		CAN_PROFILE_FUNCTION();
-
 		glCreateBuffers(1, &m_RendererID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 		glBufferData(GL_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
 	}
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()
 	{
-		CAN_PROFILE_FUNCTION();
-
 		glDeleteBuffers(1, &m_RendererID);
 	}
 	 
 	void OpenGLIndexBuffer::ReDo(uint32_t* indices, uint32_t count)
 	{
-		CAN_PROFILE_FUNCTION();
-
 		m_Count = count;
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 		glBufferData(GL_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
@@ -82,14 +76,10 @@ namespace Can
 
 	void OpenGLIndexBuffer::Bind() const
 	{
-		CAN_PROFILE_FUNCTION();
-
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
 	}
 	void OpenGLIndexBuffer::Unbind() const
 	{
-		CAN_PROFILE_FUNCTION();
-
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 }

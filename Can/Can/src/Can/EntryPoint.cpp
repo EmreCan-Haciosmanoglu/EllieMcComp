@@ -35,18 +35,12 @@ int main(int argc, char** argv)
 	Can::Log::Init();
 	CAN_CORE_WARN("Initialized Log!");
 
-	CAN_PROFILE_BEGIN_SESSION("Startup", "CanProfile-Startup.json");
 	std::srand((unsigned int)std::time(nullptr));
 	main_application = Can::CreateApplication(Can::WindowProps{ title, w, h });
-	CAN_PROFILE_END_SESSION();
 
-	CAN_PROFILE_BEGIN_SESSION("Runtime", "CanProfile-Runtime.json");
 	main_application->Run();
-	CAN_PROFILE_END_SESSION();
 
-	CAN_PROFILE_BEGIN_SESSION("Cleaning", "CanProfile-Cleaning.json");
 	delete main_application;
-	CAN_PROFILE_END_SESSION();
 }
 
 #endif // CAN_PLATFORM_WINDOWS

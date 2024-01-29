@@ -22,8 +22,6 @@ namespace Can::Layer
 
 	void ImGuiLayer::OnAttach()
 	{
-		CAN_PROFILE_FUNCTION();
-
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -52,8 +50,6 @@ namespace Can::Layer
 
 	void ImGuiLayer::OnDetach()
 	{
-		CAN_PROFILE_FUNCTION();
-
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
@@ -61,8 +57,6 @@ namespace Can::Layer
 
 	void ImGuiLayer::Begin()
 	{
-		CAN_PROFILE_FUNCTION();
-
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
@@ -70,8 +64,6 @@ namespace Can::Layer
 
 	void ImGuiLayer::End()
 	{
-		CAN_PROFILE_FUNCTION();
-
 		ImGuiIO& io = ImGui::GetIO();
 		Application& app = Application::Get();
 

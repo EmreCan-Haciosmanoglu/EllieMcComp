@@ -10,14 +10,10 @@ namespace Can
 	OpenGLContext::OpenGLContext(GLFWwindow* windowHandle)
 		:m_WindowHandle(windowHandle)
 	{
-		CAN_PROFILE_FUNCTION();
-
 		CAN_CORE_ASSERT(windowHandle, "Window handle is null!");
 	}
 	void OpenGLContext::Init()
 	{
-		CAN_PROFILE_FUNCTION();
-
 		glfwMakeContextCurrent(m_WindowHandle);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		CAN_CORE_ASSERT(status, "Failed to initialize Glad!");
@@ -42,8 +38,6 @@ namespace Can
 
 	void OpenGLContext::SwapBuffers()
 	{
-		CAN_PROFILE_FUNCTION();
-
 		glfwSwapBuffers(m_WindowHandle);
 	}
 }
