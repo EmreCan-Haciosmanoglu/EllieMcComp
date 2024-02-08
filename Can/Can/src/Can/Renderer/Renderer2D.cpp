@@ -197,6 +197,7 @@ namespace Can
 		s_Data.QuadVertexBufferPtr++;
 
 		s_Data.QuadIndexCount += 6;
+		Flush(); // WHYYYY this fixis visual glitches
 	}
 
 	void Renderer2D::DrawRoundedQuad(const DrawQuadParameters& parameters)
@@ -428,7 +429,7 @@ namespace Can
 
 			s_Data.QuadIndexCount += 6 * 4;
 		}
-
+		Flush(); // WHYYYY this fixis visual glitches
 	}
 	void Renderer2D::DrawText(const std::string& text, const glm::vec3& position, const glm::vec4& color, float zoomLevel)
 	{

@@ -462,6 +462,7 @@ namespace Can
 			immediate_quad(p0i, p1i, p2i, p3i, uv0, uv1, uv2, uv3, theme.color, texture_index);
 			//immediate_quad(p0i, p1i, p2i, p3i, uv0, uv1, uv2, uv3, color, 0.0f);
 		}
+		immediate_flush(); // WHYYYY this fixis visual glitches
 	}
 
 	bool global_pressed = false;
@@ -505,6 +506,10 @@ namespace Can
 							state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_PRESSED);
 							state->flags |= BUTTON_STATE_FLAGS_HOLD;
 						}
+						else if (state->flags & BUTTON_STATE_FLAGS_RELEASED)
+						{
+							state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_RELEASED);
+						}
 						else
 						{
 							if (!(state->flags & BUTTON_STATE_FLAGS_HOLD))
@@ -523,7 +528,7 @@ namespace Can
 							state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_HOLD);
 							state->flags |= BUTTON_STATE_FLAGS_RELEASED;
 						}
-						else
+						else 
 						{
 							state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_RELEASED);
 						}
@@ -552,12 +557,15 @@ namespace Can
 					{
 						if (state->flags & BUTTON_STATE_FLAGS_PRESSED || state->flags & BUTTON_STATE_FLAGS_HOLD)
 							color == theme.background_color_pressed;
+						else if (state->flags & BUTTON_STATE_FLAGS_RELEASED)
+							state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_RELEASED);
 					}
 				}
 			}
 			immediate_quad(p0i, p1i, p2i, p3i, color);
 			Rect text_rect = rect;
 			text_rect.z++;
+			immediate_flush(); // WHYYYY this fixis visual glitches
 			immediate_text(text, text_rect, *theme.label_theme);
 		}
 		return state->flags;
@@ -843,6 +851,7 @@ namespace Can
 					else
 						text_rect.x = regioned_track_rect.x + std::max(regioned_track_rect.w, regioned_thumb_rect.w) + thumb_margin;
 				}
+				immediate_flush();
 				immediate_text(text, text_rect, *theme.label_theme);
 			}
 		}
@@ -1045,6 +1054,7 @@ namespace Can
 					else
 						text_rect.x = regioned_track_rect.x + std::max(regioned_track_rect.w, regioned_thumb_rect.w) + thumb_margin;
 				}
+				immediate_flush();
 				immediate_text(text, text_rect, *theme.label_theme);
 			}
 		}
@@ -1187,6 +1197,7 @@ namespace Can
 					text.append(state->text, 0, state->char_count);
 			}
 
+			immediate_flush();
 			immediate_text(text, text_rect, *theme.label_theme);
 		}
 

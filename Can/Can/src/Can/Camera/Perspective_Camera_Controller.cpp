@@ -37,8 +37,54 @@ namespace Can
 				mode = Mode::GamePlay;
 			}
 		}
-		if (mode == Mode::GamePlay)
+
+		switch (mode)
 		{
+		case Can::Mode::FreeMoving:
+		{
+			if (Input::IsKeyPressed(right_key))
+				translate(camera.right, frame_independent_translation_speed);
+			else if (Input::IsKeyPressed(left_key))
+				translate(-camera.right, frame_independent_translation_speed);
+
+			if (Input::IsKeyPressed(forward_key))
+				translate(camera.forward, frame_independent_translation_speed);
+			else if (Input::IsKeyPressed(backward_key))
+				translate(-camera.forward, frame_independent_translation_speed);
+
+			if (Input::IsKeyPressed(raise_key))
+				translate(camera.up, frame_independent_translation_speed);
+			else if (Input::IsKeyPressed(lower_key))
+				translate(-camera.up, frame_independent_translation_speed);
+
+			if (Input::IsKeyPressed(rotate_cw_key))
+			{
+				camera.rotation.z += frame_independent_rotation_speed;
+				camera.set_rotation(camera.rotation);
+			}
+			else if (Input::IsKeyPressed(rotate_ccw_key))
+			{
+				camera.rotation.z -= frame_independent_rotation_speed;
+				camera.set_rotation(camera.rotation);
+			}
+
+			if (Input::IsKeyPressed(pitch_up_key))
+			{
+				camera.rotation.y += frame_independent_rotation_speed;
+				camera.set_rotation(camera.rotation);
+			}
+			else if (Input::IsKeyPressed(pitch_down_key))
+			{
+				camera.rotation.y -= frame_independent_rotation_speed;
+				camera.set_rotation(camera.rotation);
+			}
+
+			camera.set_rotation(camera.rotation);
+			break;
+		}
+		case Can::Mode::GamePlay:
+		{
+
 			if (Input::IsKeyPressed(left_key))
 				translate_relative(v3{ 0.0f, +1.0f, 0.0f }, frame_independent_translation_speed);
 			else if (Input::IsKeyPressed(right_key))
@@ -89,49 +135,19 @@ namespace Can
 				center_rot.y + temp_additional_rotation_y,
 				center_rot.z + temp_additional_rotation_z
 				});
+			break;
 		}
-		else if (mode == Mode::FreeMoving)
+		case Can::Mode::FollowFirstPerson:
 		{
-			if (Input::IsKeyPressed(right_key))
-				translate(camera.right, frame_independent_translation_speed);
-			else if (Input::IsKeyPressed(left_key))
-				translate(-camera.right, frame_independent_translation_speed);
-
-			if (Input::IsKeyPressed(forward_key))
-				translate(camera.forward, frame_independent_translation_speed);
-			else if (Input::IsKeyPressed(backward_key))
-				translate(-camera.forward, frame_independent_translation_speed);
-
-			if (Input::IsKeyPressed(raise_key))
-				translate(camera.up, frame_independent_translation_speed);
-			else if (Input::IsKeyPressed(lower_key))
-				translate(-camera.up, frame_independent_translation_speed);
-
-			if (Input::IsKeyPressed(rotate_cw_key))
-			{
-				camera.rotation.z += frame_independent_rotation_speed;
-				camera.set_rotation(camera.rotation);
-			}
-			else if (Input::IsKeyPressed(rotate_ccw_key))
-			{
-				camera.rotation.z -= frame_independent_rotation_speed;
-				camera.set_rotation(camera.rotation);
-			}
-
-			if (Input::IsKeyPressed(pitch_up_key))
-			{
-				camera.rotation.y += frame_independent_rotation_speed;
-				camera.set_rotation(camera.rotation);
-			}
-			else if (Input::IsKeyPressed(pitch_down_key))
-			{
-				camera.rotation.y -= frame_independent_rotation_speed;
-				camera.set_rotation(camera.rotation);
-			}
-
-			camera.set_rotation(camera.rotation);
+			camera.set_position(follow_object->position + v3{ 0.0f, 0.0f, 0.18f }/* Head OffSet / Camera Offset */);
+			camera.set_rotation(v3{
+				glm::degrees(follow_object->rotation.x),
+				glm::degrees(follow_object->rotation.y),
+				glm::degrees(follow_object->rotation.z) + 180.0f
+				});
+			break;
 		}
-		else if (mode == Mode::FollowThirdPerson)
+		case Can::Mode::FollowThirdPerson:
 		{
 			center_pos = follow_object->position;
 			update_camera_position();
@@ -176,6 +192,10 @@ namespace Can
 				center_rot.y + temp_additional_rotation_y,
 				center_rot.z + temp_additional_rotation_z
 				});
+			break;
+		}
+		default:
+			break;
 		}
 
 		if (Input::IsKeyPressed(increase_fov_key))
@@ -311,22 +331,22 @@ namespace Can
 		MouseCode key_code = event.GetMouseButton();
 		switch (key_code)
 		{
-		case Can::MouseCode::ButtonLeft: // 0
-			if (is_mouse_dragging == false)
-			{
-				is_mouse_dragging = true;
-				auto [mouseX, mouseY] = Can::Input::get_mouse_pos_float();
-				mouse_drag_start_pos = { mouseX, mouseY };
-			}
+		case Can::MouseCode::ButtonLeft:	// 0
 			break;
-		case Can::MouseCode::ButtonRight: // 1
+		case Can::MouseCode::ButtonRight:	// 1
 			// Do this ?? maybe not??
 			temp_additional_rotation_z = glm::radians(0.0f);
 			temp_additional_rotation_y = glm::radians(0.0f);
 			is_mouse_dragging = false;
 			update_camera_position();
 			break;
-		case Can::MouseCode::Button2:
+		case Can::MouseCode::Button2:		// Middle
+			if (is_mouse_dragging == false)
+			{
+				is_mouse_dragging = true;
+				auto [mouseX, mouseY] = Can::Input::get_mouse_pos_float();
+				mouse_drag_start_pos = { mouseX, mouseY };
+			}
 			break;
 		case Can::MouseCode::Button3:
 			break;
@@ -348,7 +368,11 @@ namespace Can
 		MouseCode key_code = event.GetMouseButton();
 		switch (key_code)
 		{
-		case Can::MouseCode::ButtonLeft: // 0
+		case Can::MouseCode::ButtonLeft:	// 0
+			break;
+		case Can::MouseCode::ButtonRight:	// 1
+			break;
+		case Can::MouseCode::Button2:		// Middle
 			// Apply rotation/ orbitting
 			is_mouse_dragging = false;
 
@@ -362,10 +386,6 @@ namespace Can
 				camera.set_rotation(center_rot);
 				update_camera_position();
 			}
-			break;
-		case Can::MouseCode::ButtonRight: // 1
-			break;
-		case Can::MouseCode::Button2:
 			break;
 		case Can::MouseCode::Button3:
 			break;
