@@ -12,8 +12,8 @@ namespace Can
 
 		virtual void ReDo(float* vertices, uint32_t size) override;
 		virtual void Resize(uint32_t size) override;
-		virtual void SetData(const void* data, uint32_t size) override;
-		virtual void SetSubData(float* vertices, int start, int offset) override;
+		virtual void SetData(const float* data, uint32_t size) override;
+		virtual void SetSubData(const float* vertices, int start, int offset) override;
 
 		virtual void Bind() const override;
 		virtual void Unbind() const override;

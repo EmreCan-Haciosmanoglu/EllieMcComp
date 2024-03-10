@@ -85,10 +85,12 @@ namespace Can
 					if (force_update) goto end;
 				}
 
+				/*
 				m_ImGuiLayer->Begin();
 				for (Layer::Layer* layer : m_LayerStack)
 					layer->OnImGuiRender();
 				m_ImGuiLayer->End();
+				*/
 			}
 
 

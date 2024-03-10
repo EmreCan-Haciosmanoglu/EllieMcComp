@@ -462,7 +462,7 @@ namespace Can
 			immediate_quad(p0i, p1i, p2i, p3i, uv0, uv1, uv2, uv3, theme.color, texture_index);
 			//immediate_quad(p0i, p1i, p2i, p3i, uv0, uv1, uv2, uv3, color, 0.0f);
 		}
-		immediate_flush(); // WHYYYY this fixis visual glitches
+		immediate_flush(); // WHYYYY this fixes visual glitches
 	}
 
 	bool global_pressed = false;
@@ -565,7 +565,7 @@ namespace Can
 			immediate_quad(p0i, p1i, p2i, p3i, color);
 			Rect text_rect = rect;
 			text_rect.z++;
-			immediate_flush(); // WHYYYY this fixis visual glitches
+			immediate_flush(); // WHYYYY this fixes visual glitches
 			immediate_text(text, text_rect, *theme.label_theme);
 		}
 		return state->flags;

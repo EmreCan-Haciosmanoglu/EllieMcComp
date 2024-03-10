@@ -107,8 +107,8 @@ namespace Can
 
 		virtual void ReDo(float* vertices, uint32_t size) = 0;
 		virtual void Resize(uint32_t size) = 0;
-		virtual void SetData(const void* data, uint32_t size) = 0;
-		virtual void SetSubData(float* vertices, int start, int offset) = 0;
+		virtual void SetData(const float* data, uint32_t size) = 0;
+		virtual void SetSubData(const float* vertices, int start, int offset) = 0;
 
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;

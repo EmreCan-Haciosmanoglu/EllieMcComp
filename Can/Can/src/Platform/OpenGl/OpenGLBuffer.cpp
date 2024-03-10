@@ -32,12 +32,12 @@ namespace Can
 
 		glBufferData(GL_ARRAY_BUFFER, size, NULL, GL_DYNAMIC_DRAW);
 	}
-	void OpenGLVertexBuffer::SetData(const void* data, uint32_t size)
+	void OpenGLVertexBuffer::SetData(const float* data, uint32_t size)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 	}
-	void OpenGLVertexBuffer::SetSubData(float* vertices, int offset, int size)
+	void OpenGLVertexBuffer::SetSubData(const float* vertices, int offset, int size)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 		glBufferSubData(GL_ARRAY_BUFFER, offset, size, vertices);
