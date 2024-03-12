@@ -113,14 +113,16 @@ namespace Can
         {
 #ifdef CAN_DEBUG
         {
-            ComPtr<ID3D12InfoQueue> info_queue;
-            auto result = main_device->QueryInterface(IID_PPV_ARGS(&info_queue));
-            if (FAILED(result)) return false;
-            if (!info_queue) return false;
-            
-            info_queue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CURRUPTION, false);
-            info_queue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, false);
-            info_queue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, false);
+            {
+                ComPtr<ID3D12InfoQueue> info_queue;
+                auto result = main_device->QueryInterface(IID_PPV_ARGS(&info_queue));
+                if (FAILED(result)) return false;
+                if (!info_queue) return false;
+                
+                info_queue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CURRUPTION, false);
+                info_queue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, false);
+                info_queue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, false);
+            }
             
             ComPtr<ID3D12DebugDevice> debug_device;
             result = main_device->QueryInterface(IID_PPV_ARGS(&debug_device));
