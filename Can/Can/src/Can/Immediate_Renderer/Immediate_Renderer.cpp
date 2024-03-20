@@ -76,8 +76,8 @@ namespace Can
 			s32 uy1 = sub_region.prev_frame_used_region.y;
 			s32 uy2 = sub_region.prev_frame_used_region.y + sub_region.prev_frame_used_region.h;
 
-			s32 scrolled_x_diff = Math::lerp(rx1 - ux1, rx2 - ux2, state->horizontal_scroll_percentage);
-			s32 scrolled_y_diff = Math::lerp(ry1 - uy1, ry2 - uy2, 1.0f - state->vertical_scroll_percentage);
+			s32 scrolled_x_diff = (s32)Math::lerp((f32)(rx1 - ux1), (f32)(rx2 - ux2), state->horizontal_scroll_percentage);
+			s32 scrolled_y_diff = (s32)Math::lerp((f32)(ry1 - uy1), (f32)(ry2 - uy2), 1.0f - state->vertical_scroll_percentage);
 
 			if (sub_region.theme->flags & SUB_REGION_THEME_FLAGS_HORIZONTALLY_SCROLLABLE)
 				new_rect.x += scrolled_x_diff;
@@ -368,7 +368,7 @@ namespace Can
 		for (const s8* c = text.c_str(); *c; ++c)
 		{
 			u8 p = (u8)*c;
-			text_width += chars[p].advanceX;
+			text_width += (s32)(chars[p].advanceX);
 		}
 
 		s32 atlas_width = atlas->width;
@@ -410,7 +410,6 @@ namespace Can
 
 		for (u64 i = 1; i < buffer_data.texture_slots_cursor; i++)
 		{
-			atlas->texture.get();
 			if (*buffer_data.texture_slots[i].get() == *atlas->texture.get())
 			{
 				texture_index = (float)i;
@@ -427,11 +426,11 @@ namespace Can
 		for (const char* c = text.c_str(); *c; ++c)
 		{
 			u8 p = *c;
-			s32 x = pos.x + chars[p].bitmapLeft;
-			s32 y = pos.y + chars[p].bitmapTop;
+			s32 x = pos.x + (s32)chars[p].bitmapLeft;
+			s32 y = pos.y + (s32)chars[p].bitmapTop;
 			s32 z = pos.z;
-			s32 w = chars[p].bitmapWidth;
-			s32 h = chars[p].bitmapHeight;
+			s32 w = (s32)chars[p].bitmapWidth;
+			s32 h = (s32)chars[p].bitmapHeight;
 
 			v3i p0i{ x,     y - h, z };
 			v3i p1i{ x + w, y - h, z };
@@ -452,8 +451,8 @@ namespace Can
 				FT_KERNING_DEFAULT,				// kerning mode
 				&kerning);						// variable to store kerning value
 
-			pos.x += chars[p].advanceX + (kerning.x >> 6);
-			pos.y += chars[p].advanceY;
+			pos.x += (s32)chars[p].advanceX + (kerning.x >> 6);
+			pos.y += (s32)chars[p].advanceY;
 			pos.z++;
 
 			if (w == 0 || h == 0)
@@ -528,7 +527,7 @@ namespace Can
 							state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_HOLD);
 							state->flags |= BUTTON_STATE_FLAGS_RELEASED;
 						}
-						else 
+						else
 						{
 							state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_RELEASED);
 						}
@@ -679,7 +678,7 @@ namespace Can
 			Button_Theme& thumb_theme = *theme.thumb_theme;
 			regioned_thumb_rect.z = regioned_track_rect.z + 1;
 
-			f32 denom = max_value - min_value;
+			f32 denom = (f32)(max_value - min_value);
 			if (denom <= 0.0f) denom = 1.0f;
 			f32 ratio = (current_value - min_value) / denom;
 			if (theme.flags & SLIDER_THEME_FLAGS_IS_HORIZONTAL)
@@ -691,7 +690,7 @@ namespace Can
 					min_x += regioned_thumb_rect.w / 2;
 					max_x -= regioned_thumb_rect.w / 2;
 				}
-				regioned_thumb_rect.x = Math::lerp(min_x, max_x, ratio);
+				regioned_thumb_rect.x = (s32)Math::lerp((f32)min_x, (f32)max_x, ratio);
 			}
 			else
 			{
@@ -702,7 +701,7 @@ namespace Can
 					min_y -= regioned_thumb_rect.h / 2;
 					max_y += regioned_thumb_rect.h / 2;
 				}
-				regioned_thumb_rect.y = Math::lerp(min_y, max_y, ratio);
+				regioned_thumb_rect.y = (s32)Math::lerp((f32)min_y, (f32)max_y, ratio);
 			}
 
 			if (theme.flags & SLIDER_THEME_FLAGS_IS_HORIZONTAL)
@@ -802,17 +801,17 @@ namespace Can
 			{
 				if (theme.flags & SLIDER_THEME_FLAGS_IS_HORIZONTAL)
 				{
-					f32 denom = regioned_track_rect.w;
+					f32 denom{ (f32)regioned_track_rect.w };
 					if (denom <= 0.0f) denom = 1.0f;
 					f32 ratio = ((s32)mouse_x - regioned_track_rect.x) / denom;
-					current_value = min_value + ratio * (max_value - min_value);
+					current_value = (s16)((f32)min_value + ratio * (f32)(max_value - min_value));
 				}
 				else
 				{
-					f32 denom = regioned_track_rect.h;
+					f32 denom{ (f32)regioned_track_rect.h };
 					if (denom <= 0.0f) denom = 1.0f;
 					f32 ratio = ((regioned_track_rect.y + regioned_track_rect.h) - (s32)mouse_y) / denom;
-					current_value = min_value + ratio * (max_value - min_value);
+					current_value = (s16)((f32)min_value + ratio * ((f32)max_value - (f32)min_value));
 				}
 			}
 
@@ -887,25 +886,25 @@ namespace Can
 			f32 ratio = (current_value - min_value) / denom;
 			if (theme.flags & SLIDER_THEME_FLAGS_IS_HORIZONTAL)
 			{
-				s32 min_x = regioned_track_rect.x - regioned_thumb_rect.w / 2.0f;
-				s32 max_x = regioned_track_rect.x + regioned_track_rect.w - regioned_thumb_rect.w / 2.0f;
+				s32 min_x{ (s32)((f32)regioned_track_rect.x - (f32)regioned_thumb_rect.w / 2.0f) };
+				s32 max_x{ (s32)((f32)regioned_track_rect.x + (f32)regioned_track_rect.w - (f32)regioned_thumb_rect.w / 2.0f) };
 				if (theme.flags & SLIDER_THEME_FLAGS_THUMB_IS_INSIDE)
 				{
-					min_x += regioned_thumb_rect.w / 2.0f;
-					max_x -= regioned_thumb_rect.w / 2.0f;
+					min_x += (s32)((f32)regioned_thumb_rect.w / 2.0f);
+					max_x -= (s32)((f32)regioned_thumb_rect.w / 2.0f);
 				}
-				regioned_thumb_rect.x = Math::lerp(min_x, max_x, ratio);
+				regioned_thumb_rect.x = (s32)Math::lerp((f32)min_x, (f32)max_x, ratio);
 			}
 			else
 			{
-				s32 min_y = regioned_track_rect.y + regioned_track_rect.h - regioned_thumb_rect.h / 2.0f;
-				s32 max_y = regioned_track_rect.y - regioned_thumb_rect.h / 2.0f;
+				s32 min_y{ (s32)((f32)regioned_track_rect.y + (f32)regioned_track_rect.h - (f32)regioned_thumb_rect.h / 2.0f) };
+				s32 max_y{ (s32)((f32)regioned_track_rect.y - (f32)regioned_thumb_rect.h / 2.0f) };
 				if (theme.flags & SLIDER_THEME_FLAGS_THUMB_IS_INSIDE)
 				{
-					min_y -= regioned_thumb_rect.h / 2.0f;
-					max_y += regioned_thumb_rect.h / 2.0f;
+					min_y -= (s32)((f32)regioned_thumb_rect.h / 2.0f);
+					max_y += (s32)((f32)regioned_thumb_rect.h / 2.0f);
 				}
-				regioned_thumb_rect.y = Math::lerp(min_y, max_y, ratio);
+				regioned_thumb_rect.y = (s32)Math::lerp((f32)min_y, (f32)max_y, ratio);
 			}
 
 			if (theme.flags & SLIDER_THEME_FLAGS_IS_HORIZONTAL)
@@ -916,7 +915,7 @@ namespace Can
 				else if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_BOTTOM_OR_LEFT)
 					regioned_thumb_rect.y -= regioned_thumb_rect.h + theme.x_or_y_offset_in_pixels;
 				else
-					regioned_thumb_rect.y += regioned_track_rect.h / 2.0f - regioned_thumb_rect.h / 2.0f;
+					regioned_thumb_rect.y += (s32)((f32)regioned_track_rect.h * 0.5f - (f32)regioned_thumb_rect.h * 0.5f);
 			}
 			else
 			{
@@ -926,7 +925,7 @@ namespace Can
 				else if (theme.flags & SLIDER_THEME_FLAGS_THUMB_AT_BOTTOM_OR_LEFT)
 					regioned_thumb_rect.x -= regioned_thumb_rect.w + theme.x_or_y_offset_in_pixels;
 				else
-					regioned_thumb_rect.x += regioned_track_rect.w / 2.0f - regioned_thumb_rect.w / 2.0f;
+					regioned_thumb_rect.x += (s32)((f32)regioned_track_rect.w * 0.5f - (f32)regioned_thumb_rect.w * 0.5f);
 			}
 
 			v4 color = thumb_theme.background_color;
@@ -1005,14 +1004,14 @@ namespace Can
 			{
 				if (theme.flags & SLIDER_THEME_FLAGS_IS_HORIZONTAL)
 				{
-					f32 denom = regioned_track_rect.w;
+					f32 denom = (f32)regioned_track_rect.w;
 					if (denom <= 0.0f) denom = 1.0f;
 					f32 ratio = ((s32)mouse_x - regioned_track_rect.x) / denom;
 					current_value = min_value + ratio * (max_value - min_value);
 				}
 				else
 				{
-					f32 denom = regioned_track_rect.h;
+					f32 denom = (f32)regioned_track_rect.h;
 					if (denom <= 0.0f) denom = 1.0f;
 					f32 ratio = ((regioned_track_rect.y + regioned_track_rect.h) - (s32)mouse_y) / denom;
 					current_value = min_value + ratio * (max_value - min_value);
@@ -1435,7 +1434,7 @@ namespace Can
 				assert(the_most_inner_region.region.h > 0);
 				assert(the_most_inner_region.used_region.h > 0);
 
-				thumb_rect.h = (track_rect.h) / 2 * ((f32)the_most_inner_region.region.h / the_most_inner_region.used_region.h);
+				thumb_rect.h = (s32)(((f32)track_rect.h * 0.5f) * ((f32)the_most_inner_region.region.h / (f32)the_most_inner_region.used_region.h));
 
 				u64 vertical_scroll_bar_hash = ((u64)2 << 32) + the_most_inner_region.hash;
 				immediate_slider_float(track_rect, thumb_rect, text, 0, state->vertical_scroll_percentage, 1.0f, *theme.vertical_slider_theme, vertical_scroll_bar_hash);
@@ -1447,12 +1446,12 @@ namespace Can
 
 	void immediate_flush()
 	{
-		buffer_data.vertex_buffer->SetData((f32*)buffer_data.buffer_base, buffer_data.buffer_cursor * sizeof(Vertex));
+		buffer_data.vertex_buffer->SetData((f32*)buffer_data.buffer_base, (u32)(buffer_data.buffer_cursor * sizeof(Vertex)));
 		buffer_data.vertex_array->Bind();
 
 		for (size_t i = 0; i < buffer_data.texture_slots_cursor; i++)
-			buffer_data.texture_slots[i]->Bind(i);
-		RenderCommand::DrawIndexed(buffer_data.vertex_array, buffer_data.quad_count);
+			buffer_data.texture_slots[i]->Bind((u32)i);
+		RenderCommand::DrawIndexed(buffer_data.vertex_array, (u32)buffer_data.quad_count);
 
 		buffer_data.texture_slots_cursor = 1;
 		buffer_data.quad_count = 0;

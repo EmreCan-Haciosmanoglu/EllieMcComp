@@ -36,15 +36,15 @@ namespace Can
 		Ref<Shader> TextureShader;
 		Ref<Texture2D> WhiteTexture;
 
-		uint32_t QuadIndexCount = 0;
+		uint32_t QuadIndexCount{ 0 };
 
 		QuadVertex* QuadVertexBufferBase = nullptr;
 		u64 buffer_cursor = 0;
 
 		std::array<Ref<Texture2D>, MaxTextureSlots> TextureSlots;
-		u64 texture_slots_cursor = 1; // 0 => white texture;
+		u64 texture_slots_cursor{ 1 }; // 0 => white texture;
 
-		v4 QuadVertexPositions;
+		v4 QuadVertexPositions{};
 
 		Font* font;
 		std::vector<FontAtlas> fontAtlas{};
@@ -129,12 +129,12 @@ namespace Can
 
 	void Renderer2D::Flush()
 	{
-		s_Data.QuadVertexBuffer->SetData((float*)s_Data.QuadVertexBufferBase, s_Data.buffer_cursor * sizeof(QuadVertex));
+		s_Data.QuadVertexBuffer->SetData((float*)s_Data.QuadVertexBufferBase, (u32)(s_Data.buffer_cursor * sizeof(QuadVertex)));
 
 		s_Data.QuadVertexArray->Bind();
 
 		for (size_t i = 0; i < s_Data.texture_slots_cursor; i++)
-			s_Data.TextureSlots[i]->Bind(i);
+			s_Data.TextureSlots[i]->Bind((u32)i);
 		RenderCommand::DrawIndexed(s_Data.QuadVertexArray, s_Data.QuadIndexCount);
 
 		s_Data.QuadIndexCount = 0;
@@ -475,8 +475,8 @@ namespace Can
 	{
 		int flags = FontFlags::LeftAligned | FontFlags::WordWrap;
 
-		float _sx = zoomLevel *(2.0f / 1600.0f);
-		float _sy = zoomLevel *(2.0f / 900.0f);
+		float _sx = zoomLevel * (2.0f / 1600.0f);
+		float _sy = zoomLevel * (2.0f / 900.0f);
 
 
 		float x = position.x;
@@ -504,7 +504,6 @@ namespace Can
 
 		for (size_t i = 1; i < s_Data.texture_slots_cursor; i++)
 		{
-			s_Data.fontAtlas[0].texture.get();
 			if (*s_Data.TextureSlots[i].get() == *s_Data.fontAtlas[0].texture.get())
 			{
 				textureIndex = (float)i;
@@ -532,7 +531,7 @@ namespace Can
 				FT_KERNING_DEFAULT, // kerning mode
 				&kerning);          // variable to store kerning value
 
- // Advance cursor to start of next character
+			// Advance cursor to start of next character
 			x += (chars[*p].advanceX + (kerning.x >> 6)) * _sx;
 			y += chars[*p].advanceY * _sy;
 

@@ -72,7 +72,7 @@ namespace Can::Utility
 
 		void WriteProfile(const ProfileResult& result)
 		{
-			std::stringstream json;
+			std::stringstream json{};
 
 			std::string name = result.Name;
 			std::replace(name.begin(), name.end(), '"', '\'');

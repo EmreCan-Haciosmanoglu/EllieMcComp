@@ -1,5 +1,10 @@
 #pragma once
 
+#ifndef _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING
+#define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING
+#endif // !_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING
+
+
 #include <iostream>
 #include <memory>
 #include <utility>

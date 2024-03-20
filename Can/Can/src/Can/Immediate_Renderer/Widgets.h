@@ -13,7 +13,7 @@ namespace Can
 {
 	class Font;
 	class FontAtlas;
-	class Sub_Region_Theme;
+	struct Sub_Region_Theme;
 
 	struct Vertex
 	{
@@ -53,7 +53,7 @@ namespace Can
 
 		u64 quad_count = 0;
 
-		Vertex buffer_base[MAXIMUM_VERTICES];
+		Vertex buffer_base[MAXIMUM_VERTICES]{ Vertex{} };
 		u64 buffer_cursor = 0;
 
 		Ref<Texture2D> texture_slots[MAXIMUM_TEXTURE_SLOTS];

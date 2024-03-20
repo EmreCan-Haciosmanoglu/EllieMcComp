@@ -569,6 +569,10 @@ namespace Can::Math
 	{
 		return a + (b - a) * t;
 	}
+	s32 lerp(s32 a, s32 b, s32 t)
+	{
+		return a + (b - a) * t;
+	}
 
 	v3 safe_ray_plane_intersection(v3 X, v3 v, v3 C, v3 n)
 	{
