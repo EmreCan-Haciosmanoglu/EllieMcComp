@@ -226,18 +226,23 @@ namespace Can::Math
 		return true;
 	}
 
-	v2 RotatePoint(const v2& point, f32 angle)
+	v2 rotate_point(const v2& point, const f32& angle_in_radians)
 	{
+		const f32 cos_of_angle{ glm::cos(angle_in_radians) };
+		const f32 sin_of_angle{ glm::sin(angle_in_radians) };
 		return v2{
-			glm::cos(angle) * point.x - glm::sin(angle) * point.y,
-			glm::sin(angle) * point.x + glm::cos(angle) * point.y
+			cos_of_angle * point.x - sin_of_angle * point.y,
+			sin_of_angle * point.x + cos_of_angle * point.y
 		};
 	}
-	v2 RotatePointAroundPoint(const v2& p1, f32 angle, const v2& p2)
+	v2 rotate_around_a_point(const v2& point, const f32& angle_in_radians, const v2& center)
 	{
+		const f32 cos_of_angle{ glm::cos(angle_in_radians) };
+		const f32 sin_of_angle{ glm::sin(angle_in_radians) };
+		const v2 diff{ point - center };
 		return v2{
-			glm::cos(angle) * (p1.x - p2.x) - glm::sin(angle) * (p1.y - p2.y) + p2.x,
-			glm::sin(angle) * (p1.x - p2.x) + glm::cos(angle) * (p1.y - p2.y) + p2.y
+			cos_of_angle * diff.x - sin_of_angle * diff.y + center.x,
+			sin_of_angle * diff.x + cos_of_angle * diff.y + center.y
 		};
 	}
 

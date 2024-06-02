@@ -22,7 +22,7 @@ namespace Can
 		u64 capacity = 0;
 		Unordered_Array_Element<T>* values = nullptr;
 
-		T& operator[] (u64 x) {
+		[[nodiscard]] T& operator[] (u64 x) {
 			return values[x].value;
 		}
 	};

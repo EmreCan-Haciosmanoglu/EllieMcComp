@@ -288,8 +288,8 @@ namespace Can::Math
 		return false;
 	}
 
-	v2 RotatePoint(const v2& point, f32 angle);
-	v2 RotatePointAroundPoint(const v2& p1, f32 angle, const v2& p2);
+	v2 rotate_point(const v2& point, const f32& angle_in_radians);
+	v2 rotate_around_a_point(const v2& point, const f32& angle_in_radians, const v2& center);
 
 	template <int N>
 	std::array<v2, 2> GetMinsAndMaxs(const std::array<v2, N>& points)
