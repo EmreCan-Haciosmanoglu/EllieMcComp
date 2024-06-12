@@ -569,6 +569,129 @@ namespace Can
 		}
 		return state->flags;
 	}
+	u16 immediate_image_button(Rect& rect, Button_Theme& theme, Ref<Texture2D> texture, u64 hash, bool relative)
+	{
+		Button_State* state = get_or_init(button_states, hash);
+
+		bool mouse_pressed = Input::IsMouseButtonPressed(MouseCode::Button0);
+		auto window_heigth = main_application->GetWindow().GetHeight();
+		auto [mouse_x, mouse_y] = Input::get_mouse_pos();
+		mouse_y = window_heigth - mouse_y;
+		Rect region = rect;
+		if (relative)
+		{
+			update_used_region(rect);
+			region = clip_with_regions(rect);
+		}
+		{
+			v3i p0i{ region.x,            region.y,            region.z };
+			v2 uv0{0.0f, 0.0f};
+			v3i p1i{ region.x + region.w, region.y,            region.z };
+			v2 uv1{ 1.0f, 0.0f };
+			v3i p2i{ region.x + region.w, region.y + region.h, region.z };
+			v2 uv2{ 1.0f, 1.0f };
+			v3i p3i{ region.x,            region.y + region.h, region.z };
+			v2 uv3{ 0.0f, 1.0f };
+			v4 color = theme.background_color;
+
+			f32 textureIndex = 0.0f;
+			if (texture != nullptr)
+			{
+				for (size_t i = 1; i < buffer_data.texture_slots_cursor; i++)
+				{
+					if (*buffer_data.texture_slots[i].get() == *texture.get())
+					{
+						textureIndex = (float)i;
+						break;
+					}
+				}
+				if (textureIndex == 0.0f)
+				{
+					textureIndex = (float)buffer_data.texture_slots_cursor;
+					buffer_data.texture_slots[buffer_data.texture_slots_cursor] = texture;
+					buffer_data.texture_slots_cursor++;
+				}
+			}
+
+			if (!global_pressed || (global_pressed && pressed_hash == hash))
+			{
+				bool mouse_over = inside(region, mouse_x, mouse_y);
+				if (mouse_over)
+				{
+					state->flags |= BUTTON_STATE_FLAGS_OVER;
+					color = theme.background_color_over;
+
+					if (mouse_pressed)
+					{
+						global_pressed = true;
+						pressed_hash = hash;
+
+						if (state->flags & BUTTON_STATE_FLAGS_PRESSED)
+						{
+							state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_PRESSED);
+							state->flags |= BUTTON_STATE_FLAGS_HOLD;
+						}
+						else if (state->flags & BUTTON_STATE_FLAGS_RELEASED)
+						{
+							state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_RELEASED);
+						}
+						else
+						{
+							if (!(state->flags & BUTTON_STATE_FLAGS_HOLD))
+							{
+								state->flags |= BUTTON_STATE_FLAGS_PRESSED;
+							}
+						}
+						color = theme.background_color_pressed;
+					}
+					else
+					{
+						global_pressed = false;
+						if (state->flags & BUTTON_STATE_FLAGS_PRESSED || state->flags & BUTTON_STATE_FLAGS_HOLD)
+						{
+							state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_PRESSED);
+							state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_HOLD);
+							state->flags |= BUTTON_STATE_FLAGS_RELEASED;
+						}
+						else
+						{
+							state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_RELEASED);
+						}
+					}
+				}
+				else
+				{
+					state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_OVER);
+
+					if (!mouse_pressed)
+					{
+						if (state->flags & BUTTON_STATE_FLAGS_PRESSED || state->flags & BUTTON_STATE_FLAGS_HOLD)
+						{
+							state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_PRESSED);
+							state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_HOLD);
+							state->flags |= BUTTON_STATE_FLAGS_RELEASED;
+						}
+						else
+						{
+							state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_RELEASED);
+						}
+						global_pressed = false;
+						color = theme.background_color;
+					}
+					else
+					{
+						if (state->flags & BUTTON_STATE_FLAGS_PRESSED || state->flags & BUTTON_STATE_FLAGS_HOLD)
+							color == theme.background_color_pressed;
+						else if (state->flags & BUTTON_STATE_FLAGS_RELEASED)
+							state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_RELEASED);
+					}
+				}
+			}
+			immediate_quad(p0i, p1i, p2i, p3i, uv0, uv1, uv2, uv3, color, textureIndex);
+			immediate_flush(); // WHYYYY this fixes visual glitches
+		}
+		return state->flags;
+	}
 	u16 immediate_drop_down_list(Rect& rect, std::vector<std::string>& list, u64& selected_item, Drop_Down_List_Theme& theme, u64 hash)
 	{
 		bool first_time = false;

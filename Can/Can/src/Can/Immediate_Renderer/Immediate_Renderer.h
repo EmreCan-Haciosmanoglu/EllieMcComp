@@ -33,6 +33,7 @@ namespace Can
 	void immediate_text(const std::string& text, Rect& rect, Label_Theme& theme, bool relative = true);
 
 	u16 immediate_button(Rect& rect, const std::string& text, Button_Theme& theme, u64 hash, bool relative = true);
+	u16 immediate_image_button(Rect& rect, Button_Theme& theme, Ref<Texture2D> texture, u64 hash, bool relative = true);
 	u16 immediate_drop_down_list(Rect& rect, std::vector<std::string>& list, u64& selected_item, Drop_Down_List_Theme& theme, u64 hash);
 	u16 immediate_slider(Rect& track_rect, Rect& thumb_rect, std::string& text, s16 min_value, s16& current_value, s16 max_value, Slider_Theme& theme, u64 hash);
 	u16 immediate_slider_float(Rect& track_rect, Rect& thumb_rect, std::string& text, f32 min_value, f32& current_value, f32 max_value, Slider_Theme& theme, u64 hash);
