@@ -12,8 +12,6 @@
 
 namespace Can
 {
-	void update_used_region(Rect& rect);
-	Rect clip_with_regions(Rect& rect);
 
 	void init_immediate_renderer();
 
@@ -28,7 +26,9 @@ namespace Can
 	void immediate_quad(const v3& p0, const v3& p1, const v3& p2, const v3& p3, const v4& color);
 	void immediate_quad(const v2i& p0i, const v2i& p1i, const v2i& p2i, const v2i& p3i, const v4& color);
 	void immediate_quad(const v3i& p0i, const v3i& p1i, const v3i& p2i, const v3i& p3i, const v4& color);
-	void immediate_quad(Rect& r, const v4& color, bool relative = false);
+
+	void immediate_quad(const Rect& rect, const v4& color, bool relative = false);
+	void immediate_image(const Rect& rect, const Ref<Texture2D>& image, bool relative = false);
 
 	void immediate_text(const std::string& text, Rect& rect, Label_Theme& theme, bool relative = true);
 

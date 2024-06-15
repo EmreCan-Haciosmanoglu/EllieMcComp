@@ -30,7 +30,7 @@ namespace Can
 	Hash_Table<Text_Box_State, 0xffff> text_box_states;
 
 #define SOME_DENOM 100.0f
-	void update_used_region(Rect& rect)
+	void update_used_region(const Rect& rect)
 	{
 		std::vector<Buffer_Data::Sub_Region>& regions = buffer_data.sub_regions;
 		u64 region_count = buffer_data.sub_region_count;
@@ -53,7 +53,7 @@ namespace Can
 			used_region.h = uy2 - used_region.y;
 		}
 	}
-	Rect clip_with_regions(Rect& rect)
+	Rect clip_with_regions(const Rect& rect)
 	{
 		Rect new_rect = rect;
 		std::vector<Buffer_Data::Sub_Region>& regions = buffer_data.sub_regions;
@@ -318,7 +318,7 @@ namespace Can
 		};
 		immediate_quad(p0, p1, p2, p3, color);
 	}
-	void immediate_quad(Rect& rect, const v4& color, bool relative)
+	void immediate_quad(const Rect& rect, const v4& color, bool relative)
 	{
 		Rect r = rect;
 		if (relative)
@@ -332,6 +332,46 @@ namespace Can
 		v3i p2i{ r.x + r.w, r.y + r.h, r.z };
 		v3i p3i{ r.x,       r.y + r.h, r.z };
 		immediate_quad(p0i, p1i, p2i, p3i, color);
+	}
+	void immediate_image(const Rect& rect, const Ref<Texture2D>& image, bool relative)
+	{
+		Rect r = rect;
+		if (relative)
+		{
+			update_used_region(rect);
+			r = clip_with_regions(rect);
+			if (r.w <= 0 || r.h <= 0) return;
+		}
+		v3i p0i{ r.x,       r.y,       r.z };
+		v2 uv0{ 0.0f, 0.0f };
+		v3i p1i{ r.x + r.w, r.y,       r.z };
+		v2 uv1{ 1.0f, 0.0f };
+		v3i p2i{ r.x + r.w, r.y + r.h, r.z };
+		v2 uv2{ 1.0f, 1.0f };
+		v3i p3i{ r.x,       r.y + r.h, r.z };
+		v2 uv3{ 0.0f, 1.0f };
+		v4 color{ 1.0f, 1.0f, 1.0f, 1.0f };
+
+		f32 textureIndex = 0.0f;
+		if (image != nullptr)
+		{
+			for (size_t i = 1; i < buffer_data.texture_slots_cursor; i++)
+			{
+				if (*buffer_data.texture_slots[i].get() == *image.get())
+				{
+					textureIndex = (float)i;
+					break;
+				}
+			}
+			if (textureIndex == 0.0f)
+			{
+				textureIndex = (float)buffer_data.texture_slots_cursor;
+				buffer_data.texture_slots[buffer_data.texture_slots_cursor] = image;
+				buffer_data.texture_slots_cursor++;
+			}
+		}
+		immediate_quad(p0i, p1i, p2i, p3i, uv0, uv1, uv2, uv3, color, textureIndex);
+		immediate_flush();
 	}
 
 	FontAtlas* find_or_init_value(Buffer_Data_Font_Atlas_Key key)
