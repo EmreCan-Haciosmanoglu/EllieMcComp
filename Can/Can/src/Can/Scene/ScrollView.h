@@ -1,5 +1,7 @@
 #pragma once
 //#include "Can.h"
+#undef min
+#undef max
 #include <entt/entt.hpp>
 
 namespace Can
@@ -10,10 +12,10 @@ namespace Can
 	{
 		entt::registry& Registry;
 		entt::entity Parent = entt::null;
-		glm::vec3& Position = glm::vec3(0.0f);
-		glm::vec2& Size = glm::vec2(1.0f);
-		glm::vec4& Color = glm::vec4(1.0f);
-		
+		glm::vec3 Position{ 0.0f, 0.0f, 0.0f };
+		glm::vec2 Size{ 1.0f, 1.0f };
+		glm::vec4 Color{ 1.0f, 1.0f, 1.0f, 1.0f };
+
 		uint8_t scrollPosition = 0;
 		// 0 -> top
 		// 1 -> right
@@ -23,13 +25,13 @@ namespace Can
 		std::function<void()> OnClick;
 		float borderRadius = 0.0f;
 		bool border = false;
-		glm::vec4& BorderColor = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+		glm::vec4 BorderColor{ 0.0f, 0.0f, 0.0f, 1.0f };
 	};
 
 	class ScrollView
 	{
 	public:
-		ScrollView(ScrollViewConstructorParameters& parameters,	ScrollBarConstructorParameters _ScrollBarConstructorParameters);
+		ScrollView(ScrollViewConstructorParameters& parameters, ScrollBarConstructorParameters _ScrollBarConstructorParameters);
 		~ScrollView();
 
 		void Update();

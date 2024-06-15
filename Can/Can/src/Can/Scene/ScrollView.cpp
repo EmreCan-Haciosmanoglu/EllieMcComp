@@ -95,7 +95,7 @@ namespace Can
 				}
 				// Set scrollbar size
 				entt::entity bar = sceneRegistry.get<ChildrenComponent>(scrollbarID)[0];
-				auto& [bt, bsr] = sceneRegistry.get<TransformComponent, SpriteRendererComponent>(bar);
+				auto [bt, bsr] = sceneRegistry.get<TransformComponent, SpriteRendererComponent>(bar);
 				scrollbar->sizeRatio = totalChildrenWidth / vsr.size.x;
 				bsr.size.x = vsr.size.x / scrollbar->sizeRatio;
 				// Then get the scroll bar pos and calculate children positions

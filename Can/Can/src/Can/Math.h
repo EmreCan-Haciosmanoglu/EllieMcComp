@@ -10,36 +10,36 @@ namespace Can::Math
 
 		Vector2<T> operator+ (const Vector2<T>& right) const
 		{
-			return Vector2(this->x + right.x, this->.y + right.y);
+			return Vector2(this->x + right.x, this->y + right.y);
 		}
 		Vector2<T> operator- (const Vector2<T>& right) const
 		{
-			return Vector2(this->.x - right.x, this->.y - right.y);
+			return Vector2(this->x - right.x, this->y - right.y);
 		}
 		Vector2<T> operator* (const Vector2<T>& right) const
 		{
-			return Vector2(this->.x * right.x, this->.y * right.y);
+			return Vector2(this->x * right.x, this->y * right.y);
 		}
 		Vector2<T> operator/ (const Vector2<T>& right) const
 		{
-			return Vector2(this->.x / right.x, this->.y / right.y);
+			return Vector2(this->x / right.x, this->y / right.y);
 		}
 
 		Vector2<T> operator+ (T right)
 		{
-			return Vector2(this->.x + right, this->.y + right);
+			return Vector2(this->x + right, this->y + right);
 		}
 		Vector2<T> operator- (T right)
 		{
-			return Vector2(this->.x - right, this->.y - right);
+			return Vector2(this->x - right, this->y - right);
 		}
 		Vector2<T> operator* (T right)
 		{
-			return Vector2(this->.x * right, this->.y * right);
+			return Vector2(this->x * right, this->y * right);
 		}
 		Vector2<T> operator/ (T right)
 		{
-			return Vector2(this->.x / right, this->.y / right);
+			return Vector2(this->x / right, this->y / right);
 		}
 
 		operator v2() const

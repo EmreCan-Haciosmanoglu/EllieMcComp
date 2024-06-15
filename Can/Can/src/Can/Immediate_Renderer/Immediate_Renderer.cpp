@@ -168,15 +168,15 @@ namespace Can
 		buffer_data.shader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 	}
 
-	void immediate_quad(v2& p0, v2& p1, v2& p2, v2& p3, v2& uv0, v2& uv1, v2& uv2, v2& uv3, v4& color)
+	void immediate_quad(const v2& p0, const v2& p1, const v2& p2, const v2& p3, const v2& uv0, const v2& uv1, const v2& uv2, const v2& uv3, const v4& color)
 	{
 		immediate_quad(p0, p1, p2, p3, uv0, uv1, uv2, uv3, color, 0.0f);
 	}
-	void immediate_quad(v2i& p0i, v2i& p1i, v2i& p2i, v2i& p3i, v2& uv0, v2& uv1, v2& uv2, v2& uv3, v4& color, f32 texture_index)
+	void immediate_quad(const v2i& p0i, const v2i& p1i, const v2i& p2i, const v2i& p3i, const v2& uv0, const v2& uv1, const v2& uv2, const v2& uv3, const v4& color, f32 texture_index)
 	{
 		immediate_quad(v3i(p0i, 0), v3i(p1i, 0), v3i(p2i, 0), v3i(p3i, 0), uv0, uv1, uv2, uv3, color, texture_index);
 	}
-	void immediate_quad(v3i& p0i, v3i& p1i, v3i& p2i, v3i& p3i, v2& uv0, v2& uv1, v2& uv2, v2& uv3, v4& color, f32 texture_index)
+	void immediate_quad(const v3i& p0i, const v3i& p1i, const v3i& p2i, const v3i& p3i, const v2& uv0, const v2& uv1, const v2& uv2, const v2& uv3, const v4& color, f32 texture_index)
 	{
 		auto& window = main_application->GetWindow();
 
@@ -211,11 +211,11 @@ namespace Can
 		};
 		immediate_quad(p0, p1, p2, p3, uv0, uv1, uv2, uv3, color, texture_index);
 	}
-	void immediate_quad(v2& p0, v2& p1, v2& p2, v2& p3, v2& uv0, v2& uv1, v2& uv2, v2& uv3, v4& color, f32 texture_index)
+	void immediate_quad(const v2& p0, const v2& p1, const v2& p2, const v2& p3, const v2& uv0, const v2& uv1, const v2& uv2, const v2& uv3, const v4& color, f32 texture_index)
 	{
 		immediate_quad(v3(p0, 0.0f), v3(p1, 0.0f), v3(p2, 0.0f), v3(p3, 0.0f), uv0, uv1, uv2, uv3, color, texture_index);
 	}
-	void immediate_quad(v3& p0, v3& p1, v3& p2, v3& p3, v2& uv0, v2& uv1, v2& uv2, v2& uv3, v4& color, f32 texture_index)
+	void immediate_quad(const v3& p0, const v3& p1, const v3& p2, const v3& p3, const v2& uv0, const v2& uv1, const v2& uv2, const v2& uv3, const v4& color, f32 texture_index)
 	{
 		Vertex vertex;
 		vertex.position = p0;
@@ -245,11 +245,11 @@ namespace Can
 
 		buffer_data.quad_count += 6;
 	}
-	void immediate_quad(v2& p0, v2& p1, v2& p2, v2& p3, v4& color)
+	void immediate_quad(const v2& p0, const v2& p1, const v2& p2, const v2& p3, const v4& color)
 	{
 		immediate_quad(v3(p0, 0.0f), v3(p1, 0.0f), v3(p2, 0.0f), v3(p3, 0.0f), color);
 	}
-	void immediate_quad(v3& p0, v3& p1, v3& p2, v3& p3, v4& color)
+	void immediate_quad(const v3& p0, const v3& p1, const v3& p2, const v3& p3, const v4& color)
 	{
 		Vertex vertex;
 		vertex.position = p0;
@@ -279,11 +279,11 @@ namespace Can
 
 		buffer_data.quad_count += 6;
 	}
-	void immediate_quad(v2i& p0i, v2i& p1i, v2i& p2i, v2i& p3i, v4& color)
+	void immediate_quad(const v2i& p0i, const v2i& p1i, const v2i& p2i, const v2i& p3i, const v4& color)
 	{
 		immediate_quad(v3i(p0i, 0), v3i(p1i, 0), v3i(p2i, 0), v3i(p3i, 0), color);
 	}
-	void immediate_quad(v3i& p0i, v3i& p1i, v3i& p2i, v3i& p3i, v4& color)
+	void immediate_quad(const v3i& p0i, const v3i& p1i, const v3i& p2i, const v3i& p3i, const v4& color)
 	{
 		auto& window = main_application->GetWindow();
 
@@ -318,7 +318,7 @@ namespace Can
 		};
 		immediate_quad(p0, p1, p2, p3, color);
 	}
-	void immediate_quad(Rect& rect, v4& color, bool relative)
+	void immediate_quad(Rect& rect, const v4& color, bool relative)
 	{
 		Rect r = rect;
 		if (relative)
@@ -585,7 +585,7 @@ namespace Can
 		}
 		{
 			v3i p0i{ region.x,            region.y,            region.z };
-			v2 uv0{0.0f, 0.0f};
+			v2 uv0{ 0.0f, 0.0f };
 			v3i p1i{ region.x + region.w, region.y,            region.z };
 			v2 uv1{ 1.0f, 0.0f };
 			v3i p2i{ region.x + region.w, region.y + region.h, region.z };
@@ -776,7 +776,7 @@ namespace Can
 		}
 		return state->flags;
 	}
-	u16 immediate_slider(Rect& track_rect, Rect& thumb_rect, std::string& text, s16 min_value, s16& current_value, s16 max_value, Slider_Theme& theme, u64 hash)
+	u16 immediate_slider(Rect& track_rect, Rect& thumb_rect, const std::string& text, s16 min_value, s16& current_value, s16 max_value, Slider_Theme& theme, u64 hash)
 	{
 		Slider_State* state = get_or_init(slider_states, hash);
 		//assert(max - min >= 0.0f); // start using these
@@ -979,7 +979,7 @@ namespace Can
 		}
 		return state->flags;
 	}
-	u16 immediate_slider_float(Rect& track_rect, Rect& thumb_rect, std::string& text, f32 min_value, f32& current_value, f32 max_value, Slider_Theme& theme, u64 hash)
+	u16 immediate_slider_float(Rect& track_rect, Rect& thumb_rect, const std::string& text, f32 min_value, f32& current_value, f32 max_value, Slider_Theme& theme, u64 hash)
 	{
 		Slider_State* state = get_or_init(slider_states, hash);
 		//assert(max - min >= 0.0f); // start using these

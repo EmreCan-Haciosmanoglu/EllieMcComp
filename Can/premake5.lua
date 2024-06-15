@@ -39,7 +39,7 @@ project "Can"
     location "Can"
     kind "StaticLib"
     language "C++"
-    cppdialect "C++17" 
+    cppdialect "C++20"
     staticruntime "on"
     
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -109,7 +109,7 @@ project "Sandbox"
     location "Sandbox"
     kind "ConsoleApp"
     language "C++"
-    cppdialect "C++17"
+    cppdialect "C++20"
     staticruntime "On"
         
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -160,7 +160,7 @@ project "Sandbox3D"
     location "Sandbox3D"
     kind "ConsoleApp"
     language "C++"
-    cppdialect "C++17"
+    cppdialect "C++20"
     staticruntime "On"
         
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")

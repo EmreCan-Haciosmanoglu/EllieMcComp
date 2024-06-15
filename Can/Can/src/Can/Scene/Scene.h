@@ -1,5 +1,7 @@
 #pragma once
 #include "Can.h"
+#undef min
+#undef max
 #include <entt/entt.hpp>
 
 namespace Can
