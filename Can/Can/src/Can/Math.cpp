@@ -570,6 +570,11 @@ namespace Can::Math
 		return a + (b - a) * t;
 	}
 
+	v4 lerp(const v4& a, const v4& b, f32 t)
+	{
+		return a + (b - a) * t;
+	}
+
 	f32 lerp(f32 a, f32 b, f32 t)
 	{
 		return a + (b - a) * t;

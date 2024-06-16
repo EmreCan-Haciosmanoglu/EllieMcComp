@@ -333,7 +333,7 @@ namespace Can
 		v3i p3i{ r.x,       r.y + r.h, r.z };
 		immediate_quad(p0i, p1i, p2i, p3i, color);
 	}
-	void immediate_image(const Rect& rect, const Ref<Texture2D>& image, bool relative)
+	void immediate_image(const Rect& rect, const Ref<Texture2D>& image, bool relative) 
 	{
 		Rect r = rect;
 		if (relative)

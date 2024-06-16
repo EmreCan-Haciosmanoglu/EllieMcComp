@@ -396,6 +396,7 @@ namespace Can::Math
 		const std::array<v3, 2>& line_segment_2);
 
 	v3 lerp(const v3& a, const v3& b, f32 t);
+	v4 lerp(const v4 & a, const v4 & b, f32 t);
 	f32 lerp(f32 a, f32 b, f32 t);
 	s32 lerp(s32 a, s32 b, s32 t);
 
