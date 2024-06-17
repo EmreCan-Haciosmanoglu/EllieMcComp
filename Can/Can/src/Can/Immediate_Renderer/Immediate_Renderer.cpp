@@ -333,7 +333,12 @@ namespace Can
 		v3i p3i{ r.x,       r.y + r.h, r.z };
 		immediate_quad(p0i, p1i, p2i, p3i, color);
 	}
-	void immediate_image(const Rect& rect, const Ref<Texture2D>& image, bool relative) 
+	void immediate_image(const Rect& rect, const Ref<Texture2D>& image, bool relative)
+	{
+		v4 tint{ 1.0f, 1.0f, 1.0f, 1.0f };
+		immediate_tinted_image(rect, image, tint, relative);
+	}
+	void immediate_tinted_image(const Rect& rect, const Ref<Texture2D>& image, const v4& tint, bool relative)
 	{
 		Rect r = rect;
 		if (relative)
@@ -350,7 +355,6 @@ namespace Can
 		v2 uv2{ 1.0f, 1.0f };
 		v3i p3i{ r.x,       r.y + r.h, r.z };
 		v2 uv3{ 0.0f, 1.0f };
-		v4 color{ 1.0f, 1.0f, 1.0f, 1.0f };
 
 		f32 textureIndex = 0.0f;
 		if (image != nullptr)
@@ -370,7 +374,7 @@ namespace Can
 				buffer_data.texture_slots_cursor++;
 			}
 		}
-		immediate_quad(p0i, p1i, p2i, p3i, uv0, uv1, uv2, uv3, color, textureIndex);
+		immediate_quad(p0i, p1i, p2i, p3i, uv0, uv1, uv2, uv3, tint, textureIndex);
 		immediate_flush();
 	}
 

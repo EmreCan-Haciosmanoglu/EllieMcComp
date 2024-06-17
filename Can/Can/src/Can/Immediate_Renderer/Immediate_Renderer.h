@@ -29,6 +29,7 @@ namespace Can
 
 	void immediate_quad(const Rect& rect, const v4& color, bool relative = false);
 	void immediate_image(const Rect& rect, const Ref<Texture2D>& image, bool relative = false);
+	void immediate_tinted_image(const Rect& rect, const Ref<Texture2D>& image, const v4& tint, bool relative = false);
 
 	void immediate_text(const std::string& text, Rect& rect, Label_Theme& theme, bool relative = true);
 
