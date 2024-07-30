@@ -18,7 +18,7 @@ namespace Can
 		CAN_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 
-		Utility::Random rand;
+		Random rand{};
 		m_Window = Window::Create(props);
 		m_Window->SetEventCallback(CAN_BIND_EVENT_FN(Application::OnEvent));
 

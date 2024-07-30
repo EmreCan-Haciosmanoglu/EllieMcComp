@@ -9,7 +9,7 @@ namespace Can::Noise
 	public:
 		Perlin1D()
 		{
-			for (size_t i = 0; i < SeedLenght; i++) m_Seed[i] = Utility::Random::Float(1.0f);
+			for (size_t i = 0; i < SeedLenght; i++) m_Seed[i] = random_f32(1.0f);
 		}
 
 		const float* GenerateNoise(size_t octaves)
@@ -59,7 +59,7 @@ namespace Can::Noise
 		{
 			size_t len = SeedSize * SeedSize;
 			for (size_t i = 0; i < len; i++)
-				m_Seed[i] = Utility::Random::Float(1.0f);
+				m_Seed[i] = random_f32(1.0f);
 		}
 
 		const float* GenerateNoise(size_t octaves)

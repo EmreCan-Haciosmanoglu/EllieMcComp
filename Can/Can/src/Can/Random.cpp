@@ -1,7 +1,7 @@
 #include "canpch.h"
 #include "Random.h"
 
-namespace Can::Utility
+namespace Can
 {
 	Random::Random()
 	{
