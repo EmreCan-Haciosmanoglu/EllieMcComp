@@ -154,6 +154,7 @@
     <ClInclude Include="src\Can\Camera\Orthographic_Camera_Controller.h" />
     <ClInclude Include="src\Can\Camera\Perspective_Camera.h" />
     <ClInclude Include="src\Can\Camera\Perspective_Camera_Controller.h" />
+    <ClInclude Include="src\Can\CommonHeaders.h" />
     <ClInclude Include="src\Can\Core.h" />
     <ClInclude Include="src\Can\Core\TimeStep.h" />
     <ClInclude Include="src\Can\EntryPoint.h" />
@@ -164,6 +165,11 @@
     <ClInclude Include="src\Can\Font\Font.h" />
     <ClInclude Include="src\Can\Font\FontAtlas.h" />
     <ClInclude Include="src\Can\Font\FontFlags.h" />
+    <ClInclude Include="src\Can\Graphics\DirectX12\D3D12CommonHeaders.h" />
+    <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Core.h" />
+    <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Interface.h" />
+    <ClInclude Include="src\Can\Graphics\GraphicsPlatformInterface.h" />
+    <ClInclude Include="src\Can\Graphics\Renderer.h" />
     <ClInclude Include="src\Can\Hash_Table.h" />
     <ClInclude Include="src\Can\Immediate_Renderer\Immediate_Renderer.h" />
     <ClInclude Include="src\Can\Immediate_Renderer\States.h" />
@@ -179,6 +185,9 @@
     <ClInclude Include="src\Can\Math.h" />
     <ClInclude Include="src\Can\MouseCodes.h" />
     <ClInclude Include="src\Can\Noise\Perlin.h" />
+    <ClInclude Include="src\Can\Platform\Platform.h" />
+    <ClInclude Include="src\Can\Platform\PlatformTypes.h" />
+    <ClInclude Include="src\Can\Platform\Window.h" />
     <ClInclude Include="src\Can\Random.h" />
     <ClInclude Include="src\Can\Renderer\Buffer.h" />
     <ClInclude Include="src\Can\Renderer\Framebuffer.h" />
@@ -605,6 +614,9 @@
     <ClCompile Include="src\Can\EntryPoint.cpp" />
     <ClCompile Include="src\Can\Font\Font.cpp" />
     <ClCompile Include="src\Can\Font\FontAtlas.cpp" />
+    <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Core.cpp" />
+    <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Interface.cpp" />
+    <ClCompile Include="src\Can\Graphics\Renderer.cpp" />
     <ClCompile Include="src\Can\Immediate_Renderer\Immediate_Renderer.cpp" />
     <ClCompile Include="src\Can\KeyCodes.cpp" />
     <ClCompile Include="src\Can\Layers\ImGuiBuild.cpp" />
@@ -614,6 +626,7 @@
     <ClCompile Include="src\Can\Log.cpp" />
     <ClCompile Include="src\Can\Math.cpp" />
     <ClCompile Include="src\Can\Noise\Perlin.cpp" />
+    <ClCompile Include="src\Can\Platform\Window.cpp" />
     <ClCompile Include="src\Can\Random.cpp" />
     <ClCompile Include="src\Can\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Can\Renderer\Framebuffer.cpp" />
