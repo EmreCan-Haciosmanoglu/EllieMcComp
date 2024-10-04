@@ -168,6 +168,7 @@
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12CommonHeaders.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Core.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Interface.h" />
+    <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Resources.h" />
     <ClInclude Include="src\Can\Graphics\GraphicsPlatformInterface.h" />
     <ClInclude Include="src\Can\Graphics\Renderer.h" />
     <ClInclude Include="src\Can\Hash_Table.h" />
@@ -616,6 +617,7 @@
     <ClCompile Include="src\Can\Font\FontAtlas.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Core.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Interface.cpp" />
+    <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Resources.cpp" />
     <ClCompile Include="src\Can\Graphics\Renderer.cpp" />
     <ClCompile Include="src\Can\Immediate_Renderer\Immediate_Renderer.cpp" />
     <ClCompile Include="src\Can\KeyCodes.cpp" />
