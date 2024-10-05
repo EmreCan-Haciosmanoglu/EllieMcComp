@@ -19,7 +19,7 @@ void Debug::OnUpdate(Can::TimeStep ts)
 {
 }
 
-void Debug::OnEvent(Can::Event::Event& event)
+void Debug::OnEvent(Can::Event* event)
 {
 }
 

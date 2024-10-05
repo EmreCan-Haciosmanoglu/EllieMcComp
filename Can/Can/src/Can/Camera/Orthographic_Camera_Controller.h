@@ -14,12 +14,12 @@ namespace Can
 	public:
 		Orthographic_Camera_Controller();
 
-		void on_update(Can::TimeStep ts);
-		void on_event(Can::Event::Event& e);
+		void on_update(TimeStep ts);
+		void on_event(Event* e);
 
 	
-		bool on_mouse_scroll_event(Event::MouseScrolledEvent& e);
-		bool on_window_resized(Event::WindowResizeEvent& e);
+		bool on_mouse_scroll_event(MouseScrolledEvent* e);
+		bool on_window_resized(WindowResizeEvent* e);
 
 	
 		f32 m_ZoomLevel = 0.0f;

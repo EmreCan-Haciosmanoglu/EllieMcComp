@@ -24,7 +24,7 @@ namespace Can
 			f32 fovy, f32 aspect, f32 n, f32 f, v3 pos, v3 rot);
 
 		void on_update(Can::TimeStep ts);
-		void on_event(Event::Event& e);
+		void on_event(Event* e);
 
 		void translate(v3 direction, f32 length);
 		void translate_relative(v3 direction, f32 length);
@@ -32,14 +32,14 @@ namespace Can
 		void orbit_around_point(f32 amount_in_radians, v3 point, bool clockwise = false);
 
 	private:
-		bool on_window_resized(Event::WindowResizeEvent& event);
+		bool on_window_resized(WindowResizeEvent* event);
 
-		bool on_mouse_moved(Event::MouseMovedEvent& event);
-		bool on_mouse_scrolled(Event::MouseScrolledEvent& event);
-		bool on_mouse_pressed(Event::MouseButtonPressedEvent& event);
-		bool on_mouse_released(Event::MouseButtonReleasedEvent& event);
+		bool on_mouse_moved(MouseMovedEvent* event);
+		bool on_mouse_scrolled(MouseScrolledEvent* event);
+		bool on_mouse_pressed(MouseButtonPressedEvent* event);
+		bool on_mouse_released(MouseButtonReleasedEvent* event);
 
-		bool on_key_released(Event::KeyReleasedEvent& event);
+		bool on_key_released(KeyReleasedEvent* event);
 
 		void update_camera_position();
 

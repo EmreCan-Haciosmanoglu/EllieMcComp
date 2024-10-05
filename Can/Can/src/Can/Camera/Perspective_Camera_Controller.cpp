@@ -204,15 +204,15 @@ namespace Can
 			camera.field_of_view_angle -= 2.0f * ts;
 		camera.recalculate_projection_matrix();
 	}
-	void Perspective_Camera_Controller::on_event(Event::Event& e)
+	void Perspective_Camera_Controller::on_event(Event* e)
 	{
-		Event::EventDispatcher dispatcher(e);
-		dispatcher.Dispatch< Event::WindowResizeEvent>(CAN_BIND_EVENT_FN(Perspective_Camera_Controller::on_window_resized));
-		dispatcher.Dispatch<Event::MouseMovedEvent>(CAN_BIND_EVENT_FN(Perspective_Camera_Controller::on_mouse_moved));
-		dispatcher.Dispatch<Event::MouseScrolledEvent>(CAN_BIND_EVENT_FN(Perspective_Camera_Controller::on_mouse_scrolled));
-		dispatcher.Dispatch<Event::MouseButtonPressedEvent>(CAN_BIND_EVENT_FN(Perspective_Camera_Controller::on_mouse_pressed));
-		dispatcher.Dispatch<Event::MouseButtonReleasedEvent>(CAN_BIND_EVENT_FN(Perspective_Camera_Controller::on_mouse_released));
-		dispatcher.Dispatch<Event::KeyReleasedEvent>(CAN_BIND_EVENT_FN(Perspective_Camera_Controller::on_key_released));
+		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch< WindowResizeEvent>(CAN_BIND_EVENT_FN(Perspective_Camera_Controller::on_window_resized));
+		dispatcher.Dispatch<MouseMovedEvent>(CAN_BIND_EVENT_FN(Perspective_Camera_Controller::on_mouse_moved));
+		dispatcher.Dispatch<MouseScrolledEvent>(CAN_BIND_EVENT_FN(Perspective_Camera_Controller::on_mouse_scrolled));
+		dispatcher.Dispatch<MouseButtonPressedEvent>(CAN_BIND_EVENT_FN(Perspective_Camera_Controller::on_mouse_pressed));
+		dispatcher.Dispatch<MouseButtonReleasedEvent>(CAN_BIND_EVENT_FN(Perspective_Camera_Controller::on_mouse_released));
+		dispatcher.Dispatch<KeyReleasedEvent>(CAN_BIND_EVENT_FN(Perspective_Camera_Controller::on_key_released));
 	}
 
 	void Perspective_Camera_Controller::translate(v3 direction, f32 length)
@@ -263,16 +263,16 @@ namespace Can
 		update_camera_position();
 	}
 
-	bool Perspective_Camera_Controller::on_window_resized(Event::WindowResizeEvent& event)
+	bool Perspective_Camera_Controller::on_window_resized(WindowResizeEvent* event)
 	{
-		if (event.width == 0 || event.height == 0)
+		if (event->width == 0 || event->height == 0)
 			return false;
-		camera.aspect_ratio = (f32)event.width / (f32)event.height;
+		camera.aspect_ratio = (f32)event->width / (f32)event->height;
 		camera.recalculate_projection_matrix();
 		return false;
 	}
 
-	bool Perspective_Camera_Controller::on_mouse_moved(Event::MouseMovedEvent& event) {
+	bool Perspective_Camera_Controller::on_mouse_moved(MouseMovedEvent* event) {
 		if (mode == Mode::FollowFirstPerson)
 			return false;
 
@@ -312,12 +312,12 @@ namespace Can
 		}
 		return false;
 	}
-	bool Perspective_Camera_Controller::on_mouse_scrolled(Event::MouseScrolledEvent& event)
+	bool Perspective_Camera_Controller::on_mouse_scrolled(MouseScrolledEvent* event)
 	{
 		if (mode == Mode::FollowThirdPerson || mode == Mode::GamePlay)
 		{
-			f32 x_scroll = event.GetXOffset();
-			f32 y_scroll = event.GetYOffset();
+			f32 x_scroll = event->GetXOffset();
+			f32 y_scroll = event->GetYOffset();
 
 			zoom_t -= zoom_speed * y_scroll;
 			zoom_t = (glm::min)(zoom_t, 1.0f);
@@ -326,9 +326,9 @@ namespace Can
 		}
 		return false;
 	}
-	bool Perspective_Camera_Controller::on_mouse_pressed(Event::MouseButtonPressedEvent& event)
+	bool Perspective_Camera_Controller::on_mouse_pressed(MouseButtonPressedEvent* event)
 	{
-		MouseCode key_code = event.GetMouseButton();
+		MouseCode key_code = event->GetMouseButton();
 		switch (key_code)
 		{
 		case Can::MouseCode::ButtonLeft:	// 0
@@ -363,9 +363,9 @@ namespace Can
 		}
 		return false;
 	}
-	bool Perspective_Camera_Controller::on_mouse_released(Event::MouseButtonReleasedEvent& event)
+	bool Perspective_Camera_Controller::on_mouse_released(MouseButtonReleasedEvent* event)
 	{
-		MouseCode key_code = event.GetMouseButton();
+		MouseCode key_code = event->GetMouseButton();
 		switch (key_code)
 		{
 		case Can::MouseCode::ButtonLeft:	// 0
@@ -403,9 +403,9 @@ namespace Can
 		return false;
 	}
 
-	bool Perspective_Camera_Controller::on_key_released(Event::KeyReleasedEvent& event)
+	bool Perspective_Camera_Controller::on_key_released(KeyReleasedEvent* event)
 	{
-		KeyCode key_code = event.GetKeyCode();
+		KeyCode key_code = event->GetKeyCode();
 
 		if (key_code == mode_cycle_key)
 		{

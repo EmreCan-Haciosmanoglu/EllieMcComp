@@ -81,14 +81,14 @@ namespace Can::Platform::Windows
 				data.Width = width;
 				data.Height = height;
 
-				Event::WindowResizeEvent event(width, height);
+				WindowResizeEvent* event = new WindowResizeEvent(width, height);
 				data.EventCallback(event);
 			});
 
 		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-				Event::WindowCloseEvent event;
+				WindowCloseEvent* event = new WindowCloseEvent();
 				data.EventCallback(event);
 			});
 
@@ -100,19 +100,19 @@ namespace Can::Platform::Windows
 				{
 				case GLFW_PRESS:
 				{
-					Event::KeyPressedEvent event(static_cast<KeyCode>(key), 0);
+					KeyPressedEvent* event = new KeyPressedEvent(static_cast<KeyCode>(key), 0);
 					data.EventCallback(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
-					Event::KeyReleasedEvent event(static_cast<KeyCode>(key));
+					KeyReleasedEvent* event = new KeyReleasedEvent(static_cast<KeyCode>(key));
 					data.EventCallback(event);
 					break;
 				}
 				case GLFW_REPEAT:
 				{
-					Event::KeyPressedEvent event(static_cast<KeyCode>(key), 1);
+					KeyPressedEvent* event = new KeyPressedEvent(static_cast<KeyCode>(key), 1);
 					data.EventCallback(event);
 					break;
 				}
@@ -122,7 +122,7 @@ namespace Can::Platform::Windows
 		glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int keycode)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-				Event::KeyTypedEvent event(static_cast<KeyCode>(keycode));
+				KeyTypedEvent* event = new KeyTypedEvent(static_cast<KeyCode>(keycode));
 				data.EventCallback(event);
 			});
 
@@ -134,13 +134,13 @@ namespace Can::Platform::Windows
 				{
 				case GLFW_PRESS:
 				{
-					Event::MouseButtonPressedEvent event(static_cast<MouseCode>(button));
+					MouseButtonPressedEvent* event = new MouseButtonPressedEvent(static_cast<MouseCode>(button));
 					data.EventCallback(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
-					Event::MouseButtonReleasedEvent event(static_cast<MouseCode>(button));
+					MouseButtonReleasedEvent* event = new MouseButtonReleasedEvent(static_cast<MouseCode>(button));
 					data.EventCallback(event);
 					break;
 				}
@@ -151,7 +151,7 @@ namespace Can::Platform::Windows
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-				Event::MouseScrolledEvent event((float)xScroll, (float)yScroll);
+				MouseScrolledEvent* event = new MouseScrolledEvent((float)xScroll, (float)yScroll);
 				data.EventCallback(event);
 			});
 
@@ -159,7 +159,7 @@ namespace Can::Platform::Windows
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-				Event::MouseMovedEvent event((float)xPos, (float)yPos);
+				MouseMovedEvent* event = new MouseMovedEvent((float)xPos, (float)yPos);
 				data.EventCallback(event);
 			});
 	}

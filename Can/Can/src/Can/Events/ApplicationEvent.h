@@ -2,7 +2,7 @@
 
 #include "Event.h"
 
-namespace Can::Event
+namespace Can
 {
 	class  WindowResizeEvent : public Event
 	{

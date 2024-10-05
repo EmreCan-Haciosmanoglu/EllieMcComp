@@ -22,7 +22,7 @@ void Scene::OnUpdate(Can::TimeStep ts)
 	Can::Renderer3D::EndScene();
 }
 
-void Scene::OnEvent(Can::Event::Event& event)
+void Scene::OnEvent(Can::Event* event)
 {
 	m_MainCameraController.OnEvent(event);
 }

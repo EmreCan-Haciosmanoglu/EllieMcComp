@@ -12,7 +12,7 @@ public:
 	virtual void OnDetach() override {}
 
 	virtual void OnUpdate(Can::TimeStep ts) override;
-	virtual void OnEvent(Can::Event::Event& event) override;
+	virtual void OnEvent(Can::Event* event) override;
 
 private:
 	Sandbox3D* m_Parent;

@@ -3,7 +3,7 @@
 #include "Event.h"
 #include "Can/Input.h"
 
-namespace Can::Event
+namespace Can
 {
 	class  MouseMovedEvent : public Event
 	{

@@ -42,7 +42,7 @@ void SandBox2DLayer::OnUpdate(Can::TimeStep ts)
 	Can::Renderer2D::EndScene();
 }
 
-void SandBox2DLayer::OnEvent(Can::Event::Event& event)
+void SandBox2DLayer::OnEvent(Can::Event* event)
 {
 	m_CameraController.OnEvent(event);
 }

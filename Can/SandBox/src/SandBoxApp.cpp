@@ -218,7 +218,7 @@ public:
 		Can::Renderer::EndScene();
 	}
 
-	void OnEvent(Can::Event::Event& event) override
+	void OnEvent(Can::Event* event) override
 	{
 		m_CameraController.OnEvent(event);
 	}

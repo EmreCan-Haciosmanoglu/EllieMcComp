@@ -55,26 +55,26 @@ namespace Can
 		m_Camera.SetPosition(m_CameraPosition);
 	}
 
-	void Orthographic_Camera_Controller::on_event(Event::Event& e)
+	void Orthographic_Camera_Controller::on_event(Event* e)
 	{
-		Event::EventDispatcher dispatcher(e);
-		dispatcher.Dispatch< Event::MouseScrolledEvent>(CAN_BIND_EVENT_FN(Orthographic_Camera_Controller::on_mouse_scroll_event));
-		dispatcher.Dispatch< Event::WindowResizeEvent>(CAN_BIND_EVENT_FN(Orthographic_Camera_Controller::on_window_resized));
+		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch< MouseScrolledEvent>(CAN_BIND_EVENT_FN(Orthographic_Camera_Controller::on_mouse_scroll_event));
+		dispatcher.Dispatch< WindowResizeEvent>(CAN_BIND_EVENT_FN(Orthographic_Camera_Controller::on_window_resized));
 	}
 
-	bool Orthographic_Camera_Controller::on_mouse_scroll_event(Event::MouseScrolledEvent& e)
+	bool Orthographic_Camera_Controller::on_mouse_scroll_event(MouseScrolledEvent* e)
 	{
-		m_ZoomLevel -= e.GetYOffset();
+		m_ZoomLevel -= e->GetYOffset();
 		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 
 		return false;
 	}
 
-	bool Orthographic_Camera_Controller::on_window_resized(Event::WindowResizeEvent& e)
+	bool Orthographic_Camera_Controller::on_window_resized(WindowResizeEvent* e)
 	{
-		if (e.width == 0 || e.height == 0)
+		if (e->width == 0 || e->height == 0)
 			return false;
-		m_AspectRatio = (f32)e.width / (f32)e.width;
+		m_AspectRatio = (f32)e->width / (f32)e->width;
 		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 
 		return false;

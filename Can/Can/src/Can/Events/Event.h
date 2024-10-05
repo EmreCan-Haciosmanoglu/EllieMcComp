@@ -2,7 +2,7 @@
 
 #include "Can/Core.h"
 
-namespace Can::Event
+namespace Can
 {
 	enum class EventType
 	{
@@ -47,7 +47,7 @@ namespace Can::Event
 	class EventDispatcher
 	{
 	public:
-		EventDispatcher(Event& event)
+		EventDispatcher(Event* event)
 			: m_Event(event)
 		{
 		}
@@ -55,9 +55,9 @@ namespace Can::Event
 		template<typename T, typename F>
 		bool Dispatch(const F& func)
 		{
-			if (m_Event.GetEventType() == T::GetStaticType())
+			if (m_Event->GetEventType() == T::GetStaticType())
 			{
-				m_Event.m_Handled = func(static_cast<T&>(m_Event));
+				m_Event->m_Handled = func(static_cast<T*>(m_Event));
 				return true;
 			}
 			return false;
@@ -66,20 +66,20 @@ namespace Can::Event
 		template<typename T, typename F>
 		bool dispatch(void* p, const F& func)
 		{
-			if (m_Event.GetEventType() == T::GetStaticType())
+			if (m_Event->GetEventType() == T::GetStaticType())
 			{
-				m_Event.m_Handled = func(static_cast<T&>(p, m_Event));
+				m_Event->m_Handled = func(static_cast<T*>(p, m_Event));
 				return true;
 			}
 			return false;
 		}
 	private:
-		Event& m_Event;
+		Event* m_Event;
 	};
 
-	inline std::ostream& operator<<(std::ostream& os, const Event& e)
+	inline std::ostream& operator<<(std::ostream& os, const Event* e)
 	{
-		return os << e.ToString();
+		return os << e->ToString();
 	}
 
 }

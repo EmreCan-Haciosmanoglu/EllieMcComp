@@ -17,7 +17,7 @@ namespace Can
 	class  Window
 	{
 	public:
-		using EventCallbackFn = std::function<void(Event::Event&)>;
+		using EventCallbackFn = std::function<void(Event*)>;
 
 		virtual ~Window() = default;
 

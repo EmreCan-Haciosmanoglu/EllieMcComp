@@ -29,7 +29,7 @@ void SandBox3D::OnUpdate(Can::TimeStep ts)
 	Can::Renderer2D::EndScene();
 }
 
-void SandBox3D::OnEvent(Can::Event::Event & event)
+void SandBox3D::OnEvent(Can::Event & event)
 {
 	m_CameraController.OnEvent(event);
 }
