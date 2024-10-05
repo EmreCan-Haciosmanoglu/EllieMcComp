@@ -1,19 +1,12 @@
 #pragma once
 #include "Can\Core.h"
-#include "Can\CommonHeaders.h"
+#include "Can\Common\CommonHeaders.h"
 
 namespace Can::platform
 {
-
-	struct window_init_info
-	{
-		LRESULT(*win_proc)(HWND, UINT, WPARAM, LPARAM);
-		int* a;
-		LPCWSTR lpcwstr;
-		s32 x, y, w, h;
-	};
-
 	DEFINE_TYPED_ID(window_id);
+
+	struct window_init_info;
 
 	class window
 	{
@@ -27,9 +20,10 @@ namespace Can::platform
 		void set_fullscreen(bool is_fullscreen) const;
 		bool is_fullscreen() const;
 		void* handle() const;
-		//void set_caption(const wchar_t* caption) const;
+		void set_caption(const wchar_t* caption) const;
 		//math::u32v4 size() const;
-		//void resize(u32 width, u32 height) const;
+		RECT size() const;
+		void resize(u32 width, u32 height) const;
 		u32 width() const;
 		u32 height() const;
 		bool is_closed() const;
@@ -39,5 +33,4 @@ namespace Can::platform
 	};
 
 	window create_window(const window_init_info* const info);
-	void remove_window(const window_id& id);
 }

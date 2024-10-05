@@ -1,5 +1,5 @@
 #pragma once
-#include "Can\CommonHeaders.h"
+#include "Can\Common\CommonHeaders.h"
 #include "Window.h"
 
 namespace Can::platform

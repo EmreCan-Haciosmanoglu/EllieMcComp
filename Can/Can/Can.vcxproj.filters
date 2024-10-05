@@ -1421,12 +1421,13 @@
     <ClInclude Include="src\Can\Platform\PlatformTypes.h" />
     <ClInclude Include="src\Can\Platform\Window.h" />
     <ClInclude Include="src\Can\Graphics\GraphicsPlatformInterface.h" />
-    <ClInclude Include="src\Can\CommonHeaders.h" />
+    <ClInclude Include="src\Can\Common\CommonHeaders.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Interface.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Core.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12CommonHeaders.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Resources.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Surface.h" />
+    <ClInclude Include="src\Can\Common\Id.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -1624,7 +1625,6 @@
     <ClCompile Include="src\Can\Graphics\Renderer.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Interface.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Core.cpp" />
-    <ClCompile Include="src\Can\Platform\Window.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Resources.cpp" />
     <ClCompile Include="src\Can\Platform\Platform.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Surface.cpp" />

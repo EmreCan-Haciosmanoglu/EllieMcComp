@@ -14,7 +14,7 @@ namespace Can::graphics::d3d12
 		}
 
 		DISABLE_COPY(d3d12_surface);
-		constexpr d3d12_surface(d3d12_surface&& o)
+		d3d12_surface(d3d12_surface&& o)
 			: _swap_chain{ o._swap_chain }
 			, _window{ o._window }
 			, _current_bb_index{ o._current_bb_index }
@@ -31,7 +31,7 @@ namespace Can::graphics::d3d12
 
 			o.present();
 		}
-		constexpr d3d12_surface& operator=(d3d12_surface&& o)
+		d3d12_surface& operator=(d3d12_surface&& o)
 		{
 			assert(this != &o);
 			if (this != &o)

@@ -154,7 +154,8 @@
     <ClInclude Include="src\Can\Camera\Orthographic_Camera_Controller.h" />
     <ClInclude Include="src\Can\Camera\Perspective_Camera.h" />
     <ClInclude Include="src\Can\Camera\Perspective_Camera_Controller.h" />
-    <ClInclude Include="src\Can\CommonHeaders.h" />
+    <ClInclude Include="src\Can\Common\CommonHeaders.h" />
+    <ClInclude Include="src\Can\Common\Id.h" />
     <ClInclude Include="src\Can\Core.h" />
     <ClInclude Include="src\Can\Core\TimeStep.h" />
     <ClInclude Include="src\Can\EntryPoint.h" />
@@ -631,7 +632,6 @@
     <ClCompile Include="src\Can\Math.cpp" />
     <ClCompile Include="src\Can\Noise\Perlin.cpp" />
     <ClCompile Include="src\Can\Platform\Platform.cpp" />
-    <ClCompile Include="src\Can\Platform\Window.cpp" />
     <ClCompile Include="src\Can\Random.cpp" />
     <ClCompile Include="src\Can\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Can\Renderer\Framebuffer.cpp" />

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Can\CommonHeaders.h"
+#include "Can\Common\CommonHeaders.h"
 #include "Renderer.h"
 #include "Can\Platform\Window.h"
 
