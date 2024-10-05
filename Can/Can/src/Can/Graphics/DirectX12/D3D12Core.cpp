@@ -1,6 +1,7 @@
 #include "canpch.h"
 #include "D3D12Core.h"
 #include "D3D12Resources.h"
+#include "D3D12Surface.h"
 
 
 namespace Can::graphics::d3d12::core
@@ -164,6 +165,8 @@ namespace Can::graphics::d3d12::core
 		ID3D12Device8* main_device{ nullptr };
 		IDXGIFactory7* dxgi_factory{ nullptr };
 		d3d12_command   gfx_command;
+		std::vector<d3d12_surface> surfaces;
+
 		descriptor_heap rtv_desc_heap{ D3D12_DESCRIPTOR_HEAP_TYPE_RTV };
 		descriptor_heap dsv_desc_heap{ D3D12_DESCRIPTOR_HEAP_TYPE_DSV };
 		descriptor_heap srv_desc_heap{ D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV };
@@ -353,20 +356,6 @@ namespace Can::graphics::d3d12::core
 		release(main_device);
 	}
 
-	void render()
-	{
-		gfx_command.begin_frame();
-
-		ID3D12GraphicsCommandList6* cmd_list{ gfx_command.command_list() };
-
-		const u32 frame_idx{ current_frame_index() };
-		if (deferred_releases_flag[frame_idx])
-		{
-			process_deferred_releases(frame_idx);
-		}
-
-		gfx_command.end_frame();
-	}
 
 	ID3D12Device* const device()
 	{
@@ -386,5 +375,54 @@ namespace Can::graphics::d3d12::core
 	void set_deferred_releases_flag()
 	{
 		deferred_releases_flag[current_frame_index()] = -1;
+	}
+
+	surface create_surface(platform::window window)
+	{
+		surfaces.emplace_back(window);
+		surface_id id{ (u32)surfaces.size() - 1 };
+		surfaces[id].create_swap_chain(dxgi_factory, gfx_command.command_queue(), render_target_format);
+		return surface{ id };
+	}
+
+	void remove_surface(surface_id id)
+	{
+		gfx_command.flush();
+		surfaces[id].~d3d12_surface();
+	}
+
+	void resize_surface(surface_id id, u32 width, u32 height)
+	{
+		gfx_command.flush();
+		surfaces[id].resize();
+	}
+
+	u32 surface_width(surface_id id)
+	{
+		return surfaces[id].width();
+	}
+
+	u32 surface_height(surface_id id)
+	{
+		return surfaces[id].height();
+	}
+
+	void render_surface(surface_id id)
+	{
+		gfx_command.begin_frame();
+
+		ID3D12GraphicsCommandList6* cmd_list{ gfx_command.command_list() };
+
+		const u32 frame_idx{ current_frame_index() };
+		if (deferred_releases_flag[frame_idx])
+		{
+			process_deferred_releases(frame_idx);
+		}
+
+		const d3d12_surface& surface{ surfaces[id] };
+
+		surface.present();
+
+		gfx_command.end_frame();
 	}
 }
