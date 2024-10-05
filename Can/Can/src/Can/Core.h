@@ -104,4 +104,6 @@ namespace Can
 		s32 y = 0;
 		s32 z = 0;
 	};
+
+	constexpr u32 u32_invalid_id{ (u32) - 1};
 }

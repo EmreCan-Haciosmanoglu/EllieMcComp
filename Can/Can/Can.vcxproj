@@ -169,6 +169,7 @@
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Core.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Interface.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Resources.h" />
+    <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Surface.h" />
     <ClInclude Include="src\Can\Graphics\GraphicsPlatformInterface.h" />
     <ClInclude Include="src\Can\Graphics\Renderer.h" />
     <ClInclude Include="src\Can\Hash_Table.h" />
@@ -618,6 +619,7 @@
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Core.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Interface.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Resources.cpp" />
+    <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Surface.cpp" />
     <ClCompile Include="src\Can\Graphics\Renderer.cpp" />
     <ClCompile Include="src\Can\Immediate_Renderer\Immediate_Renderer.cpp" />
     <ClCompile Include="src\Can\KeyCodes.cpp" />
@@ -628,6 +630,7 @@
     <ClCompile Include="src\Can\Log.cpp" />
     <ClCompile Include="src\Can\Math.cpp" />
     <ClCompile Include="src\Can\Noise\Perlin.cpp" />
+    <ClCompile Include="src\Can\Platform\Platform.cpp" />
     <ClCompile Include="src\Can\Platform\Window.cpp" />
     <ClCompile Include="src\Can\Random.cpp" />
     <ClCompile Include="src\Can\Renderer\Buffer.cpp" />

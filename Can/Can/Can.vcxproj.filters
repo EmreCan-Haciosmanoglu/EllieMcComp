@@ -1426,6 +1426,7 @@
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Core.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12CommonHeaders.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Resources.h" />
+    <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Surface.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -1625,5 +1626,7 @@
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Core.cpp" />
     <ClCompile Include="src\Can\Platform\Window.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Resources.cpp" />
+    <ClCompile Include="src\Can\Platform\Platform.cpp" />
+    <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Surface.cpp" />
   </ItemGroup>
 </Project>

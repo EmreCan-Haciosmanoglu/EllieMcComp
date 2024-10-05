@@ -12,7 +12,7 @@ namespace Can::graphics::d3d12::core
 		public:
 			d3d12_command() = default;
 			DISABLE_COPY_AND_MOVE(d3d12_command)
-			explicit d3d12_command(ID3D12Device8* const device, D3D12_COMMAND_LIST_TYPE type)
+				explicit d3d12_command(ID3D12Device8* const device, D3D12_COMMAND_LIST_TYPE type)
 			{
 				HRESULT hr{ S_OK };
 
@@ -173,6 +173,7 @@ namespace Can::graphics::d3d12::core
 		u32                    deferred_releases_flag[frame_buffer_count]{};
 		std::mutex             deferred_releases_mutex{};
 
+		constexpr DXGI_FORMAT render_target_format{ DXGI_FORMAT_R8G8B8A8_UNORM_SRGB };
 		constexpr D3D_FEATURE_LEVEL minimum_feature_level{ D3D_FEATURE_LEVEL_11_0 };
 
 		bool failed_init()
@@ -260,7 +261,7 @@ namespace Can::graphics::d3d12::core
 			Microsoft::WRL::ComPtr<ID3D12Debug3> debug_interface;
 			if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debug_interface))))
 			{
-			debug_interface->EnableDebugLayer();
+				debug_interface->EnableDebugLayer();
 			}
 			else
 			{
@@ -371,6 +372,13 @@ namespace Can::graphics::d3d12::core
 	{
 		return main_device;
 	}
+
+	descriptor_heap& rtv_heap() { return rtv_desc_heap; }
+	descriptor_heap& dsv_heap() { return dsv_desc_heap; }
+	descriptor_heap& srv_heap() { return srv_desc_heap; }
+	descriptor_heap& uav_heap() { return uav_desc_heap; }
+	DXGI_FORMAT default_render_target_format() { return render_target_format; }
+
 	u32 current_frame_index()
 	{
 		return gfx_command.frame_index();

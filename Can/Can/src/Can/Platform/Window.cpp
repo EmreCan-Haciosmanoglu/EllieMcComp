@@ -17,6 +17,21 @@ namespace Can::platform
 		return false;
 	}
 
+	u32 window::width() const
+	{
+		return 800;
+	}
+
+	u32 window::height() const
+	{
+		return 800;
+	}
+
+	void* window::handle() const
+	{
+		return nullptr;
+	}
+
 	//void* handle() const;
 	//void set_caption(const wchar_t* caption) const;
 	//math::u32v4 size() const;
@@ -28,9 +43,9 @@ namespace Can::platform
 		return false;
 	}
 
-	window* create_window(const window_init_info* const info)
+	window create_window(const window_init_info* const info)
 	{
-		return new window();
+		return window{};
 	}
 
 	void remove_window(const window_id& id)
