@@ -14,8 +14,7 @@ namespace Can::graphics
 		constexpr explicit surface(surface_id id) : _id{ id } {}
 		constexpr surface() = default;
 		constexpr surface_id get_id() const { return _id; }
-		//constexpr bool is_valid() const { return id::is_valid(_id); }
-		constexpr bool is_valid() const { return true; }
+		constexpr bool is_valid() const { return id::is_valid(_id); }
 
 		void resize(u32 width, u32 height) const;
 		u32 width() const;
@@ -23,7 +22,7 @@ namespace Can::graphics
 		void render() const;
 
 	private:
-		surface_id _id{};// id::invalid_id
+		surface_id _id{ id::invalid_id };
 	};
 
 	struct render_surface

@@ -24,14 +24,14 @@ namespace Can::graphics::d3d12
 
 		DXGI_SWAP_CHAIN_DESC1 desc{};
 		desc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
-		desc.BufferCount = frame_buffer_count;
+		desc.BufferCount = buffer_count;
 		desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		desc.Flags = _allow_tearing ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0;
 		desc.Format = to_non_srgb(format);
 		desc.Height = _window.height();
 		desc.Width = _window.width();
 		desc.SampleDesc.Count = 1;
-		desc.SampleDesc.Quality = 1;
+		desc.SampleDesc.Quality = 0;
 		desc.Scaling = DXGI_SCALING_STRETCH;
 		desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 		desc.Stereo = false;
@@ -45,7 +45,7 @@ namespace Can::graphics::d3d12
 
 		_current_bb_index = _swap_chain->GetCurrentBackBufferIndex();
 
-		for (u32 i{ 0 }; i < frame_buffer_count; ++i)
+		for (u32 i{ 0 }; i < buffer_count; ++i)
 		{
 			_render_target_data[i].rtv = core::rtv_heap().allocate();
 		}
@@ -67,7 +67,7 @@ namespace Can::graphics::d3d12
 
 	void d3d12_surface::finalize()
 	{
-		for (u32 i{ 0 }; i < frame_buffer_count; ++i)
+		for (u32 i{ 0 }; i < buffer_count; ++i)
 		{
 			render_target_data& data{ _render_target_data[i] };
 			assert(!data.resource);
@@ -96,13 +96,12 @@ namespace Can::graphics::d3d12
 
 	void d3d12_surface::release()
 	{
-		for (u32 i{ 0 }; i < frame_buffer_count; ++i)
+		for (u32 i{ 0 }; i < buffer_count; ++i)
 		{
 			render_target_data& data{ _render_target_data[i] };
 			core::release(data.resource);
 			core::rtv_heap().free(data.rtv);
 		}
-
 		core::release(_swap_chain);
 	}
 }

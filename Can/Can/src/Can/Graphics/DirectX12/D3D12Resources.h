@@ -18,7 +18,7 @@ namespace Can::graphics::d3d12
 	private:
 		friend class descriptor_heap;
 		descriptor_heap* container{ nullptr };
-		u32 index{ 0 };// u32_invalid_id
+		u32 index{ u32_invalid_id };
 #endif
 	};
 
@@ -36,14 +36,14 @@ namespace Can::graphics::d3d12
 		[[nodiscard]] descriptor_handle allocate();
 		void free(descriptor_handle& handle);
 
-		constexpr D3D12_DESCRIPTOR_HEAP_TYPE type() const { return _type; }
-		constexpr D3D12_CPU_DESCRIPTOR_HANDLE cpu_start() const { return _cpu_start; }
-		constexpr D3D12_GPU_DESCRIPTOR_HANDLE gpu_start() const { return _gpu_start; }
-		constexpr ID3D12DescriptorHeap* const heap() const { return _heap; }
-		constexpr u32 capacity() const { return _capacity; }
-		constexpr u32 size() const { return _size; }
-		constexpr u32 descriptor_size() const { return _descriptor_size; }
-		constexpr bool is_shader_visible() const { return _gpu_start.ptr != 0; }
+		[[nodiscard]] constexpr D3D12_DESCRIPTOR_HEAP_TYPE type() const { return _type; }
+		[[nodiscard]] constexpr D3D12_CPU_DESCRIPTOR_HANDLE cpu_start() const { return _cpu_start; }
+		[[nodiscard]] constexpr D3D12_GPU_DESCRIPTOR_HANDLE gpu_start() const { return _gpu_start; }
+		[[nodiscard]] constexpr ID3D12DescriptorHeap* const heap() const { return _heap; }
+		[[nodiscard]] constexpr u32 capacity() const { return _capacity; }
+		[[nodiscard]] constexpr u32 size() const { return _size; }
+		[[nodiscard]] constexpr u32 descriptor_size() const { return _descriptor_size; }
+		[[nodiscard]] constexpr bool is_shader_visible() const { return _gpu_start.ptr != 0; }
 
 	private:
 		ID3D12DescriptorHeap* _heap;

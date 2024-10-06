@@ -39,7 +39,7 @@ namespace Can::graphics::d3d12::core
 					DXCall(hr = device->CreateCommandAllocator(type, IID_PPV_ARGS(&frame.cmd_allocator)));
 					if (FAILED(hr)) goto _error;
 					NAME_D3D12_OBJECT_INDEXED(
-						_cmd_queue,
+						frame.cmd_allocator,
 						i,
 						type == D3D12_COMMAND_LIST_TYPE_DIRECT ?
 						L"GFX Command Allocator" :
@@ -52,7 +52,7 @@ namespace Can::graphics::d3d12::core
 				if (FAILED(hr)) goto _error;
 				DXCall(_cmd_list->Close());
 				NAME_D3D12_OBJECT(
-					_cmd_queue,
+					_cmd_list,
 					type == D3D12_COMMAND_LIST_TYPE_DIRECT ?
 					L"GFX Command List" :
 					type == D3D12_COMMAND_LIST_TYPE_COMPUTE ?
@@ -227,7 +227,7 @@ namespace Can::graphics::d3d12::core
 
 	void __declspec(noinline) process_deferred_releases(u32 frame_idx)
 	{
-		std::lock_guard{ deferred_releases_mutex };
+		std::lock_guard lock { deferred_releases_mutex };
 
 		deferred_releases_flag[frame_idx] = 0;
 		rtv_desc_heap.process_deferred_free(frame_idx);
@@ -374,7 +374,7 @@ namespace Can::graphics::d3d12::core
 	}
 	void set_deferred_releases_flag()
 	{
-		deferred_releases_flag[current_frame_index()] = -1;
+		deferred_releases_flag[current_frame_index()] = 1;
 	}
 
 	surface create_surface(platform::window window)

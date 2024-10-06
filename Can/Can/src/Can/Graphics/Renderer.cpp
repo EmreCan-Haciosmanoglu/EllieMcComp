@@ -43,7 +43,7 @@ namespace Can::graphics
 
 	void remove_surface(surface_id id)
 	{
-		//assert(id::is_valid(id));
+		assert(id::is_valid(id));
 		gfx.surface.remove(id);
 	}
 

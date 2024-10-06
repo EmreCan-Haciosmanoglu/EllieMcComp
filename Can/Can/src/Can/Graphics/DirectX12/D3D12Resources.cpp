@@ -77,7 +77,7 @@ namespace Can::graphics::d3d12
 		assert(_size < _capacity);
 
 		const u32 index{ _free_handles[_size] };
-		const u32 offset{ index + _descriptor_size };
+		const u32 offset{ index * _descriptor_size };
 		++_size;
 
 		descriptor_handle handle;
@@ -98,7 +98,7 @@ namespace Can::graphics::d3d12
 		assert((handle.cpu.ptr - _cpu_start.ptr) % _descriptor_size == 0);
 		assert(handle.index < _capacity);
 
-		const u32 index{ (u32)(handle.cpu.ptr = _cpu_start.ptr) / _descriptor_size };
+		const u32 index{ (u32)(handle.cpu.ptr - _cpu_start.ptr) / _descriptor_size };
 		assert(handle.index == index);
 
 		const u32 frame_index{ core::current_frame_index() };

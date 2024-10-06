@@ -15,8 +15,7 @@ namespace Can::platform
 		constexpr explicit window(window_id id) : _id{ id } {}
 		constexpr window() = default;
 		constexpr window_id get_id() const { return _id; }
-		//constexpr bool is_valid() const { return id::is_valid(_id); }
-		constexpr bool is_valid() const { return true; }
+		constexpr bool is_valid() const { return id::is_valid(_id); }
 
 		void set_fullscreen(bool is_fullscreen) const;
 		bool is_fullscreen() const;
