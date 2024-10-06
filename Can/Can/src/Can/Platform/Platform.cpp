@@ -54,7 +54,7 @@ namespace Can::platform
 
 		window_info& get_from_handle(window_handle handle)
 		{
-			const window_id id{};// { (id::id_type)GetWindowLongPtr(info.hwnd, GWLP_USERDATA) };
+			const window_id id { (id::id_type)GetWindowLongPtr(handle, GWLP_USERDATA) };
 			return get_from_id(id);
 		}
 
@@ -65,9 +65,39 @@ namespace Can::platform
 			switch (msg)
 			{
 			case WM_DESTROY:
+			{
 				get_from_handle(hwnd).is_closed = true;
+				break;
+			}
+			case WM_EXITSIZEMOVE:
+			{
+				info = &get_from_handle(hwnd);
+				break;
+			}
+			case WM_SIZE:
+			{
+				if (wparam == SIZE_MAXIMIZED)
+				{
+					info = &get_from_handle(hwnd);
+				}
+				break;
+			}
+			case WM_SYSCOMMAND:
+			{
+				if (wparam == SC_RESTORE)
+				{
+					info = &get_from_handle(hwnd);
+				}
+				break;
+			}
 			default:
 				break;
+			}
+
+			if (info)
+			{
+				assert(info->hwnd);
+				GetClientRect(info->hwnd, info->is_fullscreen ? &info->fullscreen_area : &info->client_area);
 			}
 
 			LONG_PTR long_ptr{ GetWindowLongPtr(hwnd, 0) };
@@ -177,17 +207,20 @@ namespace Can::platform
 		RegisterClassEx(&wc);
 
 		window_info info{};
-		RECT rc{ info.client_area };
+		info.client_area.right = (init_info && init_info->width) ? info.client_area.left + init_info->width : info.client_area.right;
+		info.client_area.bottom = (init_info && init_info->height) ? info.client_area.top + init_info->height : info.client_area.bottom;
+		info.style |= parent ? WS_CHILD : WS_OVERLAPPEDWINDOW;
 
-		AdjustWindowRect(&rc, info.style, FALSE);
+		RECT rect{ info.client_area };	
+
+		AdjustWindowRect(&rect, info.style, FALSE);
 
 		const wchar_t* caption{ (init_info && init_info->caption) ? init_info->caption : L"Can Game" };
-		const s32 left{ (init_info && init_info->left) ? init_info->left : info.client_area.left };
-		const s32 top{ (init_info && init_info->top) ? init_info->top : info.client_area.top };
-		const s32 width{ (init_info && init_info->width) ? init_info->width : rc.right - rc.left };
-		const s32 height{ (init_info && init_info->height) ? init_info->height : rc.bottom - rc.top };
+		const s32 left{ init_info ? init_info->left : info.top_left.x };
+		const s32 top{ init_info  ? init_info->top : info.top_left.y };
+		const s32 width{ rect.right - rect.left };
+		const s32 height{ rect.bottom - rect.top };
 
-		info.style |= parent ? WS_CHILD : WS_OVERLAPPEDWINDOW;
 
 		info.hwnd = CreateWindowEx(
 			0,				   // extended style
@@ -204,10 +237,11 @@ namespace Can::platform
 
 		if (info.hwnd)
 		{
+			DEBUG_OP(SetLastError(0));
 			const window_id id{ add_to_windows(info) };
 			SetWindowLongPtr(info.hwnd, GWLP_USERDATA, (LONG_PTR)id);
 
-			SetWindowLongPtr(info.hwnd, 0, (LONG_PTR)callback);
+			if (callback) SetWindowLongPtr(info.hwnd, 0, (LONG_PTR)callback);
 			assert(GetLastError() == 0);
 
 			ShowWindow(info.hwnd, SW_SHOWNORMAL);

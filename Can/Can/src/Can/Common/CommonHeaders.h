@@ -26,5 +26,5 @@ DISABLE_MOVE(T)
 #if _DEBUG
 #define DEBUG_OP(op) op
 #else 
-#define DEBUG_OP(op)
+#define DEBUG_OP(op) (void(0))
 #endif
