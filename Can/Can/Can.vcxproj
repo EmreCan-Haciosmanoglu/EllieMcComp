@@ -171,6 +171,7 @@
     <ClInclude Include="src\Can\Font\FontFlags.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12CommonHeaders.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Core.h" />
+    <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Helpers.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Interface.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Resources.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Surface.h" />

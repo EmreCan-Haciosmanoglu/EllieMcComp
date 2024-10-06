@@ -1431,6 +1431,7 @@
     <ClInclude Include="src\Can\Components\ComponentsCommonHeaders.h" />
     <ClInclude Include="src\Can\Components\Entity.h" />
     <ClInclude Include="src\Can\Components\Transform.h" />
+    <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Helpers.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
