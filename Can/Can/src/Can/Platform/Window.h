@@ -1,6 +1,7 @@
 #pragma once
 #include "Can\Core.h"
 #include "Can\Common\CommonHeaders.h"
+#include "Can\Common\Id.h"
 
 namespace Can::platform
 {
@@ -29,7 +30,7 @@ namespace Can::platform
 		bool is_closed() const;
 
 	private:
-		window_id _id{};// id::invalid_id
+		window_id _id{ id::invalid_id };
 	};
 
 	window create_window(const window_init_info* const info);

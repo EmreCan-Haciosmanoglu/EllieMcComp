@@ -2,8 +2,6 @@
 
 #pragma warning(disable: 4530) // disable exception warning
 
-//#include "Id.h"
-
 #include <memory>
 #include <mutex>
 
@@ -30,7 +28,3 @@ DISABLE_MOVE(T)
 #else 
 #define DEBUG_OP(op)
 #endif
-
-#ifndef DEFINE_TYPED_ID
-#define DEFINE_TYPED_ID(T) typedef u32 T
-#endif // !DEFINE_TYPED_ID
