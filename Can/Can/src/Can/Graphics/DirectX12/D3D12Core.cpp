@@ -2,10 +2,12 @@
 #include "D3D12Core.h"
 #include "D3D12Resources.h"
 #include "D3D12Surface.h"
+#include "D3D12Helpers.h"
 
 
 namespace Can::graphics::d3d12::core
 {
+	void create_a_root_signiture();
 	namespace
 	{
 		class d3d12_command
@@ -227,7 +229,7 @@ namespace Can::graphics::d3d12::core
 
 	void __declspec(noinline) process_deferred_releases(u32 frame_idx)
 	{
-		std::lock_guard lock { deferred_releases_mutex };
+		std::lock_guard lock{ deferred_releases_mutex };
 
 		deferred_releases_flag[frame_idx] = 0;
 		rtv_desc_heap.process_deferred_free(frame_idx);
@@ -315,6 +317,8 @@ namespace Can::graphics::d3d12::core
 		NAME_D3D12_OBJECT(srv_desc_heap.heap(), L"SRV Descriptor Heap");
 		NAME_D3D12_OBJECT(uav_desc_heap.heap(), L"UAV Descriptor Heap");
 
+		create_a_root_signiture();
+
 		return true;
 	}
 
@@ -357,7 +361,7 @@ namespace Can::graphics::d3d12::core
 	}
 
 
-	ID3D12Device* const device()
+	ID3D12Device8* const device()
 	{
 		return main_device;
 	}
@@ -424,5 +428,42 @@ namespace Can::graphics::d3d12::core
 		surface.present();
 
 		gfx_command.end_frame();
+	}
+
+	void create_a_root_signiture()
+	{
+		d3dx::d3d12_descriptor_range range{ D3D12_DESCRIPTOR_RANGE_TYPE_SRV, D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND, 0 };
+		d3dx::d3d12_root_parameter params[3]{};
+		params[0].as_constants(2, D3D12_SHADER_VISIBILITY_PIXEL, 0);
+		params[1].as_cbv(D3D12_SHADER_VISIBILITY_PIXEL, 1);
+		params[2].as_descriptor_table(D3D12_SHADER_VISIBILITY_PIXEL, &range, 1);
+
+		d3dx::d3d12_root_signature_desc root_sig_desc{ params,_countof(params) };
+
+		ID3D12RootSignature* root_sig{ root_sig_desc.create() };
+
+		release(root_sig);
+	}
+
+	ID3D12RootSignature* _root_signature;
+	D3D12_SHADER_BYTECODE _vs{};
+
+	void create_a_pipeline_state_object()
+	{
+		struct
+		{
+			d3dx::d3d12_pipeline_state_subobject_root_signature root_sig{ _root_signature };
+			d3dx::d3d12_pipeline_state_subobject_vs vs{_vs};
+		} stream;
+
+		D3D12_PIPELINE_STATE_STREAM_DESC desc{};
+		desc.pPipelineStateSubobjectStream = &stream;
+		desc.SizeInBytes = sizeof(stream);
+
+		ID3D12PipelineState* pso{ nullptr };
+		device()->CreatePipelineState(&desc, IID_PPV_ARGS(&pso));
+
+
+		release(pso);
 	}
 }

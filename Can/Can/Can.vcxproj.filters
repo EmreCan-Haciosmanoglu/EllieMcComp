@@ -1633,5 +1633,6 @@
     <ClCompile Include="src\Can\Platform\Platform.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Surface.cpp" />
     <ClCompile Include="src\Can\Components\Entity.cpp" />
+    <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Helpers.cpp" />
   </ItemGroup>
 </Project>

@@ -623,6 +623,7 @@
     <ClCompile Include="src\Can\Font\Font.cpp" />
     <ClCompile Include="src\Can\Font\FontAtlas.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Core.cpp" />
+    <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Helpers.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Interface.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Resources.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Surface.cpp" />
