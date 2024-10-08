@@ -1,5 +1,5 @@
 #include "canpch.h"
-#include "Can\Common\CommonHeaders.h"
+#include "D3D12CommonHeaders.h"
 #include "D3D12Core.h"
 #include "D3D12Interface.h"
 #include "Can\Graphics\GraphicsPlatformInterface.h" 
@@ -18,5 +18,7 @@ namespace Can::graphics::d3d12
 		pi.surface.width = core::surface_width;
 		pi.surface.height = core::surface_height;
 		pi.surface.render = core::render_surface;
+
+		pi.platform = graphics_platform::direct3d12;
 	}
 }

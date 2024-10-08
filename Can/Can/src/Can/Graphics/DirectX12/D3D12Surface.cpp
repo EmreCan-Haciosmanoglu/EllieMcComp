@@ -22,6 +22,8 @@ namespace Can::graphics::d3d12
 			if (_allow_tearing)
 				_present_flags = DXGI_PRESENT_ALLOW_TEARING;
 
+		_format = format;
+
 		DXGI_SWAP_CHAIN_DESC1 desc{};
 		desc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
 		desc.BufferCount = buffer_count;
@@ -73,7 +75,7 @@ namespace Can::graphics::d3d12
 			assert(!data.resource);
 			DXCall(_swap_chain->GetBuffer(i, IID_PPV_ARGS(&data.resource)));
 			D3D12_RENDER_TARGET_VIEW_DESC desc{};
-			desc.Format = core::default_render_target_format();
+			desc.Format = _format;
 			desc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 			core::device()->CreateRenderTargetView(data.resource, &desc, data.rtv.cpu);
 		}

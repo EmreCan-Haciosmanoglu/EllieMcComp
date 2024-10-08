@@ -7,7 +7,6 @@
 
 namespace Can::graphics::d3d12::core
 {
-	void create_a_root_signiture();
 	namespace
 	{
 		class d3d12_command
@@ -15,7 +14,7 @@ namespace Can::graphics::d3d12::core
 		public:
 			d3d12_command() = default;
 			DISABLE_COPY_AND_MOVE(d3d12_command)
-				explicit d3d12_command(ID3D12Device8* const device, D3D12_COMMAND_LIST_TYPE type)
+				explicit d3d12_command(id3d12_device* const device, D3D12_COMMAND_LIST_TYPE type)
 			{
 				HRESULT hr{ S_OK };
 
@@ -128,7 +127,7 @@ namespace Can::graphics::d3d12::core
 			}
 
 			constexpr ID3D12CommandQueue* const command_queue() const { return _cmd_queue; }
-			constexpr ID3D12GraphicsCommandList6* const command_list() const { return _cmd_list; }
+			constexpr id3d12_graphics_command_list* const command_list() const { return _cmd_list; }
 			constexpr u32 const frame_index() const { return _frame_index; }
 
 		private:
@@ -156,7 +155,7 @@ namespace Can::graphics::d3d12::core
 			};
 
 			ID3D12CommandQueue* _cmd_queue{ nullptr };
-			ID3D12GraphicsCommandList6* _cmd_list{ nullptr };
+			id3d12_graphics_command_list* _cmd_list{ nullptr };
 			ID3D12Fence1* _fence;
 			u64                         _fence_value{ 0 };
 			HANDLE                      _fence_event{ nullptr };
@@ -164,7 +163,7 @@ namespace Can::graphics::d3d12::core
 			u32                         _frame_index{ 0 };
 		};
 
-		ID3D12Device8* main_device{ nullptr };
+		id3d12_device* main_device{ nullptr };
 		IDXGIFactory7* dxgi_factory{ nullptr };
 		d3d12_command   gfx_command;
 		std::vector<d3d12_surface> surfaces;
@@ -317,8 +316,6 @@ namespace Can::graphics::d3d12::core
 		NAME_D3D12_OBJECT(srv_desc_heap.heap(), L"SRV Descriptor Heap");
 		NAME_D3D12_OBJECT(uav_desc_heap.heap(), L"UAV Descriptor Heap");
 
-		create_a_root_signiture();
-
 		return true;
 	}
 
@@ -361,7 +358,7 @@ namespace Can::graphics::d3d12::core
 	}
 
 
-	ID3D12Device8* const device()
+	id3d12_device* const device()
 	{
 		return main_device;
 	}
@@ -370,7 +367,6 @@ namespace Can::graphics::d3d12::core
 	descriptor_heap& dsv_heap() { return dsv_desc_heap; }
 	descriptor_heap& srv_heap() { return srv_desc_heap; }
 	descriptor_heap& uav_heap() { return uav_desc_heap; }
-	DXGI_FORMAT default_render_target_format() { return render_target_format; }
 
 	u32 current_frame_index()
 	{
@@ -415,7 +411,7 @@ namespace Can::graphics::d3d12::core
 	{
 		gfx_command.begin_frame();
 
-		ID3D12GraphicsCommandList6* cmd_list{ gfx_command.command_list() };
+		id3d12_graphics_command_list* cmd_list{ gfx_command.command_list() };
 
 		const u32 frame_idx{ current_frame_index() };
 		if (deferred_releases_flag[frame_idx])
@@ -428,42 +424,5 @@ namespace Can::graphics::d3d12::core
 		surface.present();
 
 		gfx_command.end_frame();
-	}
-
-	void create_a_root_signiture()
-	{
-		d3dx::d3d12_descriptor_range range{ D3D12_DESCRIPTOR_RANGE_TYPE_SRV, D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND, 0 };
-		d3dx::d3d12_root_parameter params[3]{};
-		params[0].as_constants(2, D3D12_SHADER_VISIBILITY_PIXEL, 0);
-		params[1].as_cbv(D3D12_SHADER_VISIBILITY_PIXEL, 1);
-		params[2].as_descriptor_table(D3D12_SHADER_VISIBILITY_PIXEL, &range, 1);
-
-		d3dx::d3d12_root_signature_desc root_sig_desc{ params,_countof(params) };
-
-		ID3D12RootSignature* root_sig{ root_sig_desc.create() };
-
-		release(root_sig);
-	}
-
-	ID3D12RootSignature* _root_signature;
-	D3D12_SHADER_BYTECODE _vs{};
-
-	void create_a_pipeline_state_object()
-	{
-		struct
-		{
-			d3dx::d3d12_pipeline_state_subobject_root_signature root_sig{ _root_signature };
-			d3dx::d3d12_pipeline_state_subobject_vs vs{_vs};
-		} stream;
-
-		D3D12_PIPELINE_STATE_STREAM_DESC desc{};
-		desc.pPipelineStateSubobjectStream = &stream;
-		desc.SizeInBytes = sizeof(stream);
-
-		ID3D12PipelineState* pso{ nullptr };
-		device()->CreatePipelineState(&desc, IID_PPV_ARGS(&pso));
-
-
-		release(pso);
 	}
 }

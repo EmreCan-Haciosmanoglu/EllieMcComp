@@ -1,5 +1,6 @@
 #pragma once
 #include "ComponentsCommonHeaders.h"
+#include "Entity.h"
 
 namespace Can::transform
 {

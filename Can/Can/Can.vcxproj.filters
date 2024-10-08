@@ -1432,6 +1432,9 @@
     <ClInclude Include="src\Can\Components\Entity.h" />
     <ClInclude Include="src\Can\Components\Transform.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Helpers.h" />
+    <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Shaders.h" />
+    <ClInclude Include="src\Can\Content\ContentLoader.h" />
+    <ClInclude Include="src\Can\Components\Script.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -1634,5 +1637,7 @@
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Surface.cpp" />
     <ClCompile Include="src\Can\Components\Entity.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Helpers.cpp" />
+    <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Shaders.cpp" />
+    <ClCompile Include="src\Can\Content\ContentLoader.cpp" />
   </ItemGroup>
 </Project>
