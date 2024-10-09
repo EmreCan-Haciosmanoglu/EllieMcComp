@@ -3,6 +3,7 @@
 #include "D3D12Resources.h"
 #include "D3D12Surface.h"
 #include "D3D12Helpers.h"
+#include "D3D12Shaders.h"\
 
 
 namespace Can::graphics::d3d12::core
@@ -177,7 +178,6 @@ namespace Can::graphics::d3d12::core
 		u32                    deferred_releases_flag[frame_buffer_count]{};
 		std::mutex             deferred_releases_mutex{};
 
-		constexpr DXGI_FORMAT render_target_format{ DXGI_FORMAT_R8G8B8A8_UNORM_SRGB };
 		constexpr D3D_FEATURE_LEVEL minimum_feature_level{ D3D_FEATURE_LEVEL_11_0 };
 
 		bool failed_init()
@@ -310,6 +310,8 @@ namespace Can::graphics::d3d12::core
 		new(&gfx_command) d3d12_command(main_device, D3D12_COMMAND_LIST_TYPE_DIRECT);
 		if (!gfx_command.command_queue()) return failed_init();
 
+		if (!shaders::initialize()) return failed_init();
+
 		NAME_D3D12_OBJECT(main_device, L"Main D3D12 Device");
 		NAME_D3D12_OBJECT(rtv_desc_heap.heap(), L"RTV Descriptor Heap");
 		NAME_D3D12_OBJECT(dsv_desc_heap.heap(), L"DSV Descriptor Heap");
@@ -326,7 +328,14 @@ namespace Can::graphics::d3d12::core
 		for (u32 i{ 0 }; i < frame_buffer_count; ++i)
 			process_deferred_releases(i);
 
+		shaders::shutdown();
+
 		release(dxgi_factory);
+
+		rtv_desc_heap.process_deferred_free(0);
+		dsv_desc_heap.process_deferred_free(0);
+		srv_desc_heap.process_deferred_free(0);
+		uav_desc_heap.process_deferred_free(0);
 
 		rtv_desc_heap.release();
 		dsv_desc_heap.release();
@@ -381,7 +390,7 @@ namespace Can::graphics::d3d12::core
 	{
 		surfaces.emplace_back(window);
 		surface_id id{ (u32)surfaces.size() - 1 };
-		surfaces[id].create_swap_chain(dxgi_factory, gfx_command.command_queue(), render_target_format);
+		surfaces[id].create_swap_chain(dxgi_factory, gfx_command.command_queue());
 		return surface{ id };
 	}
 

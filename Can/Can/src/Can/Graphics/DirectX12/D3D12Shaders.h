@@ -25,6 +25,7 @@ namespace Can::graphics::d3d12::shaders
 		enum id : u32
 		{
 			fullscreen_triangle_vs = 0,
+			fill_color_ps,
 
 			count
 		};
