@@ -14,9 +14,6 @@
 #include "Can/Font/FontFlags.h"
 #include "Can/Math.h"
 
-#undef max
-#undef min
-
 namespace Can
 {
 

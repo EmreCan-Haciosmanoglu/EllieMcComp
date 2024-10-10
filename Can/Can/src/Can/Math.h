@@ -54,8 +54,24 @@ namespace Can::Math
 	class Vector3
 	{
 	public:
+		Vector3() : x{}, y{}, z{} {}
+		Vector3(T v) : x{ v }, y{ v }, z{ v } {}
 		Vector3(T x, T y, T z) : x(x), y(y), z(z) {}
-		Vector3(const v3& other) :x(other.x), y(other.y), z(other.z) {}
+		Vector3(const v3& other) :x{ other.x }, y{ other.y }, z{ other.z } {}
+
+		static void move(Vector3<T>* dest, Vector3<T>* src)
+		{
+			dest->x = src->x;
+			dest->y = src->y;
+			dest->z = src->z;
+			Vector3::reset_to_default(src);
+		}
+		static void reset_to_default(Vector3<T>* dest)
+		{
+			dest->x = {};
+			dest->y = {};
+			dest->z = {};
+		}
 
 		Vector3<T> operator+ (const Vector3<T>& right) const
 		{
@@ -98,6 +114,75 @@ namespace Can::Math
 
 	public:
 		T x, y, z;
+	};
+
+	template <typename T>
+	class Vector4
+	{
+	public:
+		Vector4() : x{}, y{}, z{}, w{} {}
+		Vector4(T v) : x{ v }, y{ v }, z{ v }, w{ v } {}
+		Vector4(v4 v) : x{ v.x }, y{ v.y }, z{ v.z }, w{ v.w } {}
+		Vector4(T x, T y, T z, T w) : x{ x }, y{ y }, z{ z }, w{ w } {}
+		Vector4(const v3& other) :x(other.x), y(other.y), z(other.z) {}
+
+		static void move(Vector4<T>* dest, Vector4<T>* src)
+		{
+			dest->x = src->x;
+			dest->y = src->y;
+			dest->z = src->z;
+			dest->w = src->w;
+			Vector4::reset_to_default(src);
+		}
+		static void reset_to_default(Vector4<T>* dest)
+		{
+			dest->x = {};
+			dest->y = {};
+			dest->z = {};
+			dest->w = {};
+		}
+
+		Vector4<T> operator+ (const Vector4<T>& right) const
+		{
+			return Vector4(this->x + right.x, this->y + right.y, this->z + right.z, this->w + right.w);
+		}
+		Vector4<T> operator- (const Vector4<T>& right) const
+		{
+			return Vector4(this->x - right.x, this->y - right.y, this->z - right.z, this->w - right.w);
+		}
+		Vector4<T> operator* (const Vector4<T>& right) const
+		{
+			return Vector4(this->x * right.x, this->y * right.y, this->z * right.z, this->w * right.w);
+		}
+		Vector4<T> operator/ (const Vector4<T>& right) const
+		{
+			return Vector4(this->x / right.x, this->y / right.y, this->z / right.z, this->w / right.w);
+		}
+
+		Vector4<T> operator+ (T right)
+		{
+			return Vector4(this->x + right, this->y + right, this->z + right, this->w + right);
+		}
+		Vector4<T> operator- (T right)
+		{
+			return Vector4(this->x - right, this->y - right, this->z - right, this->w - right);
+		}
+		Vector4<T> operator* (T right)
+		{
+			return Vector4(this->x * right, this->y * right, this->z * right, this->w * right);
+		}
+		Vector4<T> operator/ (T right)
+		{
+			return Vector4(this->x / right, this->y / right, this->z / right, this->w / right);
+		}
+
+		operator v4() const
+		{
+			return v4{ x, y, z, w };
+		}
+
+	public:
+		T x, y, z, w;
 	};
 
 	template<typename T>
@@ -396,7 +481,7 @@ namespace Can::Math
 		const std::array<v3, 2>& line_segment_2);
 
 	v3 lerp(const v3& a, const v3& b, f32 t);
-	v4 lerp(const v4 & a, const v4 & b, f32 t);
+	v4 lerp(const v4& a, const v4& b, f32 t);
 	f32 lerp(f32 a, f32 b, f32 t);
 	s32 lerp(s32 a, s32 b, s32 t);
 
