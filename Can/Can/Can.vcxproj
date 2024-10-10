@@ -173,6 +173,7 @@
     <ClInclude Include="src\Can\Font\FontFlags.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12CommonHeaders.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Core.h" />
+    <ClInclude Include="src\Can\Graphics\DirectX12\D3D12GPass.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Helpers.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Interface.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Resources.h" />
@@ -622,11 +623,13 @@
     <ClCompile Include="src\Can\Camera\Perspective_Camera.cpp" />
     <ClCompile Include="src\Can\Camera\Perspective_Camera_Controller.cpp" />
     <ClCompile Include="src\Can\Components\Entity.cpp" />
+    <ClCompile Include="src\Can\Components\Transform.cpp" />
     <ClCompile Include="src\Can\Content\ContentLoader.cpp" />
     <ClCompile Include="src\Can\EntryPoint.cpp" />
     <ClCompile Include="src\Can\Font\Font.cpp" />
     <ClCompile Include="src\Can\Font\FontAtlas.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Core.cpp" />
+    <ClCompile Include="src\Can\Graphics\DirectX12\D3D12GPass.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Helpers.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Interface.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Resources.cpp" />

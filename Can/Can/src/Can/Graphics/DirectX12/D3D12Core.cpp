@@ -3,7 +3,8 @@
 #include "D3D12Resources.h"
 #include "D3D12Surface.h"
 #include "D3D12Helpers.h"
-#include "D3D12Shaders.h"\
+#include "D3D12Shaders.h"
+#include "D3D12GPass.h"
 
 
 namespace Can::graphics::d3d12::core
@@ -310,7 +311,7 @@ namespace Can::graphics::d3d12::core
 		new(&gfx_command) d3d12_command(main_device, D3D12_COMMAND_LIST_TYPE_DIRECT);
 		if (!gfx_command.command_queue()) return failed_init();
 
-		if (!shaders::initialize()) return failed_init();
+		if (!shaders::initialize() || !gpass::initialize()) return failed_init();
 
 		NAME_D3D12_OBJECT(main_device, L"Main D3D12 Device");
 		NAME_D3D12_OBJECT(rtv_desc_heap.heap(), L"RTV Descriptor Heap");
@@ -328,6 +329,7 @@ namespace Can::graphics::d3d12::core
 		for (u32 i{ 0 }; i < frame_buffer_count; ++i)
 			process_deferred_releases(i);
 
+		gpass::shutdown();
 		shaders::shutdown();
 
 		release(dxgi_factory);

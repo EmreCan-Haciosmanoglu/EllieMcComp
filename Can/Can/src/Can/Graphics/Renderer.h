@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Can\Common\CommonHeaders.h"
+#include "DirectX12\D3D12CommonHeaders.h"
 #include "Can\Common\Id.h"
 #include "Can\Platform\Window.h"
 
