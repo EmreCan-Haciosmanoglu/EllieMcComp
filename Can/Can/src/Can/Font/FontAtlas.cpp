@@ -23,7 +23,7 @@ namespace Can
 				continue;
 			}
 			width += slot->bitmap.width + 2;
-			height = (std::max)(height, (uint32_t)slot->bitmap.rows);
+			height = std::max(height, (uint32_t)slot->bitmap.rows);
 		}
 		texture = Texture2D::Create(width, height);
 

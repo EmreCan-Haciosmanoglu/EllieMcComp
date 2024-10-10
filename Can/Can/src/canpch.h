@@ -4,6 +4,10 @@
 #define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING
 #endif // !_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING
 
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif // !NOMINMAX
+
 
 #include <iostream>
 #include <memory>

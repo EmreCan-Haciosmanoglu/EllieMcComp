@@ -28,13 +28,13 @@ namespace Can
 
 		for (size_t i = 1; i < 8; i++)
 		{
-			minVal.x = (std::min)(minVal.x, points[i].x);
-			minVal.y = (std::min)(minVal.y, points[i].y);
-			minVal.z = (std::min)(minVal.z, points[i].z);
+			minVal.x = std::min(minVal.x, points[i].x);
+			minVal.y = std::min(minVal.y, points[i].y);
+			minVal.z = std::min(minVal.z, points[i].z);
 
-			maxVal.x = (std::max)(maxVal.x, points[i].x);
-			maxVal.y = (std::max)(maxVal.y, points[i].y);
-			maxVal.z = (std::max)(maxVal.z, points[i].z);
+			maxVal.x = std::max(maxVal.x, points[i].x);
+			maxVal.y = std::max(maxVal.y, points[i].y);
+			maxVal.z = std::max(maxVal.z, points[i].z);
 		}
 	}
 

@@ -1,8 +1,6 @@
 #include "canpch.h"
 #include "Math.h"
 
-#undef min
-#undef max
 namespace Can::Math
 {
 	std::vector<v3> GetCubicCurveSamples(const std::array<v3, 4>& vs, f32 preferedLength, std::vector<f32>& ts)

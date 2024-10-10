@@ -5,8 +5,6 @@
 #include "VertexArray.h"
 #include "Shader.h"
 #include <glm/glm.hpp>
-#undef min
-#undef max
 #include <limits>
 
 namespace Can

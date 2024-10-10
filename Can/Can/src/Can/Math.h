@@ -298,10 +298,10 @@ namespace Can::Math
 		v2 maxs = points[0];
 		for (size_t i = 1; i < N; i++)
 		{
-			mins.x = (std::min)(mins.x, points[i].x);
-			mins.y = (std::min)(mins.y, points[i].y);
-			maxs.x = (std::max)(maxs.x, points[i].x);
-			maxs.y = (std::max)(maxs.y, points[i].y);
+			mins.x = std::min(mins.x, points[i].x);
+			mins.y = std::min(mins.y, points[i].y);
+			maxs.x = std::max(maxs.x, points[i].x);
+			maxs.y = std::max(maxs.y, points[i].y);
 		}
 		return{ mins, maxs };
 	}
@@ -313,13 +313,13 @@ namespace Can::Math
 		v3 maxs = points[0];
 		for (size_t i = 1; i < N; i++)
 		{
-			mins.x = (std::min)(mins.x, points[i].x);
-			mins.y = (std::min)(mins.y, points[i].y);
-			mins.z = (std::min)(mins.z, points[i].z);
+			mins.x = std::min(mins.x, points[i].x);
+			mins.y = std::min(mins.y, points[i].y);
+			mins.z = std::min(mins.z, points[i].z);
 
-			maxs.x = (std::max)(maxs.x, points[i].x);
-			maxs.y = (std::max)(maxs.y, points[i].y);
-			maxs.z = (std::max)(maxs.z, points[i].z);
+			maxs.x = std::max(maxs.x, points[i].x);
+			maxs.y = std::max(maxs.y, points[i].y);
+			maxs.z = std::max(maxs.z, points[i].z);
 		}
 		return{ mins, maxs };
 	}
