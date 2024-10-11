@@ -6,6 +6,8 @@
 #include "D3D12Shaders.h"
 #include "D3D12GPass.h"
 
+#include "Can\Unordered_Array.h"
+
 
 namespace Can::graphics::d3d12::core
 {
@@ -89,11 +91,13 @@ namespace Can::graphics::d3d12::core
 
 			}
 
-			void end_frame()
+			void end_frame(const d3d12_surface& surface)
 			{
 				DXCall(_cmd_list->Close());
 				ID3D12CommandList* const cmd_lists[]{ _cmd_list };
 				_cmd_queue->ExecuteCommandLists(_countof(cmd_lists), &cmd_lists[0]);
+
+				surface.present();
 
 				u64& fence_value{ _fence_value };
 				++fence_value;
@@ -167,8 +171,9 @@ namespace Can::graphics::d3d12::core
 
 		id3d12_device* main_device{ nullptr };
 		IDXGIFactory7* dxgi_factory{ nullptr };
-		d3d12_command   gfx_command;
-		std::vector<d3d12_surface> surfaces;
+		d3d12_command                  gfx_command;
+		Unordered_Array<d3d12_surface> surfaces;
+		d3dx::d3d12_resource_barrier   resource_barriers;
 
 		descriptor_heap rtv_desc_heap{ D3D12_DESCRIPTOR_HEAP_TYPE_RTV };
 		descriptor_heap dsv_desc_heap{ D3D12_DESCRIPTOR_HEAP_TYPE_DSV };
@@ -259,6 +264,7 @@ namespace Can::graphics::d3d12::core
 	bool initialize()
 	{
 		if (main_device) shutdown();
+		array_resize(&surfaces, surfaces.capacity + 1);
 
 		u32 dxgi_factory_flags{ 0 };
 #ifdef _DEBUG
@@ -390,8 +396,9 @@ namespace Can::graphics::d3d12::core
 
 	surface create_surface(platform::window window)
 	{
-		surfaces.emplace_back(window);
-		surface_id id{ (u32)surfaces.size() - 1 };
+		d3d12_surface s{ window };
+		auto [new_surface, index] = array_add(&surfaces, &s);
+		surface_id id{ (u32)index };
 		surfaces[id].create_swap_chain(dxgi_factory, gfx_command.command_queue());
 		return surface{ id };
 	}
@@ -431,9 +438,53 @@ namespace Can::graphics::d3d12::core
 		}
 
 		const d3d12_surface& surface{ surfaces[id] };
+		ID3D12Resource* const current_back_buffer{ surface.back_buffer() };
 
-		surface.present();
 
-		gfx_command.end_frame();
+		d3d12_frame_info frame_info
+		{
+			surface.width(),
+			surface.height()
+		};
+		gpass::set_size({ (s32)frame_info.surface_width, (s32)frame_info.surface_height });
+		d3dx::d3d12_resource_barrier& barriers{ resource_barriers };
+
+		//Record commands
+		cmd_list->RSSetViewports(1, &surface.viewport());
+		cmd_list->RSSetScissorRects(1, &surface.scissor_rect());
+
+		// Depth prepass
+		gpass::add_transitions_for_depth_prepass(barriers);
+		barriers.apply(cmd_list);
+		gpass::set_render_targets_for_depth_prepass(cmd_list);
+		gpass::depth_prepass(cmd_list, frame_info);
+
+		// Geometry and lighting pass
+		gpass::add_transitions_for_gpass(barriers);
+		barriers.apply(cmd_list);
+		gpass::set_render_targets_for_gpass(cmd_list);
+		gpass::render(cmd_list, frame_info);
+
+		d3dx::transition_resource(
+			cmd_list,
+			current_back_buffer,
+			D3D12_RESOURCE_STATE_PRESENT,
+			D3D12_RESOURCE_STATE_RENDER_TARGET
+		);
+		// Post-process
+
+		// After Post-process
+
+		gpass::add_transitions_for_post_process(barriers);
+		barriers.apply(cmd_list);
+		d3dx::transition_resource(
+			cmd_list,
+			current_back_buffer,
+			D3D12_RESOURCE_STATE_RENDER_TARGET,
+			D3D12_RESOURCE_STATE_PRESENT
+		);
+
+		// DONE
+		gfx_command.end_frame(surface);
 	}
 }

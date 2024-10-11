@@ -7,8 +7,11 @@ namespace Can
 	class Unordered_Array_Element
 	{
 	public:
-		Unordered_Array_Element() {}
-		T value{};
+		Unordered_Array_Element() : value{} {}
+
+		template<typename T, typename... Ts>
+		Unordered_Array_Element(Ts... args) : value{ args... } {}
+		T value;
 		bool valid = false;
 	};
 

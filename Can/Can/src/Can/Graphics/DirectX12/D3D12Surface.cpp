@@ -106,4 +106,36 @@ namespace Can::graphics::d3d12
 		}
 		core::release(_swap_chain);
 	}
+
+	void d3d12_surface::move(d3d12_surface* dest, d3d12_surface* src)
+	{
+		dest->_swap_chain = src->_swap_chain;
+		for (u32 i{ 0 }; i < buffer_count; ++i)
+		{
+			dest->_render_target_data[i].resource = src->_render_target_data[i].resource;
+			dest->_render_target_data[i].rtv = src->_render_target_data[i].rtv;
+		}
+		dest->_window = src->_window;
+		dest->_current_bb_index = src->_current_bb_index;
+		dest->_allow_tearing = src->_allow_tearing;
+		dest->_present_flags = src->_present_flags;
+		dest->_viewport = src->_viewport;
+		dest->_scissor_rect = src->_scissor_rect;
+
+		d3d12_surface::reset_to_default(src);
+	}
+	void d3d12_surface::reset_to_default(d3d12_surface* dest)
+	{
+		dest->_swap_chain = nullptr;
+		for (u32 i{ 0 }; i < buffer_count; ++i)
+		{
+			dest->_render_target_data[i] = {};
+		}
+		dest->_window = {};
+		dest->_current_bb_index = 0;
+		dest->_allow_tearing = 0;
+		dest->_present_flags = 0;
+		dest->_viewport = {};
+		dest->_scissor_rect = {};
+	}
 }

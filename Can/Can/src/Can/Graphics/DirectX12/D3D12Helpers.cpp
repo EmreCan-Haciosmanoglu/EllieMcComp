@@ -8,6 +8,24 @@ namespace Can::graphics::d3d12::d3dx
 	{
 
 	}
+	
+	void transition_resource(
+		id3d12_graphics_command_list* cmd_list,
+		ID3D12Resource* resource,
+		D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after,
+		D3D12_RESOURCE_BARRIER_FLAGS flags /*= D3D12_RESOURCE_BARRIER_FLAG_NONE*/,
+		u32 subresource /*= D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES*/
+	) {
+		D3D12_RESOURCE_BARRIER barier{};
+		barier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		barier.Flags = flags;
+		barier.Transition.pResource = resource;
+		barier.Transition.StateBefore= before;
+		barier.Transition.StateAfter = after;
+		barier.Transition.Subresource = subresource;
+
+		cmd_list->ResourceBarrier(1, &barier);
+	}
 
 	ID3D12RootSignature* create_root_signature(const D3D12_ROOT_SIGNATURE_DESC1& desc)
 	{
@@ -45,7 +63,7 @@ namespace Can::graphics::d3d12::d3dx
 	{
 		assert(desc.pPipelineStateSubobjectStream && desc.SizeInBytes);
 		ID3D12PipelineState* pso{ nullptr };
-		core::device()->CreatePipelineState(&desc, IID_PPV_ARGS(&pso));
+		DXCall(core::device()->CreatePipelineState(&desc, IID_PPV_ARGS(&pso)));
 		assert(pso);
 		return pso;
 	}
@@ -54,7 +72,7 @@ namespace Can::graphics::d3d12::d3dx
 	{
 		assert(stream && stream_size);
 		D3D12_PIPELINE_STATE_STREAM_DESC desc{};
-		desc.pPipelineStateSubobjectStream = &stream;
+		desc.pPipelineStateSubobjectStream = stream;
 		desc.SizeInBytes = stream_size;
 		return create_pipeline_state(desc);
 	}
