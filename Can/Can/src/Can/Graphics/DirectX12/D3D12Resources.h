@@ -10,6 +10,7 @@ namespace Can::graphics::d3d12
 	{
 		D3D12_CPU_DESCRIPTOR_HANDLE cpu{};
 		D3D12_GPU_DESCRIPTOR_HANDLE gpu{};
+		u32                         index{ u32_invalid_id };
 
 		const bool is_valid() const { return cpu.ptr != 0; }
 		const bool is_shader_visible() const { return gpu.ptr != 0; }
@@ -18,7 +19,6 @@ namespace Can::graphics::d3d12
 	private:
 		friend class descriptor_heap;
 		descriptor_heap* container{ nullptr };
-		u32 index{ u32_invalid_id };
 #endif
 	};
 
@@ -125,7 +125,7 @@ namespace Can::graphics::d3d12
 			:_texture{ std::move(o._texture) }
 			, _mip_count{ o._mip_count }
 		{
-			for (u32 i{ 0 }; i < d3d12_texture::max_mips; ++i) _rtv[i] = o._rtv[i];
+			for (u32 i{ 0 }; i < _mip_count; ++i) _rtv[i] = o._rtv[i];
 			o.reset();
 		}
 		constexpr d3d12_render_texture& operator=(d3d12_render_texture&& o)
@@ -150,18 +150,18 @@ namespace Can::graphics::d3d12
 		{
 			_texture = std::move(o._texture);
 			_mip_count = o._mip_count;
-			for (u32 i{ 0 }; i < d3d12_texture::max_mips; ++i) _rtv[i] = o._rtv[i];
+			for (u32 i{ 0 }; i < _mip_count; ++i) _rtv[i] = o._rtv[i];
 			o.reset();
 		}
 		constexpr void reset()
 		{
-			for (u32 i{ 0 }; i < d3d12_texture::max_mips; ++i) _rtv[i] = {};
+			for (u32 i{ 0 }; i < _mip_count; ++i) _rtv[i] = {};
 			_mip_count = 0;
 
 		}
-		d3d12_texture _texture{};
+		d3d12_texture     _texture{};
 		descriptor_handle _rtv[d3d12_texture::max_mips]{};
-		u32 _mip_count{ 0 };
+		u32               _mip_count{ 0 };
 	};
 
 	class d3d12_depth_buffer

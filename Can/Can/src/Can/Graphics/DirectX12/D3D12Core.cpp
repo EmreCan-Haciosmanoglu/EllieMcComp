@@ -5,6 +5,7 @@
 #include "D3D12Helpers.h"
 #include "D3D12Shaders.h"
 #include "D3D12GPass.h"
+#include "D3D12PostProcess.h"
 
 #include "Can\Unordered_Array.h"
 
@@ -172,7 +173,7 @@ namespace Can::graphics::d3d12::core
 		id3d12_device* main_device{ nullptr };
 		IDXGIFactory7* dxgi_factory{ nullptr };
 		d3d12_command                  gfx_command;
-		Unordered_Array<d3d12_surface> surfaces;
+		std::vector<d3d12_surface> surfaces{};
 		d3dx::d3d12_resource_barrier   resource_barriers;
 
 		descriptor_heap rtv_desc_heap{ D3D12_DESCRIPTOR_HEAP_TYPE_RTV };
@@ -242,10 +243,10 @@ namespace Can::graphics::d3d12::core
 		srv_desc_heap.process_deferred_free(frame_idx);
 		uav_desc_heap.process_deferred_free(frame_idx);
 
-		std::vector<IUnknown*> resources{ deferred_releases[frame_idx] };
-		if (!resources.empty())
+		std::vector<IUnknown*>& resources{ deferred_releases[frame_idx] };
+		if (resources.size())
 		{
-			for (auto& resource : resources) release(resource);
+			for (auto resource : resources) release(resource);
 			resources.clear();
 		}
 	}
@@ -264,7 +265,7 @@ namespace Can::graphics::d3d12::core
 	bool initialize()
 	{
 		if (main_device) shutdown();
-		array_resize(&surfaces, surfaces.capacity + 1);
+
 
 		u32 dxgi_factory_flags{ 0 };
 #ifdef _DEBUG
@@ -317,7 +318,7 @@ namespace Can::graphics::d3d12::core
 		new(&gfx_command) d3d12_command(main_device, D3D12_COMMAND_LIST_TYPE_DIRECT);
 		if (!gfx_command.command_queue()) return failed_init();
 
-		if (!shaders::initialize() || !gpass::initialize()) return failed_init();
+		if (!shaders::initialize() || !gpass::initialize() || !fx::initialize()) return failed_init();
 
 		NAME_D3D12_OBJECT(main_device, L"Main D3D12 Device");
 		NAME_D3D12_OBJECT(rtv_desc_heap.heap(), L"RTV Descriptor Heap");
@@ -335,6 +336,7 @@ namespace Can::graphics::d3d12::core
 		for (u32 i{ 0 }; i < frame_buffer_count; ++i)
 			process_deferred_releases(i);
 
+		fx::shutdown();
 		gpass::shutdown();
 		shaders::shutdown();
 
@@ -396,9 +398,8 @@ namespace Can::graphics::d3d12::core
 
 	surface create_surface(platform::window window)
 	{
-		d3d12_surface s{ window };
-		auto [new_surface, index] = array_add(&surfaces, &s);
-		surface_id id{ (u32)index };
+		surfaces.emplace_back(window);
+		surface_id id{ (u32)surfaces.size() - 1 };
 		surfaces[id].create_swap_chain(dxgi_factory, gfx_command.command_queue());
 		return surface{ id };
 	}
@@ -450,6 +451,9 @@ namespace Can::graphics::d3d12::core
 		d3dx::d3d12_resource_barrier& barriers{ resource_barriers };
 
 		//Record commands
+		ID3D12DescriptorHeap* const heaps[]{ srv_desc_heap.heap() };
+		cmd_list->SetDescriptorHeaps(1, heaps);
+
 		cmd_list->RSSetViewports(1, &surface.viewport());
 		cmd_list->RSSetScissorRects(1, &surface.scissor_rect());
 
@@ -472,11 +476,12 @@ namespace Can::graphics::d3d12::core
 			D3D12_RESOURCE_STATE_RENDER_TARGET
 		);
 		// Post-process
-
-		// After Post-process
-
 		gpass::add_transitions_for_post_process(barriers);
 		barriers.apply(cmd_list);
+
+		fx::post_process(cmd_list, surface.rtv());
+
+		// After Post-process
 		d3dx::transition_resource(
 			cmd_list,
 			current_back_buffer,

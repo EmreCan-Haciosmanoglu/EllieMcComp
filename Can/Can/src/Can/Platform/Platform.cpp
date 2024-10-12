@@ -2,6 +2,8 @@
 #include "Platform.h"
 #include "PlatformTypes.h"
 
+#include "Can\Unordered_Array.h"
+
 namespace Can::platform
 {
 #ifdef _WIN64
@@ -18,31 +20,18 @@ namespace Can::platform
 			bool is_closed{ false };
 		};
 
-		std::vector<window_info> windows;
-		std::vector<u32> available_slots;
+		std::vector<window_info> windows{};
 
 		u32 add_to_windows(window_info info)
 		{
-			u32 id{ u32_invalid_id };
-			if (available_slots.empty())
-			{
-				id = (u32)windows.size();
-				windows.emplace_back(info);
-			}
-			else
-			{
-				id = available_slots.back();
-				available_slots.pop_back();
-				assert(id != u32_invalid_id);
-				windows[id] = info;
-			}
-			return id;
+			windows.push_back(info);
+			return windows.size() - 1;
 		}
 
 		void remove_from_windows(u32 id)
 		{
-			assert(id < windows.size());
-			available_slots.emplace_back(id);
+			//assert(id < windows.capacity);
+			//windows.values[id].valid = false;
 		}
 
 		window_info& get_from_id(window_id id)
@@ -53,7 +42,7 @@ namespace Can::platform
 
 		window_info& get_from_handle(window_handle handle)
 		{
-			const window_id id { (id::id_type)GetWindowLongPtr(handle, GWLP_USERDATA) };
+			const window_id id{ (id::id_type)GetWindowLongPtr(handle, GWLP_USERDATA) };
 			return get_from_id(id);
 		}
 
@@ -210,13 +199,13 @@ namespace Can::platform
 		info.client_area.bottom = (init_info && init_info->height) ? info.client_area.top + init_info->height : info.client_area.bottom;
 		info.style |= parent ? WS_CHILD : WS_OVERLAPPEDWINDOW;
 
-		RECT rect{ info.client_area };	
+		RECT rect{ info.client_area };
 
 		AdjustWindowRect(&rect, info.style, FALSE);
 
 		const wchar_t* caption{ (init_info && init_info->caption) ? init_info->caption : L"Can Game" };
 		const s32 left{ init_info ? init_info->left : info.top_left.x };
-		const s32 top{ init_info  ? init_info->top : info.top_left.y };
+		const s32 top{ init_info ? init_info->top : info.top_left.y };
 		const s32 width{ rect.right - rect.left };
 		const s32 height{ rect.bottom - rect.top };
 

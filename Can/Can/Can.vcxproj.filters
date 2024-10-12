@@ -1436,6 +1436,7 @@
     <ClInclude Include="src\Can\Content\ContentLoader.h" />
     <ClInclude Include="src\Can\Components\Script.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12GPass.h" />
+    <ClInclude Include="src\Can\Graphics\DirectX12\D3D12PostProcess.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -1642,5 +1643,6 @@
     <ClCompile Include="src\Can\Content\ContentLoader.cpp" />
     <ClCompile Include="src\Can\Components\Transform.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12GPass.cpp" />
+    <ClCompile Include="src\Can\Graphics\DirectX12\D3D12PostProcess.cpp" />
   </ItemGroup>
 </Project>

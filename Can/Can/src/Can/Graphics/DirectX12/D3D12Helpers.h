@@ -17,7 +17,7 @@ namespace Can::graphics::d3d12::d3dx
 	constexpr struct {
 		const D3D12_RASTERIZER_DESC no_cull{
 			D3D12_FILL_MODE_SOLID,						//FillMode
-			D3D12_CULL_MODE_BACK,						//CullMode
+			D3D12_CULL_MODE_NONE,						//CullMode
 			0,											//FrontCounterClockwise
 			0,											//DepthBias
 			0,											//DepthBiasClamp

@@ -10,6 +10,14 @@ namespace Can::graphics::d3d12::gpass
 {
 	namespace
 	{
+		struct gpass_root_param_indices {
+			enum : u32 {
+				root_constants = 0, 
+
+				count
+			};
+		};
+
 		constexpr DXGI_FORMAT main_buffer_format{ DXGI_FORMAT_R16G16B16A16_FLOAT };
 		constexpr DXGI_FORMAT depth_buffer_format{ DXGI_FORMAT_D32_FLOAT };
 		constexpr v2i initial_dimensions{ 100,100 };
@@ -40,11 +48,11 @@ namespace Can::graphics::d3d12::gpass
 			desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
 			desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
 			desc.Format = main_buffer_format;
-			desc.Width = size.x;
 			desc.Height = size.y;
 			desc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
 			desc.MipLevels = 0;
 			desc.SampleDesc = { 1, 0 };
+			desc.Width = size.x;
 
 			/*Main Buffer*/ {
 				d3d12_texture_init_info info{};
@@ -77,10 +85,10 @@ namespace Can::graphics::d3d12::gpass
 	bool create_gpass_pso_and_root_signiture()
 	{
 		assert(!gpass_root_signature && !gpass_pso);
-
-		d3dx::d3d12_root_parameter parameters[1]{};
-		parameters[0].as_constants(1, D3D12_SHADER_VISIBILITY_PIXEL, 1);
-		d3dx::d3d12_root_signature_desc root_signature{ parameters, _countof(parameters) };
+		using idx = gpass_root_param_indices;
+		d3dx::d3d12_root_parameter parameters[idx::count]{};
+		parameters[idx::root_constants].as_constants(3, D3D12_SHADER_VISIBILITY_PIXEL, 1);
+		d3dx::d3d12_root_signature_desc root_signature{ parameters, idx::count };
 		gpass_root_signature = root_signature.create();
 		assert(gpass_root_signature);
 		NAME_D3D12_OBJECT(gpass_root_signature, L"GPass Root Signature");
@@ -125,13 +133,14 @@ namespace Can::graphics::d3d12::gpass
 
 	void set_size(v2i size)
 	{
-		v2i d{ dimensions };
+		v2i& d{ dimensions };
 		if (size.x > d.x || size.y > d.y)
 		{
 			d = { std::max(size.x, d.x), std::max(size.y, d.y) };
 			create_buffers(d);
 		}
 	}
+	
 	void depth_prepass(id3d12_graphics_command_list* cmd_list, const d3d12_frame_info& info)
 	{
 
@@ -175,8 +184,17 @@ namespace Can::graphics::d3d12::gpass
 		cmd_list->SetPipelineState(gpass_pso);
 
 		static u32 frame{ 0 };
-		++frame;
-		cmd_list->SetGraphicsRoot32BitConstant(0, frame, 0);
+		struct {
+			f32 width;
+			f32 height;
+			u32 frame;
+		} constants{
+				(f32)info.surface_width,
+				(f32)info.surface_height,
+				++frame
+		};
+		using idx = gpass_root_param_indices;
+		cmd_list->SetGraphicsRoot32BitConstants(idx::root_constants, 3, &constants, 0);
 
 		cmd_list->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		cmd_list->DrawInstanced(3, 1, 0, 0);
@@ -197,4 +215,7 @@ namespace Can::graphics::d3d12::gpass
 		cmd_list->ClearRenderTargetView(rtv, clear_value, 0, nullptr);
 		cmd_list->OMSetRenderTargets(1, &rtv, 0, &dsv);
 	}
+
+	const d3d12_render_texture& main_buffer() { return gpass_main_buffer; }
+	const d3d12_depth_buffer& depth_buffer() { return gpass_depth_buffer; }
 }

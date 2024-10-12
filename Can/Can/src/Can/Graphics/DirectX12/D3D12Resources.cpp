@@ -85,8 +85,8 @@ namespace Can::graphics::d3d12
 		handle.cpu.ptr = _cpu_start.ptr + offset;
 		if (is_shader_visible()) handle.gpu.ptr = _gpu_start.ptr + offset;
 
+		handle.index = index;
 		DEBUG_OP(handle.container = this);
-		DEBUG_OP(handle.index = index);
 		return handle;
 	}
 	void descriptor_heap::free(descriptor_handle& handle)
@@ -180,7 +180,7 @@ namespace Can::graphics::d3d12
 
 	void d3d12_render_texture::release()
 	{
-		for (u32 i{ 0 }; i < d3d12_texture::max_mips; ++i) core::rtv_heap().free(_rtv[i]);
+		for (u32 i{ 0 }; i < _mip_count; ++i) core::rtv_heap().free(_rtv[i]);
 		_texture.release();
 		_mip_count = 0; 
 	}
