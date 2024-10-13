@@ -274,6 +274,10 @@ namespace Can::graphics::d3d12::core
 			if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debug_interface))))
 			{
 				debug_interface->EnableDebugLayer();
+#if 0
+#pragma warning("WARNING: THIS IS TOO COSTLY!!!")
+				debug_interface->SetEnableGPUBasedValidation(1);
+#endif
 			}
 			else
 			{
@@ -458,6 +462,12 @@ namespace Can::graphics::d3d12::core
 		cmd_list->RSSetScissorRects(1, &surface.scissor_rect());
 
 		// Depth prepass
+		barriers.add(
+			current_back_buffer,
+			D3D12_RESOURCE_STATE_PRESENT,
+			D3D12_RESOURCE_STATE_RENDER_TARGET,
+			D3D12_RESOURCE_BARRIER_FLAG_BEGIN_ONLY
+		);
 		gpass::add_transitions_for_depth_prepass(barriers);
 		barriers.apply(cmd_list);
 		gpass::set_render_targets_for_depth_prepass(cmd_list);
@@ -469,13 +479,13 @@ namespace Can::graphics::d3d12::core
 		gpass::set_render_targets_for_gpass(cmd_list);
 		gpass::render(cmd_list, frame_info);
 
-		d3dx::transition_resource(
-			cmd_list,
+		// Post-processs
+		barriers.add(
 			current_back_buffer,
 			D3D12_RESOURCE_STATE_PRESENT,
-			D3D12_RESOURCE_STATE_RENDER_TARGET
+			D3D12_RESOURCE_STATE_RENDER_TARGET,
+			D3D12_RESOURCE_BARRIER_FLAG_END_ONLY
 		);
-		// Post-process
 		gpass::add_transitions_for_post_process(barriers);
 		barriers.apply(cmd_list);
 

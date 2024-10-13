@@ -22,12 +22,6 @@ namespace Can::platform
 
 		std::vector<window_info> windows{};
 
-		u32 add_to_windows(window_info info)
-		{
-			windows.push_back(info);
-			return windows.size() - 1;
-		}
-
 		void remove_from_windows(u32 id)
 		{
 			//assert(id < windows.capacity);
@@ -46,46 +40,39 @@ namespace Can::platform
 			return get_from_id(id);
 		}
 
+		bool resized{ false };
 		LRESULT CALLBACK internal_window_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		{
-			window_info* info{ nullptr };
-
 			switch (msg)
 			{
+			case WM_NCCREATE:
+			{
+				DEBUG_OP(SetLastError(0));
+				windows.push_back({ hwnd });
+				SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)(windows.size() - 1));
+				assert(GetLastError() == 0);
+				break;
+			}
 			case WM_DESTROY:
 			{
 				get_from_handle(hwnd).is_closed = true;
 				break;
 			}
-			case WM_EXITSIZEMOVE:
-			{
-				info = &get_from_handle(hwnd);
-				break;
-			}
 			case WM_SIZE:
 			{
-				if (wparam == SIZE_MAXIMIZED)
-				{
-					info = &get_from_handle(hwnd);
-				}
-				break;
-			}
-			case WM_SYSCOMMAND:
-			{
-				if (wparam == SC_RESTORE)
-				{
-					info = &get_from_handle(hwnd);
-				}
+				resized = wparam != SIZE_MINIMIZED;
 				break;
 			}
 			default:
 				break;
 			}
 
-			if (info)
+			if (resized && GetAsyncKeyState(VK_LBUTTON) >= 0)
 			{
-				assert(info->hwnd);
-				GetClientRect(info->hwnd, info->is_fullscreen ? &info->fullscreen_area : &info->client_area);
+				window_info& info{ get_from_handle(hwnd) };
+				assert(info.hwnd);
+				GetClientRect(info.hwnd, info.is_fullscreen ? &info.fullscreen_area : &info.client_area);
+				resized = false;
 			}
 
 			LONG_PTR long_ptr{ GetWindowLongPtr(hwnd, 0) };
@@ -226,15 +213,14 @@ namespace Can::platform
 		if (info.hwnd)
 		{
 			DEBUG_OP(SetLastError(0));
-			const window_id id{ add_to_windows(info) };
-			SetWindowLongPtr(info.hwnd, GWLP_USERDATA, (LONG_PTR)id);
-
 			if (callback) SetWindowLongPtr(info.hwnd, 0, (LONG_PTR)callback);
 			assert(GetLastError() == 0);
 
 			ShowWindow(info.hwnd, SW_SHOWNORMAL);
 			UpdateWindow(info.hwnd);
 
+			const window_id id{ (id::id_type)GetWindowLongPtr(info.hwnd , GWLP_USERDATA) };
+			windows[id] = info;
 			return window{ id };
 		}
 		return {};

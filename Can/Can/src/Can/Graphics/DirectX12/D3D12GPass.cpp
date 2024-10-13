@@ -18,9 +18,10 @@ namespace Can::graphics::d3d12::gpass
 			};
 		};
 
-		constexpr DXGI_FORMAT main_buffer_format{ DXGI_FORMAT_R16G16B16A16_FLOAT };
-		constexpr DXGI_FORMAT depth_buffer_format{ DXGI_FORMAT_D32_FLOAT };
-		constexpr v2i initial_dimensions{ 100,100 };
+		constexpr DXGI_FORMAT        main_buffer_format{ DXGI_FORMAT_R16G16B16A16_FLOAT };
+		constexpr DXGI_FORMAT        depth_buffer_format{ DXGI_FORMAT_D32_FLOAT };
+		constexpr v2i                initial_dimensions{ 100,100 };
+		D3D12_RESOURCE_BARRIER_FLAGS flags{};
 
 		d3d12_render_texture gpass_main_buffer{};
 		d3d12_depth_buffer gpass_depth_buffer{};
@@ -78,6 +79,9 @@ namespace Can::graphics::d3d12::gpass
 				gpass_depth_buffer = d3d12_depth_buffer{ info };
 				NAME_D3D12_OBJECT(gpass_depth_buffer.resource(), L"GPass Depth Buffer")
 			}
+
+			flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+
 			return gpass_main_buffer.resource() && gpass_depth_buffer.resource();
 		}
 	}
@@ -149,6 +153,12 @@ namespace Can::graphics::d3d12::gpass
 	void add_transitions_for_depth_prepass(d3dx::d3d12_resource_barrier& barriers)
 	{
 		barriers.add(
+			gpass_main_buffer.resource(),
+			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+			D3D12_RESOURCE_STATE_RENDER_TARGET,
+			D3D12_RESOURCE_BARRIER_FLAG_BEGIN_ONLY
+		);
+		barriers.add(
 			gpass_depth_buffer.resource(),
 			D3D12_RESOURCE_STATE_DEPTH_READ | D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
 			D3D12_RESOURCE_STATE_DEPTH_WRITE
@@ -160,7 +170,8 @@ namespace Can::graphics::d3d12::gpass
 		barriers.add(
 			gpass_main_buffer.resource(),
 			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-			D3D12_RESOURCE_STATE_RENDER_TARGET
+			D3D12_RESOURCE_STATE_RENDER_TARGET,
+			D3D12_RESOURCE_BARRIER_FLAG_END_ONLY
 		);
 		barriers.add(
 			gpass_depth_buffer.resource(),

@@ -117,7 +117,7 @@ namespace Can
 	{
 		s_Data.TextureShader->Bind();
 		s_Data.TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
-		RenderCommand::enable_depth_testing(false);
+		//RenderCommand::enable_depth_testing(true);
 		s_Data.QuadIndexCount = 0;
 		s_Data.texture_slots_cursor = 1;
 		s_Data.buffer_cursor = 0;
