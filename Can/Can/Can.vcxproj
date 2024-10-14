@@ -180,6 +180,7 @@
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Resources.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Shaders.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Surface.h" />
+    <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Upload.h" />
     <ClInclude Include="src\Can\Graphics\GraphicsPlatformInterface.h" />
     <ClInclude Include="src\Can\Graphics\Renderer.h" />
     <ClInclude Include="src\Can\Hash_Table.h" />
@@ -235,6 +236,7 @@
     <ClInclude Include="src\Can\Shadow\ShadowMapEntityRenderer.h" />
     <ClInclude Include="src\Can\Shadow\ShadowMapMasterRenderer.h" />
     <ClInclude Include="src\Can\Unordered_Array.h" />
+    <ClInclude Include="src\Can\Utilities\IOStream.h" />
     <ClInclude Include="src\Can\Window.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLContext.h" />
@@ -637,6 +639,7 @@
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Resources.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Shaders.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Surface.cpp" />
+    <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Upload.cpp" />
     <ClCompile Include="src\Can\Graphics\Renderer.cpp" />
     <ClCompile Include="src\Can\Immediate_Renderer\Immediate_Renderer.cpp" />
     <ClCompile Include="src\Can\KeyCodes.cpp" />
@@ -683,6 +686,7 @@
     <ClCompile Include="src\Can\Shadow\ShadowMapEntityRenderer.cpp" />
     <ClCompile Include="src\Can\Shadow\ShadowMapMasterRenderer.cpp" />
     <ClCompile Include="src\Can\Unordered_Array.cpp" />
+    <ClCompile Include="src\Can\Utilities\IOStream.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\OpenGl\OpenGLFramebuffer.cpp" />
