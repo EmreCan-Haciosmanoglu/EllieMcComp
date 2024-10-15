@@ -161,6 +161,7 @@
     <ClInclude Include="src\Can\Components\Script.h" />
     <ClInclude Include="src\Can\Components\Transform.h" />
     <ClInclude Include="src\Can\Content\ContentLoader.h" />
+    <ClInclude Include="src\Can\Content\ContentToEngine.h" />
     <ClInclude Include="src\Can\Core.h" />
     <ClInclude Include="src\Can\Core\TimeStep.h" />
     <ClInclude Include="src\Can\EntryPoint.h" />
@@ -172,6 +173,7 @@
     <ClInclude Include="src\Can\Font\FontAtlas.h" />
     <ClInclude Include="src\Can\Font\FontFlags.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12CommonHeaders.h" />
+    <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Content.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Core.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12GPass.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Helpers.h" />
@@ -237,6 +239,7 @@
     <ClInclude Include="src\Can\Shadow\ShadowMapMasterRenderer.h" />
     <ClInclude Include="src\Can\Unordered_Array.h" />
     <ClInclude Include="src\Can\Utilities\IOStream.h" />
+    <ClInclude Include="src\Can\Utilities\Math.h" />
     <ClInclude Include="src\Can\Window.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLContext.h" />
@@ -640,6 +643,7 @@
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Shaders.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Surface.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Upload.cpp" />
+    <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Content.cpp" />
     <ClCompile Include="src\Can\Graphics\Renderer.cpp" />
     <ClCompile Include="src\Can\Immediate_Renderer\Immediate_Renderer.cpp" />
     <ClCompile Include="src\Can\KeyCodes.cpp" />

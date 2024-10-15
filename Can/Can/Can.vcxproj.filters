@@ -1439,6 +1439,9 @@
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12PostProcess.h" />
     <ClInclude Include="src\Can\Utilities\IOStream.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Upload.h" />
+    <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Content.h" />
+    <ClInclude Include="src\Can\Utilities\Math.h" />
+    <ClInclude Include="src\Can\Content\ContentToEngine.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -1648,5 +1651,6 @@
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12PostProcess.cpp" />
     <ClCompile Include="src\Can\Utilities\IOStream.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Upload.cpp" />
+    <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Content.cpp" />
   </ItemGroup>
 </Project>

@@ -79,8 +79,8 @@ namespace Can::graphics::d3d12::d3dx
 	}
 
 	ID3D12Resource* create_buffer(
+		void* data,
 		u32 buffer_size,
-		void* data /* = nullptr */,
 		bool is_cpu_accesible /* = false */,
 		D3D12_RESOURCE_STATES state /* = D3D12_RESOURCE_STATE_COMMON */,
 		D3D12_RESOURCE_FLAGS flags /* = D3D12_RESOURCE_FLAG_NONE */,
@@ -127,7 +127,7 @@ namespace Can::graphics::d3d12::d3dx
 		{
 			if (is_cpu_accesible)
 			{
-				D3D12_RANGE range{};
+				const D3D12_RANGE range{};
 				void* cpu_address{ nullptr };
 				DXCall(resource->Map(0, &range, reinterpret_cast<void**>(&cpu_address)));
 				assert(cpu_address);

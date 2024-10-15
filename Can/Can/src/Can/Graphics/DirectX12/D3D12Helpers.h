@@ -316,8 +316,8 @@ namespace Can::graphics::d3d12::d3dx
 	ID3D12PipelineState* create_pipeline_state(void* stream, u64 stream_size);
 
 	ID3D12Resource* create_buffer(
+		void* data,
 		u32 buffer_size,
-		void* data = nullptr,
 		bool is_cpu_accesible = false,
 		D3D12_RESOURCE_STATES state = D3D12_RESOURCE_STATE_COMMON,
 		D3D12_RESOURCE_FLAGS flags = D3D12_RESOURCE_FLAG_NONE,

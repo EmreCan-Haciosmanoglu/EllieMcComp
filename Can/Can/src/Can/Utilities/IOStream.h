@@ -3,7 +3,7 @@
 #include "Can\Core.h"
 #include  <type_traits>
 
-namespace Can::io
+namespace Can::utl
 {
 	class blob_stream_reader
 	{
