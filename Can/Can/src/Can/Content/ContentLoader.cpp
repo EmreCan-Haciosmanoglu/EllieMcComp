@@ -1,11 +1,11 @@
 #include "canpch.h"
 #include "ContentLoader.h"
 
-#include "Can\Components\Entity.h"
-#include "Can\Components\Transform.h"
-#include "Can\Components\Script.h"
+#include "Can/Components/Entity.h"
+#include "Can/Components/Transform.h"
+#include "Can/Components/Script.h"
 
-#include "Can\Graphics\Renderer.h"
+#include "Can/Graphics/Renderer.h"
 
 #if !defined(SHIPPING)
 

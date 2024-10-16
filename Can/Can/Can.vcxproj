@@ -148,6 +148,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Can.h" />
+    <ClInclude Include="src\Can\API\Camera.h" />
+    <ClInclude Include="src\Can\API\GameEntity.h" />
+    <ClInclude Include="src\Can\API\ScriptComponent.h" />
+    <ClInclude Include="src\Can\API\TransformComponent.h" />
     <ClInclude Include="src\Can\Application.h" />
     <ClInclude Include="src\Can\AssetLoader.h" />
     <ClInclude Include="src\Can\Camera\Camera.h" />
@@ -172,6 +176,7 @@
     <ClInclude Include="src\Can\Font\Font.h" />
     <ClInclude Include="src\Can\Font\FontAtlas.h" />
     <ClInclude Include="src\Can\Font\FontFlags.h" />
+    <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Camera.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12CommonHeaders.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Content.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Core.h" />
@@ -631,9 +636,11 @@
     <ClCompile Include="src\Can\Components\Entity.cpp" />
     <ClCompile Include="src\Can\Components\Transform.cpp" />
     <ClCompile Include="src\Can\Content\ContentLoader.cpp" />
+    <ClCompile Include="src\Can\Content\ContentToEngine.cpp" />
     <ClCompile Include="src\Can\EntryPoint.cpp" />
     <ClCompile Include="src\Can\Font\Font.cpp" />
     <ClCompile Include="src\Can\Font\FontAtlas.cpp" />
+    <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Camera.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Core.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12GPass.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Helpers.cpp" />

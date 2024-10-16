@@ -1,6 +1,6 @@
 #pragma once
-#include "Can\Common\CommonHeaders.h"
-#include "Can\Core.h"
+#include "Can/Common/CommonHeaders.h"
+#include "Can/Core.h"
 namespace Can::content
 {
 	struct primitive_topology

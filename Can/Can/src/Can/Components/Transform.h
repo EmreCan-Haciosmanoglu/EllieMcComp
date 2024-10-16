@@ -1,7 +1,7 @@
 #pragma once
 #include "ComponentsCommonHeaders.h"
 #include "Entity.h"
-#include "Can\Math.h"
+#include "Can/Math.h"
 
 namespace Can::transform
 {

@@ -1,6 +1,6 @@
 #pragma once
+#include "Can/Core.h"
 
-#include "Can\Core.h"
 namespace Can::id
 {
 	using id_type = u32;

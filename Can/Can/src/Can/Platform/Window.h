@@ -1,7 +1,6 @@
 #pragma once
 #include "Can\Core.h"
 #include "Can\Common\CommonHeaders.h"
-#include "Can\Common\Id.h"
 
 namespace Can::platform
 {

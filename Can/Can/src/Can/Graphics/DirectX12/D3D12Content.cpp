@@ -22,9 +22,9 @@ namespace Can::graphics::d3d12::content
 			D3D_PRIMITIVE_TOPOLOGY    primitive_topology{};
 		};
 
-		std::vector<ID3D12Resource*>  submesh_buffers{};
-		std::vector<position_view>    position_views{};
-		std::vector<element_view>     element_views{};
+		std::vector<ID3D12Resource*>  submesh_buffers{};  // Unordered_Array
+		std::vector<position_view>    position_views{};	  // Unordered_Array
+		std::vector<element_view>     element_views{};	  // Unordered_Array
 		std::mutex                    submesh_mutex{};
 
 		D3D_PRIMITIVE_TOPOLOGY get_d3d_primitive_topology(Can::content::primitive_topology::type type)

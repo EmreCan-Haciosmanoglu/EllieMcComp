@@ -1442,6 +1442,11 @@
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Content.h" />
     <ClInclude Include="src\Can\Utilities\Math.h" />
     <ClInclude Include="src\Can\Content\ContentToEngine.h" />
+    <ClInclude Include="src\Can\API\Camera.h" />
+    <ClInclude Include="src\Can\API\GameEntity.h" />
+    <ClInclude Include="src\Can\API\TransformComponent.h" />
+    <ClInclude Include="src\Can\API\ScriptComponent.h" />
+    <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -1652,5 +1657,7 @@
     <ClCompile Include="src\Can\Utilities\IOStream.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Upload.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Content.cpp" />
+    <ClCompile Include="src\Can\Content\ContentToEngine.cpp" />
+    <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Camera.cpp" />
   </ItemGroup>
 </Project>

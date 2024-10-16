@@ -1,5 +1,5 @@
 #pragma once
-#include "Can\Graphics\DirectX12\D3D12CommonHeaders.h"
+#include "Can/Graphics/DirectX12/D3D12CommonHeaders.h"
 
 #if !defined(SHIPPING)
 namespace Can::content
