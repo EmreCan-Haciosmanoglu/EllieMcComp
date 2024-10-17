@@ -4,6 +4,8 @@
 #include "Can/Platform/Window.h"
 #include "Can/API/Camera.h"
 
+#include <DirectXMath.h>
+
 namespace Can::graphics
 {
 	DEFINE_TYPED_ID(surface_id);

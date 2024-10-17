@@ -118,6 +118,7 @@ namespace Can::graphics::d3d12::content
 
 		void remove(id::id_type id)
 		{
+			assert(false);
 			std::lock_guard lock{ submesh_mutex };
 			position_views.erase(position_views.begin() + id);
 			element_views.erase(element_views.begin() + id);
