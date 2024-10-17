@@ -163,6 +163,7 @@ namespace Can
 		auto& camera = buffer_data.camera_controller->m_Camera;
 		buffer_data.shader->Bind();
 		buffer_data.shader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+		buffer_data.left_mouse_button_released_event_handled = false;
 	}
 
 	void immediate_quad(const v2& p0, const v2& p1, const v2& p2, const v2& p3, const v2& uv0, const v2& uv1, const v2& uv2, const v2& uv3, const v4& color)
@@ -567,6 +568,7 @@ namespace Can
 							state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_PRESSED);
 							state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_HOLD);
 							state->flags |= BUTTON_STATE_FLAGS_RELEASED;
+							buffer_data.left_mouse_button_released_event_handled = true;
 						}
 						else
 						{
@@ -585,6 +587,7 @@ namespace Can
 							state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_PRESSED);
 							state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_HOLD);
 							state->flags |= BUTTON_STATE_FLAGS_RELEASED;
+							buffer_data.left_mouse_button_released_event_handled = true;
 						}
 						else
 						{
@@ -693,6 +696,7 @@ namespace Can
 							state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_PRESSED);
 							state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_HOLD);
 							state->flags |= BUTTON_STATE_FLAGS_RELEASED;
+							buffer_data.left_mouse_button_released_event_handled = true;
 						}
 						else
 						{
@@ -711,6 +715,7 @@ namespace Can
 							state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_PRESSED);
 							state->flags &= (0xffff ^ BUTTON_STATE_FLAGS_HOLD);
 							state->flags |= BUTTON_STATE_FLAGS_RELEASED;
+							buffer_data.left_mouse_button_released_event_handled = true;
 						}
 						else
 						{

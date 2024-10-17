@@ -46,6 +46,8 @@ namespace Can
 
 	struct Buffer_Data
 	{
+		bool left_mouse_button_released_event_handled{ true };
+
 		Ref<VertexArray> vertex_array;
 		Ref<VertexBuffer> vertex_buffer;
 		Ref<Shader> shader;
