@@ -66,6 +66,12 @@ namespace Can
 			return;
 		}
 
+		if (e->GetEventType() == MouseButtonReleasedEvent::GetStaticType())
+		{
+			events.push_back(e);
+			return;
+		}
+
 		for (auto it{ m_LayerStack.end() }; it != m_LayerStack.begin();)
 		{
 			(*--it)->OnEvent(e);
@@ -87,10 +93,32 @@ namespace Can
 
 			if (!m_Minimized)
 			{
-				for (Layer::Layer* layer : m_LayerStack)
+				for (auto it{ m_LayerStack.end() }; it != m_LayerStack.begin();)
 				{
+					auto layer{ (*--it) };
 					bool force_update{ layer->OnUpdate(timestep) };
 					if (force_update) goto end;
+					for (u64 i{ 0 }; i < events.size(); ++i)
+					{
+						auto e{ events[i] };
+						layer->OnEvent(e);
+						e->seen = true;
+						if (e->m_Handled)
+						{
+							events.erase(events.begin() + i);
+							--i;
+							delete e;
+						}
+					}
+				}
+				for (u64 i{ events.size() }; i > 0; --i)
+				{
+					auto e{ events[i - 1] };
+					if (e->seen)
+					{
+						events.erase(events.begin() + i - 1);
+						delete e;
+					}
 				}
 				/*
 				m_ImGuiLayer->Begin();

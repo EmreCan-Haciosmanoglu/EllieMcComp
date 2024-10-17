@@ -42,6 +42,7 @@ namespace Can
 			return GetCategoryFlags() & category;
 		}
 		bool m_Handled = false;
+		bool seen = false;
 	};
 
 	class EventDispatcher

@@ -46,6 +46,7 @@ namespace Can
 		Scope<Window> m_Window;
 		//Layer::ImGuiLayer* m_ImGuiLayer;
 		bool m_Minimized{ false };
+		std::vector<class Event*> events{};
 		Layer::LayerStack m_LayerStack;
 
 		static Application* s_Instance;
