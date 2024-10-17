@@ -15,19 +15,39 @@ namespace Can
 		bool valid = false;
 	};
 
+	constexpr u64 array_start_size{ 4 };
+
 	template<typename T>
 	class Unordered_Array
 	{
 	public:
-		Unordered_Array() {}
+		Unordered_Array(u64 c = array_start_size)
+		{
+			assert(c >= array_start_size);
+			capacity = c;
+			values = new Unordered_Array_Element<T>[c];
+			for (u64 i{ 0 }; i < c; ++i)
+			{
+				values[i].valid = false;
+				T::reset_to_default(&values[i].value);
+			}
+		}
 
-		u64 size = 0;
-		u64 capacity = 0;
-		Unordered_Array_Element<T>* values = nullptr;
+		~Unordered_Array()
+		{
+			assert(values);
+			delete[] values;
+		}
+
+		u64 size{ 0 };
+		u64 capacity{ 0 };
+		Unordered_Array_Element<T>* values{ nullptr };
 
 		[[nodiscard]] T& operator[] (u64 x) {
 			return values[x].value;
 		}
+
+		[[nodiscard]] constexpr bool is_valid(u64 index) const { assert(index < capacity); return values[index].valid; }
 	};
 
 	template<typename T>
@@ -64,6 +84,34 @@ namespace Can
 
 			unordered_array->values[unordered_array->size].valid = true;
 			T::move(&unordered_array->values[unordered_array->size].value, value);
+			unordered_array->size++;
+			return std::make_pair(&unordered_array->values[unordered_array->size - 1].value, unordered_array->size - 1);
+		}
+	}
+
+	template<typename T, typename... Args>
+	std::pair<T*, u64> array_emplace(
+		Unordered_Array<T>* unordered_array,
+		Args&&... args
+	)
+	{
+		if (unordered_array->size < unordered_array->capacity)
+		{
+			u64 empty_index = 0;
+			for (; empty_index < unordered_array->size; empty_index++)
+				if (!unordered_array->values[empty_index].valid)
+					break;
+			unordered_array->values[empty_index].valid = true;
+			new (&unordered_array->values[empty_index].value) T(std::forward<Args>(args)...);
+			unordered_array->size++;
+			return std::make_pair(&unordered_array->values[empty_index].value, empty_index);
+		}
+		else
+		{
+			array_resize(unordered_array, (u64)((f32)unordered_array->capacity * 1.5f));
+
+			unordered_array->values[unordered_array->size].valid = true;
+			new (&unordered_array->values[unordered_array->size].value) T(std::forward<Args>(args)...);
 			unordered_array->size++;
 			return std::make_pair(&unordered_array->values[unordered_array->size - 1].value, unordered_array->size - 1);
 		}
