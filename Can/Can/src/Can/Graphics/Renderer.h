@@ -122,4 +122,7 @@ namespace Can::graphics
 
 	id::id_type add_submesh(const u8*& data);
 	void remove_submesh(id::id_type id);
+
+	id::id_type add_material (material_init_info info);
+	void remove_material(id::id_type id);
 }

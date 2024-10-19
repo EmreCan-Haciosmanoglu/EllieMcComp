@@ -93,6 +93,7 @@ namespace Can::graphics::d3d12::gpass
 		d3dx::d3d12_root_parameter parameters[idx::count]{};
 		parameters[idx::root_constants].as_constants(3, D3D12_SHADER_VISIBILITY_PIXEL, 1);
 		d3dx::d3d12_root_signature_desc root_signature{ parameters, idx::count };
+		root_signature.Flags &= ~D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS;
 		gpass_root_signature = root_signature.create();
 		assert(gpass_root_signature);
 		NAME_D3D12_OBJECT(gpass_root_signature, L"GPass Root Signature");

@@ -55,14 +55,13 @@ OutputDebugString(L"\n");
 
 #ifdef _DEBUG
 #ifndef NAME_D3D12_OBJECT_INDEXED
-#define NAME_D3D12_OBJECT_INDEXED(obj, index, name)				\
-{														\
-wchar_t full_name[128];									\
-if(swprintf_s(full_name, L"%s[%u]", name, index) > 0){	\
-obj->SetName(full_name);								\
-OutputDebugString(L"::D3D12 Object Created: ");			\
-OutputDebugString(full_name);							\
-OutputDebugString(L"\n");								\
+#define NAME_D3D12_OBJECT_INDEXED(obj, n, name)	{		  \
+wchar_t full_name[128];									  \
+if(swprintf_s(full_name, L"%s[%llu]", name, (u64)n) > 0){ \
+obj->SetName(full_name);								  \
+OutputDebugString(L"::D3D12 Object Created: ");			  \
+OutputDebugString(full_name);							  \
+OutputDebugString(L"\n");								  \
 }}
 #endif // !NAME_D3D12_OBJECT_INDEXED
 #else

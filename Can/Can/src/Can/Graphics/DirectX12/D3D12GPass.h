@@ -1,6 +1,5 @@
 #pragma once
 #include "D3D12CommonHeaders.h"
-#include "D3D12Helpers.h"
 
 namespace Can::graphics::d3d12
 {
@@ -10,6 +9,21 @@ namespace Can::graphics::d3d12
 }
 namespace Can::graphics::d3d12::gpass
 {
+
+	struct opaque_root_parameter
+	{
+		enum parameter : u32
+		{
+			per_frame_data,
+			position_buffer,
+			element_buffer,
+			srv_indices,
+			per_object_data,
+
+			count
+		};
+	};
+
 	bool initialize();
 	void shutdown();
 
