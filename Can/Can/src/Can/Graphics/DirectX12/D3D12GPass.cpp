@@ -18,8 +18,6 @@ namespace Can::graphics::d3d12::gpass
 			};
 		};
 
-		constexpr DXGI_FORMAT        main_buffer_format{ DXGI_FORMAT_R16G16B16A16_FLOAT };
-		constexpr DXGI_FORMAT        depth_buffer_format{ DXGI_FORMAT_D32_FLOAT };
 		constexpr v2i                initial_dimensions{ 100,100 };
 		D3D12_RESOURCE_BARRIER_FLAGS flags{};
 

@@ -43,7 +43,7 @@ namespace Can::graphics
 	{
 		if (gfx.platform != (graphics_platform)-1) gfx.shutdown();
 	}
-
+ 
 	const char* get_engine_shaders_path()
 	{
 		return engine_shader_paths[(u32)gfx.platform];
@@ -248,5 +248,14 @@ namespace Can::graphics
 	void remove_material(id::id_type id)
 	{
 		gfx.resources.remove_material(id);
+	}
+
+	id::id_type add_render_item(id::id_type entity_id, id::id_type geometry_content_id, u32 material_count, const id::id_type* const material_ids)
+	{
+		gfx.resources.add_render_item(entity_id, geometry_content_id, material_count, material_ids);
+	}
+	void remove_render_item(id::id_type id)
+	{
+		gfx.resources.remove_render_item(id);
 	}
 }

@@ -12,10 +12,6 @@ namespace Can::content
 		class geometry_hierarchy_stream
 		{
 		public:
-			struct lod_offset {
-				u16 offset;
-				u16 count;
-			};
 
 			DISABLE_COPY_AND_MOVE(geometry_hierarchy_stream);
 			geometry_hierarchy_stream(u8* const buffer, u32 lods = u32_invalid_id)

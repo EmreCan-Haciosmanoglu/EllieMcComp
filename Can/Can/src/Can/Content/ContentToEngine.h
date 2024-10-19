@@ -15,4 +15,9 @@ namespace Can::content
 			count
 		};
 	};
+
+	struct lod_offset {
+		u16 offset;
+		u16 count;
+	};
 }

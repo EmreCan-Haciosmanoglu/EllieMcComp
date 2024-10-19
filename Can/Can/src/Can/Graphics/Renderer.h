@@ -8,6 +8,14 @@
 
 namespace Can::graphics
 {
+	struct frame_info
+	{
+		id::id_type* render_item_ids{ nullptr };
+		f32* thresholds{ nullptr };
+		u32 render_item_count{ 0 };
+		camera_id camera_id{ id::invalid_id };
+	};
+
 	DEFINE_TYPED_ID(surface_id);
 
 	class surface
@@ -108,6 +116,39 @@ namespace Can::graphics
 		direct3d12 = 0,
 	};
 
+	struct shader_flags
+	{
+		enum flags :u32
+		{
+			none = 0x00,
+			vertex = 0x01,
+			hull = 0x02,
+			domain = 0x04,
+			geometry = 0x08,
+			pixel = 0x10,
+			compute = 0x20,
+			amplification = 0x40,
+			mesh = 0x80,
+		};
+	};
+
+	struct shader_type
+	{
+		enum type : u32
+		{
+			vertex = 0,
+			hull,
+			domain,
+			geometry,
+			pixel,
+			compute,
+			amplification,
+			mesh,
+
+			count
+		};
+	};
+
 	bool initialize(graphics_platform platform);
 	void shutdown();
 
@@ -125,4 +166,7 @@ namespace Can::graphics
 
 	id::id_type add_material (material_init_info info);
 	void remove_material(id::id_type id);
+
+	id::id_type add_render_item(id::id_type entity_id, id::id_type geometry_content_id, u32 material_count, const id::id_type* const material_ids);
+	void remove_render_item(id::id_type id);
 }
