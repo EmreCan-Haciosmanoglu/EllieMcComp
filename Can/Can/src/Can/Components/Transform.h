@@ -10,9 +10,9 @@ namespace Can::transform
 
 	struct init_info
 	{
-		Math::Vector4<f32> rotation{ 0.0f };
-		Math::Vector3<f32> position{ 0.0f };
-		Math::Vector3<f32> scale{ 1.0f, 1.0f, 1.0f };
+		f32 position[3]{};
+		f32 rotation[4]{};
+		f32 scale[3]{ 1.0f, 1.0f, 1.0f };
 	};
 
 	class component
@@ -23,9 +23,11 @@ namespace Can::transform
 		constexpr component_id get_id() const { return _id; }
 		const bool is_valid() const { return _id != id::invalid_id; }
 
-		[[nodiscard]] Math::Vector4<f32> rotation() const;
-		[[nodiscard]] Math::Vector3<f32> position() const;
-		[[nodiscard]] Math::Vector3<f32> scale() const;
+		[[nodiscard]] math::v4 rotation() const;
+		[[nodiscard]] math::v3 orientation() const;
+		[[nodiscard]] math::v3 position() const;
+		[[nodiscard]] math::v3 scale() const;
+		
 	private:
 		component_id _id;
 		transform_id _tramsform{};
@@ -33,4 +35,5 @@ namespace Can::transform
 
 	component create(init_info info, game_entity::entity entity);
 	void remove(component c);
+	void get_transform_matrices(const game_entity::entity_id id, math::m4x4& world, math::m4x4& inverse_world);
 }
