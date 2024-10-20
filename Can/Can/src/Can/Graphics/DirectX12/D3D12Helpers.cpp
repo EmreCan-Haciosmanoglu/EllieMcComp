@@ -79,7 +79,7 @@ namespace Can::graphics::d3d12::d3dx
 	}
 
 	ID3D12Resource* create_buffer(
-		void* data,
+		const void* data,
 		u32 buffer_size,
 		bool is_cpu_accesible /* = false */,
 		D3D12_RESOURCE_STATES state /* = D3D12_RESOURCE_STATE_COMMON */,

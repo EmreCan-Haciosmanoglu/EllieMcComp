@@ -198,6 +198,16 @@ namespace Can::graphics::d3d12::d3dx
 		};
 	} blend_state;
 
+	constexpr u64 align_size_for_constant_buffer(u64 size)
+	{
+		return math::align_size_up<D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT>(size);
+	}
+
+	constexpr u64 align_size_for_texture(u64 size)
+	{
+		return math::align_size_up<D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT>(size);
+	}
+
 	class d3d12_resource_barrier
 	{
 	public:
@@ -469,7 +479,7 @@ namespace Can::graphics::d3d12::d3dx
 	ID3D12PipelineState* create_pipeline_state(void* stream, u64 stream_size);
 
 	ID3D12Resource* create_buffer(
-		void* data,
+		const void* data,
 		u32 buffer_size,
 		bool is_cpu_accesible = false,
 		D3D12_RESOURCE_STATES state = D3D12_RESOURCE_STATE_COMMON,
