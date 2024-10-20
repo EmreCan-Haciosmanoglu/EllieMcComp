@@ -83,10 +83,10 @@ namespace Can::graphics
 		return gfx.surface.height(_id);
 	}
 
-	void surface::render() const
+	void surface::render(frame_info info) const
 	{
 		assert(is_valid());
-		gfx.surface.render(_id);
+		gfx.surface.render(_id, info);
 	}
 
 	camera create_camera(camera_init_info info)

@@ -17,7 +17,7 @@ namespace Can::graphics
 			void(*resize)(surface_id,u32,u32);
 			u32(*width)(surface_id);
 			u32(*height)(surface_id);
-			void(*render)(surface_id);
+			void(*render)(surface_id, frame_info);
 		} surface;
 
 		struct

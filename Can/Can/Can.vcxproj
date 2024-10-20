@@ -188,6 +188,7 @@
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Shaders.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Surface.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Upload.h" />
+    <ClInclude Include="src\Can\Graphics\DirectX12\Shaders\SharedTypes.h" />
     <ClInclude Include="src\Can\Graphics\GraphicsPlatformInterface.h" />
     <ClInclude Include="src\Can\Graphics\Renderer.h" />
     <ClInclude Include="src\Can\Hash_Table.h" />
@@ -245,6 +246,7 @@
     <ClInclude Include="src\Can\Unordered_Array.h" />
     <ClInclude Include="src\Can\Utilities\IOStream.h" />
     <ClInclude Include="src\Can\Utilities\Math.h" />
+    <ClInclude Include="src\Can\Utilities\MathTypes.h" />
     <ClInclude Include="src\Can\Window.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLContext.h" />

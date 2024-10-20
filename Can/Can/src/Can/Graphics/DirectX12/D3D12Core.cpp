@@ -8,6 +8,8 @@
 #include "D3D12PostProcess.h"
 #include "D3D12Upload.h"
 #include "D3D12Content.h"
+#include "D3D12Camera.h"
+#include "Shaders/SharedTypes.h"
 
 #include "Can\Unordered_Array.h"
 
@@ -235,23 +237,58 @@ namespace Can::graphics::d3d12::core
 			DXCall(device->CheckFeatureSupport(D3D12_FEATURE_FEATURE_LEVELS, &feature_level_info, sizeof(feature_level_info)));
 			return feature_level_info.MaxSupportedFeatureLevel;
 		}
-	}
 
-	void __declspec(noinline) process_deferred_releases(u32 frame_idx)
-	{
-		std::lock_guard lock{ deferred_releases_mutex };
-
-		deferred_releases_flag[frame_idx] = 0;
-		rtv_desc_heap.process_deferred_free(frame_idx);
-		dsv_desc_heap.process_deferred_free(frame_idx);
-		srv_desc_heap.process_deferred_free(frame_idx);
-		uav_desc_heap.process_deferred_free(frame_idx);
-
-		std::vector<IUnknown*>& resources{ deferred_releases[frame_idx] };
-		if (resources.size())
+		void __declspec(noinline) process_deferred_releases(u32 frame_idx)
 		{
-			for (auto resource : resources) release(resource);
-			resources.clear();
+			std::lock_guard lock{ deferred_releases_mutex };
+
+			deferred_releases_flag[frame_idx] = 0;
+			rtv_desc_heap.process_deferred_free(frame_idx);
+			dsv_desc_heap.process_deferred_free(frame_idx);
+			srv_desc_heap.process_deferred_free(frame_idx);
+			uav_desc_heap.process_deferred_free(frame_idx);
+
+			std::vector<IUnknown*>& resources{ deferred_releases[frame_idx] };
+			if (resources.size())
+			{
+				for (auto resource : resources) release(resource);
+				resources.clear();
+			}
+		}
+
+		d3d12_frame_info get_d3d12_frame_info(const frame_info& info, constant_buffer& cbuffer, const d3d12_surface& surface, u32 frame_idx, f32 delta_time)
+		{
+			camera::d3d12_camera& camera{ camera::get(info.camera_id) };
+			camera.update();
+			hlsl::GlobalShaderData data{};
+
+			using namespace DirectX;
+			XMStoreFloat4x3A(&data.View, camera.view());
+			XMStoreFloat4x3A(&data.Projection, camera.projection());
+			XMStoreFloat4x3A(&data.InvProjection, camera.inverse_projection());
+			XMStoreFloat4x3A(&data.ViewProjection, camera.view_projection());
+			XMStoreFloat4x3A(&data.InvViewProjection, camera.inverse_view_projection());
+			XMStoreFloat3(&data.CameraPosition, camera.position());
+			XMStoreFloat3(&data.CameraDirection, camera.direction());
+			data.ViewWidth = surface.width();
+			data.ViewHeight = surface.height();
+			data.DeltaTime = delta_time;
+
+			hlsl::GlobalShaderData* const shader_data{ cbuffer.allocate< hlsl::GlobalShaderData>() };
+			memcpy(shader_data, &data, sizeof(hlsl::GlobalShaderData));
+
+			d3d12_frame_info d3d12_info
+			{
+				&info,
+				&camera,
+				cbuffer.gpu_address(shader_data),
+				data.ViewWidth,
+				data.ViewHeight,
+				frame_idx,
+				delta_time
+			};
+
+			return d3d12_info;
 		}
 	}
 
@@ -341,7 +378,7 @@ namespace Can::graphics::d3d12::core
 		NAME_D3D12_OBJECT(uav_desc_heap.heap(), L"UAV Descriptor Heap");
 
 		return true;
-	}
+}
 
 	void shutdown()
 	{
@@ -448,7 +485,7 @@ namespace Can::graphics::d3d12::core
 		return surfaces[id].height();
 	}
 
-	void render_surface(surface_id id)
+	void render_surface(surface_id id, frame_info info)
 	{
 		gfx_command.begin_frame();
 
@@ -468,12 +505,9 @@ namespace Can::graphics::d3d12::core
 		ID3D12Resource* const current_back_buffer{ surface.back_buffer() };
 
 
-		d3d12_frame_info frame_info
-		{
-			surface.width(),
-			surface.height()
-		};
-		gpass::set_size({ (s32)frame_info.surface_width, (s32)frame_info.surface_height });
+		const d3d12_frame_info d3d12_info{ get_d3d12_frame_info(info, cbuffer, surface, frame_idx, 16.7f) };
+
+		gpass::set_size({ (s32)d3d12_info.surface_width, (s32)d3d12_info.surface_height });
 		d3dx::d3d12_resource_barrier& barriers{ resource_barriers };
 
 		//Record commands
@@ -493,13 +527,13 @@ namespace Can::graphics::d3d12::core
 		gpass::add_transitions_for_depth_prepass(barriers);
 		barriers.apply(cmd_list);
 		gpass::set_render_targets_for_depth_prepass(cmd_list);
-		gpass::depth_prepass(cmd_list, frame_info);
+		gpass::depth_prepass(cmd_list, d3d12_info);
 
 		// Geometry and lighting pass
 		gpass::add_transitions_for_gpass(barriers);
 		barriers.apply(cmd_list);
 		gpass::set_render_targets_for_gpass(cmd_list);
-		gpass::render(cmd_list, frame_info);
+		gpass::render(cmd_list, d3d12_info);
 
 		// Post-processs
 		barriers.add(
@@ -511,7 +545,7 @@ namespace Can::graphics::d3d12::core
 		gpass::add_transitions_for_post_process(barriers);
 		barriers.apply(cmd_list);
 
-		fx::post_process(cmd_list, surface.rtv());
+		fx::post_process(cmd_list, d3d12_info, surface.rtv());
 
 		// After Post-process
 		d3dx::transition_resource(

@@ -227,9 +227,9 @@ namespace Can::graphics::d3d12::camera
 		game_entity::entity entity{ game_entity::entity_id{_entity_id} };
 		DirectX::XMFLOAT3 pos{ entity.transform().position() };
 		DirectX::XMFLOAT3 dir{ entity.transform().orientation() };
-		DirectX::XMVECTOR position{ DirectX::XMLoadFloat3(&pos) };
-		DirectX::XMVECTOR direction{ DirectX::XMLoadFloat3(&dir) };
-		_view = DirectX::XMMatrixLookToRH(position, direction, _up);
+		_position =  DirectX::XMLoadFloat3(&pos) ;
+		_direction =  DirectX::XMLoadFloat3(&dir) ;
+		_view = DirectX::XMMatrixLookToRH(_position, _direction, _up);
 		
 		if (_is_dirty)
 		{

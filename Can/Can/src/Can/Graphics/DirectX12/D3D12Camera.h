@@ -18,13 +18,15 @@ namespace Can::graphics::d3d12::camera
 		void view_width(f32 width);
 		void view_height(f32 height);
 		void near_z(f32 near_z);
-		void far_z(f32 far_z) ;
+		void far_z(f32 far_z);
 
 		[[nodiscard]] constexpr DirectX::XMMATRIX view() const { return _view; }
 		[[nodiscard]] constexpr DirectX::XMMATRIX projection() const { return _projection; }
 		[[nodiscard]] constexpr DirectX::XMMATRIX inverse_projection() const { return _inverse_projection; }
 		[[nodiscard]] constexpr DirectX::XMMATRIX view_projection() const { return _view_projection; }
 		[[nodiscard]] constexpr DirectX::XMMATRIX inverse_view_projection() const { return _inverse_view_projection; }
+		[[nodiscard]] constexpr DirectX::XMVECTOR position() const { return _position; }
+		[[nodiscard]] constexpr DirectX::XMVECTOR direction() const { return _direction; }
 		[[nodiscard]] constexpr DirectX::XMVECTOR up() const { return _up; }
 		[[nodiscard]] constexpr f32 near_z() const { return _near_z; }
 		[[nodiscard]] constexpr f32 far_z() const { return _far_z; }
@@ -40,6 +42,8 @@ namespace Can::graphics::d3d12::camera
 		DirectX::XMMATRIX       _inverse_projection;
 		DirectX::XMMATRIX       _view_projection;
 		DirectX::XMMATRIX       _inverse_view_projection;
+		DirectX::XMVECTOR       _position;
+		DirectX::XMVECTOR       _direction;
 		DirectX::XMVECTOR       _up;
 		f32                     _near_z;
 		f32                     _far_z;

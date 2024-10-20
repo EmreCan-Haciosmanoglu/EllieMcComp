@@ -4,6 +4,7 @@
 #include "D3D12Resources.h"
 #include "D3D12Helpers.h"
 #include "D3D12Shaders.h"
+#include "D3D12Content.h"
 
 
 namespace Can::graphics::d3d12::gpass
@@ -12,7 +13,7 @@ namespace Can::graphics::d3d12::gpass
 	{
 		struct gpass_root_param_indices {
 			enum : u32 {
-				root_constants = 0, 
+				root_constants = 0,
 
 				count
 			};
@@ -34,6 +35,103 @@ namespace Can::graphics::d3d12::gpass
 #else
 		constexpr f32 clear_value[4]{ };
 #endif
+
+		struct gpass_cache
+		{
+			std::vector<id::id_type> d3d12_render_item_ids;
+
+			id::id_type* entity_ids{ nullptr };
+			id::id_type* submesh_gpu_ids{ nullptr };
+			id::id_type* materials_ids{ nullptr };
+			ID3D12PipelineState** gpass_pipeline_states{ nullptr };
+			ID3D12PipelineState** depth_pipeline_states{ nullptr };
+			ID3D12RootSignature** root_signatures{ nullptr };
+			material_type::type* material_types{ nullptr };
+			D3D12_GPU_VIRTUAL_ADDRESS* position_buffers{ nullptr };
+			D3D12_GPU_VIRTUAL_ADDRESS* element_buffers{ nullptr };
+			D3D12_INDEX_BUFFER_VIEW* index_buffer_views{ nullptr };
+			D3D_PRIMITIVE_TOPOLOGY* primitive_topologies{ nullptr };
+			u32* elements_types{ nullptr };
+			D3D12_GPU_VIRTUAL_ADDRESS* per_object_data{ nullptr };
+
+			constexpr content::render_item::items_cache items_cache() const
+			{
+				return {
+					entity_ids,
+					submesh_gpu_ids,
+					materials_ids,
+					gpass_pipeline_states,
+					depth_pipeline_states
+				};
+			}
+
+			constexpr content::submesh::views_cache views_cache() const
+			{
+				return {
+					position_buffers,
+					element_buffers,
+					index_buffer_views,
+					primitive_topologies,
+					elements_types
+				};
+			}
+
+			constexpr content::material::materials_cache materials_cache() const
+			{
+				return{
+					root_signatures,
+					material_types
+				};
+			}
+
+			constexpr void resize()
+			{
+				const u64 items_count{ d3d12_render_item_ids.size() };
+				const u64 new_buffer_size{ items_count * struct_size };
+				const u64 old_buffer_size{ _buffer.size() };
+				if (new_buffer_size > old_buffer_size)
+				{
+					_buffer.resize(new_buffer_size);
+				}
+
+				if (new_buffer_size != old_buffer_size)
+				{
+					entity_ids = (id::id_type*)_buffer.data();
+					submesh_gpu_ids = (id::id_type*)(&entity_ids[items_count]);
+					materials_ids = (id::id_type*)(&submesh_gpu_ids[items_count]);
+					gpass_pipeline_states = (ID3D12PipelineState**)(&materials_ids[items_count]);
+					depth_pipeline_states = (ID3D12PipelineState**)(&gpass_pipeline_states[items_count]);
+					root_signatures = (ID3D12RootSignature**)(&depth_pipeline_states[items_count]);
+					material_types = (material_type::type*)(&root_signatures[items_count]);
+					position_buffers = (D3D12_GPU_VIRTUAL_ADDRESS*)(&material_types[items_count]);
+					element_buffers = (D3D12_GPU_VIRTUAL_ADDRESS*)(&position_buffers[items_count]);
+					index_buffer_views = (D3D12_INDEX_BUFFER_VIEW*)(&element_buffers[items_count]);
+					primitive_topologies = (D3D_PRIMITIVE_TOPOLOGY*)(&index_buffer_views[items_count]);
+					elements_types = (u32*)(&primitive_topologies[items_count]);
+					per_object_data = (D3D12_GPU_VIRTUAL_ADDRESS*)(&elements_types[items_count]);
+				}
+			}
+
+		private:
+			constexpr static u32 struct_size
+			{
+				sizeof(id::id_type) +				   // entity_ids
+				sizeof(id::id_type) +				   // submesh_gpu_ids
+				sizeof(id::id_type) +				   // materials_ids
+				sizeof(ID3D12PipelineState*) +		   // gpass_pipeline_states
+				sizeof(ID3D12PipelineState*) +		   // depth_pipeline_states
+				sizeof(ID3D12RootSignature*) +		   // root_signatures
+				sizeof(material_type::type) +		   // material_types
+				sizeof(D3D12_GPU_VIRTUAL_ADDRESS) +	   // position_buffers
+				sizeof(D3D12_GPU_VIRTUAL_ADDRESS) +	   // element_buffers
+				sizeof(D3D12_INDEX_BUFFER_VIEW) +	   // index_buffer_views
+				sizeof(D3D_PRIMITIVE_TOPOLOGY) +	   // primitive_topologies
+				sizeof(u32) +						   // elements_types
+				sizeof(D3D12_GPU_VIRTUAL_ADDRESS)	   // per_object_data
+			};
+
+			std::vector<u8> _buffer;
+		} frame_cache;
 
 		bool create_buffers(v2i size)
 		{
@@ -82,47 +180,52 @@ namespace Can::graphics::d3d12::gpass
 
 			return gpass_main_buffer.resource() && gpass_depth_buffer.resource();
 		}
-	}
 
-	bool create_gpass_pso_and_root_signiture()
-	{
-		assert(!gpass_root_signature && !gpass_pso);
-		using idx = gpass_root_param_indices;
-		d3dx::d3d12_root_parameter parameters[idx::count]{};
-		parameters[idx::root_constants].as_constants(3, D3D12_SHADER_VISIBILITY_PIXEL, 1);
-		d3dx::d3d12_root_signature_desc root_signature{ parameters, idx::count };
-		root_signature.Flags &= ~D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS;
-		gpass_root_signature = root_signature.create();
-		assert(gpass_root_signature);
-		NAME_D3D12_OBJECT(gpass_root_signature, L"GPass Root Signature");
+		bool create_gpass_pso_and_root_signiture()
+		{
+			assert(!gpass_root_signature && !gpass_pso);
+			using idx = gpass_root_param_indices;
+			d3dx::d3d12_root_parameter parameters[idx::count]{};
+			parameters[idx::root_constants].as_constants(3, D3D12_SHADER_VISIBILITY_PIXEL, 1);
+			d3dx::d3d12_root_signature_desc root_signature{ parameters, idx::count };
+			root_signature.Flags &= ~D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS;
+			gpass_root_signature = root_signature.create();
+			assert(gpass_root_signature);
+			NAME_D3D12_OBJECT(gpass_root_signature, L"GPass Root Signature");
 
-		struct {
-			d3dx::d3d12_pipeline_state_subobject_root_signature        root_signature{ gpass_root_signature };
-			d3dx::d3d12_pipeline_state_subobject_vs                    vs{ shaders::get_engine_shader(shaders::engine_shader::fullscreen_triangle_vs) };
-			d3dx::d3d12_pipeline_state_subobject_ps                    ps{ shaders::get_engine_shader(shaders::engine_shader::fill_color_ps) };
-			d3dx::d3d12_pipeline_state_subobject_primitive_topology    primitive_topology{ D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE };
-			d3dx::d3d12_pipeline_state_subobject_render_target_formats render_target_formats;
-			d3dx::d3d12_pipeline_state_subobject_depth_stencil_format  depth_stencil_format{ depth_buffer_format };
-			d3dx::d3d12_pipeline_state_subobject_rasterizer            rasterizer{ d3dx::rasterizer_state.no_cull };
-			d3dx::d3d12_pipeline_state_subobject_depth_stencil1        depth{ d3dx::depth_state.disabled };
-		} stream;
+			struct {
+				d3dx::d3d12_pipeline_state_subobject_root_signature        root_signature{ gpass_root_signature };
+				d3dx::d3d12_pipeline_state_subobject_vs                    vs{ shaders::get_engine_shader(shaders::engine_shader::fullscreen_triangle_vs) };
+				d3dx::d3d12_pipeline_state_subobject_ps                    ps{ shaders::get_engine_shader(shaders::engine_shader::fill_color_ps) };
+				d3dx::d3d12_pipeline_state_subobject_primitive_topology    primitive_topology{ D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE };
+				d3dx::d3d12_pipeline_state_subobject_render_target_formats render_target_formats;
+				d3dx::d3d12_pipeline_state_subobject_depth_stencil_format  depth_stencil_format{ depth_buffer_format };
+				d3dx::d3d12_pipeline_state_subobject_rasterizer            rasterizer{ d3dx::rasterizer_state.no_cull };
+				d3dx::d3d12_pipeline_state_subobject_depth_stencil1        depth{ d3dx::depth_state.disabled };
+			} stream;
 
-		D3D12_RT_FORMAT_ARRAY rtf_array{};
-		rtf_array.NumRenderTargets = 1;
-		rtf_array.RTFormats[0] = main_buffer_format;
+			D3D12_RT_FORMAT_ARRAY rtf_array{};
+			rtf_array.NumRenderTargets = 1;
+			rtf_array.RTFormats[0] = main_buffer_format;
 
-		stream.render_target_formats = rtf_array;
+			stream.render_target_formats = rtf_array;
 
-		gpass_pso = d3dx::create_pipeline_state(&stream, sizeof(stream));
-		NAME_D3D12_OBJECT(gpass_pso, L"GPass Pipeline State Object");
+			gpass_pso = d3dx::create_pipeline_state(&stream, sizeof(stream));
+			NAME_D3D12_OBJECT(gpass_pso, L"GPass Pipeline State Object");
 
-		return gpass_root_signature && gpass_pso;
+			return gpass_root_signature && gpass_pso;
+		}
+
+		void prepare_render_frame(const d3d12_frame_info& d3d12_info)
+		{
+
+		}
 	}
 
 	bool initialize()
 	{
 		return create_buffers(initial_dimensions) && create_gpass_pso_and_root_signiture();
-	} 
+	}
 
 	void shutdown()
 	{
@@ -143,10 +246,10 @@ namespace Can::graphics::d3d12::gpass
 			create_buffers(d);
 		}
 	}
-	
-	void depth_prepass(id3d12_graphics_command_list* cmd_list, const d3d12_frame_info& info)
-	{
 
+	void depth_prepass(id3d12_graphics_command_list* cmd_list, const d3d12_frame_info& d3d12_info)
+	{
+		prepare_render_frame(d3d12_info);
 	}
 
 	void add_transitions_for_depth_prepass(d3dx::d3d12_resource_barrier& barriers)
@@ -188,7 +291,7 @@ namespace Can::graphics::d3d12::gpass
 		);
 	}
 
-	void render(id3d12_graphics_command_list* cmd_list, const d3d12_frame_info& info)
+	void render(id3d12_graphics_command_list* cmd_list, const d3d12_frame_info& d3d12_info)
 	{
 		cmd_list->SetGraphicsRootSignature(gpass_root_signature);
 		cmd_list->SetPipelineState(gpass_pso);
@@ -199,8 +302,8 @@ namespace Can::graphics::d3d12::gpass
 			f32 height;
 			u32 frame;
 		} constants{
-				(f32)info.surface_width,
-				(f32)info.surface_height,
+				(f32)d3d12_info.surface_width,
+				(f32)d3d12_info.surface_height,
 				++frame
 		};
 		using idx = gpass_root_param_indices;

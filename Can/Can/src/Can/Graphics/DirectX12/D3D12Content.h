@@ -16,7 +16,7 @@ namespace Can::graphics::d3d12::content
 		{
 			D3D12_GPU_VIRTUAL_ADDRESS* const position_buffers;
 			D3D12_GPU_VIRTUAL_ADDRESS* const element_buffers;
-			D3D12_INDEX_BUFFER_VIEW* const   index_buffer_view;
+			D3D12_INDEX_BUFFER_VIEW* const   index_buffer_views;
 			D3D_PRIMITIVE_TOPOLOGY* const    primitive_topologies;
 			u32* const                       elements_types;
 		};
@@ -53,7 +53,7 @@ namespace Can::graphics::d3d12::content
 			id::id_type* const          entity_ids;
 			id::id_type* const          submesh_gpu_ids;
 			id::id_type* const          materials_ids;
-			ID3D12PipelineState** const psos;
+			ID3D12PipelineState** const gpass_psos;
 			ID3D12PipelineState** const depth_psos;
 		};
 

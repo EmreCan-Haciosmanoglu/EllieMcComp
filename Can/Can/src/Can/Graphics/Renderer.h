@@ -29,7 +29,7 @@ namespace Can::graphics
 		void resize(u32 width, u32 height) const;
 		u32 width() const;
 		u32 height() const;
-		void render() const;
+		void render(frame_info info) const;
 
 	private:
 		surface_id _id{ id::invalid_id };

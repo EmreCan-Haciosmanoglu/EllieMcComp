@@ -1447,6 +1447,8 @@
     <ClInclude Include="src\Can\API\TransformComponent.h" />
     <ClInclude Include="src\Can\API\ScriptComponent.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Camera.h" />
+    <ClInclude Include="src\Can\Graphics\DirectX12\Shaders\SharedTypes.h" />
+    <ClInclude Include="src\Can\Utilities\MathTypes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
