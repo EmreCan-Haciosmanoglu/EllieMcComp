@@ -32,7 +32,7 @@ namespace Can::graphics::d3d12::gpass
 	[[nodiscard]] const d3d12_render_texture& main_buffer();
 	[[nodiscard]] const d3d12_depth_buffer& depth_buffer();
 
-	void set_size(v2i size);
+	void set_size(math::u32v2 size);
 	void depth_prepass(id3d12_graphics_command_list* cmd_list, const d3d12_frame_info& d3d12_info);
 	void render(id3d12_graphics_command_list* cmd_list, const d3d12_frame_info& d3d12_info);
 
