@@ -158,8 +158,8 @@ namespace Can::graphics::d3d12::content
 			id::id_type* _texture_ids;
 			u32* _descriptor_indices;
 			id::id_type* _shader_ids;
-			id::id_type _root_signature_id;
-			u32 _texture_count;
+			id::id_type  _root_signature_id;
+			u32          _texture_count;
 			material_type::type _type;
 			shader_flags::flags _shader_flags;
 		};
@@ -425,14 +425,10 @@ namespace Can::graphics::d3d12::content
 			blob.skip(total_buffer_size);
 			data = blob.position();
 
-			submesh_view submesh_view{};
-			submesh_view.position_buffer_view.BufferLocation = resource->GetGPUVirtualAddress();
-			submesh_view.position_buffer_view.SizeInBytes = position_buffer_size;
-			submesh_view.position_buffer_view.StrideInBytes = sizeof(v3);
-
-			submesh_view.index_buffer_view.BufferLocation = resource->GetGPUVirtualAddress() + aligned_position_buffer_size + aligned_element_buffer_size;
-			submesh_view.index_buffer_view.Format = (index_size == sizeof(16)) ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT;
-			submesh_view.index_buffer_view.SizeInBytes = index_buffer_size;
+			submesh_view view{};
+			view.position_buffer_view.BufferLocation = resource->GetGPUVirtualAddress();
+			view.position_buffer_view.SizeInBytes = position_buffer_size;
+			view.position_buffer_view.StrideInBytes = sizeof(v3);
 
 			if (element_size)
 			{
@@ -440,8 +436,13 @@ namespace Can::graphics::d3d12::content
 				submesh_view.element_buffer_view.SizeInBytes = element_buffer_size;
 				submesh_view.element_buffer_view.StrideInBytes = element_size;
 			}
-			submesh_view.elements_type = elements_type;
-			submesh_view.primitive_topology = get_d3d_primitive_topology((Can::content::primitive_topology::type)primitive_topology);
+
+			view.index_buffer_view.BufferLocation = resource->GetGPUVirtualAddress() + aligned_position_buffer_size + aligned_element_buffer_size;
+			view.index_buffer_view.SizeInBytes = index_buffer_size;
+			view.index_buffer_view.Format = (index_size == sizeof(16)) ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT;
+			
+			view.primitive_topology = get_d3d_primitive_topology((Can::content::primitive_topology::type)primitive_topology);
+			view.elements_type = elements_type;
 
 			std::lock_guard lock{ submesh_mutex };
 			submesh_buffers.push_back(resource);
@@ -477,6 +478,19 @@ namespace Can::graphics::d3d12::content
 		}
 	}
 
+	namespace texture
+	{
+		void get_descriptor_indices(const id::id_type* const texture_ids, u32 id_count, u32* const indices)
+		{
+			assert(texture_ids && id_count && indices);
+			std::lock_guard lock{ texture_mutex };
+			for (u32 i{ 0 }; i < id_count; ++i)
+			{
+				indices[i] = textures[i].srv().index;
+			}
+		}
+	}
+
 	namespace material
 	{
 		// NOTE: Expects 'buffer' to contain:
@@ -501,6 +515,7 @@ namespace Can::graphics::d3d12::content
 
 		void remove(id::id_type id)
 		{
+			assert(false);
 			std::lock_guard lock{ material_mutex };
 			materials.erase(materials.begin() + id); // Unordered_Array
 		}
@@ -543,7 +558,7 @@ namespace Can::graphics::d3d12::content
 			std::unique_ptr<id::id_type[]> items{ std::make_unique<id::id_type[]>(sizeof(id::id_type) * (1 + (u64)material_count + 1)) };
 
 			items[0] = geometry_content_id;
-			id::id_type* const items_ids{ &items[1] };
+			id::id_type* const item_ids{ &items[1] };
 
 			std::lock_guard lock{ render_item_mutex };
 
@@ -602,7 +617,7 @@ namespace Can::graphics::d3d12::content
 			u32 d3d12_render_item_count{ 0 };
 			for (u32 i{ 0 }; i < count; ++i)
 			{
-				d3d12_render_item_count += frane_cache, lod_offsets[i].count;
+				d3d12_render_item_count += frame_cache.lod_offsets[i].count;
 			}
 
 			assert(d3d12_render_item_count);
