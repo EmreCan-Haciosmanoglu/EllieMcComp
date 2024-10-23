@@ -69,11 +69,11 @@ namespace Can::graphics
 		id::id_type       entity_id{ id::invalid_id };
 		camera::type      type{};
 		DirectX::XMFLOAT3 up;
-		union{
+		union {
 			f32           field_of_view;
 			f32           view_width;
 		};
-		union{
+		union {
 			f32           aspect_ratio;
 			f32           view_height;
 		};
@@ -111,11 +111,6 @@ namespace Can::graphics
 		}
 	};
 
-	enum class graphics_platform :u32
-	{
-		direct3d12 = 0,
-	};
-
 	struct shader_flags
 	{
 		enum flags :u32
@@ -149,6 +144,42 @@ namespace Can::graphics
 		};
 	};
 
+	struct material_type
+	{
+		enum type : u32
+		{
+			opaque,
+			// transparent, unlit, clear_coat, cloth, skin, foliage, hair, etc
+			count
+		};
+	};
+
+	struct material_init_info
+	{
+		material_type::type type;
+		u32                 texture_count;
+		id::id_type         shader_ids[shader_type::count]{ id::invalid_id, id::invalid_id, id::invalid_id, id::invalid_id, id::invalid_id, id::invalid_id, id::invalid_id, id::invalid_id};
+		id::id_type* texture_ids;
+	};
+
+	struct primitive_topology
+	{
+		enum type : u32 {
+			point_List = 1,
+			line_list,
+			line_strip,
+			triangle_list,
+			triangle_strip,
+
+			count
+		};
+	};
+
+	enum class graphics_platform :u32
+	{
+		direct3d12 = 0,
+	};
+
 	bool initialize(graphics_platform platform);
 	void shutdown();
 
@@ -164,7 +195,7 @@ namespace Can::graphics
 	id::id_type add_submesh(const u8*& data);
 	void remove_submesh(id::id_type id);
 
-	id::id_type add_material (material_init_info info);
+	id::id_type add_material(material_init_info info);
 	void remove_material(id::id_type id);
 
 	id::id_type add_render_item(id::id_type entity_id, id::id_type geometry_content_id, u32 material_count, const id::id_type* const material_ids);

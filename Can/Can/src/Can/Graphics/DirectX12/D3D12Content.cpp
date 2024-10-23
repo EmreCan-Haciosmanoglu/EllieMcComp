@@ -111,7 +111,7 @@ namespace Can::graphics::d3d12::content
 
 				if (info.texture_count)
 				{
-					memcpy(_texture_ids, info.texture_ids, info.texture_count * size(id::id_type));
+					memcpy(_texture_ids, info.texture_ids, info.texture_count * sizeof(id::id_type));
 					texture::get_descriptor_indices(_texture_ids, info.texture_count, _descriptor_indices);
 				}
 
@@ -145,9 +145,9 @@ namespace Can::graphics::d3d12::content
 				_root_signature_id = *(id::id_type*)(&buffer[root_signature_index]);
 				_texture_count = *(u32*)(&buffer[texture_count_index]);
 
-				_shader_ids = *(id::id_type*)(&buffer[texture_count_index + sizeof(u32)]);
-				_texture_ids = _texture_count ? *(id::id_type*)(&buffer[texture_count_index + sizeof(u32)]) : nullptr;
-				_descriptor_indices = _texture_count ? *(id::id_type*)(&buffer[texture_count_index + sizeof(u32)]) : nullptr;
+				_shader_ids = (id::id_type*)(&buffer[texture_count_index + sizeof(u32)]);
+				_texture_ids = _texture_count ? &_shader_ids[_mm_popcnt_u32(_shader_flags)] : nullptr;
+				_descriptor_indices = _texture_count ? (u32*)(&_texture_ids[_texture_count]) : nullptr;
 			}
 
 			constexpr static u32 shader_flags_index{ sizeof(material_type::type) };
@@ -164,21 +164,21 @@ namespace Can::graphics::d3d12::content
 			shader_flags::flags _shader_flags;
 		};
 
-		constexpr D3D_PRIMITIVE_TOPOLOGY get_d3d_primitive_topology(Can::content::primitive_topology::type type)
+		constexpr D3D_PRIMITIVE_TOPOLOGY get_d3d_primitive_topology(primitive_topology::type type)
 		{
-			assert(type < Can::content::primitive_topology::count);
+			assert(type < primitive_topology::count);
 
 			switch (type)
 			{
-			case Can::content::primitive_topology::point_List:
+			case primitive_topology::point_List:
 				return D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
-			case Can::content::primitive_topology::line_list:
+			case primitive_topology::line_list:
 				return D3D_PRIMITIVE_TOPOLOGY_LINELIST;
-			case Can::content::primitive_topology::line_strip:
+			case primitive_topology::line_strip:
 				return D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
-			case Can::content::primitive_topology::triangle_list:
+			case primitive_topology::triangle_list:
 				return D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-			case Can::content::primitive_topology::triangle_strip:
+			case primitive_topology::triangle_strip:
 				return D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
 			}
 			return D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
@@ -199,39 +199,39 @@ namespace Can::graphics::d3d12::content
 
 		constexpr D3D12_ROOT_SIGNATURE_FLAGS get_root_signature_flags(shader_flags::flags flags)
 		{
-			D3D12_ROOT_SIGNATURE_FLAGS flags{ d3dx::d3d12_root_signature_desc::default_flags };
+			D3D12_ROOT_SIGNATURE_FLAGS d3d12_root_signature_flags{ d3dx::d3d12_root_signature_desc::default_flags };
 
-			if (flags & shader_flags::vertex)        flags &= ~D3D12_ROOT_SIGNATURE_FLAG_DENY_VERTEX_SHADER_ROOT_ACCESS;
-			if (flags & shader_flags::hull)          flags &= ~D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS;
-			if (flags & shader_flags::domain)        flags &= ~D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS;
-			if (flags & shader_flags::geometry)      flags &= ~D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS;
-			if (flags & shader_flags::pixel)         flags &= ~D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS;
-			if (flags & shader_flags::amplification) flags &= ~D3D12_ROOT_SIGNATURE_FLAG_DENY_AMPLIFICATION_SHADER_ROOT_ACCESS;
-			if (flags & shader_flags::mesh)          flags &= ~D3D12_ROOT_SIGNATURE_FLAG_DENY_MESH_SHADER_ROOT_ACCESS;
+			if (flags & shader_flags::vertex)        d3d12_root_signature_flags &= ~D3D12_ROOT_SIGNATURE_FLAG_DENY_VERTEX_SHADER_ROOT_ACCESS;
+			if (flags & shader_flags::hull)          d3d12_root_signature_flags &= ~D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS;
+			if (flags & shader_flags::domain)        d3d12_root_signature_flags &= ~D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS;
+			if (flags & shader_flags::geometry)      d3d12_root_signature_flags &= ~D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS;
+			if (flags & shader_flags::pixel)         d3d12_root_signature_flags &= ~D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS;
+			if (flags & shader_flags::amplification) d3d12_root_signature_flags &= ~D3D12_ROOT_SIGNATURE_FLAG_DENY_AMPLIFICATION_SHADER_ROOT_ACCESS;
+			if (flags & shader_flags::mesh)          d3d12_root_signature_flags &= ~D3D12_ROOT_SIGNATURE_FLAG_DENY_MESH_SHADER_ROOT_ACCESS;
 
-			return flags;
+			return d3d12_root_signature_flags;
 		}
 
 		id::id_type create_root_signature(material_type::type type, shader_flags::flags flags)
 		{
 			assert(type < material_type::count);
-			static_assert(size(type) == sizeof(u32) && sizeof(flags) == sizeof(u32));
+			static_assert(sizeof(type) == sizeof(u32) && sizeof(flags) == sizeof(u32));
 			const u64 key{ ((u64)type << 32) | flags };
 			auto pair = mtl_rs_map.find(key);
 			if (pair != mtl_rs_map.end())
 			{
 				assert(pair->first == key);
-				return pair->secod;
+				return pair->second;
 			}
 
-			ID3D12RootSignature* root_siignature{ nullptr };
+			ID3D12RootSignature* root_signature{ nullptr };
 			switch (type)
 			{
 			case material_type::opaque:
 			{
 				using params = gpass::opaque_root_parameter;
 				d3dx::d3d12_root_parameter parameters[params::count]{};
-				parameters[params::per_frame_data].as_cbv(D3D12_SHADER_VISIBILITY_ALL, 0);
+				parameters[params::global_shader_data].as_cbv(D3D12_SHADER_VISIBILITY_ALL, 0);
 
 				D3D12_SHADER_VISIBILITY buffer_visibility{};
 				D3D12_SHADER_VISIBILITY data_visibility{};
@@ -269,7 +269,7 @@ namespace Can::graphics::d3d12::content
 			}
 			}
 
-			aseert(root_signature);
+			assert(root_signature);
 			const id::id_type id{ (id::id_type)root_signatures.size() };
 			root_signatures.push_back(root_signature);
 			mtl_rs_map[key] = id;
@@ -305,7 +305,7 @@ namespace Can::graphics::d3d12::content
 			std::lock_guard lock{ material_mutex };
 			const d3d12_material_stream material{ materials[material_id].get() };
 
-			constexpr u64 aligned_stream_size{ math::align_size_up<sizeof(u64)>(sizeof(d3dx::d3d12_pipeline_state_subobject_stream) };
+			constexpr u64 aligned_stream_size{ math::align_size_up<sizeof(u64)>(sizeof(d3dx::d3d12_pipeline_state_subobject_stream)) };
 			u8* const stream_ptr{ (u8* const)alloca(aligned_stream_size) };
 			ZeroMemory(stream_ptr, aligned_stream_size);
 			new(stream_ptr) d3dx::d3d12_pipeline_state_subobject_stream{};
@@ -318,7 +318,7 @@ namespace Can::graphics::d3d12::content
 
 			stream.render_target_formats = rt_array;
 			stream.root_signature = root_signatures[material.root_signature_id()];
-			stream.primitive_topology = get_d3d_primitive_topology_type(primitive_topology);
+			stream.primitive_topology = get_d3d_primitive_topology_type(d3d12_primitive_topology);
 			stream.depth_stencil_format = gpass::depth_buffer_format;
 			stream.rasterizer = d3dx::rasterizer_state.backface_cull;
 			stream.depth_stencil1 = d3dx::depth_state.enabled_readonly;
@@ -432,21 +432,21 @@ namespace Can::graphics::d3d12::content
 
 			if (element_size)
 			{
-				submesh_view.element_buffer_view.BufferLocation = resource->GetGPUVirtualAddress() + aligned_position_buffer_size;
-				submesh_view.element_buffer_view.SizeInBytes = element_buffer_size;
-				submesh_view.element_buffer_view.StrideInBytes = element_size;
+				view.element_buffer_view.BufferLocation = resource->GetGPUVirtualAddress() + aligned_position_buffer_size;
+				view.element_buffer_view.SizeInBytes = element_buffer_size;
+				view.element_buffer_view.StrideInBytes = element_size;
 			}
 
 			view.index_buffer_view.BufferLocation = resource->GetGPUVirtualAddress() + aligned_position_buffer_size + aligned_element_buffer_size;
 			view.index_buffer_view.SizeInBytes = index_buffer_size;
 			view.index_buffer_view.Format = (index_size == sizeof(16)) ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT;
-			
-			view.primitive_topology = get_d3d_primitive_topology((Can::content::primitive_topology::type)primitive_topology);
+
+			view.primitive_topology = get_d3d_primitive_topology((primitive_topology::type)primitive_topology);
 			view.elements_type = elements_type;
 
 			std::lock_guard lock{ submesh_mutex };
 			submesh_buffers.push_back(resource);
-			submesh_views.push_back(submesh_view);
+			submesh_views.push_back(view);
 			return submesh_views.size() - 1;
 		}
 
@@ -460,7 +460,7 @@ namespace Can::graphics::d3d12::content
 			submesh_buffers.erase(submesh_buffers.begin() + id);
 		}
 
-		void get_views(const id::id_type* const gpu_ids, u32 id_count, const view_cache& cache)
+		void get_views(const id::id_type* const gpu_ids, u32 id_count, const views_cache& cache)
 		{
 			assert(gpu_ids && id_count);
 			assert(cache.position_buffers && cache.element_buffers && cache.index_buffer_views && cache.primitive_topologies && cache.elements_types);
@@ -473,7 +473,7 @@ namespace Can::graphics::d3d12::content
 				cache.element_buffers[i] = view.element_buffer_view.BufferLocation;
 				cache.index_buffer_views[i] = view.index_buffer_view;
 				cache.primitive_topologies[i] = view.primitive_topology;
-				cache.element_types[i] = view.element_type;
+				cache.elements_types[i] = view.elements_type;
 			}
 		}
 	}
@@ -496,7 +496,7 @@ namespace Can::graphics::d3d12::content
 		// NOTE: Expects 'buffer' to contain:
 		//  ...
 		//  ...
-		//  ...
+		// material_type::type type
 		// shader_flags::flags flags
 		// id::id_type         root_signature_id
 		// u32                 texture_count
@@ -546,11 +546,11 @@ namespace Can::graphics::d3d12::content
 
 			submesh::views_cache views_cache
 			{
-				(D3D12_GPU_VIRTUAL_ADDRESS* const)alloca(material_count * sizeof(D3D12_GPU_VIRTUAL_ADDRESS))
-				(D3D12_GPU_VIRTUAL_ADDRESS* const)alloca(material_count * sizeof(D3D12_GPU_VIRTUAL_ADDRESS))
+				(D3D12_GPU_VIRTUAL_ADDRESS* const)alloca(material_count * sizeof(D3D12_GPU_VIRTUAL_ADDRESS)),
+				(D3D12_GPU_VIRTUAL_ADDRESS* const)alloca(material_count * sizeof(D3D12_GPU_VIRTUAL_ADDRESS)),
 				(D3D12_INDEX_BUFFER_VIEW* const)alloca(material_count * sizeof(D3D12_INDEX_BUFFER_VIEW)),
 				(D3D_PRIMITIVE_TOPOLOGY* const)alloca(material_count * sizeof(D3D_PRIMITIVE_TOPOLOGY)),
-				(u32* const)alloca(material_count * sizeif(u32))
+				(u32* const)alloca(material_count * sizeof(u32))
 			};
 
 			submesh::get_views(gpu_ids, material_count, views_cache);
@@ -568,12 +568,13 @@ namespace Can::graphics::d3d12::content
 				item.entity_id = entity_id;
 				item.submesh_gpu_id = gpu_ids[i];
 				item.material_id = material_ids[i];
-				pso_id id_pair{ create_pso(item.material_id, views_cache.primitive_topologies[i], views_cache.elements_type[i]) };
-				item.pso_id = id_pair->gpass_pso_id;
-				item.depth_pso_id = id_pair->depth_pso_id;
+				pso_id id_pair{ create_pso(item.material_id, views_cache.primitive_topologies[i], views_cache.elements_types[i]) };
+				item.pso_id = id_pair.gpass_pso_id;
+				item.depth_pso_id = id_pair.depth_pso_id;
 
 				assert(id::is_valid(item.submesh_gpu_id) && id::is_valid(item.material_id));
-				item_ids[i] = render_items.add(item);
+				render_items.push_back(item);
+				item_ids[i] = render_items.size() - 1;
 			}
 
 			item_ids[material_count] = id::invalid_id;
@@ -588,10 +589,12 @@ namespace Can::graphics::d3d12::content
 			const id::id_type* const item_ids{ &render_item_ids[id][1] };
 			for (u32 i{ 0 }; item_ids[i] != id::invalid_id; ++i)
 			{
-				render_items.remove(items_ids[i]);
+				assert(false);
+				render_items.erase(render_items.begin() + item_ids[i]);
 			}
 
-			render_item_ids.remove(id);
+			assert(false);
+			render_item_ids.erase(render_item_ids.begin() + id);
 		}
 
 		void get_d3d12_render_item_ids(const frame_info& info, std::vector<id::id_type>& d3d12_render_item_ids)
@@ -600,7 +603,7 @@ namespace Can::graphics::d3d12::content
 			assert(d3d12_render_item_ids.empty());
 
 			frame_cache.lod_offsets.clear();
-			frame_cache.geomentry_ids.clear();
+			frame_cache.geometry_ids.clear();
 			const u32 count{ info.render_item_count };
 
 			std::lock_guard lock{ render_item_mutex };
@@ -611,7 +614,7 @@ namespace Can::graphics::d3d12::content
 				frame_cache.geometry_ids.push_back(buffer[0]);
 			}
 
-			Can::content::get_lod_offsets(frame_cache.geometry_ids.data(), info.threshold, count, frame_cache_lod_offsets);
+			Can::content::get_lod_offsets(frame_cache.geometry_ids.data(), info.thresholds, count, frame_cache.lod_offsets);
 			assert(frame_cache.lod_offsets.size() == count);
 
 			u32 d3d12_render_item_count{ 0 };
@@ -639,17 +642,17 @@ namespace Can::graphics::d3d12::content
 		void get_items(const id::id_type* const d3d12_render_item_ids, u32 id_count, const items_cache& cache)
 		{
 			assert(d3d12_render_item_ids && id_count);
-			assert(cache.entity_ids && cache.submesh_gpu_ids && cache.material_ids && cache.psos && cache.depth_psos);
+			assert(cache.entity_ids && cache.submesh_gpu_ids && cache.materials_ids && cache.gpass_psos && cache.depth_psos);
 
 			std::lock_guard lock{ render_item_mutex };
 
 			for (u32 i{ 0 }; i < id_count; ++i)
 			{
-				const d3d12_render_item& item{ render_items[d3d12_render_items[i]] };
+				const d3d12_render_item& item{ render_items[d3d12_render_item_ids[i]] };
 				cache.entity_ids[i] = item.entity_id;
 				cache.submesh_gpu_ids[i] = item.submesh_gpu_id;
-				cache.material_ids[i] = item.material_id;
-				cache.psos[i] = pipeline_states[item.pso_id];
+				cache.materials_ids[i] = item.material_id;
+				cache.gpass_psos[i] = pipeline_states[item.pso_id];
 				cache.depth_psos[i] = pipeline_states[item.depth_pso_id];
 			}
 		}

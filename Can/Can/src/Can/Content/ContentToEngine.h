@@ -31,19 +31,6 @@ namespace Can::content
 		u8 _byte_code;
 	} const* compiled_shader_ptr;
 
-	struct primitive_topology
-	{
-		enum type : u32 {
-			point_List = 1,
-			line_list,
-			line_strip,
-			triangle_list,
-			triangle_strip,
-
-			count
-		};
-	};
-
 	struct lod_offset {
 		u16 offset;
 		u16 count;
@@ -57,5 +44,5 @@ namespace Can::content
 	compiled_shader_ptr get_shader(id::id_type id);
 
 	void get_submesh_gpu_ids(id::id_type geometry_content_id, u32 id_count, id::id_type* const gpu_ids);
-	void get_lod_offset(const id::id_type* const geometry_ids, const f32* const thresholds, u32 id_count, std::vector<lod_offset>& lod_offsets);
+	void get_lod_offsets(const id::id_type* const geometry_ids, const f32* const thresholds, u32 id_count, std::vector<lod_offset>& lod_offsets);
 }
