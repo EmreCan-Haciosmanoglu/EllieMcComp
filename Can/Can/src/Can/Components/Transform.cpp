@@ -1,8 +1,6 @@
 #include "canpch.h"
 #include "Transform.h"
 #include "Can/Unordered_Array.h"
-#include <DirectXMath.h>
-#include "Can/Utilities/MathTypes.h"
 
 namespace Can::transform
 {

@@ -4,8 +4,6 @@
 #include "Can/Platform/Window.h"
 #include "Can/API/Camera.h"
 
-#include <DirectXMath.h>
-
 namespace Can::graphics
 {
 	struct frame_info

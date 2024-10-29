@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Can/Graphics/DirectX12/D3D12CommonHeaders.h"
-#include "Can/Utilities/MathTypes.h"
 
 namespace Can::graphics::d3d12::hlsl
 {

@@ -4,7 +4,7 @@
 
 namespace Can::script
 {
-	DEFINE_TYPED_ID(script_id);
+	//DEFINE_TYPED_ID(script_id);
 
 	struct init_info
 	{

@@ -2,7 +2,6 @@
 #include "D3D12Resources.h"
 #include "D3D12Core.h"
 #include "D3D12Helpers.h"
-#include "Can/Utilities/Math.h"
 
 namespace Can::graphics::d3d12
 {

@@ -20,6 +20,7 @@
 #include <string>
 #include <ctime>
 #include <cstdlib>
+#include <cstring>
 #include <sstream>
 #include <fstream>
 #include <vector>

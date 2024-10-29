@@ -1449,6 +1449,8 @@
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Camera.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\Shaders\SharedTypes.h" />
     <ClInclude Include="src\Can\Utilities\MathTypes.h" />
+    <ClInclude Include="src\Can\Utilities\Utilities.h" />
+    <ClInclude Include="src\Can\Common\PrimitiveTypes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -1661,5 +1663,10 @@
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Content.cpp" />
     <ClCompile Include="src\Can\Content\ContentToEngine.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Camera.cpp" />
+    <ClCompile Include="src\Can\Common\EngineAPI.cpp" />
+    <ClCompile Include="src\Can\Common\EntityAPI.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.Direct3D.D3D12.1.614.1\build\native\Microsoft.Direct3D.D3D12.props" Condition="Exists('..\packages\Microsoft.Direct3D.D3D12.1.614.1\build\native\Microsoft.Direct3D.D3D12.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
@@ -160,6 +161,7 @@
     <ClInclude Include="src\Can\Camera\Perspective_Camera_Controller.h" />
     <ClInclude Include="src\Can\Common\CommonHeaders.h" />
     <ClInclude Include="src\Can\Common\Id.h" />
+    <ClInclude Include="src\Can\Common\PrimitiveTypes.h" />
     <ClInclude Include="src\Can\Components\ComponentsCommonHeaders.h" />
     <ClInclude Include="src\Can\Components\Entity.h" />
     <ClInclude Include="src\Can\Components\Script.h" />
@@ -247,6 +249,7 @@
     <ClInclude Include="src\Can\Utilities\IOStream.h" />
     <ClInclude Include="src\Can\Utilities\Math.h" />
     <ClInclude Include="src\Can\Utilities\MathTypes.h" />
+    <ClInclude Include="src\Can\Utilities\Utilities.h" />
     <ClInclude Include="src\Can\Window.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGl\OpenGLContext.h" />
@@ -635,6 +638,8 @@
     <ClCompile Include="src\Can\Camera\Orthographic_Camera_Controller.cpp" />
     <ClCompile Include="src\Can\Camera\Perspective_Camera.cpp" />
     <ClCompile Include="src\Can\Camera\Perspective_Camera_Controller.cpp" />
+    <ClCompile Include="src\Can\Common\EngineAPI.cpp" />
+    <ClCompile Include="src\Can\Common\EntityAPI.cpp" />
     <ClCompile Include="src\Can\Components\Entity.cpp" />
     <ClCompile Include="src\Can\Components\Transform.cpp" />
     <ClCompile Include="src\Can\Content\ContentLoader.cpp" />
@@ -728,7 +733,18 @@
       <Project>{49610F50-352E-6A5B-5E47-58034A739FE9}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\Microsoft.Direct3D.D3D12.1.614.1\build\native\Microsoft.Direct3D.D3D12.targets" Condition="Exists('..\packages\Microsoft.Direct3D.D3D12.1.614.1\build\native\Microsoft.Direct3D.D3D12.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Direct3D.D3D12.1.614.1\build\native\Microsoft.Direct3D.D3D12.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Direct3D.D3D12.1.614.1\build\native\Microsoft.Direct3D.D3D12.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Direct3D.D3D12.1.614.1\build\native\Microsoft.Direct3D.D3D12.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Direct3D.D3D12.1.614.1\build\native\Microsoft.Direct3D.D3D12.targets'))" />
+  </Target>
 </Project>

@@ -67,8 +67,8 @@ namespace Can::content
 		std::vector<u8*>     geometry_hierarchies; // Unordered_Array
 		std::mutex           geometry_mutex;
 
-		std::vector<std::unique_ptr<u8[]>> shaders;
-		std::mutex                         shader_mutex; // Unordered_Array
+		std::vector<std::unique_ptr<u8[]>> shaders; // Unordered_Array
+		std::mutex                         shader_mutex;
 
 		u32 get_geometry_hierarchy_buffer_size(const void* const data)
 		{
@@ -151,7 +151,7 @@ namespace Can::content
 			return geometry_hierarchies.size() - 1;
 		}
 
-		bool is_signle_mesh(const void* const data)
+		bool is_single_mesh(const void* const data)
 		{
 			assert(data);
 			utl::blob_stream_reader blob{ (const u8*)data };
@@ -177,11 +177,34 @@ namespace Can::content
 		id::id_type create_geometry_resource(const void* const data)
 		{
 			assert(data);
-			return id::invalid_id;
+			return is_single_mesh(data) ? create_single_submesh(data) : create_mesh_hierarchy(data);
 		}
 
 		void destroy_geometry_resource(id::id_type id)
 		{
+			std::lock_guard lock{ geometry_mutex };
+			u8* const pointer{ geometry_hierarchies[id] };
+			if ((uintptr_t)pointer & single_mesh_marker)
+			{
+				graphics::remove_submesh(gpu_id_from_fake_pointer(pointer));
+			}
+			else
+			{
+				geometry_hierarchy_stream stream{ pointer };
+				const u32 lod_count{ stream.lod_count() };
+				u32 id_index{ 0 };
+				for (u32 lod{ 0 }; lod < lod_count; ++lod)
+				{
+					for (u32 i{ 0 }; i < stream.lod_offsets()[lod].count; ++i)
+					{
+						graphics::remove_submesh(stream.gpu_ids()[id_index++]);
+					}
+				}
+
+				free(pointer);
+			}
+			assert(false);
+			geometry_hierarchies.erase(geometry_hierarchies.begin() + id);
 		}
 
 		id::id_type create_material_resource(const void* const data)
@@ -248,6 +271,7 @@ namespace Can::content
 	{
 		std::lock_guard lock{ shader_mutex };
 		assert(id::is_valid(id));
+		assert(false);
 		shaders.erase(shaders.begin() + id);
 	}
 

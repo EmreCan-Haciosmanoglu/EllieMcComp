@@ -4,7 +4,6 @@
 #include "D3D12CommonHeaders.h"
 #include "D3D12GPass.h"
 
-#include "Can/Utilities/Math.h"
 #include "Can/Utilities/IOStream.h"
 #include "Can/Content/ContentToEngine.h"
 

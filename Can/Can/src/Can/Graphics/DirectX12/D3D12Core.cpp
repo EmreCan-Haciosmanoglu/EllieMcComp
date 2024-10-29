@@ -13,6 +13,11 @@
 
 #include "Can\Unordered_Array.h"
 
+// Version 614 is what we downloaded change this to 614 if problem occurs
+extern "C" { __declspec(dllexport) extern const UINT D3D12SDKVersion = 606; }
+extern "C" { __declspec(dllexport) extern const char* D3D12SDKPath = u8".\\D3D12\\"; }
+
+using namespace Microsoft::WRL;
 
 namespace Can::graphics::d3d12::core
 {
@@ -232,7 +237,7 @@ namespace Can::graphics::d3d12::core
 			feature_level_info.NumFeatureLevels = _countof(feature_levels);
 			feature_level_info.pFeatureLevelsRequested = feature_levels;
 
-			Microsoft::WRL::ComPtr<ID3D12Device> device;
+			ComPtr<ID3D12Device> device;
 			DXCall(D3D12CreateDevice(adapter, minimum_feature_level, IID_PPV_ARGS(&device)));
 			DXCall(device->CheckFeatureSupport(D3D12_FEATURE_FEATURE_LEVELS, &feature_level_info, sizeof(feature_level_info)));
 			return feature_level_info.MaxSupportedFeatureLevel;
@@ -263,11 +268,11 @@ namespace Can::graphics::d3d12::core
 			hlsl::GlobalShaderData data{};
 
 			using namespace DirectX;
-			XMStoreFloat4x3A(&data.View, camera.view());
-			XMStoreFloat4x3A(&data.Projection, camera.projection());
-			XMStoreFloat4x3A(&data.InvProjection, camera.inverse_projection());
-			XMStoreFloat4x3A(&data.ViewProjection, camera.view_projection());
-			XMStoreFloat4x3A(&data.InvViewProjection, camera.inverse_view_projection());
+			XMStoreFloat4x4A(&data.View, camera.view());
+			XMStoreFloat4x4A(&data.Projection, camera.projection());
+			XMStoreFloat4x4A(&data.InvProjection, camera.inverse_projection());
+			XMStoreFloat4x4A(&data.ViewProjection, camera.view_projection());
+			XMStoreFloat4x4A(&data.InvViewProjection, camera.inverse_view_projection());
 			XMStoreFloat3(&data.CameraPosition, camera.position());
 			XMStoreFloat3(&data.CameraDirection, camera.direction());
 			data.ViewWidth = surface.width();
@@ -311,7 +316,7 @@ namespace Can::graphics::d3d12::core
 		u32 dxgi_factory_flags{ 0 };
 #ifdef _DEBUG
 		{
-			Microsoft::WRL::ComPtr<ID3D12Debug3> debug_interface;
+			ComPtr<ID3D12Debug3> debug_interface;
 			if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debug_interface))))
 			{
 				debug_interface->EnableDebugLayer();
@@ -332,7 +337,7 @@ namespace Can::graphics::d3d12::core
 		hr = CreateDXGIFactory2(dxgi_factory_flags, IID_PPV_ARGS(&dxgi_factory));
 		if (FAILED(hr)) return failed_init();
 
-		Microsoft::WRL::ComPtr<IDXGIAdapter4> main_adapter;
+		ComPtr<IDXGIAdapter4> main_adapter;
 		main_adapter.Attach(determine_main_adapter());
 		if (!main_adapter) return failed_init();
 
@@ -345,7 +350,7 @@ namespace Can::graphics::d3d12::core
 
 #ifdef _DEBUG
 		{
-			Microsoft::WRL::ComPtr<ID3D12InfoQueue> info_queue;
+			ComPtr<ID3D12InfoQueue> info_queue;
 			DXCall(main_device->QueryInterface(IID_PPV_ARGS(&info_queue)));
 			info_queue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
 			info_queue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
@@ -415,14 +420,14 @@ namespace Can::graphics::d3d12::core
 #ifdef _DEBUG
 		{
 			{
-				Microsoft::WRL::ComPtr<ID3D12InfoQueue> info_queue;
+				ComPtr<ID3D12InfoQueue> info_queue;
 				DXCall(main_device->QueryInterface(IID_PPV_ARGS(&info_queue)));
 				info_queue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, false);
 				info_queue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, false);
 				info_queue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, false);
 			}
 
-			Microsoft::WRL::ComPtr<ID3D12DebugDevice2> debug_device;
+			ComPtr<ID3D12DebugDevice2> debug_device;
 			DXCall(main_device->QueryInterface(IID_PPV_ARGS(&debug_device)));
 			release(main_device);
 			DXCall(debug_device->ReportLiveDeviceObjects(

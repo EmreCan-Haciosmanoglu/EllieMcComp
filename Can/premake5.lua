@@ -41,6 +41,7 @@ project "Can"
     language "C++"
     cppdialect "C++20"
     staticruntime "on"
+    nuget "Microsoft.Direct3D.D3D12:1.614.1"
     
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")

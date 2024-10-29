@@ -1,9 +1,16 @@
 #pragma once
 
+#ifdef _WIN64
 #pragma warning(disable: 4530) // disable exception warning
+#endif // _WIN64
 
 #include <memory>
 #include <mutex>
+
+#ifdef _WIN64
+#include <DirectXMath.h>
+#endif // _WIN64
+
 
 #ifndef DISABLE_COPY
 #define DISABLE_COPY(T)          \
@@ -29,4 +36,8 @@ DISABLE_MOVE(T)
 #define DEBUG_OP(op) (void(0))
 #endif
 
+#include "Can/Common/PrimitiveTypes.h"
+#include "Can/Utilities/Math.h"
+#include "Can/Utilities/Utilities.h"
+#include "Can/Utilities/MathTypes.h"
 #include "Id.h"

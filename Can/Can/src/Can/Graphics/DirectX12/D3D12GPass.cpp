@@ -10,15 +10,13 @@
 #include "Shaders/SharedTypes.h"
 #include "Can/Components/Entity.h"
 #include "Can/Components/Transform.h"
-#include "Can/Utilities/MathTypes.h"
 
 
 namespace Can::graphics::d3d12::gpass
 {
 	namespace
 	{
-		constexpr math::u32v2        initial_dimensions{ 100,100 };
-		D3D12_RESOURCE_BARRIER_FLAGS flags{};
+		constexpr math::u32v2        initial_dimensions{ 100, 100 };
 
 		d3d12_render_texture         gpass_main_buffer{};
 		d3d12_depth_buffer           gpass_depth_buffer{};
@@ -179,8 +177,6 @@ namespace Can::graphics::d3d12::gpass
 				gpass_depth_buffer = d3d12_depth_buffer{ info };
 				NAME_D3D12_OBJECT(gpass_depth_buffer.resource(), L"GPass Depth Buffer")
 			}
-
-			flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 
 			return gpass_main_buffer.resource() && gpass_depth_buffer.resource();
 		}

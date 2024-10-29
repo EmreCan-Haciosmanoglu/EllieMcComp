@@ -88,6 +88,7 @@ namespace Can::utl
 
 		[[nodiscard]] constexpr const u8* const buffer_start() const { return _buffer; }
 		[[nodiscard]] constexpr const u8* const buffer_end() const { return &_buffer[_buffer_size]; }
+		[[nodiscard]] constexpr u64 offset() const { return _position - _buffer; }
 
 	private:
 		u8* _buffer{ nullptr };

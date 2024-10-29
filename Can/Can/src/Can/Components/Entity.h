@@ -12,7 +12,7 @@ INIT_INFO(script)
 
 	namespace game_entity
 	{
-		DEFINE_TYPED_ID(entity_id);
+		//DEFINE_TYPED_ID(entity_id);
 
 		struct entity_info
 		{
@@ -20,12 +20,12 @@ INIT_INFO(script)
 			script::init_info* script{ nullptr };
 		};
 
-		struct entity 
-		{
-			constexpr entity_id get_id() const { return _id; }
-			const bool is_valid() const { return _id != id::invalid_id; }
-			entity_id _id;
-		};
+		//struct entity 
+		//{
+		//	constexpr entity_id get_id() const { return _id; }
+		//	const bool is_valid() const { return _id != id::invalid_id; }
+		//	entity_id _id;
+		//};
 
 		bool is_alive(entity_id id);
 

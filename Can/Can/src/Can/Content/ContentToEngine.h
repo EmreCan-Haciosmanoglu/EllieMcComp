@@ -27,8 +27,8 @@ namespace Can::content
 		constexpr const u8* const byte_code() const { return &_byte_code; }
 	private:
 		u64 _byte_code_size;
-		u8 _hash[hash_length];
-		u8 _byte_code;
+		u8  _hash[hash_length];
+		u8  _byte_code;
 	} const* compiled_shader_ptr;
 
 	struct lod_offset {

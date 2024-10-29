@@ -54,6 +54,7 @@
 namespace Can
 {
 #include <glm/glm.hpp>
+#include <cstdint>
 	typedef void (*OnclickCallbackFn)();
 
 	template<typename T>
@@ -72,15 +73,15 @@ namespace Can
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}
 
-	typedef unsigned char u8;
-	typedef unsigned short u16;
-	typedef unsigned int  u32;
-	typedef unsigned long long u64;
+	typedef uint8_t u8;
+	typedef uint16_t u16;
+	typedef uint32_t u32;
+	typedef uint64_t u64;
 
-	typedef char s8;
-	typedef short s16;
-	typedef int  s32;
-	typedef long long s64;
+	typedef int8_t s8;
+	typedef int16_t s16;
+	typedef int32_t s32;
+	typedef int64_t s64;
 
 	typedef float f32;
 	typedef double f64;
@@ -105,9 +106,4 @@ namespace Can
 		s32 y = 0;
 		s32 z = 0;
 	};
-
-	constexpr u64 u64_invalid_id{ 0xffff'ffff'ffff'ffffui64};
-	constexpr u32 u32_invalid_id{ 0xffff'ffffui32 };
-	constexpr u16 u16_invalid_id{ 0xffffui16 };
-	constexpr u8  u8_invalid_id { 0xffui8 };
 }

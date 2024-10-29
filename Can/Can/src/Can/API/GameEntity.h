@@ -39,11 +39,12 @@ namespace Can
 			constexpr explicit entity_script(game_entity::entity entity)
 				:game_entity::entity{ entity.get_id() }{}
 		};
-	}
-	namespace detail
-	{
-		using script_ptr = std::unique_ptr<script::entity_script>;
-		using script_creator = script_ptr(*)(game_entity::entity entity);
-		using script_hash = std::hash<std::string>;
+
+		namespace detail
+		{
+			using script_ptr = std::unique_ptr<script::entity_script>;
+			using script_creator = script_ptr(*)(game_entity::entity entity);
+			using script_hash = std::hash<std::string>;
+		}
 	}
 }

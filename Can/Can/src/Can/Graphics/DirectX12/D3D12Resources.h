@@ -143,7 +143,7 @@ namespace Can::graphics::d3d12
 		template<typename T>
 		[[nodiscard]] T* const allocate()
 		{
-			return (T8 const)allocate(sizeof(T));
+			return (T* const)allocate(sizeof(T));
 		}
 
 		[[nodiscard]] constexpr ID3D12Resource* const buffer() const { return _buffer.buffer(); }
