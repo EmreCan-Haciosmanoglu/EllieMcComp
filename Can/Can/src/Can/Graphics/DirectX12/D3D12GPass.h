@@ -1,5 +1,6 @@
 #pragma once
 #include "D3D12CommonHeaders.h"
+#include "D3D12Helpers.h"
 
 namespace Can::graphics::d3d12
 {

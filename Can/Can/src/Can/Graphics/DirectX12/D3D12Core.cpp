@@ -512,7 +512,7 @@ namespace Can::graphics::d3d12::core
 
 		const d3d12_frame_info d3d12_info{ get_d3d12_frame_info(info, cbuffer, surface, frame_idx, 16.7f) };
 
-		gpass::set_size({ (s32)d3d12_info.surface_width, (s32)d3d12_info.surface_height });
+		gpass::set_size({ d3d12_info.surface_width, d3d12_info.surface_height });
 		d3dx::d3d12_resource_barrier& barriers{ resource_barriers };
 
 		//Record commands

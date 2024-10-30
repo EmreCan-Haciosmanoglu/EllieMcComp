@@ -27,7 +27,7 @@ namespace Can::transform
 
 			XMMATRIX world{ XMMatrixAffineTransformation(s, XMQuaternionIdentity(), r, t) };
 			XMStoreFloat4x4(&to_world[index], world);
-			
+
 			world.r[3] = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 			XMMATRIX inverse_world{ XMMatrixInverse(nullptr, world) };
 			XMStoreFloat4x4(&inv_world[index], inverse_world);
@@ -66,7 +66,7 @@ namespace Can::transform
 			to_world.emplace_back();
 			inv_world.emplace_back();
 			rotations.emplace_back(info.rotation);
-			orientations.emplace_back(calculate_orientation(info.rotation));
+			orientations.emplace_back(calculate_orientation(math::v4{ info.rotation }));
 			positions.emplace_back(info.position);
 			scales.emplace_back(info.scale);
 			has_transform.emplace_back((u8)0);
