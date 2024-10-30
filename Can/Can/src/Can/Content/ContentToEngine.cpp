@@ -120,7 +120,7 @@ namespace Can::content
 
 			assert([&]() {
 				f32 previous_threshold{ stream.thresholds()[0] };
-				for (u32 i{ 0 }; i < lod_count; ++i)
+				for (u32 i{ 1 }; i < lod_count; ++i)
 				{
 					if (stream.thresholds()[i] <= previous_threshold) return false;
 					previous_threshold = stream.thresholds()[i];
@@ -226,12 +226,12 @@ namespace Can::content
 
 		switch (type)
 		{
-		case Can::content::asset_type::animation: break;
-		case Can::content::asset_type::audio: break;
-		case Can::content::asset_type::material: id = create_material_resource(data); break;
-		case Can::content::asset_type::mesh: id = create_geometry_resource(data); break;
-		case Can::content::asset_type::skeleton: break;
-		case Can::content::asset_type::texture: break;
+		case asset_type::animation: break;
+		case asset_type::audio: break;
+		case asset_type::material: id = create_material_resource(data); break;
+		case asset_type::mesh: id = create_geometry_resource(data); break;
+		case asset_type::skeleton: break;
+		case asset_type::texture: break;
 		}
 
 		assert(id::is_valid(id));
@@ -244,12 +244,12 @@ namespace Can::content
 
 		switch (type)
 		{
-		case Can::content::asset_type::animation: break;
-		case Can::content::asset_type::audio: break;
-		case Can::content::asset_type::material: destroy_material_resource(id); break;
-		case Can::content::asset_type::mesh: destroy_geometry_resource(id); break;
-		case Can::content::asset_type::skeleton: break;
-		case Can::content::asset_type::texture: break;
+		case asset_type::animation: break;
+		case asset_type::audio: break;
+		case asset_type::material: destroy_material_resource(id); break;
+		case asset_type::mesh: destroy_geometry_resource(id); break;
+		case asset_type::skeleton: break;
+		case asset_type::texture: break;
 		default:
 			assert(false);
 			break;

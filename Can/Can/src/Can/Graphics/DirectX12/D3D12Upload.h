@@ -8,7 +8,7 @@ namespace Can::graphics::d3d12::upload
 	public:
 		d3d12_upload_context(u32 aligned_size);
 		DISABLE_COPY_AND_MOVE(d3d12_upload_context);
-		~d3d12_upload_context() {}
+		~d3d12_upload_context() { assert(_frame_index == u32_invalid_id); }
 
 		void end_upload();
 

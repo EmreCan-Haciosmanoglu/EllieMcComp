@@ -407,7 +407,7 @@ namespace Can
 		// Calculate alignment (if applicable)
 		s32 text_width = 0;
 		Char* chars = atlas->chars;
-		for (const s8* c = text.c_str(); *c; ++c)
+		for (auto c = text.c_str(); *c; ++c)
 		{
 			u8 p = (u8)*c;
 			text_width += (s32)(chars[p].advanceX);

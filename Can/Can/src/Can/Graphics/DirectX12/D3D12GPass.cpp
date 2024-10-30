@@ -76,7 +76,7 @@ namespace Can::graphics::d3d12::gpass
 				};
 			}
 
-			constexpr u32 size()
+			constexpr u32 size() const
 			{
 				return (u32)d3d12_render_item_ids.size();
 			}
@@ -184,7 +184,7 @@ namespace Can::graphics::d3d12::gpass
 		void fill_per_object_data(constant_buffer& cbuffer, const d3d12_frame_info& d3d12_info)
 		{
 			const gpass_cache& cache{ frame_cache };
-			const u32 render_items_count{ (u32)cache.size() };
+			const u32 render_items_count{ cache.size() };
 			id::id_type current_entity_id{ id::invalid_id };
 			hlsl::PerObjectData* current_data_pointer{ nullptr };
 

@@ -9,6 +9,7 @@ namespace Can::script
 	struct init_info
 	{
 		f32 p{ 0.0f };
+		script::detail::script_creator script_creator;
 	};
 
 	script_id create_transform(const init_info& info, game_entity::entity_id entity_id);

@@ -88,6 +88,7 @@ namespace Can::graphics::d3d12::upload
 
 	d3d12_upload_context::d3d12_upload_context(u32 aligned_size)
 	{
+		assert(upload_cmd_queue);
 		{
 			std::lock_guard lock{ frame_mutex };
 			_frame_index = get_available_upload_frame();
@@ -101,6 +102,7 @@ namespace Can::graphics::d3d12::upload
 
 		const D3D12_RANGE range{};
 		DXCall(frame.upload_buffer->Map(0, &range, reinterpret_cast<void**>(&frame.cpu_address)));
+		assert(frame.cpu_address);
 
 		_cmd_list = frame.cmd_list;
 		_upload_buffer = frame.upload_buffer;

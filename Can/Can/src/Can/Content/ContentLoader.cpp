@@ -31,12 +31,47 @@ namespace Can::content
 
 		bool read_transform(const u8*& data, game_entity::entity_info& info)
 		{
+			using namespace DirectX;
+			f32 rotation[3];
+
+			assert(!info.transform);
+
+			memcpy(transform_info.position, data, sizeof(transform_info.position));
+			data += sizeof(transform_info.position);
+
+			memcpy(rotation, data, sizeof(rotation));
+			data += sizeof(rotation);
+
+			memcpy(transform_info.scale, data, sizeof(transform_info.scale));
+			data += sizeof(transform_info.scale);
+
+			XMFLOAT3A rot{ rotation };
+			XMVECTOR quat{ XMQuaternionRotationRollPitchYawFromVector(XMLoadFloat3A(&rot)) };
+			XMFLOAT4A rot_quat{};
+			XMStoreFloat4A(&rot_quat, quat);
+			memcpy(transform_info.rotation, &rot_quat.x, sizeof(transform_info.rotation));
+
+			info.transform = &transform_info;
+
 			return true;
 		}
 
 		bool read_script(const u8*& data, game_entity::entity_info& info)
 		{
-			return true;
+			assert(!info.script);
+
+			const u32 name_length{ *data };
+			data += sizeof(u32);
+			if (!name_length) return false;
+			assert(name_length < 256);
+			char script_name[256]{};
+
+			memcpy(script_name, data, name_length);
+			data += name_length;
+			script_name[name_length] = '\0';
+			script_info.script_creator = script::detail::get_script_creator(script::detail::script_hash()(script_name));
+			info.script = &script_info;
+			return script_info.script_creator != nullptr;
 		}
 
 		using component_reader = bool(*)(const u8*&, game_entity::entity_info&);

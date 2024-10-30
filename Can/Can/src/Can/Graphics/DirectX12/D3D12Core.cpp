@@ -15,7 +15,7 @@
 
 // Version 614 is what we downloaded change this to 614 if problem occurs
 extern "C" { __declspec(dllexport) extern const UINT D3D12SDKVersion = 606; }
-extern "C" { __declspec(dllexport) extern const char* D3D12SDKPath = u8".\\D3D12\\"; }
+extern "C" { __declspec(dllexport) extern const char* D3D12SDKPath = /*u8*/".\\D3D12\\"; }
 
 using namespace Microsoft::WRL;
 
@@ -275,8 +275,8 @@ namespace Can::graphics::d3d12::core
 			XMStoreFloat4x4A(&data.InvViewProjection, camera.inverse_view_projection());
 			XMStoreFloat3(&data.CameraPosition, camera.position());
 			XMStoreFloat3(&data.CameraDirection, camera.direction());
-			data.ViewWidth = surface.width();
-			data.ViewHeight = surface.height();
+			data.ViewWidth = (f32)surface.width();
+			data.ViewHeight = (f32)surface.height();
 			data.DeltaTime = delta_time;
 
 			hlsl::GlobalShaderData* const shader_data{ cbuffer.allocate< hlsl::GlobalShaderData>() };
@@ -287,8 +287,8 @@ namespace Can::graphics::d3d12::core
 				&info,
 				&camera,
 				cbuffer.gpu_address(shader_data),
-				data.ViewWidth,
-				data.ViewHeight,
+				(u32)data.ViewWidth,
+				(u32)data.ViewHeight,
 				frame_idx,
 				delta_time
 			};

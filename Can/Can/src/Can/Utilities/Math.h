@@ -44,7 +44,7 @@ namespace Can::math
 	}
 
 	template<u64 alignment>
-	[[nodiscard]] constexpr u64 align_size_up(u32 size)
+	[[nodiscard]] constexpr u64 align_size_up(u64 size)
 	{
 		static_assert(alignment, "Alignment must be non-zero.");
 		constexpr u64 mask{ alignment - 1 };
@@ -53,7 +53,7 @@ namespace Can::math
 	}
 
 	template<u64 alignment>
-	[[nodiscard]] constexpr u64 align_size_down(u32 size)
+	[[nodiscard]] constexpr u64 align_size_down(u64 size)
 	{
 		static_assert(alignment, "Alignment must be non-zero.");
 		constexpr u64 mask{ alignment - 1 };
@@ -61,7 +61,7 @@ namespace Can::math
 		return (size & ~mask);
 	}
 
-	[[nodiscard]] constexpr u64 align_size_up(u32 size, u64 alignment)
+	[[nodiscard]] constexpr u64 align_size_up(u64 size, u64 alignment)
 	{
 		assert(alignment && "Alignment must be non-zero.");
 		const u64 mask{ alignment - 1 };
@@ -69,7 +69,7 @@ namespace Can::math
 		return ((size + mask) & ~mask);
 	}
 
-	[[nodiscard]] constexpr u64 align_size_down(u32 size, u64 alignment)
+	[[nodiscard]] constexpr u64 align_size_down(u64 size, u64 alignment)
 	{
 		assert(alignment && "Alignment must be non-zero.");
 		const u64 mask{ alignment - 1 };
