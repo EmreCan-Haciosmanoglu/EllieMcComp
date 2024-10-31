@@ -6,13 +6,13 @@ namespace Can::transform
 {
 	namespace
 	{
-		std::vector<math::m4x4> to_world;
-		std::vector<math::m4x4> inv_world;
-		std::vector<math::v4>   rotations;
-		std::vector<math::v3>   orientations;
-		std::vector<math::v3>   positions;
-		std::vector<math::v3>   scales;
-		std::vector<u8>         has_transform;
+		utl::vector<math::m4x4> to_world;
+		utl::vector<math::m4x4> inv_world;
+		utl::vector<math::v4>   rotations;
+		utl::vector<math::v3>   orientations;
+		utl::vector<math::v3>   positions;
+		utl::vector<math::v3>   scales;
+		utl::vector<u8>         has_transform;
 
 		void calculate_transform_matrices(id::id_type index)
 		{

@@ -13,8 +13,7 @@
 
 #include "Can\Unordered_Array.h"
 
-// Version 614 is what we downloaded change this to 614 if problem occurs
-extern "C" { __declspec(dllexport) extern const UINT D3D12SDKVersion = 606; }
+extern "C" { __declspec(dllexport) extern const UINT D3D12SDKVersion = 614; }
 extern "C" { __declspec(dllexport) extern const char* D3D12SDKPath = /*u8*/".\\D3D12\\"; }
 
 using namespace Microsoft::WRL;

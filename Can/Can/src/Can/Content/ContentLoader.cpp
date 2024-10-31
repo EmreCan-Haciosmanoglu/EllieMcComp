@@ -69,7 +69,7 @@ namespace Can::content
 			memcpy(script_name, data, name_length);
 			data += name_length;
 			script_name[name_length] = '\0';
-			script_info.script_creator = script::detail::get_script_creator(script::detail::script_hash()(script_name));
+			//script_info.script_creator = script::detail::get_script_creator(script::detail::script_hash()(script_name));
 			info.script = &script_info;
 			return script_info.script_creator != nullptr;
 		}
@@ -138,7 +138,7 @@ namespace Can::content
 	{
 		for (auto entity : entities)
 		{
-			game_entity::remove(entity.get_id());
+			game_entity::remove(entity);
 		}
 	}
 
