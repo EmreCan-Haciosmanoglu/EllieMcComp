@@ -260,7 +260,7 @@ namespace Can::graphics::d3d12::content
 				parameters[params::position_buffer].as_srv(buffer_visibility, 0);
 				parameters[params::element_buffer].as_srv(buffer_visibility, 1);
 				parameters[params::srv_indices].as_srv(D3D12_SHADER_VISIBILITY_PIXEL, 2);
-				parameters[params::per_object_data].as_srv(data_visibility, 1);
+				parameters[params::per_object_data].as_cbv(data_visibility, 1);
 
 				root_signature = d3dx::d3d12_root_signature_desc{ parameters, _countof(parameters), get_root_signature_flags(flags) }.create();
 
@@ -408,7 +408,7 @@ namespace Can::graphics::d3d12::content
 			const u32 index_count{ blob.read<u32>() };
 			const u32 elements_type{ blob.read<u32>() };
 			const u32 primitive_topology{ blob.read<u32>() };
-			const u32 index_size{ (vertex_count < (1 << 16)) ? sizeof(16) : sizeof(u32) };
+			const u32 index_size{ (vertex_count < (1 << 16)) ? sizeof(u16) : sizeof(u32) };
 
 			const u32 position_buffer_size{ sizeof(v3) * vertex_count };
 			const u32 element_buffer_size{ element_size * vertex_count };
@@ -438,7 +438,7 @@ namespace Can::graphics::d3d12::content
 
 			view.index_buffer_view.BufferLocation = resource->GetGPUVirtualAddress() + aligned_position_buffer_size + aligned_element_buffer_size;
 			view.index_buffer_view.SizeInBytes = index_buffer_size;
-			view.index_buffer_view.Format = (index_size == sizeof(16)) ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT;
+			view.index_buffer_view.Format = (index_size == sizeof(u16)) ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT;
 
 			view.primitive_topology = get_d3d_primitive_topology((primitive_topology::type)primitive_topology);
 			view.elements_type = elements_type;
