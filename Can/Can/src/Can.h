@@ -2,7 +2,6 @@
 #include "canpch.h"
 
 #include "Can/Application.h"
-#include "Can/Instrumentor.h"
 #include "Can/Input.h"
 #include "Can/KeyCodes.h"
 #include "Can/MouseCodes.h"

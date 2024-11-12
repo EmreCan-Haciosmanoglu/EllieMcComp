@@ -199,7 +199,6 @@
     <ClInclude Include="src\Can\Immediate_Renderer\Themes.h" />
     <ClInclude Include="src\Can\Immediate_Renderer\Widgets.h" />
     <ClInclude Include="src\Can\Input.h" />
-    <ClInclude Include="src\Can\Instrumentor.h" />
     <ClInclude Include="src\Can\KeyCodes.h" />
     <ClInclude Include="src\Can\Layers\Layer.h" />
     <ClInclude Include="src\Can\Layers\LayerStack.h" />

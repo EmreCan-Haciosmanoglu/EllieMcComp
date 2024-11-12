@@ -10,7 +10,6 @@
 
 namespace Can
 {
-
 	Application* Application::s_Instance = nullptr;
 
 	Application::Application(const WindowProps& props)
@@ -118,7 +117,6 @@ namespace Can
 					}
 				}
 			}
-
 
 			m_Window->OnUpdate();
 		end:

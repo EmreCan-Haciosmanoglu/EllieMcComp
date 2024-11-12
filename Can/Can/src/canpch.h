@@ -42,5 +42,3 @@
 #ifdef CAN_PLATFORM_WINDOWS
 	#include <Windows.h>
 #endif
-
-#include "Can/Instrumentor.h"
