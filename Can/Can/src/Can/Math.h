@@ -331,7 +331,7 @@ namespace Can::Math
 	std::array<v2, Size> GetCubicCurveSamples(const std::array<v2, 4>& vs)
 	{
 		std::array<v2, Size> result;
-		CAN_ASSERT(false, "Incomplete!");
+		assert(false && "Incomplete!");
 		return result;
 	}
 

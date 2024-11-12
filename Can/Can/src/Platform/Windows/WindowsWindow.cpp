@@ -26,7 +26,7 @@ namespace Can::Platform::Windows
 
 	static void GLFWErrorCallback(int error, const char* message)
 	{
-		CAN_CORE_ERROR("GLFW Error ({0}): {1}", error, message);
+		printf("GLFW Error (%d): %s", error, message);
 	}
 
 	WindowsWindow::WindowsWindow(const WindowProps& props)
@@ -45,15 +45,15 @@ namespace Can::Platform::Windows
 		m_Data.Width = props.Width;
 		m_Data.Height = props.Height;
 
-		CAN_CORE_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width, props.Height);
+		printf("Creating window %s (%d, %d)", props.Title, props.Width, props.Height);
 
 
 		if (s_GLFWWindowCount == 0)
 		{
-			CAN_CORE_INFO("Initializing GLFW");
+			printf("Initializing GLFW");
 			int success = glfwInit();
 			//glfwWindowHint(GLFW_SAMPLES, 4);
-			CAN_CORE_ASSERT(success, "Could not initialize GLFW!");
+			assert(success && "Could not initialize GLFW!");
 			glfwSetErrorCallback(GLFWErrorCallback);
 		}
 
@@ -171,7 +171,7 @@ namespace Can::Platform::Windows
 
 		if (s_GLFWWindowCount == 0)
 		{
-			CAN_CORE_INFO("Terminating GLFW");
+			printf("Terminating GLFW");
 			glfwTerminate();
 		}
 	}

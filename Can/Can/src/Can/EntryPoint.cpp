@@ -32,9 +32,6 @@ int main(int argc, char** argv)
 			i++;
 		}
 	}
-	Can::Log::Init();
-	CAN_CORE_WARN("Initialized Log!");
-
 	std::srand((unsigned int)std::time(nullptr));
 	main_application = Can::CreateApplication(Can::WindowProps{ title, w, h });
 

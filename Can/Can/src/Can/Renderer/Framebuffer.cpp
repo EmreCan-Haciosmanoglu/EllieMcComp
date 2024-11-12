@@ -10,10 +10,10 @@ namespace Can
 	{
 		switch (Renderer::GetAPI())
 		{
-			case RendererAPI::API::None: CAN_CORE_ASSERT(false, "RendererAPI::None is currently not supported!!"); return nullptr;
+			case RendererAPI::API::None: assert(false && "RendererAPI::None is currently not supported!!"); return nullptr;
 			case RendererAPI::API::OpenGL: return CreateRef<OpenGLFramebuffer>(spec);
 		}
-		CAN_CORE_ASSERT(false, "Unknown RendererAPI!!!");
+		assert(false && "Unknown RendererAPI!!!");
 		return nullptr;
 	}
 }

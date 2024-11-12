@@ -24,7 +24,7 @@ namespace Can
 		case ShaderDataType::Bool:		return 1;
 		}
 
-		CAN_CORE_ASSERT(false, "Unknown ShaderDataType!");
+		assert(false && "Unknown ShaderDataType!");
 		return 0;
 	}
 
@@ -61,7 +61,7 @@ namespace Can
 			case Can::ShaderDataType::Bool:		return 1;
 			}
 
-			CAN_CORE_ASSERT(false, "Unknown ShaderDataType!");
+			assert(false && "Unknown ShaderDataType!");
 			return 0;
 		}
 	};

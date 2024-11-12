@@ -17,16 +17,13 @@ namespace Can
 		switch (severity)
 		{
 		case GL_DEBUG_SEVERITY_HIGH:
-			CAN_CORE_CRITICAL(message); return;
 		case GL_DEBUG_SEVERITY_MEDIUM:
-			CAN_CORE_ERROR(message); return;
 		case GL_DEBUG_SEVERITY_LOW:
-			CAN_CORE_WARN(message); return;
 		case GL_DEBUG_SEVERITY_NOTIFICATION:
-			CAN_CORE_TRACE(message); return;
+			printf(message); return;
 		}
 
-		CAN_CORE_ASSERT(false, "Unknown severity level!");
+		assert(false && "Unknown severity level!");
 	}
 	void OpenGLRendererAPI::Init()
 	{

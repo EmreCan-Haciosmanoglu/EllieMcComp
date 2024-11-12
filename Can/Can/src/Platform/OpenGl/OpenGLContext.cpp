@@ -10,29 +10,29 @@ namespace Can
 	OpenGLContext::OpenGLContext(GLFWwindow* windowHandle)
 		:m_WindowHandle(windowHandle)
 	{
-		CAN_CORE_ASSERT(windowHandle, "Window handle is null!");
+		assert(windowHandle && "Window handle is null!");
 	}
 	void OpenGLContext::Init()
 	{
 		glfwMakeContextCurrent(m_WindowHandle);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		CAN_CORE_ASSERT(status, "Failed to initialize Glad!");
+		assert(status && "Failed to initialize Glad!");
 
-		CAN_CORE_INFO(
-			"OpenGL Info---\n      Vendor: {0}\n      Renderer: {1}\n      Version: {2}\n      Shading Version: {3}",
+		printf(
+			"OpenGL Info---\n      Vendor: %s\n      Renderer: %s\n      Version: %s\n      Shading Version: %s",
 			glGetString(GL_VENDOR),
 			glGetString(GL_RENDERER),
 			glGetString(GL_VERSION),
 			glGetString(GL_SHADING_LANGUAGE_VERSION)
 		);
 
-#ifdef CAN_ENABLE_ASSERTS
+#ifdef CAN_DEBUG
 		int versionMajor;
 		int versionMinor;
 		glGetIntegerv(GL_MAJOR_VERSION, &versionMajor);
 		glGetIntegerv(GL_MINOR_VERSION, &versionMinor);
 
-		CAN_CORE_ASSERT(versionMajor > 4 || (versionMajor == 4 && versionMinor >= 5), "Can requires at least OpenGL version 4.5!");
+		assert((versionMajor > 4 || (versionMajor == 4 && versionMinor >= 5)) && "Can requires at least OpenGL version 4.5!");
 #endif
 	}
 

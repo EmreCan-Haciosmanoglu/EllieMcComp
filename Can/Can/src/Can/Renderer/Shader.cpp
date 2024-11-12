@@ -11,20 +11,20 @@ namespace Can
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::API::None: CAN_CORE_ASSERT(false, "RendererAPI::None is currently not supported!!"); return nullptr;
+		case RendererAPI::API::None: assert(false && "RendererAPI::None is currently not supported!!"); return nullptr;
 		case RendererAPI::API::OpenGL: return CreateRef< OpenGLShader>(name, vertexSrc, fragmentSrc);
 		}
-		CAN_CORE_ASSERT(false, "Unknown RendererAPI!!!");
+		assert(false && "Unknown RendererAPI!!!");
 		return nullptr;
 	}
 	Ref<Shader> Shader::Create(const std::string& filepath )
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::API::None: CAN_CORE_ASSERT(false, "RendererAPI::None is currently not supported!!"); return nullptr;
+		case RendererAPI::API::None: assert(false && "RendererAPI::None is currently not supported!!"); return nullptr;
 		case RendererAPI::API::OpenGL: return CreateRef< OpenGLShader>(filepath);
 		}
-		CAN_CORE_ASSERT(false, "Unknown RendererAPI!!!");
+		assert(false && "Unknown RendererAPI!!!");
 		return nullptr;
 	}
 
@@ -36,7 +36,7 @@ namespace Can
 
 	void ShaderLibrary::Add(const std::string& name, const Ref<Shader>& shader)
 	{
-		CAN_CORE_ASSERT(!Exists(name), "Shader already exists!");
+		assert(!Exists(name) && "Shader already exists!");
 
 		m_Shaders[name] = shader;
 	}
@@ -56,7 +56,7 @@ namespace Can
 
 	Ref<Shader> ShaderLibrary::Get(const std::string& name)
 	{
-		CAN_CORE_ASSERT(Exists(name), "Shader not found!");
+		assert(Exists(name) && "Shader not found!");
 		return m_Shaders[name];
 	}
 	bool ShaderLibrary::Exists(const std::string& name) const

@@ -25,7 +25,7 @@ namespace Can
 			return	GL_BOOL;
 		}
 
-		CAN_CORE_ASSERT(false, "Unknown ShaderDataType!");
+		assert(false && "Unknown ShaderDataType!");
 		return 0;
 	}
 
@@ -49,7 +49,7 @@ namespace Can
 
 	void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertexbuffer)
 	{
-		CAN_CORE_ASSERT(vertexbuffer->GetLayout().GetElements().size(), "Vertex buffer has no layout");
+		assert(vertexbuffer->GetLayout().GetElements().size() && "Vertex buffer has no layout");
 
 		glBindVertexArray(m_RendererID);
 		vertexbuffer->Bind();

@@ -35,18 +35,6 @@
 	#error "Unknown platform!"
 #endif 
 
-#ifdef CAN_DEBUG
-#define CAN_ENABLE_ASSERTS
-#endif
-
-#ifdef CAN_ENABLE_ASSERTS
-#define CAN_ASSERT(x, ...) { if(!(x)) { CAN_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
-#define CAN_CORE_ASSERT(x, ...) { if(!(x)) { CAN_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
-#else
-#define CAN_ASSERT(x, ...)
-#define CAN_CORE_ASSERT(x, ...)
-#endif
-
 #define BIT(x) (1 << x)
 
 #define CAN_BIND_EVENT_FN(x) std::bind(&Can::x, this, std::placeholders::_1)

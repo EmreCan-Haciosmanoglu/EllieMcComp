@@ -14,7 +14,7 @@ namespace Can
 		if (type == "fragment") return GL_FRAGMENT_SHADER;
 		if (type == "pixel") return GL_FRAGMENT_SHADER;
 
-		CAN_CORE_ASSERT(false, "Unknown shader type!");
+		assert(false && "Unknown shader type!");
 		return 0;
 	}
 
@@ -61,12 +61,12 @@ namespace Can
 			}
 			else
 			{
-				CAN_CORE_ERROR("Could not read from file '{0}'", filepath);
+				printf("Could not read from file '%s'", filepath);
 			}
 		}
 		else
 		{
-			CAN_CORE_ASSERT(0, "Could not open file '{0}'", filepath);
+			assert(false && "Could not open file");
 		}
 
 		return result;
@@ -81,14 +81,14 @@ namespace Can
 		while (pos != std::string::npos)
 		{
 			size_t eol = source.find_first_of("\r\n", pos); //End of shader type declaration line
-			CAN_CORE_ASSERT(eol != std::string::npos, "Syntax Error");
+			assert(eol != std::string::npos && "Syntax Error");
 			size_t begin = pos + typeTokenLenght + 1; //Start of shader type name (after "#type " keyword)
 			std::string type = source.substr(begin, eol - begin);
-			CAN_CORE_ASSERT(type == "vertex" || type == "fragment" || type == "pixel", "Invalid shader type specified");
+			assert((type == "vertex" || type == "fragment" || type == "pixel") && "Invalid shader type specified");
 
 			size_t nextLinePos = source.find_first_not_of("\r\n", eol); //Start of shader code after shader type declaration line
-			CAN_CORE_ASSERT(nextLinePos != std::string::npos, "Syntax error")
-				pos = source.find(typeToken, nextLinePos);//Start of next shader type declaration line
+			assert(nextLinePos != std::string::npos && "Syntax error");
+			pos = source.find(typeToken, nextLinePos);//Start of next shader type declaration line
 			shaderSources[ShaderTypeFromString(type)] = (pos == std::string::npos) ? source.substr(nextLinePos) : source.substr(nextLinePos, pos - nextLinePos);
 		}
 
@@ -97,7 +97,7 @@ namespace Can
 	void OpenGLShader::Compile(std::unordered_map<GLenum, std::string> sources)
 	{
 		GLuint program = glCreateProgram();
-		CAN_CORE_ASSERT(sources.size() <= 2, "We only support 2 shaders");
+		assert(sources.size() <= 2 && "We only support 2 shaders");
 		std::array<GLenum, 2> glShaderIDs;
 		int shaderIDIndex = 0;
 		for (auto& kv : sources)
@@ -124,8 +124,8 @@ namespace Can
 
 				glDeleteShader(shader);
 
-				CAN_CORE_ERROR("{0}", infolog.data());
-				CAN_CORE_ASSERT(false, "Shader compilation failure!!!");
+				printf("%s", infolog.data());
+				assert(false && "Shader compilation failure!!!");
 			}
 			glAttachShader(program, shader);
 			glShaderIDs[shaderIDIndex++] = shader;
@@ -155,8 +155,8 @@ namespace Can
 			for (auto id : glShaderIDs)
 				glDeleteShader(id);
 
-			CAN_CORE_ERROR("{0}", infoLog.data());
-			CAN_CORE_ASSERT(false, "Linking failure!!");
+			assert("%s", infoLog.data());
+			assert(false && "Linking failure!!");
 			return;
 		}
 

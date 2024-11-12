@@ -35,7 +35,7 @@
 
 #include "../stb/stb_image.h"
 
-#include "Can/Log.h"
+#include "Can/Core.h"
 #include "Can/KeyCodes.h"
 #include "Can/MouseCodes.h"
 

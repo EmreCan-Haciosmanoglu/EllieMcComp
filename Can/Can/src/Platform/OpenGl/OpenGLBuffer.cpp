@@ -28,7 +28,7 @@ namespace Can
 	}
 	void OpenGLVertexBuffer::Resize(uint32_t size)
 	{
-		CAN_CORE_ASSERT(size > 0, "Size must be bigger than 0!");
+		assert(size > 0 && "Size must be bigger than 0!");
 
 		glBufferData(GL_ARRAY_BUFFER, size, NULL, GL_DYNAMIC_DRAW);
 	}

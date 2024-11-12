@@ -33,7 +33,7 @@ namespace Can
 		{
 			data = stbi_load(path.c_str(), &width, &height, &channels, 0);
 		}
-		CAN_CORE_ASSERT(data, "Failed to load image!");
+		assert(data && "Failed to load image!");
 
 		m_Width = width;
 		m_Height = height;
@@ -48,7 +48,7 @@ namespace Can
 			m_InternalFormat = GL_RGB8;
 			m_DataFormat = GL_RGB;
 		}
-		CAN_CORE_ASSERT(m_InternalFormat & m_DataFormat, "Format isn't supported!");
+		assert((m_InternalFormat & m_DataFormat) && "Format isn't supported!");
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
 		glTextureStorage2D(m_RendererID, 1, m_InternalFormat, m_Width, m_Height);
@@ -82,9 +82,9 @@ namespace Can
 
 	void OpenGLTexture2D::SetData(void* data, uint32_t size)
 	{
-#ifdef CAN_ENABLE_ASSERTS
+#ifdef CAN_DEBUG
 		uint32_t bpp = m_DataFormat == GL_RGBA ? 4 : 3;
-		CAN_CORE_ASSERT(size == m_Width * m_Height * bpp, "Data must be entire texture!");
+		assert((size == m_Width * m_Height * bpp) && "Data must be entire texture!");
 #endif
 
 		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);

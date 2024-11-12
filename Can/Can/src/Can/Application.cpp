@@ -14,7 +14,7 @@ namespace Can
 
 	Application::Application(const WindowProps& props)
 	{
-		CAN_CORE_ASSERT(!s_Instance, "Application already exists!");
+		assert(!s_Instance && "Application already exists!");
 		s_Instance = this;
 
 		Random rand{};

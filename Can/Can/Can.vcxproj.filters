@@ -153,9 +153,6 @@
     <ClInclude Include="src\Can\Layers\LayerStack.h">
       <Filter>src\Can\Layers</Filter>
     </ClInclude>
-    <ClInclude Include="src\Can\Log.h">
-      <Filter>src\Can</Filter>
-    </ClInclude>
     <ClInclude Include="src\Can\Math.h">
       <Filter>src\Can</Filter>
     </ClInclude>
@@ -1488,9 +1485,6 @@
     </ClCompile>
     <ClCompile Include="src\Can\Layers\LayerStack.cpp">
       <Filter>src\Can\Layers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Can\Log.cpp">
-      <Filter>src\Can</Filter>
     </ClCompile>
     <ClCompile Include="src\Can\Math.cpp">
       <Filter>src\Can</Filter>
