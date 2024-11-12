@@ -150,9 +150,6 @@
     <ClInclude Include="src\Can\KeyCodes.h">
       <Filter>src\Can</Filter>
     </ClInclude>
-    <ClInclude Include="src\Can\Layers\ImGuiLayer.h">
-      <Filter>src\Can\Layers</Filter>
-    </ClInclude>
     <ClInclude Include="src\Can\Layers\Layer.h">
       <Filter>src\Can\Layers</Filter>
     </ClInclude>
@@ -1487,9 +1484,6 @@
       <Filter>src\Can</Filter>
     </ClCompile>
     <ClCompile Include="src\Can\Layers\ImGuiBuild.cpp">
-      <Filter>src\Can\Layers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Can\Layers\ImGuiLayer.cpp">
       <Filter>src\Can\Layers</Filter>
     </ClCompile>
     <ClCompile Include="src\Can\Layers\Layer.cpp">

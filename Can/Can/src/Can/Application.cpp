@@ -23,9 +23,6 @@ namespace Can
 		m_Window->SetEventCallback(CAN_BIND_EVENT_FN(Application::OnEvent));
 
 		Renderer::Init();
-
-		//m_ImGuiLayer = new Layer::ImGuiLayer();
-		//PushOverlay(m_ImGuiLayer);
 	}
 
 	Application::~Application()
@@ -120,12 +117,6 @@ namespace Can
 						delete e;
 					}
 				}
-				/*
-				m_ImGuiLayer->Begin();
-				for (Layer::Layer* layer : m_LayerStack)
-					layer->OnImGuiRender();
-				m_ImGuiLayer->End();
-				*/
 			}
 
 

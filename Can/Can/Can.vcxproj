@@ -201,7 +201,6 @@
     <ClInclude Include="src\Can\Input.h" />
     <ClInclude Include="src\Can\Instrumentor.h" />
     <ClInclude Include="src\Can\KeyCodes.h" />
-    <ClInclude Include="src\Can\Layers\ImGuiLayer.h" />
     <ClInclude Include="src\Can\Layers\Layer.h" />
     <ClInclude Include="src\Can\Layers\LayerStack.h" />
     <ClInclude Include="src\Can\Log.h" />
@@ -662,7 +661,6 @@
     <ClCompile Include="src\Can\Immediate_Renderer\Immediate_Renderer.cpp" />
     <ClCompile Include="src\Can\KeyCodes.cpp" />
     <ClCompile Include="src\Can\Layers\ImGuiBuild.cpp" />
-    <ClCompile Include="src\Can\Layers\ImGuiLayer.cpp" />
     <ClCompile Include="src\Can\Layers\Layer.cpp" />
     <ClCompile Include="src\Can\Layers\LayerStack.cpp" />
     <ClCompile Include="src\Can\Log.cpp" />

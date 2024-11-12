@@ -13,7 +13,6 @@
 #include "Can/Core/TimeStep.h"
 
 #include "Can/Layers/Layer.h"
-#include "Can/Layers/ImGuiLayer.h"
 
 #include "Can/Renderer/Prefab.h"
 #include "Can/Renderer/Object.h"

@@ -8,7 +8,6 @@
 #include "Can/Events/ApplicationEvent.h"
 
 #include "Can/Layers/LayerStack.h"
-//#include "Can/Layers/ImGuiLayer.h"
 
 #include "Can/Core/TimeStep.h"
 
@@ -44,7 +43,6 @@ namespace Can
 	private:
 		float m_LastFrameTime{ 0.0f };
 		Scope<Window> m_Window;
-		//Layer::ImGuiLayer* m_ImGuiLayer;
 		bool m_Minimized{ false };
 		std::vector<class Event*> events{};
 		Layer::LayerStack m_LayerStack;
