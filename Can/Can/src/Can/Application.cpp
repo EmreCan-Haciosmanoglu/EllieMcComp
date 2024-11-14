@@ -3,7 +3,7 @@
 #include "Can/Noise/Perlin.h"
 
 #include "Application.h"
-#include "Can/Renderer/Renderer.h"
+#include "Can/Renderer/OpenGLRenderer.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -21,12 +21,12 @@ namespace Can
 		m_Window = Window::Create(props);
 		m_Window->SetEventCallback(CAN_BIND_EVENT_FN(Application::OnEvent));
 
-		Renderer::Init();
+		OpenGLRenderer::Init();
 	}
 
 	Application::~Application()
 	{
-		Renderer::Shutdown();
+		OpenGLRenderer::Shutdown();
 	}
 
 	void Application::PushLayer(Layer::Layer* layer)
@@ -139,7 +139,7 @@ namespace Can
 		}
 		m_Minimized = false;
 
-		Renderer::OnWindowResize(e->width, e->height);
+		OpenGLRenderer::OnWindowResize(e->width, e->height);
 
 		return false;
 	}

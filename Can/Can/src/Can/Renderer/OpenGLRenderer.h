@@ -6,7 +6,7 @@
 
 namespace Can
 {
-	class Renderer
+	class OpenGLRenderer
 	{
 	public:
 		static void Init();

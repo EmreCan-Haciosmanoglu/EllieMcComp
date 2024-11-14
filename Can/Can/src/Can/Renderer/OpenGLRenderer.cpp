@@ -1,5 +1,5 @@
 #include "canpch.h"
-#include "Renderer.h"
+#include "OpenGLRenderer.h"
 #include "Renderer2D.h"
 #include "Renderer3D.h"
 
@@ -10,9 +10,9 @@
 
 namespace Can
 {
-	Scope<Renderer::SceneData> Renderer::s_SceneData = CreateScope<Renderer::SceneData>();
+	Scope<OpenGLRenderer::SceneData> OpenGLRenderer::s_SceneData = CreateScope<OpenGLRenderer::SceneData>();
 
-	void Renderer::Init()
+	void OpenGLRenderer::Init()
 	{
 		RenderCommand::Init();
 		Renderer2D::Init();
@@ -21,26 +21,26 @@ namespace Can
 		init_immediate_renderer();
 	}
 
-	void Renderer::Shutdown()
+	void OpenGLRenderer::Shutdown()
 	{
 		Renderer2D::Shutdown();
 	}
 
-	void Renderer::OnWindowResize(uint32_t width, uint32_t height)
+	void OpenGLRenderer::OnWindowResize(uint32_t width, uint32_t height)
 	{
 		RenderCommand::SetViewport(0, 0, width, height);
 	}
 
-	void Renderer::BeginScene(Camera::Camera& camera)
+	void OpenGLRenderer::BeginScene(Camera::Camera& camera)
 	{
 		s_SceneData->ViewProjectMatrix = camera.GetViewProjectionMatrix();
 	}
 
-	void Renderer::EndScene()
+	void OpenGLRenderer::EndScene()
 	{
 	}
 
-	void Renderer::Submit(
+	void OpenGLRenderer::Submit(
 		const Ref<Shader>& shader,
 		const Ref<VertexArray>& vertexArray,
 		const glm::mat4& transform

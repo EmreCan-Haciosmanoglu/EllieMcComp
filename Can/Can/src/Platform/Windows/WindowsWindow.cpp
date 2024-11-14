@@ -8,7 +8,7 @@
 
 #include "Can/Input.h"
 
-#include "Can/Renderer/Renderer.h"
+#include "Can/Renderer/OpenGLRenderer.h"
 
 #include "Platform/OpenGl/OpenGLContext.h"
 
@@ -59,7 +59,7 @@ namespace Can::Platform::Windows
 
 		{
 #if defined(CAN_DEBUG)
-			if (Renderer::GetAPI() == RendererAPI::API::OpenGL)
+			if (OpenGLRenderer::GetAPI() == RendererAPI::API::OpenGL)
 				glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 #endif
 			glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);

@@ -183,7 +183,7 @@
     <ClInclude Include="src\Can\Renderer\RenderCommand.h">
       <Filter>src\Can\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Can\Renderer\Renderer.h">
+    <ClInclude Include="src\Can\Renderer\OpenGLRenderer.h">
       <Filter>src\Can\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Can\Renderer\Renderer2D.h">
@@ -1513,7 +1513,7 @@
     <ClCompile Include="src\Can\Renderer\RenderCommand.cpp">
       <Filter>src\Can\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Can\Renderer\Renderer.cpp">
+    <ClCompile Include="src\Can\Renderer\OpenGLRenderer.cpp">
       <Filter>src\Can\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Can\Renderer\Renderer2D.cpp">

@@ -195,16 +195,16 @@ public:
 		Can::RenderCommand::SetClearColor({ 0.15f, 0.15f, 0.15f, 1.0f });
 		Can::RenderCommand::Clear();
 
-		Can::Renderer::BeginScene(m_CameraController.GetCamera());
+		Can::OpenGLRenderer::BeginScene(m_CameraController.GetCamera());
 
 		auto textureShader = m_ShaderLibrary.Get("Texture");
 
 		m_SquareTexture->Bind();
-		Can::Renderer::Submit(textureShader, m_SquareVertexArray);
+		Can::OpenGLRenderer::Submit(textureShader, m_SquareVertexArray);
 
 		m_NameTexture->Bind();
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_CubePosition);
-		Can::Renderer::Submit(textureShader, m_SquareVertexArray, transform);
+		Can::OpenGLRenderer::Submit(textureShader, m_SquareVertexArray, transform);
 		
 		Can::Ref<Can::OpenGLShader> openglshader = std::dynamic_pointer_cast<Can::OpenGLShader>(m_CubeShader);
 		if (openglshader)
@@ -213,9 +213,9 @@ public:
 			openglshader->UploadUniformFloat3("u_Color", m_LeftColor);
 		}
 		transform = glm::translate(transform, m_CubePosition);
-		Can::Renderer::Submit(m_CubeShader, m_CubeVertexArray, transform);
+		Can::OpenGLRenderer::Submit(m_CubeShader, m_CubeVertexArray, transform);
 
-		Can::Renderer::EndScene();
+		Can::OpenGLRenderer::EndScene();
 	}
 
 	void OnEvent(Can::Event* event) override
