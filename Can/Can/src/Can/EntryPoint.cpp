@@ -1,9 +1,9 @@
 #include "canpch.h"
+#if CAN_OPENGL
 #include "EntryPoint.h"
 #include "Core.h"
 #include "Application.h"
 
-#ifdef CAN_PLATFORM_WINDOWS
 
 extern Can::Application* Can::CreateApplication(const Can::WindowProps& props); 
 
@@ -39,5 +39,18 @@ int main(int argc, char** argv)
 
 	delete main_application;
 }
+#endif // CAN_OPENGL
 
-#endif // CAN_PLATFORM_WINDOWS
+int __cdecl printf2(const char* format, ...)
+{
+	char str[1024];
+
+	va_list argptr;
+	va_start(argptr, format);
+	int ret = vsnprintf(str, sizeof(str), format, argptr);
+	va_end(argptr);
+
+	OutputDebugStringA(str);
+
+	return ret;
+}

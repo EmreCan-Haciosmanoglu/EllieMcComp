@@ -42,3 +42,7 @@
 #ifdef CAN_PLATFORM_WINDOWS
 	#include <Windows.h>
 #endif
+
+#define printf printf2
+
+int __cdecl printf2(const char* format, ...);
