@@ -22,7 +22,7 @@ namespace Can
 		Application(const WindowProps& props);
 		virtual ~Application();
 
-		void Run();
+		void run();
 
 		void OnEvent(Event* e);
 
@@ -50,5 +50,5 @@ namespace Can
 		static Application* s_Instance;
 	};
 
-	Application* CreateApplication(const Can::WindowProps& props);
+	Application* application_create(const WindowProps& props);
 }

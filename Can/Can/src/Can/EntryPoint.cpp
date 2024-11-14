@@ -4,37 +4,20 @@
 #include "Core.h"
 #include "Application.h"
 
-extern Can::Application* Can::CreateApplication(const Can::WindowProps& props); 
+extern Can::Application* Can::application_create(const Can::WindowProps& props); 
 
 Can::Application* main_application = nullptr;
 
-int main(int argc, char** argv)
+int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
-	unsigned int w = 1280;
-	unsigned int h = 720;
-	std::string title = "Application";
-	for (size_t i = 0; i < argc - 1; i++)
-	{
-		if (strcmp(argv[i], "-t") == 0 || strcmp(argv[i], "--title") == 0)
-		{
-			title = argv[i + 1];
-			i++;
-		}
-		else if (strcmp(argv[i], "-w") == 0 || strcmp(argv[i], "--width") == 0)
-		{
-			w = std::stoi(argv[i + 1]);
-			i++;
-		}
-		else if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--height") == 0)
-		{
-			h = std::stoi(argv[i + 1]);
-			i++;
-		}
-	}
-	std::srand((unsigned int)std::time(nullptr));
-	main_application = Can::CreateApplication(Can::WindowProps{ title, w, h });
+	unsigned int w{ 1280 };
+	unsigned int h{ 720 };
+	std::string title{ "Application" };
 
-	main_application->Run();
+	std::srand((unsigned int)std::time(nullptr));
+	main_application = Can::application_create({ title, w, h });
+
+	main_application->run();
 
 	delete main_application;
 }

@@ -79,7 +79,7 @@ namespace Can
 		}
 	}
 
-	void Application::Run()
+	void Application::run()
 	{
 		while (m_Running)
 		{
