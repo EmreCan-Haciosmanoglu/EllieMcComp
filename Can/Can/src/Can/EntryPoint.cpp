@@ -4,7 +4,6 @@
 #include "Core.h"
 #include "Application.h"
 
-
 extern Can::Application* Can::CreateApplication(const Can::WindowProps& props); 
 
 Can::Application* main_application = nullptr;

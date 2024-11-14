@@ -19,7 +19,7 @@ namespace Can
 		assert(status && "Failed to initialize Glad!");
 
 		printf(
-			"OpenGL Info---\n      Vendor: %s\n      Renderer: %s\n      Version: %s\n      Shading Version: %s",
+			"OpenGL Info---\n      Vendor: %s\n      Renderer: %s\n      Version: %s\n      Shading Version: %s\n",
 			glGetString(GL_VENDOR),
 			glGetString(GL_RENDERER),
 			glGetString(GL_VERSION),

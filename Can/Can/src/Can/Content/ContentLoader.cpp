@@ -11,7 +11,6 @@
 
 #include <fstream>
 #include <filesystem>
-#include <Windows.h>
 
 namespace Can::content
 {

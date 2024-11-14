@@ -2,12 +2,6 @@
 
 #include "Can\Common\CommonHeaders.h"
 
-#ifdef _WIN64
-#ifndef WIN32_MEAN_AND_LEAN
-#define WIN32_MEAN_AND_LEAN
-#endif
-#include <Windows.h>
-
 namespace Can::platform
 {
 	using window_proc = LRESULT(*)(HWND, UINT, WPARAM, LPARAM);
@@ -24,4 +18,3 @@ namespace Can::platform
 		s32 height{ 1080 };
 	};
 }
-#endif // _WIN64

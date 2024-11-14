@@ -39,9 +39,10 @@
 #include "Can/KeyCodes.h"
 #include "Can/MouseCodes.h"
 
-#ifdef CAN_PLATFORM_WINDOWS
-	#include <Windows.h>
-#endif
+#ifndef WIN32_MEAN_AND_LEAN
+#define WIN32_MEAN_AND_LEAN
+#endif // WIN32_MEAN_AND_LEAN
+#include <Windows.h>
 
 #define printf printf2
 
