@@ -33,7 +33,7 @@ DISABLE_MOVE(T)
 #if _DEBUG
 #define DEBUG_OP(op) op
 #else 
-#define DEBUG_OP(op) (void(0))
+#define DEBUG_OP(op)
 #endif
 
 #include "Can/Common/PrimitiveTypes.h"

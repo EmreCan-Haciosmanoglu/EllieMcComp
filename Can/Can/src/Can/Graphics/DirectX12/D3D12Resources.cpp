@@ -94,7 +94,7 @@ namespace Can::graphics::d3d12
 		if (!handle.is_valid()) return;
 		std::lock_guard lock{ _mutex };
 		assert(_heap && _size);
-		assert(handle.container == this);
+		DEBUG_OP(assert(handle.container == this));
 		assert(handle.cpu.ptr >= _cpu_start.ptr);
 		assert((handle.cpu.ptr - _cpu_start.ptr) % _descriptor_size == 0);
 		assert(handle.index < _capacity);

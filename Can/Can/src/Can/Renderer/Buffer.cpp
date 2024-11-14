@@ -17,6 +17,7 @@ namespace Can
 	}
 	Ref<VertexBuffer> VertexBuffer::Create(uint32_t size)
 	{
+		switch (OpenGLRenderer::GetAPI())
 		{
 		case RendererAPI::API::None: assert(false && "RendererAPI::None is currently not supported!!"); return nullptr;
 		case RendererAPI::API::OpenGL: return CreateRef<OpenGLVertexBuffer>(size);
