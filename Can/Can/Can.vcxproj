@@ -638,6 +638,7 @@
     <ClCompile Include="src\Can\Common\EngineAPI.cpp" />
     <ClCompile Include="src\Can\Common\EntityAPI.cpp" />
     <ClCompile Include="src\Can\Components\Entity.cpp" />
+    <ClCompile Include="src\Can\Components\Script.cpp" />
     <ClCompile Include="src\Can\Components\Transform.cpp" />
     <ClCompile Include="src\Can\Content\ContentLoader.cpp" />
     <ClCompile Include="src\Can\Content\ContentToEngine.cpp" />

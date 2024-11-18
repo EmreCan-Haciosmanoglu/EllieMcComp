@@ -18,8 +18,8 @@ INIT_INFO(script)
 			script::init_info* script{ nullptr };
 		};
 
-		entity create(const entity_info& info);
-		void remove(entity e);
-		bool is_alive(entity e);
+		entity create(entity_info info);
+		void remove(entity_id id);
+		bool is_alive(entity_id id);
 	}
 }

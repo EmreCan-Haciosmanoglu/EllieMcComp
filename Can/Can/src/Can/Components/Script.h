@@ -4,14 +4,11 @@
 
 namespace Can::script
 {
-	//DEFINE_TYPED_ID(script_id);
-
 	struct init_info
 	{
-		f32 p{ 0.0f };
-		script::detail::script_creator script_creator;
+		detail::script_creator script_creator;
 	};
 
-	script_id create_transform(const init_info& info, game_entity::entity_id entity_id);
-	script_id remove_transform(script_id id);
-}
+	component create(init_info info, game_entity::entity entity);
+	void remove(component c);
+} 

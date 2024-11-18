@@ -1650,6 +1650,7 @@
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Camera.cpp" />
     <ClCompile Include="src\Can\Common\EngineAPI.cpp" />
     <ClCompile Include="src\Can\Common\EntityAPI.cpp" />
+    <ClCompile Include="src\Can\Components\Script.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

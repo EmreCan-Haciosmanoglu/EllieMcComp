@@ -18,7 +18,7 @@ namespace Can
 		public:
 			constexpr explicit entity(entity_id id) : _id{ id } {}
 			constexpr entity() : _id{ id::invalid_id } {}
-			constexpr entity_id get_id() const { return _id;}
+			constexpr entity_id get_id() const { return _id; }
 			constexpr bool is_valid() const { return id::is_valid(_id); }
 
 			transform::component transform() const;
@@ -45,6 +45,28 @@ namespace Can
 			using script_ptr = std::unique_ptr<script::entity_script>;
 			using script_creator = script_ptr(*)(game_entity::entity entity);
 			using script_hash = std::hash<std::string>;
+
+			u8 register_script(size_t, script_creator);
+
+			template<class script_class>
+			script_ptr create_script(game_entity::entity entity)
+			{
+				assert(entity.is_valid());
+				return std::make_unique< script_class>(entity);
+			}
+
+#define REGISTER_SCRIPT(TYPE)												\
+			class TYPE;														\
+			namespace														\
+			{																\
+				const u8 _reg##TYPE											\
+				{															\
+					Can::script::detail::register_script(					\
+						Can::script::detail::script_hash()(#TYPE),			\
+						&Can::script::detail::create_script<TYPE>			\
+					)														\
+				};															\
+			}
 		}
 	}
 }

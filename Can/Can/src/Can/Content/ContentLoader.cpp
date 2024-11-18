@@ -137,7 +137,7 @@ namespace Can::content
 	{
 		for (auto entity : entities)
 		{
-			game_entity::remove(entity);
+			game_entity::remove(entity.get_id());
 		}
 	}
 
