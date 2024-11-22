@@ -57,7 +57,7 @@ namespace Can
 
 		namespace detail
 		{
-			using script_ptr = std::unique_ptr<script::entity_script>;
+			using script_ptr = std::unique_ptr<entity_script>;
 			using script_creator = script_ptr(*)(game_entity::entity entity);
 			using script_hash = std::hash<std::string>;
 

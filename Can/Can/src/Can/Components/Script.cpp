@@ -16,11 +16,11 @@ namespace Can::script
 		utl::vector<transform::component_cache> transform_cache;
 		std::unordered_map<id::id_type, u32>    cache_map;
 
-		using script_registery = std::unordered_map < size_t, detail::script_creator>;
+		using script_registry = std::unordered_map < size_t, detail::script_creator>;
 
-		script_registery& registery()
+		script_registry& registry()
 		{
-			static	script_registery reg;
+			static	script_registry reg;
 			return reg;
 		}
 		bool exists(script_id id)
@@ -64,15 +64,15 @@ namespace Can::script
 	{
 		u8 register_script(size_t tag, script_creator func)
 		{
-			bool result{ registery().insert(script_registery::value_type{tag,func}).second };
+			bool result{ registry().insert(script_registry::value_type{tag,func}).second };
 			assert(result);
 			return result;
 		}
 
 		script_creator get_script_creator(size_t tag)
 		{
-			auto script = Can::script::registery().find(tag);
-			assert(script != Can::script::registery().end() && script->first == tag);
+			auto script = Can::script::registry().find(tag);
+			assert(script != Can::script::registry().end() && script->first == tag);
 			return script->second;
 		}
 	}
@@ -117,7 +117,7 @@ namespace Can::script
 		id_mapping[id::index(id)] = id::invalid_id;
 	}
 
-	void update(float dt)
+	void update(f32 dt)
 	{
 		for (auto& ptr : entity_scripts)
 		{

@@ -234,8 +234,8 @@ namespace Can::graphics::d3d12::camera
 		if (_is_dirty)
 		{
 			_projection = (_projection_type == graphics::camera::perspective)
-				? DirectX::XMMatrixPerspectiveFovRH(_field_of_view * DirectX::XM_PI, _aspect_ratio, _near_z, _far_z)
-				: DirectX::XMMatrixOrthographicRH(_view_width, _view_height, _near_z, _far_z);
+				? DirectX::XMMatrixPerspectiveFovRH(_field_of_view * DirectX::XM_PI, _aspect_ratio, _far_z, _near_z)
+				: DirectX::XMMatrixOrthographicRH(_view_width, _view_height, _far_z, _near_z);
 			_inverse_projection = DirectX::XMMatrixInverse(nullptr, _projection);
 			_is_dirty = false;
 		}
