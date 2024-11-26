@@ -93,7 +93,7 @@ namespace Can::script
 		}
 		else
 		{
-			id == script_id{ (id::id_type)id_mapping.size() };
+			id = script_id{ (id::id_type)id_mapping.size() };
 			id_mapping.emplace_back();
 			generations.push_back(0);
 		}
