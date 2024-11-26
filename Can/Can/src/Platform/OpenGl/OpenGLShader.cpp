@@ -155,7 +155,7 @@ namespace Can
 			for (auto id : glShaderIDs)
 				glDeleteShader(id);
 
-			assert("%s", infoLog.data());
+			printf("%s", infoLog.data());
 			assert(false && "Linking failure!!");
 			return;
 		}
