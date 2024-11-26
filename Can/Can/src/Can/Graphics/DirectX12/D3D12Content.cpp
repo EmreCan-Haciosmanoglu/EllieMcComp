@@ -307,7 +307,16 @@ namespace Can::graphics::d3d12::content
 			}
 		}
 
-		pso_id create_pso(id::id_type material_id, D3D12_PRIMITIVE_TOPOLOGY d3d12_primitive_topology, u32 element_type)
+#pragma intrinsic(_BitScanForward)
+		shader_type::type get_shader_type(u32 flag)
+		{
+			assert(flag);
+			unsigned long index;
+			_BitScanForward(&index, flag);
+			return (shader_type::type)index;
+		}
+
+		pso_id create_pso(id::id_type material_id, D3D12_PRIMITIVE_TOPOLOGY d3d12_primitive_topology, u32 elements_type)
 		{
 			constexpr u64 aligned_stream_size{ math::align_size_up<sizeof(u64)>(sizeof(d3dx::d3d12_pipeline_state_subobject_stream)) };
 			u8* const stream_ptr{ (u8* const)alloca(aligned_stream_size) };
@@ -339,7 +348,8 @@ namespace Can::graphics::d3d12::content
 				{
 					if (flags & (1 << i))
 					{
-						Can::content::compiled_shader_ptr shader{ Can::content::get_shader(material.shader_ids()[shader_index]) };
+						const u32 key{ get_shader_type(flags & (1 << i)) == shader_type::vertex ? elements_type : u32_invalid_id };
+						Can::content::compiled_shader_ptr shader{ Can::content::get_shader(material.shader_ids()[shader_index], key) };
 						assert(shader);
 						shaders[i].pShaderBytecode = shader->byte_code();
 						shaders[i].BytecodeLength = shader->byte_code_size();
@@ -456,7 +466,7 @@ namespace Can::graphics::d3d12::content
 			std::lock_guard lock{ submesh_mutex };
 			submesh_buffers.push_back(resource);
 			submesh_views.push_back(view);
-			return submesh_views.size() - 1;
+			return (id::id_type)(submesh_views.size() - 1);
 		}
 
 		void remove(id::id_type id)
@@ -519,7 +529,7 @@ namespace Can::graphics::d3d12::content
 			d3d12_material_stream stream{ buffer, info };
 			assert(buffer);
 			materials.push_back(std::move(buffer));
-			return materials.size() - 1;
+			return (id::id_type)(materials.size() - 1);
 		}
 
 		void remove(id::id_type id)
@@ -583,13 +593,13 @@ namespace Can::graphics::d3d12::content
 
 				assert(id::is_valid(item.submesh_gpu_id) && id::is_valid(item.material_id));
 				render_items.push_back(item);
-				item_ids[i] = render_items.size() - 1;
+				item_ids[i] = (id::id_type)(render_items.size() - 1);
 			}
 
 			item_ids[material_count] = id::invalid_id;
 
 			render_item_ids.push_back(std::move(items));
-			return render_item_ids.size() - 1;
+			return (id::id_type)(render_item_ids.size() - 1);
 		}
 
 		void remove(id::id_type id)

@@ -63,12 +63,22 @@ namespace Can::content
 			u32 _lod_count;
 		};
 
-		constexpr uintptr_t  single_mesh_marker{ (uintptr_t)0x01 };
-		std::vector<u8*>     geometry_hierarchies; // Unordered_Array
-		std::mutex           geometry_mutex;
+		struct noexcept_map
+		{
+			std::unordered_map<u32, std::unique_ptr<u8[]>> map;
+			noexcept_map() = default;
+			noexcept_map(const noexcept_map&) = default;
+			noexcept_map(noexcept_map&&) noexcept = default;
+			noexcept_map& operator=(const noexcept_map&) = default;
+			noexcept_map& operator=(noexcept_map&&) noexcept = default;
+		};
 
-		std::vector<std::unique_ptr<u8[]>> shaders; // Unordered_Array
-		std::mutex                         shader_mutex;
+		constexpr uintptr_t       single_mesh_marker{ (uintptr_t)0x01 };
+		std::vector<u8*>          geometry_hierarchies; // Unordered_Array
+		std::mutex                geometry_mutex;
+
+		std::vector<noexcept_map> shader_groups; // Unordered_Array
+		std::mutex                shader_mutex;
 
 		u32 get_geometry_hierarchy_buffer_size(const void* const data)
 		{
@@ -131,7 +141,7 @@ namespace Can::content
 			static_assert(alignof(void*) > 2, "We need the least significant bit for the single mesh marker.");
 			std::lock_guard lock{ geometry_mutex };
 			geometry_hierarchies.push_back(hierarchy_buffer);
-			return geometry_hierarchies.size() - 1;
+			return (id::id_type)geometry_hierarchies.size() - 1;
 		}
 
 		id::id_type create_single_submesh(const void* const data)
@@ -148,7 +158,7 @@ namespace Can::content
 			u8* const fake_pointer{ (u8* const)((((uintptr_t)gpu_id) << shift_bits) | single_mesh_marker) };
 			std::lock_guard lock{ geometry_mutex };
 			geometry_hierarchies.push_back(fake_pointer);
-			return geometry_hierarchies.size() - 1;
+			return (id::id_type)geometry_hierarchies.size() - 1;
 		}
 
 		bool is_single_mesh(const void* const data)
@@ -256,30 +266,51 @@ namespace Can::content
 		}
 	}
 
-	id::id_type add_shader(const u8* data)
+	id::id_type add_shader_group(const u8* const* shaders, u32 num_shaders, const u32* const keys)
 	{
-		const compiled_shader_ptr shader_ptr{ (const compiled_shader_ptr)data };
-		const u64 size{ sizeof(u64) + compiled_shader::hash_length + shader_ptr->byte_code_size() };
-		std::unique_ptr<u8[]> shader{ std::make_unique<u8[]>(size) };
-		memcpy(shader.get(), data, size);
+		assert(shaders && num_shaders && keys);
+		noexcept_map group;
+		for (u32 i{ 0 }; i < num_shaders; ++i)
+		{
+			assert(shaders[i]);
+			const compiled_shader_ptr shader_ptr{ (const compiled_shader_ptr)shaders[i] };
+			const u64 size{ shader_ptr->buffer_size() };
+			std::unique_ptr<u8[]> shader{ std::make_unique<u8[]>(size) };
+			memcpy(shader.get(), shaders[i], size);
+			group.map[keys[i]] = std::move(shader);
+		}
+
 		std::lock_guard lock{ shader_mutex };
-		shaders.push_back(std::move(shader));
-		return shaders.size() - 1;
+		shader_groups.emplace_back(std::move(group));
+		return (id::id_type)(shader_groups.size() - 1);
 	}
 
-	void remove_shader(id::id_type id)
+	void remove_shader_group(id::id_type id)
 	{
 		std::lock_guard lock{ shader_mutex };
 		assert(id::is_valid(id));
 		assert(false);
-		shaders.erase(shaders.begin() + id);
+
+		shader_groups[id].map.clear();
+		shader_groups.erase(shader_groups.begin() + id);
 	}
 
-	compiled_shader_ptr get_shader(id::id_type id)
+	compiled_shader_ptr get_shader(id::id_type id, u32 shader_key)
 	{
 		std::lock_guard lock{ shader_mutex };
 		assert(id::is_valid(id));
-		return (const compiled_shader_ptr)(shaders[id].get());
+
+		for (const auto& [key, value] : shader_groups[id].map)
+		{
+			if (key == shader_key)
+			{
+		return (const compiled_shader_ptr)value.get();
+
+			}
+		}
+
+		assert(false);
+		return nullptr;
 	}
 
 	void get_submesh_gpu_ids(id::id_type geometry_content_id, u32 id_count, id::id_type* const gpu_ids)
