@@ -1442,6 +1442,8 @@
     <ClInclude Include="src\Can\Utilities\MathTypes.h" />
     <ClInclude Include="src\Can\Utilities\Utilities.h" />
     <ClInclude Include="src\Can\Common\PrimitiveTypes.h" />
+    <ClInclude Include="src\Can\API\Light.h" />
+    <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Light.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -1651,6 +1653,7 @@
     <ClCompile Include="src\Can\Common\EngineAPI.cpp" />
     <ClCompile Include="src\Can\Common\EntityAPI.cpp" />
     <ClCompile Include="src\Can\Components\Script.cpp" />
+    <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Light.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -337,7 +337,7 @@ namespace Can::graphics::d3d12::content
 				stream.root_signature = root_signatures[material.root_signature_id()];
 				stream.primitive_topology = get_d3d_primitive_topology_type(d3d12_primitive_topology);
 				stream.depth_stencil_format = gpass::depth_buffer_format;
-				stream.rasterizer = d3dx::rasterizer_state.wireframe;
+				stream.rasterizer = d3dx::rasterizer_state.backface_cull;
 				stream.depth_stencil1 = d3dx::depth_state.reversed_readonly;
 				stream.blend = d3dx::blend_state.disabled;
 

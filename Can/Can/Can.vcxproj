@@ -151,6 +151,7 @@
     <ClInclude Include="src\Can.h" />
     <ClInclude Include="src\Can\API\Camera.h" />
     <ClInclude Include="src\Can\API\GameEntity.h" />
+    <ClInclude Include="src\Can\API\Light.h" />
     <ClInclude Include="src\Can\API\ScriptComponent.h" />
     <ClInclude Include="src\Can\API\TransformComponent.h" />
     <ClInclude Include="src\Can\Application.h" />
@@ -185,6 +186,7 @@
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12GPass.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Helpers.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Interface.h" />
+    <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Light.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12PostProcess.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Resources.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Shaders.h" />
@@ -650,6 +652,7 @@
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12GPass.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Helpers.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Interface.cpp" />
+    <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Light.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12PostProcess.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Resources.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Shaders.cpp" />

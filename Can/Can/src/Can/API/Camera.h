@@ -41,6 +41,6 @@ namespace Can::graphics
 		type projection_type() const;
 		id::id_type entity_id() const;
 	private:
-		camera_id _id; 
+		camera_id _id{ id::invalid_id };
 	};
 }
