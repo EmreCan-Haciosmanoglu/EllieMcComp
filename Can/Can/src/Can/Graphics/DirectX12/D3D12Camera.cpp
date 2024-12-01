@@ -207,6 +207,7 @@ namespace Can::graphics::d3d12::camera
 			get_entity_id
 		};
 		static_assert(_countof(get_functions) == camera_parameter::count);
+
 	}
 	d3d12_camera::d3d12_camera(camera_init_info info)
 		: _up{ DirectX::XMLoadFloat3(&info.up) }
