@@ -1,5 +1,6 @@
 #include "canpch.h"
 #include "D3D12Light.h"
+#include "D3D12Resources.h"
 #include "Shaders/SharedTypes.h"
 
 #include "Can/API/GameEntity.h"
@@ -161,7 +162,7 @@ namespace Can::graphics::d3d12::light
 				}
 			}
 
-			constexpr graphics::light::type type (light_id id) const
+			constexpr graphics::light::type type(light_id id) const
 			{
 				return _owners[id].type;
 			}
@@ -201,12 +202,88 @@ namespace Can::graphics::d3d12::light
 				}
 			}
 
+			constexpr bool has_lights() const
+			{
+				return _owners.size() > 0;
+			}
 		private:
 
 			utl::vector<light_owner>                      _owners; // TODO: Unordered_Array
 			utl::vector<hlsl::DirectionalLightParameters> _non_cullable_lights;
 			utl::vector<light_id>                         _non_cullable_owners;
 		};
+
+		class d3d12_light_buffer
+		{
+		public:
+			d3d12_light_buffer() = default;
+			constexpr void update_light_buffers(light_set& set, u64 light_set_key, u32 frame_index)
+			{
+				u32 sizes[light_buffer::count]{};
+				sizes[light_buffer::non_cullable_light] = set.non_cullable_light_count() * sizeof(hlsl::DirectionalLightParameters);
+
+				u32 current_sizes[light_buffer::count]{};
+				current_sizes[light_buffer::non_cullable_light] = _buffers[light_buffer::non_cullable_light].buffer.size();
+
+				if (current_sizes[light_buffer::non_cullable_light] < sizes[light_buffer::non_cullable_light])
+				{
+					resize_buffer(light_buffer::non_cullable_light, sizes[light_buffer::non_cullable_light], frame_index);
+				}
+
+				set.non_cullable_lights(
+					(hlsl::DirectionalLightParameters* const)_buffers[light_buffer::non_cullable_light].cpu_address,
+					_buffers[light_buffer::non_cullable_light].buffer.size()
+				);
+			}
+
+			constexpr void release()
+			{
+				for (u32 i{ 0 }; i < light_buffer::count; ++i)
+				{
+					_buffers[i].buffer.release();
+					_buffers[i].cpu_address = nullptr;
+				}
+			}
+
+			[[nodiscard]] constexpr D3D12_GPU_VIRTUAL_ADDRESS non_cullable_lights() const { return _buffers[light_buffer::non_cullable_light].buffer.gpu_address(); }
+		private:
+			struct light_buffer
+			{
+				enum type : u32
+				{
+					non_cullable_light,
+					cullable_light,
+					culling_info,
+
+					count
+				};
+
+				d3d12_buffer buffer;
+				u8* cpu_address{ nullptr };
+			};
+
+			void resize_buffer(light_buffer::type type, u32 size, [[maybe_unused]] u32 frame_index)
+			{
+				assert(type < light_buffer::count);
+				if (!size) return;
+
+				_buffers[type].buffer.release();
+				_buffers[type].buffer = d3d12_buffer{ constant_buffer::get_default_init_info(size), true };
+				NAME_D3D12_OBJECT_INDEXED(_buffers[type].buffer.buffer(), frame_index,
+					type == light_buffer::non_cullable_light ? L"Non-cullable Light Buffer" :
+					type == light_buffer::cullable_light ? L"Cullable Light Buffer" : L"Light Culling Info Buffer");
+
+				D3D12_RANGE range{};
+				DXCall(_buffers[type].buffer.buffer()->Map(0, &range, (void**)(&_buffers[type].cpu_address)));
+				assert(_buffers[type].cpu_address);
+			}
+
+			light_buffer _buffers[light_buffer::count];
+			u64          _current_light_set_key{ 0 };
+		};
+
+		std::unordered_map<u64, light_set> light_sets;
+		d3d12_light_buffer                 light_buffers[frame_buffer_count];
 
 		constexpr void set_dummy(light_set&, light_id, const void* const, u32)
 		{
@@ -229,7 +306,7 @@ namespace Can::graphics::d3d12::light
 
 		constexpr void set_color(light_set& set, light_id id, const void* const data, [[maybe_unused]] u32 size)
 		{
-			math::v3 color{ *(math::v3 *)data };
+			math::v3 color{ *(math::v3*)data };
 			assert(sizeof(color) == size);
 			set.color(id, color);
 		}
@@ -250,26 +327,24 @@ namespace Can::graphics::d3d12::light
 
 		constexpr void get_color(light_set& set, light_id id, void* const data, [[maybe_unused]] u32 size)
 		{
-			math::v3* const color{ (math::v3 *const)data };
+			math::v3* const color{ (math::v3* const)data };
 			assert(sizeof(math::v3) == size);
 			*color = set.color(id);
 		}
 
 		constexpr void get_type(light_set& set, light_id id, void* const data, [[maybe_unused]] u32 size)
 		{
-			graphics::light::type* const type{ (graphics::light::type *const)data };
+			graphics::light::type* const type{ (graphics::light::type* const)data };
 			assert(sizeof(graphics::light::type) == size);
 			*type = set.type(id);
 		}
 
 		constexpr void get_entity_id(light_set& set, light_id id, void* const data, [[maybe_unused]] u32 size)
 		{
-			id::id_type* const entity_id{ (id::id_type*const)data };
+			id::id_type* const entity_id{ (id::id_type* const)data };
 			assert(sizeof(id::id_type) == size);
 			*entity_id = set.entity_id(id);
 		}
-
-		std::unordered_map<u64, light_set> light_sets;
 
 		using set_function = void(*)(light_set&, light_id, const  void* const, u32);
 		using get_function = void(*)(light_set&, light_id, void* const, u32);
@@ -295,6 +370,28 @@ namespace Can::graphics::d3d12::light
 		static_assert(_countof(get_functions) == light_parameter::count);
 
 	}
+	
+	bool initialize()
+	{
+		return true;
+	}
+
+	void shutdown()
+	{
+		assert([] {
+			bool has_lights{ false };
+			for (const auto& it : light_sets)
+			{
+				has_lights |= it.second.has_lights();
+			}
+			return !has_lights;
+			}());
+
+		for (u32 i{ 0 }; i < frame_buffer_count; ++i)
+		{
+			light_buffers[i].release();
+		}
+	}
 
 	graphics::light create(light_init_info info)
 	{
@@ -304,12 +401,14 @@ namespace Can::graphics::d3d12::light
 
 	void remove(light_id id, u64 light_set_key)
 	{
+		assert(light_sets.count(light_set_key));
 		light_sets[light_set_key].remove(id);
 	}
 
 	void set_parameter(light_id id, u64 light_set_key, light_parameter::parameter parameter, const void* const data, u32 data_size)
 	{
 		assert(data && data_size);
+		assert(light_sets.count(light_set_key));
 		assert(parameter < light_parameter::color && set_functions[parameter] != set_dummy);
 		set_functions[parameter](light_sets[light_set_key], id, data, data_size);
 	}
@@ -317,6 +416,7 @@ namespace Can::graphics::d3d12::light
 	void get_parameter(light_id id, u64 light_set_key, light_parameter::parameter parameter, void* const data, u32 data_size)
 	{
 		assert(data && data_size);
+		assert(light_sets.count(light_set_key));
 		assert(parameter < light_parameter::color);
 		get_functions[parameter](light_sets[light_set_key], id, data, data_size);
 	}
