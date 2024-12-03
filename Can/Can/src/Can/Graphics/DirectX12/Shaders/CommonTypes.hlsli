@@ -16,6 +16,7 @@ struct GlobalShaderData
     float3 CameraDirection;
     float ViewHeight;
     
+    uint NumDirectionalLights;
     float DeltaTime;
 };
 
