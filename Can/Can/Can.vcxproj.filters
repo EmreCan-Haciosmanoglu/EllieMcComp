@@ -1444,6 +1444,9 @@
     <ClInclude Include="src\Can\Common\PrimitiveTypes.h" />
     <ClInclude Include="src\Can\API\Light.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Light.h" />
+    <ClInclude Include="src\Can\API\Input.h" />
+    <ClInclude Include="src\Can\Input\Input.h" />
+    <ClInclude Include="src\Can\Input\InputWin32.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -1636,7 +1639,7 @@
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Interface.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Core.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Resources.cpp" />
-    <ClCompile Include="src\Can\Platform\Platform.cpp" />
+    <ClCompile Include="src\Can\Platform\PlatformWin32.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Surface.cpp" />
     <ClCompile Include="src\Can\Components\Entity.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Helpers.cpp" />
@@ -1654,6 +1657,8 @@
     <ClCompile Include="src\Can\Common\EntityAPI.cpp" />
     <ClCompile Include="src\Can\Components\Script.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Light.cpp" />
+    <ClCompile Include="src\Can\Input\Input.cpp" />
+    <ClCompile Include="src\Can\Input\InputWin32.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

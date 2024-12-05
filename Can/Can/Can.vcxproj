@@ -151,6 +151,7 @@
     <ClInclude Include="src\Can.h" />
     <ClInclude Include="src\Can\API\Camera.h" />
     <ClInclude Include="src\Can\API\GameEntity.h" />
+    <ClInclude Include="src\Can\API\Input.h" />
     <ClInclude Include="src\Can\API\Light.h" />
     <ClInclude Include="src\Can\API\ScriptComponent.h" />
     <ClInclude Include="src\Can\API\TransformComponent.h" />
@@ -201,6 +202,8 @@
     <ClInclude Include="src\Can\Immediate_Renderer\Themes.h" />
     <ClInclude Include="src\Can\Immediate_Renderer\Widgets.h" />
     <ClInclude Include="src\Can\Input.h" />
+    <ClInclude Include="src\Can\Input\Input.h" />
+    <ClInclude Include="src\Can\Input\InputWin32.h" />
     <ClInclude Include="src\Can\KeyCodes.h" />
     <ClInclude Include="src\Can\Layers\Layer.h" />
     <ClInclude Include="src\Can\Layers\LayerStack.h" />
@@ -661,13 +664,15 @@
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Content.cpp" />
     <ClCompile Include="src\Can\Graphics\Renderer.cpp" />
     <ClCompile Include="src\Can\Immediate_Renderer\Immediate_Renderer.cpp" />
+    <ClCompile Include="src\Can\Input\Input.cpp" />
+    <ClCompile Include="src\Can\Input\InputWin32.cpp" />
     <ClCompile Include="src\Can\KeyCodes.cpp" />
     <ClCompile Include="src\Can\Layers\ImGuiBuild.cpp" />
     <ClCompile Include="src\Can\Layers\Layer.cpp" />
     <ClCompile Include="src\Can\Layers\LayerStack.cpp" />
     <ClCompile Include="src\Can\Math.cpp" />
     <ClCompile Include="src\Can\Noise\Perlin.cpp" />
-    <ClCompile Include="src\Can\Platform\Platform.cpp" />
+    <ClCompile Include="src\Can\Platform\PlatformWin32.cpp" />
     <ClCompile Include="src\Can\Random.cpp" />
     <ClCompile Include="src\Can\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Can\Renderer\Framebuffer.cpp" />

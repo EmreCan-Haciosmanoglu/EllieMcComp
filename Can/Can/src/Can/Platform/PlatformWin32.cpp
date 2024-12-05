@@ -1,8 +1,8 @@
 #include "canpch.h"
 #include "Platform.h"
 #include "PlatformTypes.h"
-
-#include "Can\Unordered_Array.h"
+#include "Can/Input/InputWin32.h"
+#include "Can/Unordered_Array.h"
 
 namespace Can::platform
 {
@@ -67,7 +67,9 @@ namespace Can::platform
 				break;
 			}
 
-			if (resized && GetAsyncKeyState(VK_LBUTTON) >= 0)
+			input::process_input_message(hwnd, msg, wparam, lparam);
+
+			if (resized && GetKeyState(VK_LBUTTON) >= 0)
 			{
 				window_info& info{ get_from_handle(hwnd) };
 				assert(info.hwnd);
