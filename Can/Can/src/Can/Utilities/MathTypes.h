@@ -2,9 +2,10 @@
 
 namespace Can::math
 {
-	constexpr float pi = 3.1415926535897932384626433832795f;
-	constexpr float two_pi = 2.0f * pi;
-	constexpr float epsilon = 1e-5f;
+	constexpr f32 pi{ 3.1415926535897932384626433832795f };
+	constexpr f32 half_pi{ 0.5f * pi };
+	constexpr f32 two_pi{ 2.0f * pi };
+	constexpr f32 epsilon{ 1e-5f };
 #if  defined(_WIN64)
 	using v2 = DirectX::XMFLOAT2;
 	using v2a = DirectX::XMFLOAT2A;

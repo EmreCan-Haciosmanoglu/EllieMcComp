@@ -56,6 +56,7 @@ namespace Can::graphics::d3d12::light
 				{
 					assert(false && "TODO: cullable lights");
 				}
+				return{};
 			}
 
 			constexpr void remove(light_id id)

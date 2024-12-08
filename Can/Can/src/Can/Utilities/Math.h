@@ -1,8 +1,14 @@
 #pragma once
 #include "Can\Core.h"
+#include "MathTypes.h"
 
 namespace Can::math
 {
+	constexpr bool is_equal(f32 a, f32 b, f32 eps = epsilon)
+	{
+		return (a > b - eps) && (a < b + eps);
+	}
+
 	template<typename T>
 	[[nodiscard]] constexpr T clamp(T value, T min, T max)
 	{
