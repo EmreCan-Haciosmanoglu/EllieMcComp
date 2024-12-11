@@ -145,7 +145,8 @@ namespace Can::input
 			key_f12,
 
 			key_numlock,
-			key_scroll
+			key_scroll,
+			key_tilde
 		};
 	};
 
@@ -206,7 +207,7 @@ namespace Can::input
 			collection.emplace_back(input_callback{ instance, callback });
 		}
 
-		void add_handle(u64 binding, T* instance, binding_callback_t callback)
+		void add_handler(u64 binding, T* instance, binding_callback_t callback)
 		{
 			assert(instance && callback);
 			for (const auto& func : _binding_callbacks)

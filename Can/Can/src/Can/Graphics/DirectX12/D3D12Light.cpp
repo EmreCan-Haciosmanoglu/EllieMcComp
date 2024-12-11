@@ -9,10 +9,27 @@ namespace Can::graphics::d3d12::light
 {
 	namespace
 	{
+		template<u32 n>
+		struct u32_set_bits
+		{
+			static_assert(n > 0 && n <= 32);
+			constexpr static const u32 bits{ u32_set_bits<n - 1>::bits | (1 << (n - 1)) };
+		};
+
+		template<>
+		struct u32_set_bits<0>
+		{
+			constexpr static const u32 bits{ 0 };
+		};
+
+		static_assert(u32_set_bits<frame_buffer_count>::bits < (1 << 8), "That's quite a large frame buffer count");
+
+		constexpr u8 dirty_bits_mask{ (u8)u32_set_bits<frame_buffer_count>::bits };
+
 		struct light_owner
 		{
 			game_entity::entity_id entity_id{ id::invalid_id };
-			u32                    data_index;
+			u32                    data_index{ u32_invalid_id };
 			graphics::light::type  type;
 			bool                   is_enabled;
 		};
@@ -54,9 +71,45 @@ namespace Can::graphics::d3d12::light
 				}
 				else
 				{
-					assert(false && "TODO: cullable lights");
+					u32 index{ u32_invalid_id };
+
+					for (u32 i{ _enabled_light_count }; i < _cullable_owners.size(); ++i)
+					{
+						if (!id::is_valid(_cullable_owners[i]))
+						{
+							index = i;
+							break;
+						}
+					}
+
+					if (index == u32_invalid_id)
+					{
+						index = _cullable_owners.size();
+						_cullable_owners.emplace_back();
+						_cullable_lights.emplace_back();
+						_cullable_entity_ids.emplace_back();
+						_culling_info.emplace_back();
+						_dirty_bits.emplace_back();
+
+						assert(_cullable_owners.size() == _cullable_lights.size());
+						assert(_cullable_owners.size() == _cullable_entity_ids.size());
+						assert(_cullable_owners.size() == _culling_info.size());
+						assert(_cullable_owners.size() == _dirty_bits.size());
+					}
+
+					//add_cullable_light_parameters(info, index);
+					//add_light_culling_info(info, index);
+
+					_owners.emplace_back( game_entity::entity_id{info.entity_id}, index, info.type, info.is_enabled ); // TODO => add() that returns index;
+					const light_id id{ (id::id_type)(_owners.size() - 1) };
+					_cullable_entity_ids[index] = _owners[id].entity_id;
+					_cullable_owners[index] = id;
+					_dirty_bits[index] = dirty_bits_mask;
+					enable(id, info.is_enabled);
+					//update_transform(index);
+
+					return graphics::light{ id, info.light_set_key };
 				}
-				return{};
 			}
 
 			constexpr void remove(light_id id)
@@ -229,6 +282,13 @@ namespace Can::graphics::d3d12::light
 			utl::vector<light_owner>                      _owners; // TODO: Unordered_Array
 			utl::vector<hlsl::DirectionalLightParameters> _non_cullable_lights;
 			utl::vector<light_id>                         _non_cullable_owners;
+
+			utl::vector<hlsl::LightParameters>            _cullable_lights;
+			utl::vector<hlsl::LightCullingInfo>           _culling_info;
+			utl::vector<game_entity::entity_id>           _cullable_entity_ids;
+			utl::vector<light_id>                         _cullable_owners;
+			utl::vector<u8>                               _dirty_bits;
+			u32                                           _enabled_light_count{ 0 };
 		};
 
 		class d3d12_light_buffer
