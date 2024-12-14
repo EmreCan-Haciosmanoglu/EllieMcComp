@@ -570,6 +570,8 @@ namespace Can::graphics::d3d12::light
 
 			utl::vector<u8>                               _transform_flags_cache;
 			u32                                           _enabled_light_count{ 0 };
+
+			friend class d3d12_light_buffer;
 		};
 
 		class d3d12_light_buffer
@@ -580,9 +582,13 @@ namespace Can::graphics::d3d12::light
 			{
 				u32 sizes[light_buffer::count]{};
 				sizes[light_buffer::non_cullable_light] = set.non_cullable_light_count() * sizeof(hlsl::DirectionalLightParameters);
+				sizes[light_buffer::cullable_light] = set.cullable_light_count() * sizeof(hlsl::LightParameters);
+				sizes[light_buffer::culling_info] = set.cullable_light_count() * sizeof(hlsl::LightCullingInfo);
 
 				u32 current_sizes[light_buffer::count]{};
 				current_sizes[light_buffer::non_cullable_light] = _buffers[light_buffer::non_cullable_light].buffer.size();
+				current_sizes[light_buffer::cullable_light] = _buffers[light_buffer::cullable_light].buffer.size();
+				current_sizes[light_buffer::culling_info] = _buffers[light_buffer::culling_info].buffer.size();
 
 				if (current_sizes[light_buffer::non_cullable_light] < sizes[light_buffer::non_cullable_light])
 				{
@@ -593,6 +599,51 @@ namespace Can::graphics::d3d12::light
 					(hlsl::DirectionalLightParameters* const)_buffers[light_buffer::non_cullable_light].cpu_address,
 					_buffers[light_buffer::non_cullable_light].buffer.size()
 				);
+
+				bool buffers_resized{ false };
+				if (current_sizes[light_buffer::cullable_light] < sizes[light_buffer::cullable_light])
+				{
+					assert(current_sizes[light_buffer::culling_info] < sizes[light_buffer::culling_info]);
+					resize_buffer(light_buffer::cullable_light, sizes[light_buffer::cullable_light], frame_index);
+					resize_buffer(light_buffer::culling_info, sizes[light_buffer::culling_info], frame_index);
+					buffers_resized = true;
+				}
+
+				bool all_lights_updated{ false };
+				if (buffers_resized || _current_light_set_key != light_set_key)
+				{
+					memcpy(_buffers[light_buffer::cullable_light].cpu_address, set._cullable_lights.data(), sizes[light_buffer::cullable_light]);
+					memcpy(_buffers[light_buffer::culling_info].cpu_address, set._culling_infos.data(), sizes[light_buffer::culling_info]);
+					_current_light_set_key = light_set_key;
+					all_lights_updated = true;
+				}
+
+				assert(_current_light_set_key == light_set_key);
+				const u32 index_mask{ 1UL << frame_index };
+
+				if (all_lights_updated)
+				{
+					for (u32 i{ 0 }; i < set.cullable_light_count(); ++i)
+					{
+						set._dirty_bits[i] &= ~index_mask;
+					}
+				}
+				else
+				{
+					for (u32 i{ 0 }; i < set.cullable_light_count(); ++i)
+					{
+						if (set._dirty_bits[i] & index_mask)
+						{
+							assert(i * sizeof(hlsl::LightParameters) < sizes[light_buffer::cullable_light]);
+							assert(i * sizeof(hlsl::LightCullingInfo) < sizes[light_buffer::culling_info]);
+							u8* const light_dst{ _buffers[light_buffer::cullable_light].cpu_address + (i * sizeof(hlsl::LightParameters)) };
+							u8* const culling_dst{ _buffers[light_buffer::culling_info].cpu_address + (i * sizeof(hlsl::LightCullingInfo)) };
+							memcpy(light_dst, &set._cullable_lights[i], sizeof(hlsl::LightParameters));
+							memcpy(culling_dst, &set._culling_infos[i], sizeof(hlsl::LightCullingInfo));
+							set._dirty_bits[i] &= ~index_mask;
+						}
+					}
+				}
 			}
 
 			constexpr void release()
@@ -605,6 +656,8 @@ namespace Can::graphics::d3d12::light
 			}
 
 			[[nodiscard]] constexpr D3D12_GPU_VIRTUAL_ADDRESS non_cullable_lights() const { return _buffers[light_buffer::non_cullable_light].buffer.gpu_address(); }
+			[[nodiscard]] constexpr D3D12_GPU_VIRTUAL_ADDRESS cullable_lights() const { return _buffers[light_buffer::cullable_light].buffer.gpu_address(); }
+			[[nodiscard]] constexpr D3D12_GPU_VIRTUAL_ADDRESS culling_infos() const { return _buffers[light_buffer::culling_info].buffer.gpu_address(); }
 		private:
 			struct light_buffer
 			{
@@ -670,6 +723,34 @@ namespace Can::graphics::d3d12::light
 			set.color(id, color);
 		}
 
+		constexpr void set_attenuation(light_set& set, light_id id, const void* const data, [[maybe_unused]] u32 size)
+		{
+			math::v3 attenuation{ *(math::v3*)data };
+			assert(sizeof(attenuation) == size);
+			set.attenuation(id, attenuation);
+		}
+
+		constexpr void set_range(light_set& set, light_id id, const void* const data, [[maybe_unused]] u32 size)
+		{
+			f32 range{ *(f32*)data };
+			assert(sizeof(range) == size);
+			set.range(id, range);
+		}
+
+		void set_umbra(light_set& set, light_id id, const void* const data, [[maybe_unused]] u32 size)
+		{
+			f32 umbra{ *(f32*)data };
+			assert(sizeof(umbra) == size);
+			set.umbra(id, umbra);
+		}
+
+		void set_penumbra(light_set& set, light_id id, const void* const data, [[maybe_unused]] u32 size)
+		{
+			f32 penumbra{ *(f32*)data };
+			assert(sizeof(penumbra) == size);
+			set.penumbra(id, penumbra);
+		}
+
 		constexpr void get_is_enabled(light_set& set, light_id id, void* const data, [[maybe_unused]] u32 size)
 		{
 			bool* const is_enabled{ (bool* const)data };
@@ -689,6 +770,34 @@ namespace Can::graphics::d3d12::light
 			math::v3* const color{ (math::v3* const)data };
 			assert(sizeof(math::v3) == size);
 			*color = set.color(id);
+		}
+
+		constexpr void get_attenuation(light_set& set, light_id id, void* const data, [[maybe_unused]] u32 size)
+		{
+			math::v3* const attenuation{ (math::v3* const)data };
+			assert(sizeof(math::v3) == size);
+			*attenuation = set.attenuation(id);
+		}
+
+		constexpr void get_range(light_set& set, light_id id, void* const data, [[maybe_unused]] u32 size)
+		{
+			f32* const range{ (f32* const)data };
+			assert(sizeof(f32) == size);
+			*range = set.range(id);
+		}
+
+		void get_umbra(light_set& set, light_id id, void* const data, [[maybe_unused]] u32 size)
+		{
+			f32* const umbra{ (f32* const)data };
+			assert(sizeof(f32) == size);
+			*umbra = set.umbra(id);
+		}
+
+		void get_penumbra(light_set& set, light_id id, void* const data, [[maybe_unused]] u32 size)
+		{
+			f32* const penumbra{ (f32* const)data };
+			assert(sizeof(f32) == size);
+			*penumbra = set.penumbra(id);
 		}
 
 		constexpr void get_type(light_set& set, light_id id, void* const data, [[maybe_unused]] u32 size)
@@ -713,6 +822,10 @@ namespace Can::graphics::d3d12::light
 			set_is_enabled,
 			set_intensity,
 			set_color,
+			set_attenuation,
+			set_range,
+			set_umbra,
+			set_penumbra,
 			set_dummy,
 			set_dummy
 		};
@@ -723,6 +836,10 @@ namespace Can::graphics::d3d12::light
 			get_is_enabled,
 			get_intensity,
 			get_color,
+			get_attenuation,
+			get_range,
+			get_umbra,
+			get_penumbra,
 			get_type,
 			get_entity_id
 		};
