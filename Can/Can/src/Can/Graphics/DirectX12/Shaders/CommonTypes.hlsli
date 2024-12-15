@@ -27,6 +27,25 @@ struct PerObjectData
     float4x4 WorldViewProjection;
 };
 
+struct Plane
+{
+    float3 Normal;
+    float Distance;
+};
+
+struct Frustum
+{
+    Plane Planes[4];
+};
+
+struct LightCullingDispacthParameters
+{
+    uint2 NumThreadGroups;
+    uint2 NumThreads;
+    uint NumLights;
+    uint DepthBufferSrvIndex;
+};
+
 struct LightCullingInfo
 {
     float3 Position;
@@ -69,5 +88,6 @@ struct DirectionalLightParameters
 #ifdef __cplusplus
 static_assert((sizeof(PerObjectData) % 16) == 0, "Make sure PerObjectData is formatted in 16-byte chunks without any implicit padding.");
 static_assert((sizeof(LightParameters) % 16) == 0, "Make sure LightParameters is formatted in 16-byte chunks without any implicit padding.");
+static_assert((sizeof(LightCullingInfo) % 16) == 0, "Make sure LightCullingInfo is formatted in 16-byte chunks without any implicit padding.");
 static_assert((sizeof(DirectionalLightParameters) % 16) == 0, "Make sure DirectionalLightParameters is formatted in 16-byte chunks without any implicit padding.");
 #endif

@@ -146,6 +146,16 @@ namespace Can::input
 
 			key_numlock,
 			key_scroll,
+			key_colon,
+			key_plus,
+			key_comma,
+			key_minus,
+			key_period,
+			key_question,
+			key_bracket_open,
+			key_pipe,
+			key_bracket_close,
+			key_quote,
 			key_tilde
 		};
 	};
@@ -232,7 +242,7 @@ namespace Can::input
 		{
 			for (const auto& item : _binding_callbacks)
 			{
-				if(item.binding == binding)
+				if (item.binding == binding)
 				{
 					(item.instance->*item.callback)(binding, value);
 				}
