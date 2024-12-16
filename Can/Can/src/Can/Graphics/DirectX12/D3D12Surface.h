@@ -27,6 +27,7 @@ namespace Can::graphics::d3d12
 			, _present_flags{ o._present_flags }
 			, _viewport{ o._viewport }
 			, _scissor_rect{ o._scissor_rect }
+			, _light_culling_id{ o._light_culling_id }
 		{
 			for (u32 i{ 0 }; i < buffer_count; ++i)
 			{
@@ -58,6 +59,7 @@ namespace Can::graphics::d3d12
 		[[nodiscard]] constexpr D3D12_CPU_DESCRIPTOR_HANDLE rtv() const { return _render_target_data[_current_bb_index].rtv.cpu; }
 		[[nodiscard]] constexpr const D3D12_VIEWPORT& viewport() const { return _viewport; }
 		[[nodiscard]] constexpr const D3D12_RECT& scissor_rect() const { return _scissor_rect; }
+		[[nodiscard]] constexpr id::id_type light_culling_id() const { return _light_culling_id; }
 
 		static void move(d3d12_surface* dest, d3d12_surface* src);
 		static void reset_to_default(d3d12_surface* dest);
@@ -74,11 +76,12 @@ namespace Can::graphics::d3d12
 
 		IDXGISwapChain4* _swap_chain{ nullptr };
 		render_target_data _render_target_data[buffer_count]{};
-		platform::window _window{};
-		mutable u32 _current_bb_index{ 0 };
-		u32 _allow_tearing{ 0 };
-		u32 _present_flags{ 0 };
-		D3D12_VIEWPORT _viewport{};
-		D3D12_RECT _scissor_rect{};
+		platform::window   _window{};
+		mutable u32        _current_bb_index{ 0 };
+		u32                _allow_tearing{ 0 };
+		u32                _present_flags{ 0 };
+		D3D12_VIEWPORT     _viewport{};
+		D3D12_RECT         _scissor_rect{};
+		id::id_type        _light_culling_id{ id::invalid_id };
 	};
 }

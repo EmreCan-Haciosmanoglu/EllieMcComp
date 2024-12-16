@@ -8,6 +8,7 @@
 #include "D3D12PostProcess.h"
 #include "D3D12Upload.h"
 #include "D3D12Content.h"
+#include "D3D12LightCulling.h"
 #include "D3D12Light.h"
 #include "D3D12Camera.h"
 #include "Shaders/SharedTypes.h"
@@ -275,8 +276,8 @@ namespace Can::graphics::d3d12::core
 			XMStoreFloat4x4A(&data.InvViewProjection, camera.inverse_view_projection());
 			XMStoreFloat3(&data.CameraPosition, camera.position());
 			XMStoreFloat3(&data.CameraDirection, camera.direction());
-			data.ViewWidth = (f32)surface.width();
-			data.ViewHeight = (f32)surface.height();
+			data.ViewWidth = surface.viewport().Width;
+			data.ViewHeight = surface.viewport().Height;
 			data.NumDirectionalLights = light::non_cullable_light_count(info.light_set_key);
 			data.DeltaTime = delta_time;
 
@@ -290,6 +291,7 @@ namespace Can::graphics::d3d12::core
 				cbuffer.gpu_address(shader_data),
 				surface.width(),
 				surface.height(),
+				surface.light_culling_id(),
 				frame_idx,
 				delta_time
 			};
@@ -375,7 +377,7 @@ namespace Can::graphics::d3d12::core
 		new(&gfx_command) d3d12_command(main_device, D3D12_COMMAND_LIST_TYPE_DIRECT);
 		if (!gfx_command.command_queue()) return failed_init();
 
-		if (!shaders::initialize() || !gpass::initialize() || !fx::initialize() || !upload::initialize() || !content::initialize() || !light::initialize()) return failed_init();
+		if (!shaders::initialize() || !gpass::initialize() || !fx::initialize() || !upload::initialize() || !content::initialize() || !delight::initialize()) return failed_init();
 
 		NAME_D3D12_OBJECT(main_device, L"Main D3D12 Device");
 		NAME_D3D12_OBJECT(rtv_desc_heap.heap(), L"RTV Descriptor Heap");
@@ -393,7 +395,7 @@ namespace Can::graphics::d3d12::core
 		for (u32 i{ 0 }; i < frame_buffer_count; ++i)
 			process_deferred_releases(i);
 
-		light::shutdown();
+		delight::shutdown();
 		content::shutdown();
 		upload::shutdown();
 		fx::shutdown();
@@ -538,6 +540,7 @@ namespace Can::graphics::d3d12::core
 
 		// Geometry and lighting pass
 		light::update_light_buffers(d3d12_info);
+		delight::cull_lights(cmd_list, d3d12_info, barriers);
 		gpass::add_transitions_for_gpass(barriers);
 		barriers.apply(cmd_list);
 		gpass::set_render_targets_for_gpass(cmd_list);

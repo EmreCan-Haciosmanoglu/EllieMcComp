@@ -1447,6 +1447,7 @@
     <ClInclude Include="src\Can\API\Input.h" />
     <ClInclude Include="src\Can\Input\Input.h" />
     <ClInclude Include="src\Can\Input\InputWin32.h" />
+    <ClInclude Include="src\Can\Graphics\DirectX12\D3D12LightCulling.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">
@@ -1659,6 +1660,7 @@
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Light.cpp" />
     <ClCompile Include="src\Can\Input\Input.cpp" />
     <ClCompile Include="src\Can\Input\InputWin32.cpp" />
+    <ClCompile Include="src\Can\Graphics\DirectX12\D3D12LightCulling.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

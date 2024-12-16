@@ -188,6 +188,7 @@
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Helpers.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Interface.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Light.h" />
+    <ClInclude Include="src\Can\Graphics\DirectX12\D3D12LightCulling.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12PostProcess.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Resources.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12Shaders.h" />
@@ -656,6 +657,7 @@
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Helpers.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Interface.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Light.cpp" />
+    <ClCompile Include="src\Can\Graphics\DirectX12\D3D12LightCulling.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12PostProcess.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Resources.cpp" />
     <ClCompile Include="src\Can\Graphics\DirectX12\D3D12Shaders.cpp" />

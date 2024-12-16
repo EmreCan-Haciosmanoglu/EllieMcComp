@@ -1,6 +1,7 @@
 #include "canpch.h"
 #include "D3D12Surface.h"
 #include "D3D12Core.h"
+#include "D3D12LightCulling.h"
 
 namespace Can::graphics::d3d12
 {
@@ -51,6 +52,9 @@ namespace Can::graphics::d3d12
 		}
 
 		finalize();
+
+		assert(!id::is_valid(_light_culling_id));
+		_light_culling_id == delight::add_culler();
 	}
 
 	void d3d12_surface::present() const
@@ -109,6 +113,11 @@ namespace Can::graphics::d3d12
 
 	void d3d12_surface::release()
 	{
+		if (id::is_valid(_light_culling_id))
+		{
+			delight::remove_culler(_light_culling_id);
+		}
+
 		for (u32 i{ 0 }; i < buffer_count; ++i)
 		{
 			render_target_data& data{ _render_target_data[i] };
