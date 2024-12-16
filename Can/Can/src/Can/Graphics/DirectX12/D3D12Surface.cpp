@@ -54,7 +54,7 @@ namespace Can::graphics::d3d12
 		finalize();
 
 		assert(!id::is_valid(_light_culling_id));
-		_light_culling_id == delight::add_culler();
+		_light_culling_id = delight::add_culler();
 	}
 
 	void d3d12_surface::present() const

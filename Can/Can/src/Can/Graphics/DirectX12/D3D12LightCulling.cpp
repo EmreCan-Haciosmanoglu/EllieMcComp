@@ -123,18 +123,26 @@ namespace Can::graphics::d3d12::delight
 			const hlsl::LightCullingDispacthParameters& params{ culler.grid_frustums_dispatch_params };
 			memcpy(buffer, &params, sizeof(hlsl::LightCullingDispacthParameters));
 
-			barriers.add(culler.frustums.buffer(), D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+			barriers.add(
+				culler.frustums.buffer(),
+				D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+				D3D12_RESOURCE_STATE_UNORDERED_ACCESS
+			);
 			barriers.apply(cmd_list);
 
 			using light_params = light_culling_root_parameter;
 			cmd_list->SetComputeRootSignature(light_culling_root_signature);
 			cmd_list->SetPipelineState(grid_frustum_pso);
 			cmd_list->SetComputeRootConstantBufferView(light_params::global_shader_data, d3d12_info.global_shader_data);
-			cmd_list->SetComputeRootConstantBufferView(light_params::constants,cbuffer.gpu_address(buffer));
-			cmd_list->SetComputeRootUnorderedAccessView(light_params::frustums_out_or_index_counter,culler.frustums.gpu_address());
+			cmd_list->SetComputeRootConstantBufferView(light_params::constants, cbuffer.gpu_address(buffer));
+			cmd_list->SetComputeRootUnorderedAccessView(light_params::frustums_out_or_index_counter, culler.frustums.gpu_address());
 			cmd_list->Dispatch(params.NumThreadGroups.x, params.NumThreadGroups.y, 1);
 
-			barriers.add(culler.frustums.buffer(), D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
+			barriers.add(
+				culler.frustums.buffer(),
+				D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
+				D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+			);
 		}
 
 		void  _declspec(noinline) resize_and_calculate_grid_frustums(
@@ -189,5 +197,12 @@ namespace Can::graphics::d3d12::delight
 		{
 			resize_and_calculate_grid_frustums(culler, cmd_list, d3d12_info, barriers);
 		}
+	}
+
+	// TODO: Temporary for visualization. Remove later
+	D3D12_GPU_VIRTUAL_ADDRESS frustums(id::id_type light_culling_id, u32 frame_index)
+	{
+		assert(frame_index < frame_buffer_count && id::is_valid(light_culling_id));
+		return light_cullers[light_culling_id].cullers[frame_index].frustums.gpu_address();
 	}
 }
