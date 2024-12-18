@@ -17,6 +17,7 @@
 #include <limits>
 #include <format>
 
+#include <crtdbg.h>
 #include <string>
 #include <ctime>
 #include <cstdlib>
