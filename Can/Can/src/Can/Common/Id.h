@@ -18,9 +18,9 @@ namespace Can::id
 	static_assert(sizeof(generation_type) * 8 >= detail::generation_bits);
 	static_assert((sizeof(id_type) - sizeof(generation_type)) > 0);
 
-	constexpr bool is_valid(id_type id) 
-	{ 
-		return id != invalid_id; 
+	constexpr bool is_valid(id_type id)
+	{
+		return id != invalid_id;
 	}
 
 	constexpr id_type index(id_type id)
@@ -60,6 +60,6 @@ struct name final : id::detail::id_base {                      \
 	constexpr name() : id_base{ 0 } {}                         \
 };
 #else
-#define DEFINE_TYPED_ID(name) using name = id_type;
+#define DEFINE_TYPED_ID(name) using name = id::id_type;
 #endif
 }
