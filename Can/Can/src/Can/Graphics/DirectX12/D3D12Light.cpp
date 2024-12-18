@@ -910,7 +910,7 @@ namespace Can::graphics::d3d12::light
 	{
 		assert(data && data_size);
 		assert(light_sets.count(light_set_key));
-		assert(parameter < light_parameter::color);
+		assert(parameter < light_parameter::count);
 		get_functions[parameter](light_sets[light_set_key], id, data, data_size);
 	}
 

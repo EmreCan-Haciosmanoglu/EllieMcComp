@@ -54,7 +54,7 @@ void CullLightsCS(ComputeShaderInput csIn)
 
     for (i = csIn.GroupIndex; i < ShaderParams.NumLights; i += TILE_SIZE * TILE_SIZE)
     {
-        LightCullingInfo light = Lights[i];
+        const LightCullingInfo light = Lights[i];
         const float3 lightPositionVS = mul(GlobalData.View, float4(light.Position, 1.0f)).xyz;
         
         if (light.Type == LIGHT_TYPE_POINT_LIGHT)

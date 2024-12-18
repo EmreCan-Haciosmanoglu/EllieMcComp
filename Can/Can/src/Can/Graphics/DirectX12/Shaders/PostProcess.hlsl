@@ -62,11 +62,11 @@ float4 PostProcessPS(in noperspective float4 Position : SV_Position,
     
     if (idx.x % 2 == 0)
     {
-        c += 0.1f;
+        c += 0.2;
     }
     if (idx.y % 2 == 0)
     {
-        c += 0.1f;
+        c += 0.2f;
     }
     
     return float4((float3) c, 1.0f);

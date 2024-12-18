@@ -58,7 +58,7 @@ namespace Can::graphics::d3d12::delight
 		{
 			assert(!light_culling_root_signature);
 			using params = light_culling_root_parameter;
-			d3dx::d3d12_root_parameter parameters[params::count];
+			d3dx::d3d12_root_parameter parameters[params::count]{};
 			parameters[params::global_shader_data].as_cbv(D3D12_SHADER_VISIBILITY_ALL, 0);
 			parameters[params::constants].as_cbv(D3D12_SHADER_VISIBILITY_ALL, 1);
 			parameters[params::frustums_out_or_index_counter].as_uav(D3D12_SHADER_VISIBILITY_ALL, 0);

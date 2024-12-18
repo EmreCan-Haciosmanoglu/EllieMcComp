@@ -142,7 +142,7 @@ namespace Can::graphics::d3d12
 		assert(_cpu_offset + aligned_size <= _buffer.size());
 		if (_cpu_offset + aligned_size <= _buffer.size())
 		{
-			u8* const address{ _cpu_address + aligned_size };
+			u8* const address{ _cpu_address + _cpu_offset };
 			_cpu_offset += aligned_size;
 			return address;
 		}
