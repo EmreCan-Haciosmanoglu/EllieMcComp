@@ -26,16 +26,3 @@ namespace Can
 		return os;
 	}
 }
-
-#define CAN_MOUSE_BUTTON_0      ::Can::Mouse::Button0
-#define CAN_MOUSE_BUTTON_1      ::Can::Mouse::Button1
-#define CAN_MOUSE_BUTTON_2      ::Can::Mouse::Button2
-#define CAN_MOUSE_BUTTON_3      ::Can::Mouse::Button3
-#define CAN_MOUSE_BUTTON_4      ::Can::Mouse::Button4
-#define CAN_MOUSE_BUTTON_5      ::Can::Mouse::Button5
-#define CAN_MOUSE_BUTTON_6      ::Can::Mouse::Button6
-#define CAN_MOUSE_BUTTON_7      ::Can::Mouse::Button7
-#define CAN_MOUSE_BUTTON_LAST   ::Can::Mouse::ButtonLast
-#define CAN_MOUSE_BUTTON_LEFT   ::Can::Mouse::ButtonLeft
-#define CAN_MOUSE_BUTTON_RIGHT  ::Can::Mouse::ButtonRight
-#define CAN_MOUSE_BUTTON_MIDDLE ::Can::Mouse::ButtonMiddle
