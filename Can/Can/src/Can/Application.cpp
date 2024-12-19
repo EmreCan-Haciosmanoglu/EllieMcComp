@@ -83,6 +83,9 @@ namespace Can
 	{
 		while (m_Running)
 		{
+			RenderCommand::SetClearColor({ 0.9f, 0.9f, 0.9f, 1.0f });
+			RenderCommand::Clear();
+
 			f32 time{ (f32)glfwGetTime() };
 			TimeStep timestep{ time - m_LastFrameTime };
 			m_LastFrameTime = time;
