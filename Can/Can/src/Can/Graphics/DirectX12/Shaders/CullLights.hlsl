@@ -15,7 +15,7 @@ StructuredBuffer<LightCullingInfo> Lights : register(t1, space0);
 
 RWStructuredBuffer<uint> LightIndexCounter : register(u0, space0);
 RWStructuredBuffer<uint2> LightGrid_Opaque : register(u1, space0);
-RWStructuredBuffer<uint2> LightIndexList_Opaque : register(u3, space0);
+RWStructuredBuffer<uint> LightIndexList_Opaque : register(u3, space0);
 
 [numthreads(TILE_SIZE, TILE_SIZE, 1)]
 void CullLightsCS(ComputeShaderInput csIn)
@@ -34,11 +34,11 @@ void CullLightsCS(ComputeShaderInput csIn)
     // MIN/MAX
     GroupMemoryBarrierWithGroupSync();
 
-    const float depth = Texture2D(ResourceDescriptorHeap[ShaderParams.DepthBufferSrvIndex])[csIn.DispatchThreadID.xy].r;
-    const float depthVS = ClipToView(float4(0.0f, 0.0f, depth, 1.0f), GlobalData.InvViewProjection).z;
+    const float depth = Texture2D( ResourceDescriptorHeap[ShaderParams.DepthBufferSrvIndex])[csIn.DispatchThreadID.xy].r;
+    const float depthVS = ClipToView(float4(0.0f, 0.0f, depth, 1.0f), GlobalData.InvProjection).z;
     const uint z = asuint(-depthVS);
     
-    if (depth != 0)
+    if (depth != 1)
     {
         InterlockedMin(_minDepthVS, z);
         InterlockedMax(_maxDepthVS, z);
@@ -89,7 +89,7 @@ void CullLightsCS(ComputeShaderInput csIn)
     
     const uint lightCount = min(_lightCount, MaxLightsPerGroup);
     
-    if(csIn.GroupIndex == 0)
+    if (csIn.GroupIndex == 0)
     {
         InterlockedAdd(LightIndexCounter[0], lightCount, _lightIndexStartOffset);
         LightGrid_Opaque[gridIndex] = uint2(_lightIndexStartOffset, lightCount);

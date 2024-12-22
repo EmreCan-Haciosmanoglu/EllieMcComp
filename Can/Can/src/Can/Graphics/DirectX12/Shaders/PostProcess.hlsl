@@ -5,14 +5,10 @@ struct ShaderContants
     uint GPassMainBufferIndex;
 };
 
-#define FRUSTUM_VISUALIZATION 1
-#define INDEX_VISUALIZATION 0
-
 ConstantBuffer<GlobalShaderData> GlobalData : register(b0, space0);
 ConstantBuffer<ShaderContants> ShaderParams : register(b1, space0);
 
 // TODO: Temporary for visualization
-#if FRUSTUM_VISUALIZATION | INDEX_VISUALIZATION
 #define TILE_SIZE 16
 uint GetGridIndex(float2 posXY, float viewWidth)
 {
@@ -20,13 +16,39 @@ uint GetGridIndex(float2 posXY, float viewWidth)
     const uint tileX = ceil(viewWidth / TILE_SIZE);
     return (pos.x / TILE_SIZE) + (tileX * (pos.y / TILE_SIZE));
 }
+
+float4 Heatmap(StructuredBuffer<uint2> buffer, float2 posXY, float blend)
+{
+    const float w = GlobalData.ViewWidth;
+    const uint gridIndex = GetGridIndex(posXY, w);
+    const uint numLights = buffer[gridIndex].y;
+    
+    const float3 mapTex[] =
+    {
+        float3(0, 0, 0),
+        float3(0, 0, 1),
+        float3(0, 1, 1),
+        float3(0, 1, 0),
+        float3(1, 1, 0),
+        float3(1, 0, 0)
+    };
+    const uint mapTexLen = 5;
+    const uint maxHeat = 40;
+    float l = saturate((float) numLights / maxHeat) * mapTexLen;
+    float3 a = mapTex[floor(l)];
+    float3 b = mapTex[ceil(l)];
+    float3 heatmap = lerp(a, b, l - floor(l));
+    Texture2D gpassMain = ResourceDescriptorHeap[ShaderParams.GPassMainBufferIndex];
+    return float4(lerp(gpassMain[posXY].xyz, heatmap, blend), 1.0f);
+}
+
 StructuredBuffer<Frustum> Frustums : register(t0, space0);
-#endif
+StructuredBuffer<uint2> LightGridOpaque : register(t1, space0);
 
 float4 PostProcessPS(in noperspective float4 Position : SV_Position,
                      in noperspective float2 UV : TEXCOORD) : SV_Target0
 {
-#if FRUSTUM_VISUALIZATION
+#if 0 //FRUSTUM_VISUALIZATION
     
     const float w = GlobalData.ViewWidth;
     const uint gridIndex = GetGridIndex(Position.xy, w);
@@ -52,7 +74,7 @@ float4 PostProcessPS(in noperspective float4 Position : SV_Position,
     color = lerp(gpassMain[Position.xy].xyz, color, 0.25f);
     return float4(color, 1.0f);
     
-#elif INDEX_VISUALIZATION
+#elif 0 // INDEX_VISUALIZATION
     
     const uint2 pos = uint2(Position.xy);
     const uint tileX = ceil(GlobalData.ViewWidth / TILE_SIZE);
@@ -71,6 +93,8 @@ float4 PostProcessPS(in noperspective float4 Position : SV_Position,
     
     return float4((float3) c, 1.0f);
     
+#elif 0 // GRID
+    return Heatmap(LightGridOpaque, Position.xy, 0.75f);
 #else // SCENE
     
     Texture2D gpassMain = ResourceDescriptorHeap[ShaderParams.GPassMainBufferIndex];

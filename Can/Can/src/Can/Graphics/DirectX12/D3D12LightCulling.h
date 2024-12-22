@@ -21,4 +21,6 @@ namespace Can::graphics::d3d12::delight
 
 	// TODO: Temporary for visualization. Remove later
 	D3D12_GPU_VIRTUAL_ADDRESS frustums(id::id_type light_culling_id, u32 frame_index);
+	D3D12_GPU_VIRTUAL_ADDRESS light_grid_opaque(id::id_type light_culling_id, u32 frame_index);
+	D3D12_GPU_VIRTUAL_ADDRESS light_index_list_opaque(id::id_type light_culling_id, u32 frame_index);
 }

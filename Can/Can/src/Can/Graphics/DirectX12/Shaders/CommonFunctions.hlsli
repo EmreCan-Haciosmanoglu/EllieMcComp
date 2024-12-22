@@ -36,7 +36,8 @@ bool ConeInsidePlane(Cone cone, Plane plane)
 bool SphereInsideFrustum(Sphere sphere, Frustum frustum, float zNear, float zFar)
 {
     return !(
-        (sphere.Center.z - sphere.Radius > zNear || sphere.Center.z + sphere.Radius < zFar) ||
+        sphere.Center.z - sphere.Radius > zNear || 
+        sphere.Center.z + sphere.Radius < zFar ||
         SphereInsidePlane(sphere, frustum.Planes[0]) ||
         SphereInsidePlane(sphere, frustum.Planes[1]) ||
         SphereInsidePlane(sphere, frustum.Planes[2]) ||
@@ -46,17 +47,24 @@ bool SphereInsideFrustum(Sphere sphere, Frustum frustum, float zNear, float zFar
 
 bool ConeInsideFrustum(Cone cone, Frustum frustum, float zNear, float zFar)
 {
+    bool result = true;
+    
     Plane nearPlane = { float3(0, 0, -1), -zNear };
     Plane farPlane = { float3(0, 0, 1), zFar };
 
-    return !(
-        ConeInsidePlane(cone, nearPlane) || 
-        ConeInsidePlane(cone, farPlane) ||
-        ConeInsidePlane(cone, frustum.Planes[0]) ||
-        ConeInsidePlane(cone, frustum.Planes[1]) ||
-        ConeInsidePlane(cone, frustum.Planes[2]) ||
-        ConeInsidePlane(cone, frustum.Planes[3])
-    );
+    if (ConeInsidePlane(cone, nearPlane) || ConeInsidePlane(cone, farPlane))
+    {
+        result = false;
+    }
+    
+    for (int i = 0; i < 4 && result; i++)
+    {
+        if (ConeInsidePlane(cone, frustum.Planes[i]))
+        {
+            result = false;
+        }
+    }
+    return result;
 }
 
 float4 ClipToView(float4 clip, float4x4 inverseProjection)
