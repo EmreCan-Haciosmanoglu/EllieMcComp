@@ -39,3 +39,5 @@ namespace Can::utl
 {
 
 }
+
+#include "FreeList.h"

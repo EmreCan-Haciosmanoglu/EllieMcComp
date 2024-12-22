@@ -1448,6 +1448,8 @@
     <ClInclude Include="src\Can\Input\Input.h" />
     <ClInclude Include="src\Can\Input\InputWin32.h" />
     <ClInclude Include="src\Can\Graphics\DirectX12\D3D12LightCulling.h" />
+    <ClInclude Include="src\Can\Utilities\FreeList.h" />
+    <ClInclude Include="src\Can\Utilities\Vector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Can\Application.cpp">

@@ -2,7 +2,6 @@
 #include "Platform.h"
 #include "PlatformTypes.h"
 #include "Can/Input/InputWin32.h"
-#include "Can/Unordered_Array.h"
 
 namespace Can::platform
 {
@@ -20,13 +19,7 @@ namespace Can::platform
 			bool is_closed{ false };
 		};
 
-		std::vector<window_info> windows{};
-
-		void remove_from_windows(u32 id)
-		{
-			//assert(id < windows.capacity);
-			//windows.values[id].valid = false;
-		}
+		utl::free_list<window_info> windows{};
 
 		window_info& get_from_id(window_id id)
 		{
@@ -48,8 +41,8 @@ namespace Can::platform
 			case WM_NCCREATE:
 			{
 				DEBUG_OP(SetLastError(0));
-				windows.push_back({ hwnd });
-				SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)(windows.size() - 1));
+				const window_id id{ windows.add(hwnd) };
+				SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)id);
 				assert(GetLastError() == 0);
 				break;
 			}
@@ -237,7 +230,7 @@ namespace Can::platform
 	{
 		window_info& info{ get_from_id(id) };
 		DestroyWindow(info.hwnd);
-		remove_from_windows(id);
+		windows.remove(id);
 	}
 
 #endif // _WIN64
