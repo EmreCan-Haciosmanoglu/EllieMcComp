@@ -4,6 +4,10 @@
 namespace Can::utl
 {
 
+#if USE_STL_VECTOR
+#pragma message("WARNING: using utl::free_list with std::vector result in dublicate calls to class destructor!");
+#endif
+
 	template<typename T>
 	class free_list
 	{
@@ -18,6 +22,9 @@ namespace Can::utl
 		~free_list()
 		{
 			assert(!_size);
+#if USE_STL_VECTOR
+			memset(_array.data(), 0, _array.size() * sizeof(T))
+#endif
 		}
 
 		template<class... params>
@@ -83,8 +90,13 @@ namespace Can::utl
 			}
 		}
 
+#if USE_STL_VECTOR
 		utl::vector<T> _array;
-		u32            _next_free_index{ u32_invalid_id };
-		u32            _size{ 0 };
+#else
+		utl::vector<T, false> _array;
+#endif
+
+		u32                   _next_free_index{ u32_invalid_id };
+		u32                   _size{ 0 };
 	};
 }
