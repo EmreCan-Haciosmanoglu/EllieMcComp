@@ -5,7 +5,7 @@ namespace Can::graphics::d3d12::camera
 {
 	namespace
 	{
-		std::vector<d3d12_camera>cameras{}; // Unordered_Array
+		utl::free_list<d3d12_camera> cameras{};
 
 		constexpr void set_dummy(d3d12_camera&, const void* const, u32)
 		{
@@ -228,10 +228,10 @@ namespace Can::graphics::d3d12::camera
 		game_entity::entity entity{ game_entity::entity_id{_entity_id} };
 		DirectX::XMFLOAT3 pos{ entity.transform().position() };
 		DirectX::XMFLOAT3 dir{ entity.transform().orientation() };
-		_position =  DirectX::XMLoadFloat3(&pos) ;
-		_direction =  DirectX::XMLoadFloat3(&dir) ;
+		_position = DirectX::XMLoadFloat3(&pos);
+		_direction = DirectX::XMLoadFloat3(&dir);
 		_view = DirectX::XMMatrixLookToRH(_position, _direction, _up);
-		
+
 		if (_is_dirty)
 		{
 			_projection = (_projection_type == graphics::camera::perspective)
@@ -240,9 +240,9 @@ namespace Can::graphics::d3d12::camera
 			_inverse_projection = DirectX::XMMatrixInverse(nullptr, _projection);
 			_is_dirty = false;
 		}
-		
+
 		_view_projection = DirectX::XMMatrixMultiply(_view, _projection);
-			_inverse_view_projection = DirectX::XMMatrixInverse(nullptr, _view_projection);
+		_inverse_view_projection = DirectX::XMMatrixInverse(nullptr, _view_projection);
 	}
 
 	void d3d12_camera::up(v3 up)
@@ -290,15 +290,13 @@ namespace Can::graphics::d3d12::camera
 
 	graphics::camera create(camera_init_info info)
 	{
-		cameras.push_back(d3d12_camera{ info });
-		return graphics::camera{ camera_id{(u32)cameras.size() - 1} };
+		return graphics::camera{ camera_id{cameras.add(d3d12_camera{ info })} };
 	}
 
 	void remove(camera_id id)
 	{
-		assert(false);
 		assert(id::is_valid(id));
-		cameras.erase(cameras.begin() + id);
+		cameras.remove(id);
 	}
 
 	void set_parameter(camera_id id, camera_parameter::parameter parameter, const void* const data, u32 data_size)

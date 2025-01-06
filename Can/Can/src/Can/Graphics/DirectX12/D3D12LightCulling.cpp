@@ -52,7 +52,7 @@ namespace Can::graphics::d3d12::delight
 		ID3D12RootSignature* light_culling_root_signature{ nullptr };
 		ID3D12PipelineState* grid_frustum_pso{ nullptr };
 		ID3D12PipelineState* light_culling_pso{ nullptr };
-		utl::vector<light_culler> light_cullers; // TODO: Unordered_Array
+		utl::free_list<light_culler> light_cullers;
 
 		bool create_root_signatures()
 		{
@@ -233,16 +233,13 @@ namespace Can::graphics::d3d12::delight
 
 	id::id_type add_culler()
 	{
-		light_cullers.emplace_back();
-		return light_cullers.size() - 1;
+		return light_cullers.add();
 	}
 
 	void remove_culler(id::id_type id)
 	{
 		assert(id::is_valid(id));
-
-		assert(false && "free_list");
-		light_cullers.erase(light_cullers.begin() + id);
+		light_cullers.remove(id);
 	}
 
 	void cull_lights(id3d12_graphics_command_list* const cmd_list, const d3d12_frame_info& d3d12_info, d3dx::d3d12_resource_barrier& barriers)

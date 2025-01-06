@@ -64,8 +64,7 @@ namespace Can::graphics::d3d12::light
 					params.Intensity = info.intensity;
 
 					light_owner owner{ game_entity::entity_id{info.entity_id}, index, info.type, info.is_enabled };
-					_owners.push_back(owner);
-					const light_id id{ (light_id)(_owners.size() - 1) };
+					const light_id id{ _owners.add(owner) };
 					_non_cullable_owners[index] = id;
 
 					return graphics::light{ id, info.light_set_key };
@@ -85,7 +84,7 @@ namespace Can::graphics::d3d12::light
 
 					if (index == u32_invalid_id)
 					{
-						index = _cullable_owners.size();
+						index = (u32)_cullable_owners.size();
 						_cullable_owners.emplace_back();
 						_cullable_lights.emplace_back();
 						_cullable_entity_ids.emplace_back();
@@ -101,8 +100,7 @@ namespace Can::graphics::d3d12::light
 					add_cullable_light_parameters(info, index);
 					add_light_culling_info(info, index);
 
-					_owners.emplace_back(game_entity::entity_id{ info.entity_id }, index, info.type, info.is_enabled); // TODO => add() that returns index;
-					const light_id id{ (id::id_type)(_owners.size() - 1) };
+					const light_id id{ _owners.add(game_entity::entity_id{ info.entity_id }, index, info.type, info.is_enabled) };
 					_cullable_entity_ids[index] = _owners[id].entity_id;
 					_cullable_owners[index] = id;
 					_dirty_bits[index] = dirty_bits_mask;
@@ -129,9 +127,7 @@ namespace Can::graphics::d3d12::light
 					_cullable_owners[owner.data_index] = light_id{ id::invalid_id };
 				}
 
-				assert(false);
-
-				_owners.erase(_owners.begin() + id);
+				_owners.remove(id);
 			}
 
 			void update_transform()
@@ -196,7 +192,7 @@ namespace Can::graphics::d3d12::light
 					const u32 last{ count - 1 };
 					if (data_index < last)
 					{
-						swap_cullable_lights(data_index, count);
+						swap_cullable_lights(data_index, last);
 						--count;
 					}
 					else if (data_index == last)
@@ -575,7 +571,7 @@ namespace Can::graphics::d3d12::light
 				}
 			}
 
-			utl::vector<light_owner>                      _owners; // TODO: Unordered_Array
+			utl::free_list<light_owner>                   _owners;
 			utl::vector<hlsl::DirectionalLightParameters> _non_cullable_lights;
 			utl::vector<light_id>                         _non_cullable_owners;
 

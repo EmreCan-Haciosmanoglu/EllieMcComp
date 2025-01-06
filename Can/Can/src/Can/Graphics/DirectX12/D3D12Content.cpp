@@ -36,30 +36,30 @@ namespace Can::graphics::d3d12::content
 			id::id_type depth_pso_id;
 		};
 
-		std::vector<ID3D12Resource*>                submesh_buffers{}; // Unordered_Array
-		std::vector<submesh_view>                   submesh_views{};	 // Unordered_Array
-		std::mutex                                  submesh_mutex{};
+		utl::free_list<ID3D12Resource*>                submesh_buffers{};
+		utl::free_list<submesh_view>                   submesh_views{};
+		std::mutex                                     submesh_mutex{};
+													   
+		utl::free_list<d3d12_texture>                  textures{};
+		std::mutex                                     texture_mutex{};
+													   
+		std::vector<ID3D12RootSignature*>              root_signatures;
+		std::unordered_map<u64, id::id_type>           mtl_rs_map;
+		utl::free_list<std::unique_ptr<u8[]>>          materials;
+		std::mutex                                     material_mutex;
 
-		std::vector<d3d12_texture>                  textures{};	 // Unordered_Array
-		std::mutex                                  texture_mutex{};
+		utl::free_list<d3d12_render_item>              render_items;
+		utl::free_list<std::unique_ptr<id::id_type[]>> render_item_ids;
+		std::mutex                                     render_item_mutex{};
 
-		std::vector<ID3D12RootSignature*>           root_signatures;
-		std::unordered_map<u64, id::id_type>        mtl_rs_map;
-		std::vector<std::unique_ptr<u8[]>>          materials; // Unordered_Array
-		std::mutex                                  material_mutex;
-
-		std::vector<d3d12_render_item>              render_items; // Unordered_Array
-		std::vector<std::unique_ptr<id::id_type[]>> render_item_ids; // Unordered_Array
-		std::mutex                                  render_item_mutex{};
-
-		std::vector<ID3D12PipelineState*>           pipeline_states;
-		std::unordered_map<u64, id::id_type>        pso_map;
-		std::mutex                                  pso_mutex{};
-
-		struct
-		{
-			std::vector<Can::content::lod_offset>   lod_offsets;
-			std::vector<id::id_type>                geometry_ids;
+		std::vector<ID3D12PipelineState*>              pipeline_states;
+		std::unordered_map<u64, id::id_type>           pso_map;
+		std::mutex                                     pso_mutex{};
+													   
+		struct										   
+		{											   
+			std::vector<Can::content::lod_offset>      lod_offsets;
+			std::vector<id::id_type>                   geometry_ids;
 		} frame_cache;
 
 		id::id_type create_root_signature(material_type::type type, shader_flags::flags flags);
@@ -468,19 +468,17 @@ namespace Can::graphics::d3d12::content
 			view.elements_type = elements_type;
 
 			std::lock_guard lock{ submesh_mutex };
-			submesh_buffers.push_back(resource);
-			submesh_views.push_back(view);
-			return (id::id_type)(submesh_views.size() - 1);
+			submesh_buffers.add(resource);
+			return submesh_views.add(view);
 		}
 
 		void remove(id::id_type id)
 		{
-			assert(false);
 			std::lock_guard lock{ submesh_mutex };
-			submesh_views.erase(submesh_views.begin() + id);
+			submesh_views.remove(id);
 
 			core::deferred_release(submesh_buffers[id]);
-			submesh_buffers.erase(submesh_buffers.begin() + id);
+			submesh_buffers.remove(id);
 		}
 
 		void get_views(const id::id_type* const gpu_ids, u32 id_count, const views_cache& cache)
@@ -532,15 +530,13 @@ namespace Can::graphics::d3d12::content
 			std::lock_guard lock{ material_mutex };
 			d3d12_material_stream stream{ buffer, info };
 			assert(buffer);
-			materials.push_back(std::move(buffer));
-			return (id::id_type)(materials.size() - 1);
+			return materials.add(std::move(buffer));
 		}
 
 		void remove(id::id_type id)
 		{
-			assert(false);
 			std::lock_guard lock{ material_mutex };
-			materials.erase(materials.begin() + id); // Unordered_Array
+			materials.remove(id);
 		}
 
 		void get_materials(const id::id_type* const material_ids, u32 material_count, const materials_cache& cache)
@@ -596,14 +592,11 @@ namespace Can::graphics::d3d12::content
 				item.depth_pso_id = id_pair.depth_pso_id;
 
 				assert(id::is_valid(item.submesh_gpu_id) && id::is_valid(item.material_id));
-				render_items.push_back(item);
-				item_ids[i] = (id::id_type)(render_items.size() - 1);
+				item_ids[i] = render_items.add(item);
 			}
 
 			item_ids[material_count] = id::invalid_id;
-
-			render_item_ids.push_back(std::move(items));
-			return (id::id_type)(render_item_ids.size() - 1);
+			return render_item_ids.add(std::move(items));
 		}
 
 		void remove(id::id_type id)
@@ -612,12 +605,9 @@ namespace Can::graphics::d3d12::content
 			const id::id_type* const item_ids{ &render_item_ids[id][1] };
 			for (u32 i{ 0 }; item_ids[i] != id::invalid_id; ++i)
 			{
-				assert(false);
-				render_items.erase(render_items.begin() + item_ids[i]);
+				render_items.remove(item_ids[i]);
 			}
-
-			assert(false);
-			render_item_ids.erase(render_item_ids.begin() + id);
+			render_item_ids.remove(id);
 		}
 
 		void get_d3d12_render_item_ids(const frame_info& info, std::vector<id::id_type>& d3d12_render_item_ids)

@@ -7,7 +7,10 @@ namespace Can::utl
 	class vector
 	{
 	public:
-		vector() = default;
+		vector()
+		{
+			reserve(1);
+		}
 
 		constexpr explicit vector(u64 count)
 		{
@@ -47,7 +50,7 @@ namespace Can::utl
 			if (this != std::addressof(o))
 			{
 				clear();
-				reserve(o._size);
+				reserve(o._capacity);
 				for (auto& item : o)
 				{
 					emplace_back(item);

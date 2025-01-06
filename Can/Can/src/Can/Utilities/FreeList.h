@@ -23,7 +23,7 @@ namespace Can::utl
 		{
 			assert(!_size);
 #if USE_STL_VECTOR
-			memset(_array.data(), 0, _array.size() * sizeof(T))
+			memset(_array.data(), 0, _array.size() * sizeof(T));
 #endif
 		}
 
@@ -70,12 +70,12 @@ namespace Can::utl
 
 		[[nodiscard]] constexpr const T& operator[](u32 id) const
 		{
-			assert(id < _array.size() && !already_removed(id));
+			assert(id < (u32)_array.size() && !already_removed(id));
 			return _array[id];
 		}
 
 	private:
-		constexpr bool already_removed(u32 id)
+		constexpr bool already_removed(u32 id) const
 		{
 			if constexpr (sizeof(T) > sizeof(u32))
 			{
